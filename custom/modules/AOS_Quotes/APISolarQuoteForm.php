@@ -28,15 +28,30 @@
     $main_switch = $_POST['main_switch'];
     $distancetoswitch = $_POST['distancetoswitch'];
     $external_or_internal = $_POST['external_or_internal'];
+    $prepared_by = $_POST['prepared_by'];
+    $hear_about = $_POST['hear_about'];
     $preferred = $_POST['preferred'];
     $vic_rebate = $_POST['solar_vic_rebate'];
     $vic_loan = $_POST['solar_vic_loan'];
     $decription_internal_notes = $_POST['notes'];
     
     /// Assign User
-    $assigned_user = $_POST['assigned_user'];
-    $lead_source = "PE_website_quote_form";
-
+    // $assigned_user = $_POST['assigned_user'];
+    // $lead_source = "PE_website_quote_form";
+    if($prepared_by == 'Matthew Wright') {
+        $assigned_user = '8d159972-b7ea-8cf9-c9d2-56958d05485e';
+        $email_assigigned = 'matthew.wright@pure-electric.com.au';
+    } else if($prepared_by == 'Paul Szuster') {
+        $assigned_user = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
+        $email_assigigned = 'paul.szuster@pure-electric.com.au';
+    } else if($prepared_by == 'John Hooper') {
+        $assigned_user = 'b33d5d2f-89fc-ce57-1df9-5e38d4d8e98d';
+        $email_assigigned = 'john.hooper@pure-electric.com.au';
+    } else if($prepared_by == 'PE Admin') {
+        $assigned_user = '1';
+    } else {
+        $assigned_user = '1';
+    }
     
     /// check Lead existing
     $db = DBManagerFactory::getInstance();
@@ -139,7 +154,7 @@
         $quote->billing_address_street = $your_street;
         $quote->install_address_c = $your_street;
         $quote->special_notes_c = $decription_internal_notes;
-        $quote->lead_source_c = $lead_source;
+        $quote->lead_source_c = $hear_about;
         $quote->lead_source_co_c = 'PureElectric';
         $quote->assigned_user_id = $assigned_user;
         $quote->the_quote_prepared_c = "solar_quote_form";
@@ -264,7 +279,7 @@
         $quote->billing_address_street = $your_street;
         $quote->install_address_c = $your_street;
         $quote->special_notes_c = $decription_internal_notes;
-        $quote->lead_source_c = $lead_source;
+        $quote->lead_source_c = $hear_about;
         $quote->lead_source_co_c = 'PureElectric';
         $quote->assigned_user_id = $assigned_user;
         $quote->the_quote_prepared_c = "solar_quote_form";
@@ -735,8 +750,7 @@
 
             $mail->AddAttachment($file_location, $file_name, 'base64', $mime_type);
         }
-        $mail->AddCC('paul.szuster@pure-electric.com.au');
-        $mail->AddCC('matthew.wright@pure-electric.com.au');
+        $mail->AddCC($email_assigigned);
         $mail->AddCC('info@pure-electric.com.au');
         // $mail->AddCC('ngoanhtuan2510@gmail.com');
         $mail->prepForOutbound();
