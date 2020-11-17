@@ -1,0 +1,3293 @@
+<?php
+
+$db = DBManagerFactory::getInstance();
+$sql_group = "SELECT * FROM  aos_line_item_groups lig
+        WHERE lig.parent_type = 'AOS_Quotes' AND lig.parent_id = '99eaa0f6-7bb9-a9de-e519-5efab4d333e5' AND lig.deleted = 0";
+$ret = $db->query($sql_group);
+while ($row = $db->fetchByAssoc($ret)) {
+    var_dump($row);
+}
+die;
+
+// ini_set("display_errors",1);
+$servername = "database-1.crz4vavpmnv9.ap-southeast-2.rds.amazonaws.com";
+$username = "root";
+$password = "binhmatt2018";
+$database_name = "message";
+$message_folder = '/message/';
+$conn = new mysqli($servername, $username, $password, $database_name);
+$invoice_id ='d3fc579d-2684-4d79-da70-5ef3d1e28b22';
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} 
+$quote_id = '';
+$query_phone = "SELECT contacts.phone_mobile , accounts_cstm.mobile_phone_c FROM aos_invoices
+INNER JOIN accounts_cstm ON aos_invoices.billing_account_id = accounts_cstm.id_c
+INNER JOIN contacts ON aos_invoices.billing_contact_id = contacts.id
+WHERE aos_invoices.id = '".$invoice_id."' AND aos_invoices.deleted = 0";
+$query_phone = "SELECT contacts.phone_mobile,accounts_cstm.mobile_phone_c FROM aos_quotes
+  INNER JOIN accounts_cstm ON aos_quotes.billing_account_id = accounts_cstm.id_c
+  INNER JOIN contacts ON aos_quotes.billing_contact_id = contacts.id
+  WHERE aos_quotes.id = '".$quote_id."' AND aos_quotes.deleted = 0";
+$db = DBManagerFactory::getInstance();
+$result =  $db->query($query_phone);
+
+$where_phone = '';
+if($result->num_rows > 0){
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+       
+        if($row['phone_mobile'] != '' && $row['mobile_phone_c'] == ''){
+                $phone = preg_replace("/^0/", "+61", preg_replace('/\D/', '', str_replace(" ","",$row['phone_mobile'])));
+                $where_phone = " AND accounts.phone = '".$phone."'";
+        }else if($row['mobile_phone_c'] != '' && $row['phone_mobile'] == ''){
+                $phone = preg_replace("/^0/", "+61", preg_replace('/\D/', '', str_replace(" ","",$row['mobile_phone_c'])));
+                $where_phone = " AND accounts.phone = '".$phone."'";
+        }else if($row['phone_mobile'] != '' && $row['mobile_phone_c'] != ''){
+                $phone1 = preg_replace("/^0/", "+61", preg_replace('/\D/', '', str_replace(" ","",$row['phone_mobile'])));
+                $phone2 = preg_replace("/^0/", "+61", preg_replace('/\D/', '', str_replace(" ","",$row['mobile_phone_c'])));
+                $where_phone = " AND (accounts.phone = '".$phone1."' OR accounts.phone = '".$phone2."')";
+        }else{
+                die;
+        }
+}
+
+$query = "SELECT messages.message_content as link_file FROM messages 
+INNER JOIN conversations ON conversations.id  = messages.conversation_id 
+INNER JOIN accounts ON conversations.to_user  = accounts.id 
+WHERE messages.message_type = 'image'".$where_phone;
+echo $query;
+ $result =  $conn->query($query);
+ $array_link_result = array();
+                if($result->num_rows > 0){
+                    var_dump($row);
+                        $i = 0;
+                        while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                        $array_link_result[$i]=$row['link_file'];
+                        $i++;
+                        }
+                        $key = 0 ;
+                }     
+
+ var_dump($array_link_result);
+ die();
+custom_autosendgeoemail();
+require_once('custom/include/SugarFields/Fields/Multiupload/simple_html_dom.php');
+function custom_autosendgeoemail(){
+    date_default_timezone_set('UTC');
+    set_time_limit(0);
+    ini_set('memory_limit', '-1');
+
+    $db  = DBManagerFactory::getInstance();
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://cognito-idp.ap-southeast-2.amazonaws.com/');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, '{"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"1r8f4rahaq3ehkastcicb70th4","AuthParameters":{"USERNAME":"accounts@pure-electric.com.au","PASSWORD":"gPureandTrue2019*"},"ClientMetadata":{}}');
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = 'Authority: cognito-idp.ap-southeast-2.amazonaws.com';
+    $headers[] = 'Pragma: no-cache';
+    $headers[] = 'Cache-Control: no-cache';
+    $headers[] = 'Origin: https://geocreation.com.au';
+    $headers[] = 'X-Amz-Target: AWSCognitoIdentityProviderService.InitiateAuth';
+    $headers[] = 'X-Amz-User-Agent: aws-amplify/0.1.x js';
+    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36';
+    $headers[] = 'Content-Type: application/x-amz-json-1.1';
+    $headers[] = 'Accept: */*';
+    $headers[] = 'Sec-Fetch-Site: cross-site';
+    $headers[] = 'Sec-Fetch-Mode: cors';
+    $headers[] = 'Referer: https://geocreation.com.au/';
+    $headers[] = 'Accept-Encoding: gzip, deflate, br';
+    $headers[] = 'Accept-Language: en-US,en;q=0.9';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    $result_data = json_decode($result);
+    $accesstoken =  $result_data->AuthenticationResult->AccessToken;
+    $RefreshToken = $result_data->AuthenticationResult->RefreshToken;
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://cognito-idp.ap-southeast-2.amazonaws.com/');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, '{"AccessToken":'.$accesstoken.'"}');
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = 'Authority: cognito-idp.ap-southeast-2.amazonaws.com';
+    $headers[] = 'Pragma: no-cache';
+    $headers[] = 'Cache-Control: no-cache';
+    $headers[] = 'Origin: https://geocreation.com.au';
+    $headers[] = 'X-Amz-Target: AWSCognitoIdentityProviderService.GetUser';
+    $headers[] = 'X-Amz-User-Agent: aws-amplify/0.1.x js';
+    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36';
+    $headers[] = 'Content-Type: application/x-amz-json-1.1';
+    $headers[] = 'Accept: */*';
+    $headers[] = 'Sec-Fetch-Site: cross-site';
+    $headers[] = 'Sec-Fetch-Mode: cors';
+    $headers[] = 'Referer: https://geocreation.com.au/';
+    $headers[] = 'Accept-Encoding: gzip, deflate, br';
+    $headers[] = 'Accept-Language: en-US,en;q=0.9';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+
+    $param = array (
+        'ClientId' => '1r8f4rahaq3ehkastcicb70th4',
+        'AuthFlow' => 'REFRESH_TOKEN_AUTH',
+        'AuthParameters' => 
+        array (
+        'REFRESH_TOKEN' => $RefreshToken,
+        'DEVICE_KEY' => NULL,
+        ),
+    );
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://cognito-idp.ap-southeast-2.amazonaws.com/');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = 'Authority: cognito-idp.ap-southeast-2.amazonaws.com';
+    $headers[] = 'Pragma: no-cache';
+    $headers[] = 'Cache-Control: no-cache';
+    $headers[] = 'Origin: https://geocreation.com.au';
+    $headers[] = 'X-Amz-Target: AWSCognitoIdentityProviderService.InitiateAuth';
+    $headers[] = 'X-Amz-User-Agent: aws-amplify/0.1.x js';
+    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36';
+    $headers[] = 'Content-Type: application/x-amz-json-1.1';
+    $headers[] = 'Accept: */*';
+    $headers[] = 'Sec-Fetch-Site: cross-site';
+    $headers[] = 'Sec-Fetch-Mode: cors';
+    $headers[] = 'Referer: https://geocreation.com.au/';
+    $headers[] = 'Accept-Encoding: gzip, deflate, br';
+    $headers[] = 'Accept-Language: en-US,en;q=0.9';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    $IdToken =  $result_data->AuthenticationResult->IdToken;
+
+    $curl = curl_init();
+    $url = 'https://api.geocreation.com.au/api/assignments/search?filters%5BhasIssuedAgreements%5D=true&page=1';
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_HTTPGET, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            "Host: api.geocreation.com.au",
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Content-type: application/json; charset=UTF-8",
+            "Accept: */*",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding:   gzip, deflate, br",
+            "Connection: keep-alive",
+            "Authorization: token ".$IdToken,
+            "Referer: https://geocreation.com.au/assignments/?filters%5BhasIssuedAgreements%5D=true",
+            "Origin: https://geocreation.com.au",
+        )
+    );
+
+    $result = curl_exec($curl);
+    curl_close($curl);
+    if($result != false){
+        $result = json_decode($result);
+        $issue_id_arr = array();
+        $email_type = array();
+
+        //thienpb fix logic for sh
+        if(isset($result->assignment)){
+            foreach($result->assignment as $ret){
+                array_push( $issue_id_arr,$ret->reference);
+            }
+            if(count($issue_id_arr) >0){
+                foreach ($issue_id_arr as $issue_id){
+                    if(strpos($issue_id,'SH') !== false){
+                        
+                        // Get JSON of assignment by assignment ID
+                        $curl = curl_init();
+                        $url = 'https://api.geocreation.com.au/api/assignments/'.$issue_id;
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+
+                        curl_setopt($curl, CURLOPT_ENCODING, 'gzip, deflate');
+                        curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+                        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                                "Host: api.geocreation.com.au",
+                                "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+                                "Content-type: application/json; charset=UTF-8",
+                                "Accept: */*",
+                                "Accept-Language: en-US,en;q=0.5",
+                                "Accept-Encoding:   gzip, deflate, br",
+                                "Connection: keep-alive",
+                                "Authorization: token ".$$IdToken,
+                                "Referer: https://geocreation.com.au/assignments/$issue_id/edit",
+                                "Origin: https://geocreation.com.au",
+                            )
+                        );
+                        $result = curl_exec($curl);
+                        curl_close ($curl);
+
+                        $result = json_decode($result);
+                        $assignment_byID = $result->assignment->result;
+                        
+                        if(count($assignment_byID->agreements) > 1){
+                            if($assignment_byID->agreements[0]->templateName == "System Owner" ){
+                                if($assignment_byID->agreements[1]->status == 'accepted'){
+                                    //mail cho owner
+                                    $email_type[$issue_id] = 'owner';
+                                    continue;
+                                }else{
+                                    //mail cho installer
+                                    $email_type[$issue_id] = 'installer';
+                                    continue;
+                                }
+                            }else{
+                                if($assignment_byID->agreements[0]->status == 'accepted'){
+                                    //mail cho owner
+                                    $email_type[$issue_id] = 'owner';
+                                    continue;
+                                }else{
+                                    $email_type[$issue_id] = 'installer';
+                                    //mail cho installer
+                                    continue;
+                                }
+                            }
+                        }else{
+                            $email_type[$issue_id] = 'owner';
+                            // mail cho owner
+                            continue;
+                        }
+                    }else{
+                        $email_type[$issue_id] = 'owner';
+                    // mail cho owner
+                    }
+                }
+
+                //code send email
+
+                //code send email
+                $query = "SELECT aos_invoices.id,aos_invoices_cstm.stc_aggregator_serial_c,aos_invoices_cstm.geo_email_sent_date_c,aos_invoices_cstm.send_geo_email_status_c FROM aos_invoices INNER JOIN aos_invoices_cstm ON aos_invoices.id = aos_invoices_cstm.id_c
+                                                WHERE aos_invoices_cstm.stc_aggregator_serial_c IN ('". implode("','",$issue_id_arr) . "')  
+                                                AND  aos_invoices.deleted = 0";
+                $db  = DBManagerFactory::getInstance();
+
+                $ret = $db->query($query);
+                if($ret->num_rows >0 ){
+                    while($row = $db->fetchByAssoc($ret)){
+                        if($email_type[$row['stc_aggregator_serial_c']] == 'owner'){
+                            if($row['send_geo_email_status_c'] == 'pending'){
+                                //send email for owner
+                                config_sendGeoEmail($row['id'],'owner');
+                            }elseif($row['send_geo_email_status_c'] == 'sent'){
+                                if(is_null($row['send_geo_email_status_c']) || $row['send_geo_email_status_c'] == ''){
+                                    continue;
+                                }
+                                if((time() - strtotime($row['geo_email_sent_date_c']))/60/60 >= 24){
+                                    config_sendGeoEmail($row['id'],'owner');
+                                }
+                            }
+                            
+                        }else{
+                            //send email for installer
+                            config_sendGeoEmail($row['id'],'installer');
+                        }
+                    }
+                }
+                die();
+            }
+        }
+    }
+}
+
+function customReplaceEmailVariables(Email $email, $request)
+{
+
+    /**
+     * @var EmailTemplate $emailTemplate
+     */
+    $emailTemplate = BeanFactory::getBean(
+        'EmailTemplates',
+        isset($request['emails_email_templates_idb']) ?
+            $request['emails_email_templates_idb'] :
+            null
+    );
+    //thienpb fix here
+    $emailTemplate->subject = str_replace("STCs/VEECs",$request['geo_name'],$emailTemplate->subject);
+    $emailTemplate->subject = str_replace("\$productType",$request['productType'],$emailTemplate->subject);
+    $emailTemplate->subject = str_replace("\$aos_invoices_name",$request['aos_invoices_name'],$emailTemplate->subject);
+
+    $emailTemplate->body = str_replace("STCs/VEECs",$request['geo_name'],$emailTemplate->body);
+    $emailTemplate->body_html = str_replace("STCs/VEECs",$request['geo_name'],$emailTemplate->body_html);
+
+    $email->name = $emailTemplate->subject;
+    $email->description_html = $emailTemplate->body_html;
+    $email->description = $emailTemplate->body;
+
+   
+    
+    $email->description_html = str_replace("\$lead_first_name", $request['lead_first_name'] , $email->description_html);
+    $email->description_html = str_replace("\$productType", $request['productType'] , $email->description_html);
+
+    $email->description = strip_tags($email->description_html);
+
+    return $email;
+}
+
+function config_sendGeoEmail($invoice_id,$email_type){
+
+    $account_id = '';
+    $product_type = '';
+    $from_address = '';
+    $db  = DBManagerFactory::getInstance();
+
+
+    $invoice = new AOS_Invoices();
+    $invoice->retrieve($invoice_id);
+
+    if(!isset($invoice->id) || $invoice->id == "") {
+        die();
+    }
+
+
+    $from_address = "PureElectric Accounts - PureElectric &lt;accounts@pure-electric.com.au&gt;";
+
+    $account = new Account();
+    if($account_id == "") {
+        $account_id = $invoice->billing_account_id;
+    }
+    $account = $account->retrieve($account_id);
+
+    //thienpb get product name and compare
+
+    $sql = "SELECT aos_products_quotes.name FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoice->id."' AND deleted = 0";
+    $result = $db->query($sql);
+
+    $isSTC = false;
+    $isVEEC = false;
+    $geo_name = '';
+    while($row = $db->fetchByAssoc($result)){
+        if(strpos($row['name'],'STC') !== false){
+            $isSTC = true;
+        }
+        if(strpos($row['name'],'VEEC') !== false){
+            $isVEEC = true;
+        }
+    }
+
+    if($isSTC == true && $isVEEC == true){
+        $geo_name = "STCs/VEECs";
+    }else if($isSTC){
+        $geo_name = "STCs";
+    }else if($isVEEC){
+        $geo_name = "VEECs";
+    }else{
+        $geo_name ='';
+    }
+    //end
+    $sea = new SugarEmailAddress; 
+    // Grab the primary address for the given record represented by the $bean object
+    $primary = $sea->getPrimaryAddress($account);
+
+    //thien fix
+    $query_groupname = "SELECT aos_line_item_groups.name FROM aos_line_item_groups WHERE parent_id = '".$invoice_id."' AND deleted = 0 LIMIT 1";
+    $ret_groupname = $db->query($query_groupname);
+    if($ret_groupname->num_rows >0){
+        $row_groupname = $db->fetchByAssoc($ret_groupname);
+        $productType = strtolower($row_groupname['name']);
+        
+        if(strpos($productType,'sanden') !== false){
+            $product_type = 'Sanden';
+        }else if(strpos($productType,'daikin') !==false){
+            $product_type = 'Daikin';
+        }else{
+            $product_type = '';
+        }
+    }
+    $temp_request = array(
+        "module" => "Emails",
+        "action" => "send",
+        "record" => "",
+        "type" => "out",
+        "send" => 1,
+        "inbound_email_id" => ($invoice->assigned_user_id == "8d159972-b7ea-8cf9-c9d2-56958d05485e") ? "8dab4c79-32d8-0a26-f471-59f1c4e037cf" : "58cceed9-3dd3-d0b5-43b2-59f1c80e3869",
+        "emails_email_templates_name" => "CLIENT GEO STCs/VEECs Contractor Email Follow Up",
+        "emails_email_templates_idb" => "acd0d03e-e494-d298-79ce-5a057236fb84",
+        "parent_type" => "Accounts",
+        "parent_name" => $account->name,
+        "parent_id" => $account->id,
+        "from_addr" => $from_address,
+        "to_addrs_names" => $account->name . "  <".$primary.">",//"binhdigipro@gmail.com",//$lead->email1,
+        "cc_addrs_names" => "info@pure-electric.com.au",
+        "bcc_addrs_names" => "binh.nguyen@pure-electric.com.au, paul.szuster@pure-electric.com.au, matthew.wright@pure-electric.com.au",
+        "is_only_plain_text" => false,
+        "aos_invoices_name" => $invoice->name,
+        "lead_first_name"=> current(explode(' ',$account->name)),
+        "geo_name" => $geo_name,
+        "productType" => $product_type,
+        
+    );
+    $emailBean = new Email();
+    $emailBean = $emailBean->populateBeanFromRequest($emailBean, $temp_request);
+    $inboundEmailAccount = new InboundEmail();
+    $inboundEmailAccount->retrieve($temp_request['inbound_email_id']);
+    
+    $emailBean->mailbox_id = "b4fc56e6-6985-f126-af5f-5aa8c594e7fd";// Account email;
+
+    // parse and replace bean variables
+    $emailBean = customReplaceEmailVariables($emailBean, $temp_request);
+    // Signature
+    $matthew_id = "8d159972-b7ea-8cf9-c9d2-56958d05485e";
+    $paul_id = "61e04d4b-86ef-00f2-c669-579eb1bb58fa";
+    
+    if($invoice->assigned_user_id != ''){
+        $current_user = new User();
+        $invoice->retrieve($invoice->assigned_user_id);
+        
+    }else{
+        $current_user->sms_signature_c = '';
+    }
+
+    $smsTemplateID = '5fcde64f-63ac-dc94-21fb-5e5ef5cf4c70';
+    $smsTemplate = BeanFactory::getBean(
+        'pe_smstemplate',
+        $smsTemplateID
+    );
+    
+    $contact = new Contact();
+    $contact_id = $invoice->billing_contact_id; 
+    $contact = $contact->retrieve($contact_id);
+    $sms_body =  $smsTemplate->body_c;
+    $sms_body = str_replace("\$first_name", $contact->first_name, $sms_body);
+    $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+    $phone_number = preg_replace("/^61/", "+61", $phone_number);
+    $emailBean->number_client = $phone_number;
+    $emailBean->sms_message = strip_tags(trim(html_entity_decode($sms_body.$current_user->sms_signature_c,ENT_QUOTES)));
+
+    $emailBean->save();
+    $description_html_save = $emailBean->description_html;
+    $email_edit_link = "<a href='https://suitecrm.pure-electric.com.au/index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=AOS_Invoices&return_action=DetailView&return_action=DetailView&record=".$emailBean->id.'&email_template_id=acd0d03e-e494-d298-79ce-5a057236fb84'.'&sms_template_id='.$smsTemplateID."'>Edit Email Link</a><br/>";
+    $GEO_link = "<a href='https://geocreation.com.au/assignments/".$invoice->stc_aggregator_serial_c."/edit'>GEO Link</a><br/>";
+    $emailBean->description_html = $email_edit_link.$GEO_link.$emailBean->description_html;
+    //VUT - Subject email GEO "PureElectric Geo Admin STCs/VEECs Client Approval - contact_fullname + city + state + geo number"
+        if ($isSTC == true && $isVEEC == false) {
+            $contact = new Contact();
+            $contact_id = $invoice->billing_contact_id; 
+            $contact = $contact->retrieve($contact_id);
+            $emailBean->name = $emailBean->name.' - '.$contact->first_name.' '.$contact->last_name.' '.$contact->primary_address_city.' '.$contact->primary_address_state.' '.$invoice->stc_aggregator_serial_c; 
+        }    
+    //VUT-end
+    $emailToSend = clone $emailBean;
+    $emailToSend->mailbox_id = "e139bac0-4242-ae27-3a90-5bcd22e4e968";
+    $emailToSend->to_addrs_arr = array(array("email"=>"nguyenphudung93.dn@gmail.com"));
+
+    if ( $emailToSend->send()) {
+        $emailBean->status = 'sent';
+        $emailBean->description_html = preg_replace("/<a href=[^>]+Edit Email Link</a><br/>", "", $emailBean->description_html);
+         // $emailBean->description_html = preg_replace("/&lt;div dir="ltr">PureElectric Accounts class="CToWUd"></a></div></div></div>/", "", $emailBean->description_html);
+        $emailBean->to_addrs = $account->name . "  <".$primary.">";
+        $emailBean->description_html =$description_html_save;
+        $emailBean->save();
+
+        if($email_type == 'owner'){
+            $invoice->send_geo_email_status_c = 'sent';
+            $dateAUS = date('Y-m-d H:i:s', time());
+            $invoice->geo_email_sent_date_c = $dateAUS;
+            $invoice->save();
+        }
+    }
+}
+die;
+$db = DBManagerFactory::getInstance();
+$email = 'sophia.samuel@yahoo.com.au';
+$sql = "SELECT ear.bean_id AS id , bean_module AS module FROM email_addresses ea
+        RIGHT JOIN email_addr_bean_rel ear ON ear.email_address_id = ea.id
+        WHERE 1=1 
+        AND ea.deleted  != 1 AND ear.deleted != 1
+        AND LOWER(replace(ea.email_address, '.', '')) LIKE LOWER(replace('".$email."', '.', ''))";
+
+$ret = $db->query($sql);
+
+while ($row = $db->fetchByAssoc($ret)) {
+    $lookup_result[] = $row;
+}
+if(count($lookup_result)){
+
+    
+    $db = DBManagerFactory::getInstance();
+    $quotes = array();
+    $invoices = array();
+    foreach($lookup_result as $res){
+        $crm_links .= '<a class="link-button buttons" href="https://suitecrm.pure-electric.com.au/index.php?module='.$res['module'].'&action=EditView&record='.$res['id'] .'">'.$res['module']."</a>";
+        if($res['module'] == "Leads"){
+            $lead = new Lead();
+            $lead->retrieve($res['id']);
+
+            if(isset($lead->email1) && $lead->email1!= ""){
+                //<a target="_blank" href="https://mail.google.com/#search/fraserwikner%40hotmail.com">GM Search</a>
+                $crm_links .= '<a class="link-button buttons" href="https://mail.google.com/#search/'.$lead->email1.'"> GM Search</a>';
+                $crm_links .= '<a class="link-button buttons" href="http://message.pure-electric.com.au/#'.  preg_replace("/^0/", "61", preg_replace('/\D/', '', $lead->phone_work)).'">SMS Link</a>';
+            }
+            $bean_quote = new AOS_Quotes();
+            $bean_quote->retrieve( $lead->create_solar_quote_num_c);
+            if($bean_quote->id != '') {
+                $number_lead = $bean_quote->solargain_lead_number_c;
+                if(isset($bean_quote->solargain_lead_number_c) && $bean_quote->solargain_lead_number_c!= ""){
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/lead/edit/'.$bean_quote->solargain_lead_number_c.'">SG Lead</a>';
+                }
+                if(isset($bean_quote->solargain_quote_number_c) && $bean_quote->solargain_quote_number_c!= ""){
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_quote_number_c.'">SG Quote</a>';
+                }
+                if(isset($bean_quote->solargain_tesla_quote_number_c) && $bean_quote->solargain_tesla_quote_number_c!= ""){
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_tesla_quote_number_c.'">SG Quote</a>';
+                }
+            } 
+
+
+            //quote Suitecrm solar tesla 
+            $bean_quote = new AOS_Quotes();
+            $bean_quote->retrieve( $lead->create_tesla_quote_num_c);
+            if($bean_quote->id != '') {
+                $number_lead = $bean_quote->solargain_lead_number_c;
+                if(isset($bean_quote->solargain_lead_number_c) && $bean_quote->solargain_lead_number_c!= ""){
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/lead/edit/'.$bean_quote->solargain_lead_number_c.'">SG Lead</a>';
+                }
+                if(isset($bean_quote->solargain_quote_number_c) && $bean_quote->solargain_quote_number_c!= ""){
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_quote_number_c.'">SG Quote</a>';
+                }
+                if(isset($bean_quote->solargain_tesla_quote_number_c) && $bean_quote->solargain_tesla_quote_number_c!= ""){
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_tesla_quote_number_c.'">SG Quote</a>';
+                }
+                } 
+
+            if(isset($lead->phone_work) && $lead->phone_work != ""){
+                $crm_links .= '<a class="link-button buttons" href="http://message.pure-electric.com.au/#'.preg_replace("/^0/", "61", preg_replace('/\D/', '', $lead->phone_work)).'">P.Work('.preg_replace("/^0/", "61", preg_replace('/\D/', '', $lead->phone_work)).')</a>';
+            } else if(isset($lead->phone_mobile) && $lead->phone_mobile != ""){
+                $crm_links .= '<a class="link-button buttons" href="http://message.pure-electric.com.au/#'.preg_replace("/^0/", "61", preg_replace('/\D/', '', $lead->phone_mobile)).'">P.Mobile('.preg_replace("/^0/", "61", preg_replace('/\D/', '', $lead->phone_mobile)).')</a>';
+            }           
+            /*if(isset($lead->primary_address_postalcode) && $lead->primary_address_postalcode != ""){
+                    $crm_links .= " ".$lead->primary_address_street. " ".
+                                            $lead->primary_address_city. " ".
+                                            $lead->primary_address_state. " ".
+                                            $lead->primary_address_postalcode .PHP_EOL;
+            }*/
+
+            if(isset($lead->id) && $lead->id != ""){
+                    $crm_links .= '<a class="link-button buttons" href="https://suitecrm.pure-electric.com.au/index.php?entryPoint=customCreateAcceptanceLink&lead_id='.$lead->id.'">Acceptance Email</a>';
+                    //thienpb code - add link forward acceptance email to sg sam Forward Acceptance Email
+                    $crm_links .= '<a class="link-button buttons" href="https://suitecrm.pure-electric.com.au/index.php?entryPoint=customCreateForwardAcceptanceLink&lead_id='.$lead->id.'">Forward Acceptance Email</a>';
+            }
+            //primary_address_city
+        }
+        if($res['module'] == 'Accounts'){            
+            $sql = "SELECT id FROM aos_quotes WHERE billing_account_id='".$res['id']."'";
+            $ret = $db->query($sql);
+            if($ret->num_rows >0){
+                while($row = $db->fetchByAssoc($ret)){
+                    if(!in_array($row,$quotes)){
+                        $quotes[] = $row;
+                    }
+                }
+            }
+            $sql = "SELECT id FROM aos_invoices WHERE billing_account_id='".$res['id']."'";
+            $ret = $db->query($sql);
+            if($ret->num_rows >0){
+                while($row = $db->fetchByAssoc($ret)){
+                    if(!in_array($row,$invoices)){
+                        $invoices[] = $row;
+                    }
+                }
+            }
+        }
+        if($res['module'] == "Contacts"){
+            $sql = "SELECT id FROM aos_quotes WHERE billing_contact_id = '".$res['id']."'";
+            $ret = $db->query($sql);
+            if($ret->num_rows >0){
+                while($row = $db->fetchByAssoc($ret)){
+                    if(!in_array($row,$quotes)){
+                        $quotes[] = $row;
+                    }
+                }
+            }
+            $sql = "SELECT id FROM aos_invoices WHERE billing_contact_id = '".$res['id']."'";
+            $ret = $db->query($sql);
+            if($ret->num_rows >0){
+                while($row = $db->fetchByAssoc($ret)){
+                    if(!in_array($row,$invoices)){
+                        $invoices[] = $row;
+                    }
+                }
+            }
+        }
+        if($res['module'] == "PO_purchase_order"){
+            $sql = "SELECT id FROM aos_invoices WHERE billing_contact_id = '".$res['id']."'";
+            $ret = $db->query($sql);
+            if($ret->num_rows >0){
+                while($row = $db->fetchByAssoc($ret)){
+                    if(!in_array($row,$invoices)){
+                        $PO_invoices[] = $row;
+                    }
+                }
+            }
+        }
+    }
+    if(count($PO_invoices) >0){
+        $group_name ='';
+        foreach ($PO_invoices as $res_po_inv){
+            $invoice_po = new AOS_Invoices();
+            $invoice_po->retrieve($res_po_inv['id']);
+            if(isset($invoice_po->id) && $invoice_po->id != "")
+                $crm_links .= 
+                    '<a class="link-button buttons" href="https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record='.$invoice_po->id.'">Invoices</a>';
+                $crm_links .= 
+                    '<a class="link-button buttons" href="https://suitecrm.pure-electric.com.au/index.php?module=PO_purchase_order&action=EditView&record='.$invoice_po->plumber_po_c.'">Link PO</a>';
+        }
+    }
+    if(count($quotes) >0){
+        $group_name ='';
+        foreach ($quotes as $res_qt){
+            $quote = new AOS_Quotes();
+            $quote->retrieve($res_qt['id']);
+            $sql = "SELECT name FROM aos_line_item_groups WHERE parent_id = '".$quote->id."' AND parent_type = 'AOS_Quotes'" ;
+            $ret = $db->query($sql);
+            $row = $db->fetchByAssoc($ret);
+            if(strpos(strtolower($row['name']),'daikin') !== false){
+                $group_name = ' DAIKIN';
+            }else if(strpos(strtolower($row['name']),'sanden') !== false){
+                $group_name = ' SANDEN';
+            }else if(strpos(strtolower( $quote->quote_type_c),'solar') !== false){
+                $group_name =' SOLAR';
+            }
+
+            $crm_links .= /*'PEQ '.$quote->number.$group_name.":*/ 
+                '<a class="link-button buttons" href="https://suitecrm.pure-electric.com.au/index.php?module=AOS_Quotes&action=EditView&record='.$quote->id.'">PEQ '.$quote->number.$group_name.'</a>';
+
+        }
+    }
+    if(count($invoices) >0){
+        $group_name ='';
+        foreach ($invoices as $res_inv){
+            $invoice_new = new AOS_Invoices();
+            $invoice_new->retrieve($res_inv['id']);
+            if(isset($invoice_new->id) && $invoice_new->id != "")
+            $sql = "SELECT name FROM aos_line_item_groups WHERE parent_id = '".$invoice_new->id."' AND parent_type = 'AOS_Invoices'" ;
+            $ret = $db->query($sql);
+            $row = $db->fetchByAssoc($ret);
+            if(strpos(strtolower($row['name']),'daikin') !== false){
+                $group_name = ' DAIKIN';
+            }else if(strpos(strtolower($row['name']),'sanden') !== false){
+                $group_name = ' SANDEN';
+            }else if(strpos(strtolower( $quote->quote_type_c),'solar') !== false){
+                $group_name =' SOLAR';
+            }
+
+            $crm_links .= /*'PEINV '.$invoice_new->number.": */
+                '<a class="link-button buttons" href="https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record='.$invoice_new->id.'">PEINV '.$invoice_new->number.$group_name.'</a>';
+        }
+    }
+}
+
+echo $crm_links;
+die();
+
+//update profit
+$db = DBManagerFactory::getInstance();
+$query = 'SELECT aos_invoices.id as id from aos_invoices 
+INNER JOIN aos_invoices_cstm ON aos_invoices.id = aos_invoices_cstm.id_c
+WHERE aos_invoices.deleted=0 AND aos_invoices_cstm.quote_type_c ="quote_type_sanden" AND aos_invoices.status="Paid"';
+$result = $db->query($query);
+if($result->num_rows > 0){
+    while($row =  $db->fetchByAssoc($result)){
+        $InvoiceID = $row['id'];
+        $Invoice = new AOS_Invoices();
+        $Invoice->retrieve($InvoiceID);
+        if($Invoice->id != ''){
+            $subtotal_invoice = get_subtotal_amount($Invoice);
+
+            $Plumber_PO = new PO_purchase_order();
+            $Plumber_PO->retrieve(trim($Invoice->plumber_po_c));
+            $subtotal_plumber_po = get_subtotal_amount($Plumber_PO);
+            
+            $Electric_PO = new PO_purchase_order();
+            $Electric_PO->retrieve(trim($Invoice->electrical_po_c));
+            $subtotal_electrical_po = get_subtotal_amount($Electric_PO);
+            
+            $subtotal_stc = 0;
+            if($Invoice->stc_aggregator_serial_c != ''){
+                $subtotal_stc = get_subtotal_STC($Invoice->stc_aggregator_serial_c);
+            }
+            
+            $group_po = $Invoice->get_linked_beans('aos_invoices_po_purchase_order_1','PO_purchase_order');
+            $array_po_plum_and_elec = [$Invoice->electrical_po_c,$Invoice->plumber_po_c];
+            $Sanden_PO = null;
+            if(count($group_po)> 0){
+                for($i=0;$i < count($group_po);$i++){
+                    if(!in_array($group_po[$i],$array_po_plum_and_elec)){
+                        $Sanden_PO = $group_po[$i];
+                        break;
+                    }
+                }
+            }
+            if( $Sanden_PO == null){
+                $subtotal_sanden_po = 0;
+            }else{
+                $subtotal_sanden_po = get_subtotal_amount($Sanden_PO);
+            }
+       
+            $subtotal_total_cost = $subtotal_plumber_po + $subtotal_electrical_po + $subtotal_sanden_po;
+            $subtotal_total_revenue = $subtotal_invoice + $subtotal_stc;
+            $profit = $subtotal_total_revenue - $subtotal_total_cost;
+            
+            if($subtotal_total_cost != 0 ){
+                $gp = number_format($profit/$subtotal_total_cost * 100, 1) ;
+            }else {
+                $gp= 0;
+            }
+            $Invoice->total_revenue_c =  number_format($subtotal_total_revenue,2);
+            $Invoice->total_cost_c =  number_format($subtotal_total_cost,2);
+            $Invoice->gross_profit_c =  number_format($profit,2);
+            $Invoice->gross_profit_percent_c =  $gp .'%';
+            //old field 
+            $Invoice->profit_c =  number_format($profit,2);
+            $Invoice->gp_c =  $gp .'%';
+            $Invoice->subtotal_c =  number_format($subtotal_total_revenue,2);
+            $Invoice->save();
+            echo $InvoiceID .'<br>';
+        }
+
+    }
+}
+
+function get_subtotal_STC($assignment){
+    date_default_timezone_set('Africa/Lagos');
+    set_time_limit(0);
+    ini_set('memory_limit', '-1');
+    $subtotal_stc = 0;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://cognito-idp.ap-southeast-2.amazonaws.com/');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, '{"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"1r8f4rahaq3ehkastcicb70th4","AuthParameters":{"USERNAME":"accounts@pure-electric.com.au","PASSWORD":"gPureandTrue2019*"},"ClientMetadata":{}}');
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = 'Authority: cognito-idp.ap-southeast-2.amazonaws.com';
+    $headers[] = 'Pragma: no-cache';
+    $headers[] = 'Cache-Control: no-cache';
+    $headers[] = 'Origin: https://geocreation.com.au';
+    $headers[] = 'X-Amz-Target: AWSCognitoIdentityProviderService.InitiateAuth';
+    $headers[] = 'X-Amz-User-Agent: aws-amplify/0.1.x js';
+    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36';
+    $headers[] = 'Content-Type: application/x-amz-json-1.1';
+    $headers[] = 'Accept: */*';
+    $headers[] = 'Sec-Fetch-Site: cross-site';
+    $headers[] = 'Sec-Fetch-Mode: cors';
+    $headers[] = 'Referer: https://geocreation.com.au/';
+    $headers[] = 'Accept-Encoding: gzip, deflate, br';
+    $headers[] = 'Accept-Language: en-US,en;q=0.9';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    $result_data = json_decode($result);
+    $accesstoken =  $result_data->AuthenticationResult->AccessToken;
+    $RefreshToken = $result_data->AuthenticationResult->RefreshToken;
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://cognito-idp.ap-southeast-2.amazonaws.com/');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, '{"AccessToken":'.$accesstoken.'"}');
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = 'Authority: cognito-idp.ap-southeast-2.amazonaws.com';
+    $headers[] = 'Pragma: no-cache';
+    $headers[] = 'Cache-Control: no-cache';
+    $headers[] = 'Origin: https://geocreation.com.au';
+    $headers[] = 'X-Amz-Target: AWSCognitoIdentityProviderService.GetUser';
+    $headers[] = 'X-Amz-User-Agent: aws-amplify/0.1.x js';
+    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36';
+    $headers[] = 'Content-Type: application/x-amz-json-1.1';
+    $headers[] = 'Accept: */*';
+    $headers[] = 'Sec-Fetch-Site: cross-site';
+    $headers[] = 'Sec-Fetch-Mode: cors';
+    $headers[] = 'Referer: https://geocreation.com.au/';
+    $headers[] = 'Accept-Encoding: gzip, deflate, br';
+    $headers[] = 'Accept-Language: en-US,en;q=0.9';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    $param = array (
+        'ClientId' => '1r8f4rahaq3ehkastcicb70th4',
+        'AuthFlow' => 'REFRESH_TOKEN_AUTH',
+        'AuthParameters' => 
+        array (
+        'REFRESH_TOKEN' => $RefreshToken,
+        'DEVICE_KEY' => NULL,
+        ),
+    );
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://cognito-idp.ap-southeast-2.amazonaws.com/');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = 'Authority: cognito-idp.ap-southeast-2.amazonaws.com';
+    $headers[] = 'Pragma: no-cache';
+    $headers[] = 'Cache-Control: no-cache';
+    $headers[] = 'Origin: https://geocreation.com.au';
+    $headers[] = 'X-Amz-Target: AWSCognitoIdentityProviderService.InitiateAuth';
+    $headers[] = 'X-Amz-User-Agent: aws-amplify/0.1.x js';
+    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36';
+    $headers[] = 'Content-Type: application/x-amz-json-1.1';
+    $headers[] = 'Accept: */*';
+    $headers[] = 'Sec-Fetch-Site: cross-site';
+    $headers[] = 'Sec-Fetch-Mode: cors';
+    $headers[] = 'Referer: https://geocreation.com.au/';
+    $headers[] = 'Accept-Encoding: gzip, deflate, br';
+    $headers[] = 'Accept-Language: en-US,en;q=0.9';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    $IdToken =  $result_data->AuthenticationResult->IdToken;
+
+    
+    // Get JSON of assignment by assignment ID
+    $curl = curl_init();
+    $url = 'https://api.geocreation.com.au/api/assignments/'.$assignment;
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+
+    curl_setopt($curl, CURLOPT_ENCODING, 'gzip, deflate');
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            "Host: api.geocreation.com.au",
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Content-type: application/json; charset=UTF-8",
+            "Accept: */*",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding:   gzip, deflate, br",
+            "Connection: keep-alive",
+            "Authorization: token ".$IdToken,
+            "Referer: https://geocreation.com.au/assignments/$assignment/edit",
+            "Origin: https://geocreation.com.au",
+        )
+    );
+
+    $result = curl_exec($curl);
+    curl_close ($curl);
+
+    if($result != false){
+        $result = json_decode($result);
+        $assignment_byID = $result->assignment->result;
+        $address = $assignment_byID->commonSection->activityAddress->displayAddress;
+        $activityDate = $assignment_byID->commonSection->activityDate;
+        $subtotal_stc = $result->assignment->result->totalValue;
+    }
+
+    return $subtotal_stc;
+}
+
+function get_subtotal_amount($bean){
+    $subtotal_amount = $bean->subtotal_amount;
+    if($subtotal_amount == '') {
+        $subtotal_amount = 0;
+    } else{
+        $subtotal_amount = substr($subtotal_amount,0,-4);
+    } 
+    return  $subtotal_amount;
+}
+die();
+/**Update field number in Call */
+$db = DBManagerFactory::getInstance();
+$sql_set_count = "SET @count = 0;";
+$result = $db->query($sql_set_count);
+$sql_number = "UPDATE calls SET number = @count:=@count+1 ORDER BY date_entered ASC";
+$result = $db->query($sql_number);
+
+die();
+
+$db = DBManagerFactory::getInstance();
+$query = 'SELECT * from aos_quotes INNER JOIN aos_quotes_cstm ON aos_quotes.id = aos_quotes_cstm.id_c WHERE aos_quotes.date_entered > DATE_SUB(now(), INTERVAL 2 MONTH) AND (aos_quotes_cstm.pre_install_photos_c IS NULL or aos_quotes_cstm.pre_install_photos_c = "") AND aos_quotes.deleted = 0 ORDER BY aos_quotes.date_entered DESC';
+$result = $db->query($query);
+if($result->num_rows > 0){
+    while($row =  $db->fetchByAssoc($result)){
+        $uuid = md5(uniqid(mt_rand(), true));
+        $guid =  substr($uuid,0,8)."-".
+                substr($uuid,8,4)."-".
+                substr($uuid,12,4)."-".
+                substr($uuid,16,4)."-".
+                substr($uuid,20,12);
+        $query_update = 'UPDATE  aos_quotes_cstm set pre_install_photos_c = "'.$guid.'" WHERE id_c = "'.$row['id'].'"' ;
+        $db->query($query_update);
+        break;
+    }
+}
+
+$db = DBManagerFactory::getInstance();
+$query = 'SELECT * from leads INNER JOIN leads_cstm ON leads.id = leads_cstm.id_c WHERE leads.date_entered > DATE_SUB(now(), INTERVAL 2 MONTH) AND (leads_cstm.installation_pictures_c IS NULL or leads_cstm.installation_pictures_c = "") AND leads.deleted = 0 ORDER BY leads.date_entered DESC';
+$result = $db->query($query);
+if($result->num_rows > 0){
+    while($row =  $db->fetchByAssoc($result)){
+        $uuid = md5(uniqid(mt_rand(), true));
+        $guid =  substr($uuid,0,8)."-".
+                substr($uuid,8,4)."-".
+                substr($uuid,12,4)."-".
+                substr($uuid,16,4)."-".
+                substr($uuid,20,12);
+        $query_update = 'UPDATE  leads_cstm set installation_pictures_c = "'.$guid.'" WHERE id_c = "'.$row['id'].'"' ;
+        $db->query($query_update);
+        break;
+    }
+}
+die;
+die;
+ $db = DBManagerFactory::getInstance();
+ $sql = "SELECT aos_line_item_groups.id,aos_line_item_groups.name FROM `aos_line_item_groups` WHERE parent_id = '184c35e5-cf89-404a-02b2-5e7951f3cf06'";
+ $result = $db->query($sql);
+ while($row =  $db->fetchByAssoc($result)){
+    print_r($row);
+ }
+
+//  echo "</br>";
+
+//  $sql_product = "SELECT * FROM aos_products_quotes WHERE parent_type = 'PO_purchase_order' AND deleted = 0 AND group_id = '59c97ed6-03bf-5d16-b6bd-5e78573184c9' ORDER BY number";
+//  $result = $db->query($sql_product);
+//  while($row =  $db->fetchByAssoc($result)){
+//     print_r($row);
+//  }
+
+//  echo "</br>";
+
+//  $sql_product = "SELECT * FROM aos_products_quotes WHERE parent_type = 'PO_purchase_order' AND deleted = 0 AND group_id = '5db7f5c9-aacd-169f-6e4c-5e7857137a25' ORDER BY number";
+//  $result = $db->query($sql_product);
+//  while($row =  $db->fetchByAssoc($result)){
+//     print_r($row);
+ 
+//  }
+//  echo "</br>";
+
+//  $sql_product = "SELECT * FROM aos_products_quotes WHERE parent_type = 'PO_purchase_order' AND deleted = 0 AND group_id = '6182bab2-815c-6335-dfa5-5e7857bcaaf9' ORDER BY number";
+//  $result = $db->query($sql_product);
+//  while($row =  $db->fetchByAssoc($result)){
+//     print_r($row);
+//  }
+
+
+
+ //$sql_line_item = "SELECT aos_line_item_groups.id,aos_line_item_groups.name FROM aos_line_item_groups INNER JOIN po_purchase_order_pe_warehouse_log_1_c po ON aos_line_item_groups.parent_id = po.po_purchase_order_pe_warehouse_log_1pe_warehouse_log_idb WHERE parent_type = 'pe_warehouse_log' AND aos_line_item_groups.deleted = 0 AND aos_line_item_groups.parent_id = '$record' AND po.po_purchase_order_pe_warehouse_log_1po_purchase_order_ida = '$po_id' AND po.deleted = 0";
+
+// $sql = "UPDATE aos_line_item_groups SET deleted = '1' WHERE aos_line_item_groups.id = '59c97ed6-03bf-5d16-b6bd-5e78573184c9'";
+// $db->query($sql);
+// $sql = "UPDATE aos_line_item_groups SET deleted = '1' WHERE aos_line_item_groups.id = '5db7f5c9-aacd-169f-6e4c-5e7857137a25'";
+// $db->query($sql);
+
+    // $PO_number = $_GET['PO_number'];
+    // $po_id = $_GET['PO_ID'];
+    // $record = $_GET['record']; 
+
+    // $po_name = '';
+    // // get info PO from id PO
+    // $PO_bean =  new PO_purchase_order();
+    // $PO_bean->retrieve($po_id);
+    // if($PO_bean->id != ''){
+    //     $PO_number = $PO_bean->number;
+    // }                   
+    // //get groups line item by po_id(logic for change or not change po_id)
+    // //$sql_line_item = "SELECT aos_line_item_groups.id,aos_line_item_groups.name FROM aos_line_item_groups  WHERE parent_type = 'pe_warehouse_log' AND aos_line_item_groups.deleted = 0 AND aos_line_item_groups.parent_id = '$record'";
+    // $sql_line_item = "SELECT aos_line_item_groups.id,aos_line_item_groups.name FROM aos_line_item_groups INNER JOIN po_purchase_order_pe_warehouse_log_1_c po ON aos_line_item_groups.parent_id = po.po_purchase_order_pe_warehouse_log_1pe_warehouse_log_idb WHERE parent_type = 'pe_warehouse_log' AND aos_line_item_groups.deleted = 0 AND aos_line_item_groups.parent_id = '$record' AND po.po_purchase_order_pe_warehouse_log_1po_purchase_order_ida = '$po_id' AND po.deleted = 0";
+    
+    // echo $sql_line_item;
+    // $result = $db->query($sql_line_item);
+    // while($row =  $db->fetchByAssoc($result)){
+    //     $groups[] = $row;
+    // }
+    // print_r($groups);
+
+
+
+die();
+ custom_send_message_gateway();
+function custom_send_message_gateway()
+{
+    $message_dir1 = '/var/www/message';
+    echo $message_dir1;
+    var_dump(check_exist_json_sms("/message"));
+    if(check_exist_json_sms("/message")){
+        autosendmail_notification("1");
+    }
+
+    // $sms_body1 = "This is test message from message 2";
+    // $client_number1 = '+61421616733';
+    // exec("cd ".$message_dir1."; php send-message.php sms ".$client_number1.' "'.$sms_body1.'"');
+    
+    $message_dir2 = '/var/www/message2';
+
+    if(check_exist_json_sms("/message2")){
+        autosendmail_notification("1");
+    }
+
+    // $sms_body2 = "This is test message from message 1";
+    // $client_number2 = '+61490942067';
+    // exec("cd ".$message_dir2."; php send-message.php sms ".$client_number2.' "'.$sms_body2.'"');
+    die;
+}
+function check_exist_json_sms($folder){
+    $check = false;
+    $folder_message = '/var/www/suitecrm'.'/..'.$folder.'/'.'messages/';
+    $allFiles = scandir($folder_message);
+    echo filemtime($folder_message);
+    echo  strtotime("-10 minutes");
+    if($allFiles !== false){
+        $files = array_diff($allFiles, array('.', '..', 'sent_backup'));
+        if(count($files) > 0){
+            foreach ($files as $file){
+                $file_timestamp = filemtime($folder_message.$file);
+                if(!isset($date_last)) {
+                    $date_last = $file_timestamp;
+                    echo  'a : '.$date_last;
+                }else if($file_timestamp < $date_last){
+                    $date_last = $file_timestamp;
+                    echo  'b : '.$date_last;
+                }
+            }
+            if($date_last >= strtotime("-10 minutes")){
+                $check = false;
+            }else{
+                $check = true;
+            }
+        }else{
+            $check = false;
+        }
+    }else{
+       $check = false;
+    }
+    return $check;
+}
+function autosendmail_notification($gateway){
+    
+    //config mail
+    $emailObj = new Email();
+    $defaults = $emailObj->getSystemDefaultEmail();
+    $mail = new SugarPHPMailer();
+    $mail->setMailerForSystem();
+    //$mail->From = "info@pure-electric.com.au";
+    $mail->From = 'thienpb89@gmail.com';
+    $mail->FromName = "PureElectric";
+    $mail->IsHTML(true);
+    $mail->ClearAllRecipients();
+    $mail->ClearReplyTos();
+    $mail->Subject = "Warning SMS GATEWAY ".$gateway." DOWN";
+    $mail->Body = "Warning SMS GATEWAY ".$gateway." DOWN";
+
+    //$mail->AddAddress("info@pure-electric.com.au");
+    $mail->AddAddress("thienpb89@gmail.com");
+    $mail->prepForOutbound();    
+    $mail->setMailerForSystem();   
+    $sent = $mail->send();
+}
+die;
+$db = DBManagerFactory::getInstance();
+$sql_set_count = "SET @count = 0;";
+$result = $db->query($sql_set_count);
+$sql_number = "UPDATE contacts SET number = @count:=@count+1 ORDER BY date_entered ASC ";
+$result = $db->query($sql_number);
+
+die(); 
+$AWS_ACCESS_KEY_ID = 'AKIAJG53TQTXLTGRNAVA';
+$AWS_SECRET_ACCESS_KEY = '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';
+
+$folder = dirname(__FILE__) .'/server/php/files/';
+$file_array = scandir($folder);
+$file_array = array_diff($file_array, array('.', '..'));
+foreach($file_array as $file){
+    $source_file =  $folder.$file;
+    if(is_dir($source_file) && $file != 'attachments'){
+        $modified = filemtime($source_file);
+        if(strtotime('-4 day') <= $modified){
+            $file_child_array = scandir($source_file);
+            $file_child_array = array_diff($file_child_array, array('.', '..'));
+            foreach($file_child_array as $file_child){
+                $source_child_file = $source_file.'/'.$file_child;
+                if(strtotime('-4 day') <= filemtime($source_child_file)){
+                    echo $source_child_file.'<br>';
+                    //echo 'AWS_ACCESS_KEY_ID='.$AWS_ACCESS_KEY_ID.' AWS_SECRET_ACCESS_KEY='.$AWS_SECRET_ACCESS_KEY.' aws s3 cp '.$source_child_file.' s3://'.$GLOBALS['BUCKET_NAME'].'/'.$file.'/'.$file_child;
+                    shell_exec('AWS_ACCESS_KEY_ID='.$AWS_ACCESS_KEY_ID.' AWS_SECRET_ACCESS_KEY='.$AWS_SECRET_ACCESS_KEY.' aws s3 cp /var/www/suitecrm/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$file.'/'.$file_child.' s3://files-bk/'.$file.'/'.$file_child);
+                }
+            }
+        }
+    }
+}
+
+
+die;
+
+die;
+$db = DBManagerFactory::getInstance();
+// Get id and file name as key=> value that parent is email template
+$sql = "
+SELECT id, filename FROM `notes` WHERE 1
+AND `parent_type` = 'Emails'
+AND parent_id IN ('7ec05348-7386-6d87-b40b-5aa0905177ca', '29c9f493-2b41-530b-fc8c-5694e1267eed', '2c6db0d1-6843-feb9-5583-5694e1f46257', 'acd0d03e-e494-d298-79ce-5a057236fb84', '61557a5b-c02e-4b48-8a19-5aacd5aee6b0', '5fe5259a-9fb3-b7a8-2473-5ae3eccd9c01', '2e166ef8-a8df-34e9-82d7-5694e1f008c3', '1a916e8d-db16-58d8-cbf8-59fc29f9e49f', 'e537912b-524c-4766-96d3-59cfa4ece333', '3c23be80-7d7c-54a8-1e35-5696387eab4d', 'c466d37b-2ac2-ce42-ba82-59e7e83f6e3b', '5a36a733-f6c1-39b3-a736-5a940feae542', '8d17bb23-939f-d480-8a75-5a940f8a7fe5', '30eab08a-bbd4-77c7-74fe-5694e1341f6f', 'acb8b967-6c65-4445-f464-59ffd089c3a8', '82675a55-a8ea-0439-7ad8-5af3b5b901e5', '6d1dbc2e-38f4-27d6-e08b-5694e1497038', '2361ca39-a862-e898-3cc7-5bb588b9adeb', '2b25ebd0-4c17-a3ca-d689-5694e1730700', 'c223decb-4033-e600-1841-5a00177bdf23', 'ec302586-cd96-e843-bd9b-5b25c5b0b321', '3742953d-1318-43cb-00e3-5bbaab707bcd', '180953f6-3dda-b10e-8f39-5bbbfe2bec38', 'd89d6ef0-411d-395a-710f-5bd15b3f34c0', '98ea8922-6a3f-42b0-e426-5bd15b13c7cb', '12fb3725-0581-cf2c-18ed-5bbbfe6b0089', '5ad80115-b756-ea3e-ca83-5abb005602bf')
+";
+
+$ret = $db->query($sql);
+$note_files = array();
+while($row = $db->fetchByAssoc($ret)){
+    $note_files[$row['filename']] = $row['id'];
+}
+
+
+// Tao mảng các file caanf sử lý 
+$remove_sql = "
+SELECT id, filename FROM `notes` WHERE 1
+AND filename IN 
+(
+    SELECT filename FROM `notes` WHERE 1
+    AND `parent_type` = 'Emails' 
+    AND parent_id IN ('7ec05348-7386-6d87-b40b-5aa0905177ca', '29c9f493-2b41-530b-fc8c-5694e1267eed', '2c6db0d1-6843-feb9-5583-5694e1f46257', 'acd0d03e-e494-d298-79ce-5a057236fb84', '61557a5b-c02e-4b48-8a19-5aacd5aee6b0', '5fe5259a-9fb3-b7a8-2473-5ae3eccd9c01', '2e166ef8-a8df-34e9-82d7-5694e1f008c3', '1a916e8d-db16-58d8-cbf8-59fc29f9e49f', 'e537912b-524c-4766-96d3-59cfa4ece333', '3c23be80-7d7c-54a8-1e35-5696387eab4d', 'c466d37b-2ac2-ce42-ba82-59e7e83f6e3b', '5a36a733-f6c1-39b3-a736-5a940feae542', '8d17bb23-939f-d480-8a75-5a940f8a7fe5', '30eab08a-bbd4-77c7-74fe-5694e1341f6f', 'acb8b967-6c65-4445-f464-59ffd089c3a8', '82675a55-a8ea-0439-7ad8-5af3b5b901e5', '6d1dbc2e-38f4-27d6-e08b-5694e1497038', '2361ca39-a862-e898-3cc7-5bb588b9adeb', '2b25ebd0-4c17-a3ca-d689-5694e1730700', 'c223decb-4033-e600-1841-5a00177bdf23', 'ec302586-cd96-e843-bd9b-5b25c5b0b321', '3742953d-1318-43cb-00e3-5bbaab707bcd', '180953f6-3dda-b10e-8f39-5bbbfe2bec38', 'd89d6ef0-411d-395a-710f-5bd15b3f34c0', '98ea8922-6a3f-42b0-e426-5bd15b13c7cb', '12fb3725-0581-cf2c-18ed-5bbbfe6b0089', '5ad80115-b756-ea3e-ca83-5abb005602bf')
+)
+AND parent_id NOT IN ('7ec05348-7386-6d87-b40b-5aa0905177ca', '29c9f493-2b41-530b-fc8c-5694e1267eed', '2c6db0d1-6843-feb9-5583-5694e1f46257', 'acd0d03e-e494-d298-79ce-5a057236fb84', '61557a5b-c02e-4b48-8a19-5aacd5aee6b0', '5fe5259a-9fb3-b7a8-2473-5ae3eccd9c01', '2e166ef8-a8df-34e9-82d7-5694e1f008c3', '1a916e8d-db16-58d8-cbf8-59fc29f9e49f', 'e537912b-524c-4766-96d3-59cfa4ece333', '3c23be80-7d7c-54a8-1e35-5696387eab4d', 'c466d37b-2ac2-ce42-ba82-59e7e83f6e3b', '5a36a733-f6c1-39b3-a736-5a940feae542', '8d17bb23-939f-d480-8a75-5a940f8a7fe5', '30eab08a-bbd4-77c7-74fe-5694e1341f6f', 'acb8b967-6c65-4445-f464-59ffd089c3a8', '82675a55-a8ea-0439-7ad8-5af3b5b901e5', '6d1dbc2e-38f4-27d6-e08b-5694e1497038', '2361ca39-a862-e898-3cc7-5bb588b9adeb', '2b25ebd0-4c17-a3ca-d689-5694e1730700', 'c223decb-4033-e600-1841-5a00177bdf23', 'ec302586-cd96-e843-bd9b-5b25c5b0b321', '3742953d-1318-43cb-00e3-5bbaab707bcd', '180953f6-3dda-b10e-8f39-5bbbfe2bec38', 'd89d6ef0-411d-395a-710f-5bd15b3f34c0', '98ea8922-6a3f-42b0-e426-5bd15b13c7cb', '12fb3725-0581-cf2c-18ed-5bbbfe6b0089', '5ad80115-b756-ea3e-ca83-5abb005602bf')
+AND `parent_type` = 'Emails'
+
+";
+
+$ret = $db->query($remove_sql);
+$file_need_remove = array();
+while($row = $db->fetchByAssoc($ret)){
+    $file_need_remove[$row['id']] = $row['filename'];
+    
+}
+echo "need remove";
+$file = 0;
+foreach($file_need_remove as $key => $file_remove){
+    $file ++;
+    $unlink = unlink("/var/www/suitecrm/upload/".$key );
+    echo "unlink ".$unlink.'<br>';
+    //$file_original = $note_files[$file_remove];
+    if(isset($note_files[$file_remove])){
+        echo "REmove". $note_files[$file_remove]."<br>";
+        echo "Inarray<br>";
+
+        if (!symlink("/var/www/suitecrm/upload/".$note_files[$file_remove], 
+        "/var/www/suitecrm/upload/".$key)) {
+            echo "fail";
+        }
+        echo $key;
+    }
+}
+
+echo "FILE: ".$file;
+
+die();
+
+
+$db = DBManagerFactory::getInstance();
+// Get id and file name as key=> value that parent is email template
+$sql = "
+SELECT leads.id as id FROM `leads` 
+LEFT JOIN `emails_beans` ON leads.id = emails_beans.bean_id
+LEFT JOIN `emails` ON emails.id = emails_beans.email_id
+WHERE leads.deleted = 0
+AND leads.status IN ('New', 'Assigned')
+AND emails.name LIKE '%Solar PV Powerstation%'
+AND emails.status = 'sent'
+GROUP BY leads.id
+";
+
+$ret = $db->query($sql);
+while($row = $db->fetchByAssoc($ret)){
+    $lead = new Lead();
+    $lead = $lead->retrieve($row['id']);
+    if($lead->id != '') {
+        $lead->status = 'Info_Pack_Sent';
+        $lead->save();
+    }
+    echo "<br><a href='/index.php?module=Leads&action=EditView&record=".$lead->id."' target='_blank'>".$lead->number."</a>";
+}
+die;
+/// REMOVE THE DUPLICATE FILE 
+date_default_timezone_set('Africa/Lagos');
+set_time_limit(0);
+ini_set('memory_limit', '-1');
+
+$db = DBManagerFactory::getInstance();
+$sql = "SELECT id,parent_id FROM aos_line_item_groups WHERE parent_type ='pe_warehouse_log' AND deleted = 0";
+$ret = $db->query($sql);
+$i=0;
+while($row = $db->fetchByAssoc($ret)){
+    echo $i;
+    $sql_update = 'UPDATE pe_stock_items SET parent_id = "'.$row['parent_id'].'" WHERE group_id = "'.$row['id'].'" AND parent_type ="pe_warehouse_log" AND deleted = 0';
+    $db->query($sql_update);
+    $i++;
+}
+die();
+
+/// REMOVE THE DUPLICATE FILE 
+$db = DBManagerFactory::getInstance();
+// Get id and file name as key=> value that parent is email template
+$sql = "
+SELECT aos_quotes_cstm.id_c as id ,aos_quotes_cstm.solargain_quote_number_c as SGquoteNumber , aos_quotes_cstm.solargain_tesla_quote_number_c as SGquoteTeslaNumber  
+FROM `aos_quotes_cstm` 
+LEFT JOIN `aos_quotes` ON aos_quotes.id = aos_quotes_cstm.id_c
+WHERE aos_quotes.deleted = 0 
+AND (aos_quotes_cstm.sg_site_details_no_c IS NULL OR aos_quotes_cstm.sg_site_details_no_c  = '')
+AND ( (aos_quotes_cstm.solargain_quote_number_c IS NOT NULL AND aos_quotes_cstm.solargain_quote_number_c != '')
+OR (aos_quotes_cstm.solargain_tesla_quote_number_c IS NOT NULL AND aos_quotes_cstm.solargain_tesla_quote_number_c != '') )
+";
+
+$ret = $db->query($sql);
+while($row = $db->fetchByAssoc($ret)){
+    $username = "matthew.wright";
+    $password =  "MW@pure733";
+    if($row['SGquoteNumber'] != ''){
+        $quote_id = $row['SGquoteNumber'];
+    }else{
+        $quote_id = $row['SGquoteTeslaNumber'];
+    }
+
+    $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$quote_id;
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl,CURLOPT_ENCODING , "gzip");
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            "Host: crm.solargain.com.au",
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Content-Type: application/json",
+            "Accept: application/json, text/plain, */*",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding: 	gzip, deflate, br",
+            "Connection: keep-alive",
+            "Authorization: Basic ".base64_encode($username . ":" . $password),
+            "Referer: https://crm.solargain.com.au/quote/edit/".$result,
+            "Cache-Control: max-age=0"
+        )
+    );
+
+    $quote = curl_exec($curl);
+    curl_close($curl);
+    $quote_decode = json_decode($quote);
+    
+    if(!isset($quote_decode->ID)){
+        $username = 'paul.szuster@solargain.com.au';
+        $password = 'Partake@19';
+        $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$quote_id;
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        //
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        curl_setopt($curl,CURLOPT_ENCODING , "gzip");
+        curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                "Host: crm.solargain.com.au",
+                "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+                "Content-Type: application/json",
+                "Accept: application/json, text/plain, */*",
+                "Accept-Language: en-US,en;q=0.5",
+                "Accept-Encoding: 	gzip, deflate, br",
+                "Connection: keep-alive",
+                "Authorization: Basic ".base64_encode($username . ":" . $password),
+                "Referer: https://crm.solargain.com.au/quote/edit/".$result,
+                "Cache-Control: max-age=0"
+            )
+        );
+        $quote = curl_exec($curl);
+        curl_close($curl);
+        $quote_decode = json_decode($quote);
+    }
+
+    if(isset($quote_decode->ID)){
+        $sql_update = "UPDATE aos_quotes_cstm SET sg_site_details_no_c = '" 
+        .$quote_decode->Install->ID ."' WHERE id_c = '" .$row['id'] . "'";
+        $ret_update = $db->query($sql_update);
+        if($ret_update) {
+            echo '<a target="_blank" href="/index.php?module=AOS_Quotes&action=EditView&record='.$row['id'].'">'.$row['id'].'</a>';
+        }
+    }
+
+}
+
+die();
+/// REMOVE THE DUPLICATE FILE 
+$db = DBManagerFactory::getInstance();
+// Get id and file name as key=> value that parent is email template
+$sql = "
+SELECT * FROM `aos_invoices` WHERE 1 ORDER BY date_entered DESC
+";
+
+$ret = $db->query($sql);
+while($row = $db->fetchByAssoc($ret)){
+    if (strpos($row['name'], "Sanden") !== false) {
+        echo $row['id'].'<break/>';
+        // set up type = sanden
+        $quote = new AOS_Invoices();
+        $quote->retrieve($row['id']);
+        if(isset($quote->id) && $quote->id != ""){
+            $quote->quote_type_c = "quote_type_sanden";
+            $quote->save();
+        }
+    } else if (strpos($row['name'], "Methven") !== false) {
+        // set up type = sanden
+        echo $row['id'].'<break/>';
+        $quote = new AOS_Invoices();
+        $quote->retrieve($row['id']);
+        if(isset($quote->id) && $quote->id != ""){
+            $quote->quote_type_c = "quote_type_methven";
+            $quote->save();
+        }
+    }
+}
+
+die();
+
+/// REMOVE THE DUPLICATE FILE 
+$db = DBManagerFactory::getInstance();
+// Get id and file name as key=> value that parent is email template
+$sql = "
+SELECT id, filename FROM `notes` WHERE 1
+AND `parent_type` = 'Emails'
+AND parent_id IN ('7ec05348-7386-6d87-b40b-5aa0905177ca', '29c9f493-2b41-530b-fc8c-5694e1267eed', '2c6db0d1-6843-feb9-5583-5694e1f46257', 'acd0d03e-e494-d298-79ce-5a057236fb84', '61557a5b-c02e-4b48-8a19-5aacd5aee6b0', '5fe5259a-9fb3-b7a8-2473-5ae3eccd9c01', '2e166ef8-a8df-34e9-82d7-5694e1f008c3', '1a916e8d-db16-58d8-cbf8-59fc29f9e49f', 'e537912b-524c-4766-96d3-59cfa4ece333', '3c23be80-7d7c-54a8-1e35-5696387eab4d', 'c466d37b-2ac2-ce42-ba82-59e7e83f6e3b', '5a36a733-f6c1-39b3-a736-5a940feae542', '8d17bb23-939f-d480-8a75-5a940f8a7fe5', '30eab08a-bbd4-77c7-74fe-5694e1341f6f', 'acb8b967-6c65-4445-f464-59ffd089c3a8', '82675a55-a8ea-0439-7ad8-5af3b5b901e5', '6d1dbc2e-38f4-27d6-e08b-5694e1497038', '2361ca39-a862-e898-3cc7-5bb588b9adeb', '2b25ebd0-4c17-a3ca-d689-5694e1730700', 'c223decb-4033-e600-1841-5a00177bdf23', 'ec302586-cd96-e843-bd9b-5b25c5b0b321', '3742953d-1318-43cb-00e3-5bbaab707bcd', '180953f6-3dda-b10e-8f39-5bbbfe2bec38', 'd89d6ef0-411d-395a-710f-5bd15b3f34c0', '98ea8922-6a3f-42b0-e426-5bd15b13c7cb', '12fb3725-0581-cf2c-18ed-5bbbfe6b0089', '5ad80115-b756-ea3e-ca83-5abb005602bf')
+";
+
+$ret = $db->query($sql);
+$note_files = array();
+while($row = $db->fetchByAssoc($ret)){
+    $note_files[$row['filename']] = $row['id'];
+}
+
+
+// Tao mảng các file caanf sử lý 
+$remove_sql = "
+SELECT id, filename FROM `notes` WHERE 1
+AND filename IN 
+(
+    SELECT filename FROM `notes` WHERE 1
+    AND `parent_type` = 'Emails' 
+    AND parent_id IN ('7ec05348-7386-6d87-b40b-5aa0905177ca', '29c9f493-2b41-530b-fc8c-5694e1267eed', '2c6db0d1-6843-feb9-5583-5694e1f46257', 'acd0d03e-e494-d298-79ce-5a057236fb84', '61557a5b-c02e-4b48-8a19-5aacd5aee6b0', '5fe5259a-9fb3-b7a8-2473-5ae3eccd9c01', '2e166ef8-a8df-34e9-82d7-5694e1f008c3', '1a916e8d-db16-58d8-cbf8-59fc29f9e49f', 'e537912b-524c-4766-96d3-59cfa4ece333', '3c23be80-7d7c-54a8-1e35-5696387eab4d', 'c466d37b-2ac2-ce42-ba82-59e7e83f6e3b', '5a36a733-f6c1-39b3-a736-5a940feae542', '8d17bb23-939f-d480-8a75-5a940f8a7fe5', '30eab08a-bbd4-77c7-74fe-5694e1341f6f', 'acb8b967-6c65-4445-f464-59ffd089c3a8', '82675a55-a8ea-0439-7ad8-5af3b5b901e5', '6d1dbc2e-38f4-27d6-e08b-5694e1497038', '2361ca39-a862-e898-3cc7-5bb588b9adeb', '2b25ebd0-4c17-a3ca-d689-5694e1730700', 'c223decb-4033-e600-1841-5a00177bdf23', 'ec302586-cd96-e843-bd9b-5b25c5b0b321', '3742953d-1318-43cb-00e3-5bbaab707bcd', '180953f6-3dda-b10e-8f39-5bbbfe2bec38', 'd89d6ef0-411d-395a-710f-5bd15b3f34c0', '98ea8922-6a3f-42b0-e426-5bd15b13c7cb', '12fb3725-0581-cf2c-18ed-5bbbfe6b0089', '5ad80115-b756-ea3e-ca83-5abb005602bf')
+)
+AND parent_id NOT IN ('7ec05348-7386-6d87-b40b-5aa0905177ca', '29c9f493-2b41-530b-fc8c-5694e1267eed', '2c6db0d1-6843-feb9-5583-5694e1f46257', 'acd0d03e-e494-d298-79ce-5a057236fb84', '61557a5b-c02e-4b48-8a19-5aacd5aee6b0', '5fe5259a-9fb3-b7a8-2473-5ae3eccd9c01', '2e166ef8-a8df-34e9-82d7-5694e1f008c3', '1a916e8d-db16-58d8-cbf8-59fc29f9e49f', 'e537912b-524c-4766-96d3-59cfa4ece333', '3c23be80-7d7c-54a8-1e35-5696387eab4d', 'c466d37b-2ac2-ce42-ba82-59e7e83f6e3b', '5a36a733-f6c1-39b3-a736-5a940feae542', '8d17bb23-939f-d480-8a75-5a940f8a7fe5', '30eab08a-bbd4-77c7-74fe-5694e1341f6f', 'acb8b967-6c65-4445-f464-59ffd089c3a8', '82675a55-a8ea-0439-7ad8-5af3b5b901e5', '6d1dbc2e-38f4-27d6-e08b-5694e1497038', '2361ca39-a862-e898-3cc7-5bb588b9adeb', '2b25ebd0-4c17-a3ca-d689-5694e1730700', 'c223decb-4033-e600-1841-5a00177bdf23', 'ec302586-cd96-e843-bd9b-5b25c5b0b321', '3742953d-1318-43cb-00e3-5bbaab707bcd', '180953f6-3dda-b10e-8f39-5bbbfe2bec38', 'd89d6ef0-411d-395a-710f-5bd15b3f34c0', '98ea8922-6a3f-42b0-e426-5bd15b13c7cb', '12fb3725-0581-cf2c-18ed-5bbbfe6b0089', '5ad80115-b756-ea3e-ca83-5abb005602bf')
+AND `parent_type` = 'Emails'
+
+";
+
+$ret = $db->query($remove_sql);
+$file_need_remove = array();
+while($row = $db->fetchByAssoc($ret)){
+    $file_need_remove[$row['id']] = $row['filename'];
+    
+}
+echo "need remove";
+$file = 0;
+foreach($file_need_remove as $key => $file_remove){
+    $file ++;
+    $unlink = unlink("/var/www/suitecrm/upload/".$key );
+    echo "unlink ".$unlink.'<br>';
+    //$file_original = $note_files[$file_remove];
+    if(isset($note_files[$file_remove])){
+        echo "REmove". $note_files[$file_remove]."<br>";
+        echo "Inarray<br>";
+
+        if (!symlink("/var/www/suitecrm/upload/".$note_files[$file_remove], 
+        "/var/www/suitecrm/upload/".$key)) {
+            echo "fail";
+        }
+        echo $key;
+    }
+}
+
+echo "FILE: ".$file;
+die();
+
+die();
+//tu-code upload phone mobile in leads
+function upload_phone_mobile_leads(){
+    $db = DBManagerFactory::getInstance();
+    $sql = "UPDATE leads SET phone_mobile = phone_work WHERE phone_work LIKE '04%' AND  (phone_mobile = '' OR phone_mobile IS NULL)";
+    $result = $db->query($sql);
+
+}
+upload_phone_mobile_leads();
+die();
+
+array_push($job_strings, 'custom_readmail');
+
+function replaceEmailVariables(Email $email, $request)
+{
+    // request validation before replace bean variables
+    $macro_nv = array();
+    
+    $focusName = $request['parent_type'];
+    $focus     = BeanFactory::getBean($focusName, $request['parent_id']);
+    
+    /**
+     * @var EmailTemplate $emailTemplate
+     */
+    $emailTemplate           = BeanFactory::getBean('EmailTemplates', isset($request['emails_email_templates_idb']) ? $request['emails_email_templates_idb'] : null);
+    $email->name             = $emailTemplate->subject;
+    $email->description_html = $emailTemplate->body_html;
+    $email->description      = $emailTemplate->body;
+    $templateData            = $emailTemplate->parse_email_template(array(
+        'subject' => $email->name,
+        'body_html' => $email->description_html,
+        'body' => $email->description
+    ), $focusName, $focus, $macro_nv);
+    
+    $email->name             = $templateData['subject'];
+    $email->description_html = $templateData['body_html'];
+    $email->description      = $templateData['body'];
+    
+    return $email;
+}
+
+function updateSolargainLead($leadID, $request, $email, $sg_user = "matthew")
+{
+   
+    $lead = new Lead();
+    $lead->retrieve($leadID);
+    if (!$lead->solargain_lead_number_c) {
+        return;
+    }
+    $solargainLead = $lead->solargain_lead_number_c;
+    date_default_timezone_set('Africa/Lagos');
+    set_time_limit(0);
+    ini_set('memory_limit', '-1');
+    if($sg_user == "matthew"){
+        $username = "matthew.wright";
+        $password = "MW@pure733";
+    }else{
+        $username = "paul.szuster";
+        $password = "Partake@19";
+    }
+    // Get full json response for Leads
+    
+    $url = "https://crm.solargain.com.au/APIv2/leads/" . $solargainLead;
+    //set the url, number of POST vars, POST data
+    
+    $curl = curl_init();
+    
+    curl_setopt($curl, CURLOPT_URL, $url);
+    
+    
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+    
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    
+    curl_setopt($curl, CURLOPT_ENCODING, "gzip");
+    
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        "Host: crm.solargain.com.au",
+        "User-Agent: " . $_SERVER['HTTP_USER_AGENT'],
+        "Content-Type: application/json",
+        "Accept: application/json, text/plain, */*",
+        "Accept-Language: en-US,en;q=0.5",
+        "Accept-Encoding:   gzip, deflate, br",
+        "Connection: keep-alive",
+        "Authorization: Basic " . base64_encode($username . ":" . $password),
+        "Referer: https://crm.solargain.com.au/lead/edit/" . $solargainLead,
+        "Cache-Control: max-age=0"
+    ));
+    
+    $leadJSON = curl_exec($curl);
+    curl_close($curl);
+    
+    $leadSolarGain = json_decode($leadJSON);
+    global $current_user;
+    // building Note
+    // Logged in user name: Email From name: and email template title 
+    $note = "";
+    if (isset($email->from_name) && $email->from_name != "") {
+        $note = $current_user->full_name . " : " . $email->from_name . " : " . $request["emails_email_templates_name"];
+    }
+    /*else {
+    $note = $current_user->full_name. " : ".$request["emails_email_templates_name"];
+    }*/
+    $leadSolarGain->Notes[] = array(
+        "ID" => 0,
+        "Type" => array(
+            "ID" => 5,
+            "Name" => "E-Mail Out",
+            "RequiresComment" => true
+        ),
+        "Text" => $note
+    );
+    
+    $leadSolarGainJSONDecode = json_encode($leadSolarGain, JSON_UNESCAPED_SLASHES);
+    //echo $leadSolarGainJSONDecode;die();
+    // Save back lead 
+    $url                     = "https://crm.solargain.com.au/APIv2/leads/";
+    //set the url, number of POST vars, POST data
+    $curl                    = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    //curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $password);
+    
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_POST, 1);
+    
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $leadSolarGainJSONDecode);
+    
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        "Host: crm.solargain.com.au",
+        "User-Agent: " . $_SERVER['HTTP_USER_AGENT'],
+        "Content-Type: application/json",
+        "Accept: application/json, text/plain, */*",
+        "Accept-Language: en-US,en;q=0.5",
+        "Accept-Encoding:   gzip, deflate, br",
+        "Connection: keep-alive",
+        "Content-Length: " . strlen($leadSolarGainJSONDecode),
+        "Authorization: Basic " . base64_encode($username . ":" . $password),
+        "Referer: https://crm.solargain.com.au/lead/edit/" . $solargainLead
+    ));
+    
+    $lead = json_decode(curl_exec($curl));
+    curl_close($curl);
+}
+
+function handleMultipleFileAttachments($request, $email)
+{
+    ///////////////////////////////////////////////////////////////////////////
+    ////    ATTACHMENTS FROM TEMPLATES
+    // to preserve individual email integrity, we must dupe Notes and associated files
+    // for each outbound email - good for integrity, bad for filespace
+    if ( /*isset($_REQUEST['template_attachment']) && !empty($_REQUEST['template_attachment'])*/ true) {
+        $noteArray = array();
+        
+        require_once('modules/Notes/Note.php');
+        $note        = new Note();
+        $where       = "notes.parent_id = '" . $request["emails_email_templates_idb"] . "' ";
+        $attach_list = $note->get_full_list("", $where, true); //Get all Notes entries associated with email template
+        
+        $attachments = array();
+        
+        $attachments = array_merge($attachments, $attach_list);
+        
+        foreach ($attachments as $noteId) {
+            
+            $noteTemplate = new Note();
+            $noteTemplate->retrieve($noteId->id);
+            $noteTemplate->id           = create_guid();
+            $noteTemplate->new_with_id  = true; // duplicating the note with files
+            //$noteTemplate->parent_id = $this->id;
+            //$noteTemplate->parent_type = $this->module_dir;
+            $noteTemplate->parent_id    = $email->id;
+            $noteTemplate->parent_type  = $email->module_dir;
+            $noteTemplate->date_entered = '';
+            $noteTemplate->save();
+            
+            $noteFile = new UploadFile();
+            $noteFile->duplicate_file($noteId->id, $noteTemplate->id, $noteTemplate->filename);
+            $noteArray[] = $noteTemplate;
+        }
+        return $noteArray;
+        //$email->attachments = array_merge($email->attachments, $noteArray);
+    }
+}
+
+function get_string_between($string, $start, $end)
+{
+    $string = ' ' . $string;
+    $ini    = strpos($string, $start);
+    if ($ini == 0)
+        return '';
+    $ini += strlen($start);
+    $len = strpos($string, $end, $ini) - $ini;
+    return substr($string, $ini, $len);
+}
+
+function custom_readmail() 
+{
+    global $sugar_config;
+    
+    $folder = $sugar_config['mail_dir'];
+    
+    $file_array = scandir($folder);
+    
+    if (count($file_array) == 2)
+        return true;
+    
+    foreach ($file_array as $file) {
+        // temporary move file to specials
+        //copy($folder . "/" . $file, $folder . "/specials/" . $file);
+
+        if (is_file($folder . "/" . $file)) {
+            // parse all content of file to get address
+            $l_file_content = file_get_contents($folder . "/" . $file);
+            // Parse for create new lead from forwarded newlead@pure-electric.com.au
+            preg_match('#To: (.+?)\@pure-electric.com.au#i', $l_file_content, $newlead);
+            if($newlead[1] == "newlead"){
+                
+                $address_street = '';
+                $city =  '';
+                $state =  '';
+                $post_code = '';
+
+                preg_match('#Name (.+?)\n#i', $l_file_content, $lead_name);
+                if(count($lead_name) == 2){
+                    $lead = explode(" ", trim($lead_name[1]));
+                    $first_name = $lead[0];
+                    $last_name = str_replace($first_name, "", trim($lead_name[1]));
+                }
+
+                preg_match('#Return-Path: <(.+?)>#i', $l_file_content, $matches_email);
+                if (count($matches_email) == 2) {
+                    $from_email = trim($matches_email[1]);
+                }
+
+                preg_match('#Email (.+?)\n#i', $l_file_content, $email);
+                if(count($email)==2){
+                    $lead_email = $email[1];
+                    if($lead_email != ''){
+                        //check email is exists
+                        $db = DBManagerFactory::getInstance();
+                        $query_lead = "SELECT leads.id
+                                  FROM leads
+                                  JOIN email_addr_bean_rel ON leads.id = email_addr_bean_rel.bean_id
+                                  JOIN email_addresses ON email_addr_bean_rel.email_address_id = email_addresses.id
+                                  WHERE email_addresses.email_address = '".$lead_email."' AND leads.deleted = 0";
+                        $result = $db->query($query_lead);
+                        if($result->num_rows > 0){
+                            
+                            require_once('include/SugarPHPMailer.php');
+                            $emailObj = new Email();
+                            $defaults = $emailObj->getSystemDefaultEmail();
+                            $mail = new SugarPHPMailer();
+                            $mail->setMailerForSystem();
+                            $mail->From = $defaults['email'];
+                            $mail->FromName = $defaults['name'];
+                            $mail->IsHTML(true);
+
+                            $mail->Subject = 'Automatically add Lead';
+
+                            $mail->Body = 'Can not automatically add lead because email '.$lead_email.' is exists! ';
+
+                            $mail->prepForOutbound();
+                            $mail->AddAddress($from_email);
+
+                            $sent = $mail->Send();
+                            die();
+                        }
+                    }
+                }
+
+                preg_match('#Phone (.+?)\n#i', $l_file_content, $phone);
+                $phone = $phone[1];
+
+                preg_match('#Address (.+?)\n#i', $l_file_content, $address);
+                $address = strtolower($address[1]);
+
+                if($address != ''){
+                    $curl = curl_init();
+                    $address = str_replace ( " " , "+" , $address );
+                    $url = "https://www.energyaustralia.com.au/qt2/app/quoteservice/qas/find?address=".$address."&postcode=";
+                    curl_setopt($curl, CURLOPT_URL, $url);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+                    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+                    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+                    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+                    curl_setopt($curl, CURLOPT_ENCODING, 'gzip, deflate');
+                    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                            "Host: www.energyaustralia.com.au",
+                            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+                            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                            "Accept-Language: en-US,en;q=0.5",
+                            "Accept-Encoding: 	gzip, deflate, br",
+                            "Connection: keep-alive",
+                            "Upgrade-Insecure-Requests: 1",
+                            "Cache-Control: max-age=0",
+                        )
+                    );
+                    $result = curl_exec($curl);
+                    curl_close($curl);
+                    $out_address = json_decode($result);
+                    if(count($out_address) >1){
+                        $out_address = $out_address[1]->name;
+                        $address1 = explode(',',$out_address);
+                        $address_street = $address1[0];
+                        $address_element = explode('  ',trim($address1[1]));
+                        $city =  $address_element[0];
+                        $state =  $address_element[1];
+                        $post_code = $address_element[2];
+                    }
+                }
+
+                $lead = new Lead();
+                $lead->primary_address_street     = $address_street ? $address_street : "";
+                $lead->primary_address_postalcode = $post_code ? $post_code : "";
+                $lead->primary_address_city       = $city ? $city : "";
+                $lead->primary_address_state      = $state ? $state : "";
+                $lead->first_name = $first_name;
+                $lead->last_name = $last_name;
+                $lead->email1 = $lead_email;
+                $lead->phone_mobile = $phone;
+
+                if($from_email == "matthew@pure-electric.com.au" || $from_email == "matthew.wright@pure-electric.com.au"){
+                    $lead->assigned_user_id = "8d159972-b7ea-8cf9-c9d2-56958d05485e";
+                }else if($from_email == "paul.szuster@pure-electric.com.au" || $from_email == "paul@pure-electric.com.au"){
+                    $lead->assigned_user_id = "61e04d4b-86ef-00f2-c669-579eb1bb58fa";
+                }else{
+                    $lead->assigned_user_id = "8d159972-b7ea-8cf9-c9d2-56958d05485e";
+                }
+                $lead->save;
+
+                // save file attachment and thumb
+                $count_ =  substr_count($l_file_content,'Content-Disposition: attachment;');
+
+                $guid_new = create_guid();
+                $current_file_path = dirname(__FILE__).'/../../../../include/SugarFields/Fields/Multiupload/server/php/files/'.$guid_new;
+                
+                if(!file_exists ( $current_file_path )) {
+                    set_time_limit ( 0 );
+                    mkdir($current_file_path);
+                }
+
+                preg_match_all('/filename="(.*?)"(.*?)--0000000000/s',$l_file_content,$match_pdf);
+                for ($i=0; $i < $count_ ; $i++) {
+                    $file_name =  $match_pdf[1][$i];
+                    $file_content_ = $match_pdf[2][$i];
+                    $file_content_ = explode("\n\n",$file_content_);
+                    $source = $current_file_path.'/'.$file_name;
+                    $fp = fopen($source, "w+");
+                    fwrite($fp, base64_decode($file_content_[1]));
+                    fclose($fp);
+
+                    if(is_file($source)){
+                        $type = strtolower(substr(strrchr($file_name, '.'), 1));
+                        $typeok = TRUE;
+                        if($type == 'gif' || $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
+                            if(!file_exists ($current_file_path."/thumbnail/")) {
+                                mkdir($current_file_path."/thumbnail/");
+                            }
+                            $thumb =  $current_file_path."/thumbnail/".$file_name;
+                            switch ($type) {
+                                case 'jpg': // Both regular and progressive jpegs
+                                case 'jpeg':
+                                    $src_func = 'imagecreatefromjpeg';
+                                    $write_func = 'imagejpeg';
+                                    $image_quality = isset($options['jpeg_quality']) ?
+                                        $options['jpeg_quality'] : 75;
+                                    break;
+                                case 'gif':
+                                    $src_func = 'imagecreatefromgif';
+                                    $write_func = 'imagegif';
+                                    $image_quality = null;
+                                    break;
+                                case 'png':
+                                    $src_func = 'imagecreatefrompng';
+                                    $write_func = 'imagepng';
+                                    $image_quality = isset($options['png_quality']) ?
+                                        $options['png_quality'] : 9;
+                                    break;
+                                default: $typeok = FALSE; break;
+                            }
+                            if ($typeok){
+                                list($w, $h) = getimagesize($source);
+
+                                $src = $src_func($source);
+                                $new_img = imagecreatetruecolor(80,80);
+                                imagecopyresampled($new_img,$src,0,0,0,0,80,80,$w,$h);
+                                $write_func($new_img,$thumb, $image_quality);
+
+                                imagedestroy($new_img);
+                                imagedestroy($src);
+                            }
+                        }
+                    }
+                }
+                
+                $lead->installation_pictures_c = $guid_new;
+                $lead->save();
+                unlink($folder . "/" . $file);
+                return true; // break function 
+            }
+
+            // End parese
+            preg_match('#Return-Path: <(.+?)>#i', $l_file_content, $email_matches);
+            if (isset($email_matches[1]) && $email_matches[1] != "") {
+                preg_match('/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $email_matches[1], $mail_matchs);
+                if (isset($mail_matchs[0]) && $mail_matchs[0] != "") {
+                    $email = $mail_matchs[0];
+                    $db    = DBManagerFactory::getInstance();
+                    $sql   = "SELECT * FROM email_addresses ea 
+                                        LEFT JOIN email_addr_bean_rel eabr ON eabr.email_address_id = ea.id 
+                                        WHERE 1=1 AND ea.email_address = '$email' AND ea.deleted = 0 AND eabr.deleted = 0 AND eabr.bean_module = 'Leads'
+                                        ";
+                    $ret   = $db->query($sql);
+                    
+                    while ($row = $db->fetchByAssoc($ret)) {
+                        // We get address here 
+                        preg_match('/my address is(:|)(.*?)(\n|\.)/i', $l_file_content, $address_matchs);
+                        if (count($address_matchs) && $address_matchs[2] != "") {
+                            // use regrxt pattern to get address 
+                            // Just update address lead
+                            $lead = new Lead();
+                            $lead->retrieve($row["bean_id"]);
+                            $lead->primary_address_street = $address_matchs[2];
+                            $lead->save();
+                            sendDesignRequestToAdmin($lead->id);
+                            fclose($handle);
+                            unlink($folder . "/" . $file);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // Get full plain text of email 
+            $web_enquiry            = get_string_between($l_file_content, "web.enquiries", "01/01/0001");
+            $full_plain_text        = get_string_between($l_file_content, "Content-Type: text/plain;", "Content-Type: text/html;");
+            $address_section        = get_string_between($l_file_content, "Site Details", "Roof Type:");
+            $address_section        = strip_tags($address_section);
+            $address_section        = preg_replace('/\<http(.+?)\>/s', '', $address_section);
+            $address_section        = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $address_section);
+            $client_primary_address = "";
+
+            // Pattern to get 
+            $address_pattern = '/(\n([a-zA-Z-\s])+( )|)+(VIC|SA|NSW|ACT|TAS|WA|QLD|NT)+( )+(\d{4})/s';
+            $out_address     = array();
+            preg_match_all($address_pattern, $address_section, $out_address, PREG_PATTERN_ORDER);
+            $out_address[0][0] = trim($out_address[0][0]);
+            if (isset($out_address[0][0]) && $out_address[0][0] != "") {
+                $address_element = explode(" ", $out_address[0][0]);
+                if (count($address_element) >= 3) {
+                    $state            = $address_element[count($address_element) - 2];
+                    $post_code        = $address_element[count($address_element) - 1];
+                    $suburb           = str_replace($state . " " . $post_code, "", $out_address[0][0]);
+                    $suburb           = str_replace("-", "", $suburb);
+                    $exploded_address = explode("\n", $out_address[0][0]);
+                    if (count($exploded_address) == 2)
+                        $client_primary_address = $exploded_address[0];
+                }
+                
+                if (count($address_element) == 2) {
+                    $state     = $address_element[0];
+                    $post_code = $address_element[1];
+                    $suburb    = "";
+                }
+            }
+
+            // Special solve address 
+            // dont understand why it s coded
+            if (false){ //$client_primary_address == "") {
+                /*$handle = fopen($folder."/".$file, "r");
+                if ($handle) {
+                $temp_client_primary_address = "";
+                while (($line = fgets($handle)) !== false) {
+                // get the next line
+                if(isset($out_address[0][0]) &&  $out_address[0][0] != "" && (strpos($line, $out_address[0][0] ) !== false) ){
+                if(strlen($temp_client_primary_address) > 5)
+                if($client_primary_address == "") $client_primary_address = $temp_client_primary_address;
+                }
+                $temp_client_primary_address = $line;
+                }
+                }
+                fclose($handle);
+                */
+                $client_primary_address = trim(preg_replace('/[^a-zA-Z0-9]/', " ", str_replace(array(
+                    $suburb,
+                    $post_code,
+                    $state
+                ), "", $address_section)));
+            }
+            
+            if (strlen($client_primary_address) < 2)
+                $client_primary_address = "";
+            
+            $handle = fopen($folder . "/" . $file, "r");
+            if ($handle) {
+                $live_chat_text        = "";
+                $solargain_lead_number = "";
+                $note                  = "";
+                $end_live_chat         = false;
+                while (($line = fgets($handle)) !== false) {
+                    if (strpos($line, "This e-mail is private and confidential") !== false) {
+                        fclose($handle);
+                        copy($folder . "/" . $file, $folder . "/backup/" . $file);
+                        unlink($folder . "/" . $file);
+                        break;
+                    }
+                    ;
+                    if (strpos(strtolower($line), "lead/edit") !== false) {
+                        preg_match('/lead\/edit\/(.+?)>]/', strtolower($line), $match_firstchars);
+                        if (isset($match_firstchars[1]) && $match_firstchars[1] != "") {
+                            // Neu solargain lead number van la solargain cu ta continue toi dong tiep theo cho den khi gap Lead Edit 
+                            if ($solargain_lead_number == $match_firstchars[1])
+                                continue;
+                            $solargain_lead_number = $match_firstchars[1];
+                        } else
+                            continue;
+                        
+                        while (($line1 = fgets($handle)) !== false) {
+                            
+                            if (strpos($line1, "This e-mail is private and confidential") !== false) {
+                                fclose($handle);
+                                copy($folder . "/" . $file, $folder . "/backup/" . $file);
+                                unlink($folder . "/" . $file);
+                                break;
+                            }
+                            ;
+                            
+                            $line1 = strip_tags($line1);
+                            // Co live chat
+                            if (strpos($line1, "livechat") !== false) {
+                                $api_comment_line = fgets($handle);
+                                
+                                if ($api_comment_line !== false && (strpos($api_comment_line, "API Comment: Livechat Submission") !== false)) {
+                                    $blank_line = fgets($handle);
+                                    while (($l_line = fgets($handle)) !== false) {
+                                        
+                                        if (strpos($l_line, "This e-mail is private and confidential") !== false) {
+                                            fclose($handle);
+                                            copy($folder . "/" . $file, $folder . "/backup/" . $file);
+                                            unlink($folder . "/" . $file);
+                                            break;
+                                        }
+                                        ;
+                                        
+                                        if (strpos($l_line, "Customer Details") == false) {
+                                            if (strpos($l_line, "01/01/0001") !== false) {
+                                                $end_live_chat = true;
+                                            } else {
+                                                if (!$end_live_chat)
+                                                    $live_chat_text .= trim(strip_tags($l_line), "=\n");
+                                            }
+                                        } else if (strpos($l_line, "Customer Details") !== false) {
+                                            // Read the next line
+                                            if (($next_line = fgets($handle)) !== false) {
+                                                $next_line = strip_tags($next_line);
+                                                if (strpos($next_line, ",") !== false) {
+                                                    $names = explode(",", $next_line);
+                                                } else {
+                                                    $names = explode(" ", $next_line);
+                                                }
+                                                $first_name = "";
+                                                $last_name  = "";
+                                                $first_name = trim($names[1] ? $names[1] : "");
+                                                $first_name = ucfirst(strtolower($first_name));
+                                                $last_name  = trim($names[0] ? $names[0] : "");
+                                                $last_name  = ucfirst(strtolower($last_name));
+                                                
+                                                if ($first_name == "") {
+                                                    $last_name_explode = explode(" ", $last_name);
+                                                    if (count($last_name_explode) > 1) {
+                                                        $real_last_name = end($last_name_explode);
+                                                        $first_name     = str_replace($real_last_name, "", $last_name);
+                                                        $last_name      = $real_last_name;
+                                                    }
+                                                }
+                                                
+                                                $phone_mobile = "";
+                                                $phone_work   = "";
+                                                $email        = "";
+                                                
+                                                // Not exist do our next work
+                                                // read all line by while until we get the new custommer lead
+                                                
+                                                while (($next_line = fgets($handle)) !== false) {
+                                                    //if touch to end of New lead sections
+                                                    // we do the if statement for each pattern here
+                                                    if (strpos($next_line, "This e-mail is private and confidential") !== false) {
+                                                        fclose($handle);
+                                                        copy($folder . "/" . $file, $folder . "/backup/" . $file);
+                                                        unlink($folder . "/" . $file);
+                                                        break;
+                                                    }
+                                                    
+                                                    if (strpos($next_line, "m:") === 0) {
+                                                        $phone_mobile = strip_tags(trim(str_replace(array(
+                                                            "m:",
+                                                            "**",
+                                                            "*m:*"
+                                                        ), "", $next_line)));
+                                                        $phone_mobile = ($phone_mobile != "N/A\n" && is_numeric(str_replace('+','',str_replace(' ', '',$phone_mobile))) ) ? $phone_mobile : "";
+                                                    }
+
+                                                    if (strpos($next_line, "p:") !== false) {
+                                                        $phone_work = strip_tags(trim(str_replace(array(
+                                                            "*p:*",
+                                                            "p:"
+                                                        ), "", $next_line)));
+                                                        $phone_work = ($phone_work != "N/A\n" && is_numeric(str_replace('+','',str_replace(' ', '',$phone_work))) ) ? $phone_work : "";
+                                                    }
+                                                    
+                                                    if ( (strpos($next_line, "e:") === 0 || strpos($next_line, "*e:") === 0) && strpos($next_line, "@") !== false) {
+                                                        //$email = strip_tags(trim(str_replace(array("*e:*", "e:"), "", $next_line)));
+                                                        //$email = trim(str_replace(array("*e:*", "e:"),"",strip_tags( $next_line)));
+                                                        //$email = ($email != "N/A\n") ? trim($email) : "";
+                                                        preg_match('/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $next_line, $mail_match_firstchars);
+                                                        if (isset($mail_match_firstchars[0]) && $mail_match_firstchars[0] != "") {
+                                                            $email = $mail_match_firstchars[0];
+                                                        }
+                                                        
+                                                        // If we have already name in database Break
+                                                        $db = DBManagerFactory::getInstance();
+                                                        if ($first_name == "" && $last_name == "") {
+                                                            fclose($handle);
+                                                            unlink($folder . "/" . $file);
+                                                            return;
+                                                        }
+                                                        
+                                                        $db  = DBManagerFactory::getInstance();
+                                                        $sql = "SELECT * FROM email_addresses ea 
+                                                                            LEFT JOIN email_addr_bean_rel eabr ON eabr.email_address_id = ea.id 
+                                                                            WHERE 1=1 AND ea.email_address = '$email' AND ea.deleted = 0 AND eabr.deleted = 0 AND eabr.bean_module = 'Leads'
+                                                                            ";
+                                                        $ret = $db->query($sql);
+                                                        
+                                                        while ($row = $db->fetchByAssoc($ret)) {
+                                                            if (isset($row["bean_id"]) && $row["bean_id"] != "") {
+                                                                fclose($handle);
+                                                                unlink($folder . "/" . $file);
+                                                                return;
+                                                            }
+                                                        }
+                                                        
+                                                        $sql = "SELECT * FROM leads WHERE 1=1 ";
+                                                        //if ($first_name != "")
+                                                        $sql .= " AND first_name = '" . $first_name . "'";
+                                                        //if ($last_name != "")
+                                                        $sql .= " AND last_name = '" . $last_name . "'";
+                                                        $sql .= " AND deleted != 1 ";
+                                                        $ret      = $db->query($sql);
+                                                        $is_exsit = false;
+                                                        while ($row = $db->fetchByAssoc($ret)) {
+                                                            if (isset($row) && $row != null) {
+                                                                $lead = new Lead();
+                                                                $lead->retrieve($row["id"]);
+                                                                
+                                                                if ($lead->email1 == $email)
+                                                                    $is_exsit = true;
+                                                                if ($email == "") {
+                                                                    $is_exsit = true;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        if ($is_exsit) {
+                                                            fclose($handle);
+                                                            unlink($folder . "/" . $file);
+                                                            return;
+                                                        }
+                                                        
+                                                        $next_second_line = fgets($handle);
+                                                        $note .= $next_second_line;
+                                                        
+                                                        //$GLOBALS['log']->debug('--------------------------------------------> at mext line.php <--------------------------------------------' .$next_second_line );
+                                                        $next_third_line = fgets($handle);
+                                                        $note .= $next_third_line;
+                                                        
+                                                        if ($next_third_line == $out_address[0][0] && strlen($next_second_line) > 5) {
+                                                            $street_address = strip_tags($next_second_line);
+                                                        }
+
+                                                        // If it is full adreses
+                                                        if (!isset($post_code) || $post_code == "") {
+                                                            if (strlen($next_second_line) > 5) {
+                                                                $next_fourth_line = fgets($handle);
+                                                                if (preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_fourth_line, $match_firstchars, PREG_PATTERN_ORDER)) {
+                                                                    $next_fourth_line = trim(strip_tags($next_fourth_line));
+                                                                    //$GLOBALS['log']->debug('--------------------------------------------> at thirdline .php <--------------------------------------------' .$next_third_line );
+                                                                    //if(preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line, $match_firstchars,PREG_PATTERN_ORDER))
+                                                                    $state            = $match_firstchars[0][0];
+                                                                    
+                                                                    $match_subburb = preg_split('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_fourth_line);
+                                                                    $suburb        = $match_subburb[0];
+                                                                    $post_code     = $match_subburb[1];
+                                                                }
+                                                            } elseif (preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line, $match_firstchars, PREG_PATTERN_ORDER)) {
+                                                                $next_third_line = trim(strip_tags($next_third_line));
+                                                                //$GLOBALS['log']->debug('--------------------------------------------> at thirdline .php <--------------------------------------------' .$next_third_line );
+                                                                //if(preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line, $match_firstchars,PREG_PATTERN_ORDER))
+                                                                $state           = $match_firstchars[0][0];
+                                                                
+                                                                $match_subburb = preg_split('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line);
+                                                                $suburb        = $match_subburb[0];
+                                                                $post_code     = $match_subburb[1];
+                                                            }
+                                                        }
+                                                    }
+                                                    $note .= strip_tags($next_line);
+                                                    if (strpos(strtolower($next_line), "assigned to") !== false) {
+                                                        $note .= strip_tags($next_line);
+                                                    }
+                                                    
+                                                }
+                                                //if (strpos($line1, "Status:") !== false) break;
+                                            }
+                                            
+                                            // store lead here
+                                            if ($first_name != "" || $last_name != "") {
+                                                $lead                             = new Lead();
+                                                $lead->first_name                 = $first_name;
+                                                $lead->last_name                  = $last_name;
+                                                $lead->email1                     = $email;
+                                                $lead->phone_mobile               = $phone_mobile;
+                                                $lead->phone_work                 = $phone_work;
+                                                $lead->solargain_lead_number_c    = $solargain_lead_number;
+                                                $lead->primary_address_postalcode = $post_code ? $post_code : "";
+                                                $lead->primary_address_city       = $suburb ? $suburb : "";
+                                                $lead->primary_address_state      = $state ? $state : "";
+                                                $lead->live_chat_c                = $live_chat_text ? str_replace("\n\n", "", $live_chat_text) : $web_enquiry;
+                                                $lead->lead_source                = "Solargain";
+                                                $lead->primary_address_street     = $client_primary_address ? $client_primary_address : ($street_address ? $street_address : "");
+                                                if(strtolower(trim($lead->primary_address_street)) == 'n a' || strtolower(trim($lead->primary_address_street)) == 'n/a' || strtolower(trim($lead->primary_address_street)) == 'na'){
+                                                    $lead->primary_address_street = "";
+                                                }
+                                                $full_plain_text_explode          = explode("This e-mail is private and confidential", $full_plain_text);
+                                                $note_des = explode("Notes", $full_plain_text_explode[0]);
+                                                $lead->description                = $note_des[1];
+                                                $lead->address_provided_c         = $client_primary_address ? "1" : "0";
+                                                $lead->status                     = "Assigned";
+                                                
+                                                
+                                                preg_match('#Return-Path: <(.+?)>#i', $l_file_content, $sent_froms);
+                                                if(isset($sent_froms[1]) && $sent_froms[1] == "Matthew.Wright@solargain.com.au"){
+                                                    $random_number = 60;
+                                                } elseif(isset($sent_froms[1]) && (strtolower($sent_froms[1]) == "paul.szuster@solargain.com.au")) {
+                                                    $random_number = 40;
+                                                } else {
+                                                    $random_number = rand ( 1 , 100 );
+                                                }
+                                                
+                                                if ($random_number <= 50) {
+                                                    $lead->assigned_user_id = "61e04d4b-86ef-00f2-c669-579eb1bb58fa"; // Paul
+                                                } else{
+                                                    $lead->assigned_user_id = "8d159972-b7ea-8cf9-c9d2-56958d05485e"; // Matth
+                                                }
+                                                
+                                                $lead->save();
+                                                /* Need enought address
+                                                $primary_address_street = $lead->primary_address_street;
+                                                $primary_address_city = $lead->primary_address_city;
+                                                $primary_address_state = $lead->primary_address_state;
+                                                $primary_address_postalcode = $lead->primary_address_postalcode;
+                                                */
+                                                if ($lead->primary_address_street == "" || $lead->primary_address_city == "" || $lead->primary_address_state == "" || $lead->primary_address_postalcode == "") {
+                                                    
+                                                    // Send email
+                                                    if ($random_number <= 50) {
+                                                        $from_address = "Paul Szuster - PureElectric &lt;paul.szuster@pure-electric.com.au&gt;";
+                                                    } else{
+                                                        $from_address = "Matthew Wright - PureElectric &lt;matthew.wright@pure-electric.com.au&gt;";
+                                                    }
+                                                    
+                                                    $temp_request = array(
+                                                        "module" => "Emails",
+                                                        "action" => "send",
+                                                        "record" => "",
+                                                        "type" => "out",
+                                                        "send" => 1,
+                                                        "inbound_email_id" => ($random_number > 50) ? "58cceed9-3dd3-d0b5-43b2-59f1c80e3869" : "8dab4c79-32d8-0a26-f471-59f1c4e037cf",
+                                                        "emails_email_templates_name" => "Solargain / NO ADDRESS / Solar PV / QCells 300 / Fronius MAIN",
+                                                        "emails_email_templates_idb" => "58230a56-82cd-03ae-1d60-59eec0f8582d",
+                                                        "parent_type" => "Leads",
+                                                        "parent_name" => $lead->first_name ." ". $lead->last_name,
+                                                        "parent_id" => $lead->id,
+                                                        "from_addr" => $from_address,
+                                                        "to_addrs_names" => $lead->email1, //"binhdigipro@gmail.com",//$lead->email1,
+                                                        "cc_addrs_names" => "info@pure-electric.com.au",
+                                                        "bcc_addrs_names" =>  "binh.nguyen@pure-electric.com.au",
+                                                        "is_only_plain_text" => false
+                                                    );
+
+                                                    $emailBean    = new Email();
+                                                    $emailBean    = $emailBean->populateBeanFromRequest($emailBean, $temp_request);
+                                                    
+                                                    $emailBean->save();
+                                                    
+                                                    $emailBean->saved_attachments = handleMultipleFileAttachments($temp_request, $emailBean);
+                                                    //$GLOBALS['log']->debug('--------------------------------------------> LEAD Number Run HERE <--------------------------------------------\n' .$solargain_lead_number );
+                                                    // parse and replace bean variables
+                                                    $emailBean                    = replaceEmailVariables($emailBean, $temp_request);
+                                                    
+                                                    // Signature
+                                                    $matthew_id                   = "8d159972-b7ea-8cf9-c9d2-56958d05485e";
+                                                    $paul_id                      = "61e04d4b-86ef-00f2-c669-579eb1bb58fa";
+                                                    $user                         = new User();
+                                                    $user->retrieve($matthew_id);
+
+                                                    if ($random_number <= 50) {
+                                                        $emailSignatureId = "4857e8ef-cff5-cefd-9e0b-59f075f61bbe";
+                                                    } else{
+                                                        $emailSignatureId = "6157d3e7-7183-8197-ed43-59f03cf9ba9d"; // Matthew signature
+                                                    }
+                                                    
+                                                    $signature = $user->getSignature($emailSignatureId);
+                                                    $emailBean->description .= $signature["signature"];
+                                                    $emailBean->description_html .= $signature["signature_html"];
+                                                    $emailBean->description .= $live_chat_text;
+                                                    $emailBean->description_html .= $live_chat_text;
+                                                    
+                                                    //thien fix save email khi có live chat
+                                                    $emailBean->save();
+                                                    
+                                                    $lead->email_send_id_c     = $emailBean->id;
+                                                    $lead->email_send_status_c = 'pending';
+                                                    $lead->save();
+                                                    
+                                                    if ($temp_request["parent_type"] == "Leads") {
+                                                        $leadID = $temp_request["parent_id"];
+                                                        //updateSolargainLead($leadID, $temp_request, $emailBean);
+                                                    }
+                                                    
+                                                    //$body_html = $emailBean->description_html;
+                                                    
+                                                    // thien comment
+                                                    // if ($emailBean->send()) {
+                                                    //     $emailBean->status = 'sent';
+                                                    //     // Do extended things here
+                                                    //     // Save note to solargain
+                                                    
+                                                    //     if($temp_request["parent_type"] == "Leads"){
+                                                    //         $leadID = $temp_request["parent_id"];
+                                                    //         updateSolargainLead($leadID, $temp_request, $emailBean);
+                                                    //     }
+                                                    //     $emailBean->save();
+                                                    
+                                                    //     $body_html = $emailBean->description_html;
+                                                    
+                                                    // } else {
+                                                    //     // Don't save status if the email is a draft.
+                                                    //         // We need to ensure that drafts will still show
+                                                    //         // in the list view
+                                                    //         if ($emailBean->status !== 'draft') {
+                                                    //             $emailBean->status = 'send_error';
+                                                    //             $emailBean->save();
+                                                    //         } else {
+                                                    //             $emailBean->status = 'send_error';
+                                                    //         }
+                                                    // }
+
+                                                    // Send SMS to client too 
+                                                    $phone_number = $lead->phone_mobile ? $lead->phone_mobile : $lead->phone_work;
+                                                    if($phone_number){
+                                                        $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $phone_number));
+                                                        if(strlen($phone_number) >= 10){
+                                                            $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                                                            if(strpos($phone_number, "+61") !== false ){
+                                                                $user = new User();
+                                                                $user = $user->retrieve($lead->assigned_user_id);
+                                                                $message_body = 'Hi '.$lead->first_name.', my name is '.$user->first_name.' from Solargain. I received your request for a Solargain solar/battery quote for your place, I have that you are in '.$lead->primary_address_city.' '.$lead->primary_address_state.'. If you could please reply back with your street address I would be more than happy to assist.  Look forward to your response. Regards, '.$user->first_name;
+                                                                //exec("cd ".$sugar_config["message_command_dir"]."; php send-message.php sms ".$phone_number.' "'.$message_body.'"');
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    //thien fix
+                                                    // Do nothing
+                                                }
+                                                $record_id = $lead->id;
+                                                sendDesignRequestToAdmin($record_id);
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                                //$GLOBALS['log']->debug('--------------------------------------------> Live chat <--------------------------------------------\n' .$live_chat_text );
+                            }
+                            // Khong co live chat
+                            if (strpos($line1, "Customer Details") !== false) {
+                                // Read the next line
+                                if (($next_line = fgets($handle)) !== false) {
+                                    $next_line  = fgets($handle);
+                                    $next_line  = strip_tags($next_line);
+                                    $names      = explode(",", $next_line);
+                                    $first_name = "";
+                                    $last_name  = "";
+                                    $first_name = trim($names[1] ? $names[1] : "");
+                                    $first_name = ucfirst(strtolower($first_name));
+                                    $last_name  = trim($names[0] ? $names[0] : "");
+                                    $last_name  = ucfirst(strtolower($last_name));
+                                    
+                                    $phone_mobile = "";
+                                    $phone_work   = "";
+                                    $email        = "";
+                                    
+                                    // Not exist do our next work
+                                    // read all line by while until we get the new custommer lead
+                                    
+                                    while (($next_line = fgets($handle)) !== false) {
+                                        //if touch to end of New lead sections
+                                        // we do the if statement for each pattern here
+                                        
+                                        if (strpos($next_line, "This e-mail is private and confidential") !== false) {
+                                            fclose($handle);
+                                            copy($folder . "/" . $file, $folder . "/backup/" . $file);
+                                            unlink($folder . "/" . $file);
+                                            break;
+                                        }
+                                    
+                                        if (strpos($next_line, "m:") === 0) {
+                                            $phone_mobile = strip_tags(trim(str_replace(array(
+                                                "m:",
+                                                "**",
+                                                "*m:*"
+                                            ), "", $next_line)));
+                                            $phone_mobile = ($phone_mobile != "N/A\n" && is_numeric(str_replace('+','',str_replace(' ', '',$phone_mobile))) ) ? $phone_mobile : "";
+                                        }
+                                        
+                                        if (strpos($next_line, "p:") !== false) {
+                                            $phone_work = strip_tags(trim(str_replace(array(
+                                                "*p:*",
+                                                "p:"
+                                            ), "", $next_line)));
+                                            $phone_work = ($phone_work != "N/A\n" && is_numeric(str_replace('+','',str_replace(' ', '',$phone_work))) ) ? $phone_work : "";
+                                        }
+                                        
+                                        if ( (strpos($next_line, "e:") === 0 || strpos($next_line, "*e:") === 0) && strpos($next_line, "@") !== false) {
+                                            //$email = strip_tags(trim(str_replace(array("*e:*", "e:"), "", $next_line)));
+                                            //$email = trim(str_replace(array("*e:*", "e:"),"",strip_tags( $next_line)));
+                                            //$email = ($email != "N/A\n") ? trim($email) : "";
+                                            preg_match('/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i', $next_line, $mail_match_firstchars);
+                                            if (isset($mail_match_firstchars[0]) && $mail_match_firstchars[0] != "") {
+                                                $email = $mail_match_firstchars[0];
+                                            }
+                                            
+                                            // If we have already name in database Break
+                                            $db = DBManagerFactory::getInstance();
+                                            if ($first_name == "" && $last_name == "") {
+                                                fclose($handle);
+                                                unlink($folder . "/" . $file);
+                                                return;
+                                            }
+                                            $sql = "SELECT * FROM leads WHERE 1=1 ";
+                                            //if ($first_name != "")
+                                            $sql .= " AND first_name = '" . $first_name . "'";
+                                            //if ($last_name != "")
+                                            $sql .= " AND last_name = '" . $last_name . "'";
+                                            $sql .= " AND deleted != 1 ";
+                                            $ret      = $db->query($sql);
+                                            $is_exsit = false;
+                                            while ($row = $db->fetchByAssoc($ret)) {
+                                                if (isset($row) && $row != null) {
+                                                    $lead = new Lead();
+                                                    $lead->retrieve($row["id"]);
+                                                    
+                                                    if ($lead->email1 == $email)
+                                                        $is_exsit = true;
+                                                }
+                                            }
+                                            if ($is_exsit) {
+                                                fclose($handle);
+                                                unlink($folder . "/" . $file);
+                                                return;
+                                            }
+                                            
+                                            $next_second_line = fgets($handle);
+                                            $note .= $next_second_line;
+                                            //$GLOBALS['log']->debug('--------------------------------------------> at mext line.php <--------------------------------------------' .$next_second_line );
+                                            $next_third_line = fgets($handle);
+                                            $note .= $next_third_line;
+                                            
+                                            if ($next_third_line == $out_address[0][0] && strlen($next_second_line) > 5) {
+                                                $street_address = strip_tags($next_second_line);
+                                            }
+                                            
+                                            // If it is full adreses
+                                            if (!isset($post_code) || $post_code == "") {
+                                                if (strlen($next_second_line) > 5) {
+                                                    $next_fourth_line = fgets($handle);
+                                                    if (preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_fourth_line, $match_firstchars, PREG_PATTERN_ORDER)) {
+                                                        $next_fourth_line = trim(strip_tags($next_fourth_line));
+                                                        //$GLOBALS['log']->debug('--------------------------------------------> at thirdline .php <--------------------------------------------' .$next_third_line );
+                                                        //if(preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line, $match_firstchars,PREG_PATTERN_ORDER))
+                                                        $state            = $match_firstchars[0][0];
+                                                        
+                                                        $match_subburb = preg_split('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_fourth_line);
+                                                        $suburb        = $match_subburb[0];
+                                                        $post_code     = $match_subburb[1];
+                                                    }
+                                                } elseif (preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line, $match_firstchars, PREG_PATTERN_ORDER)) {
+                                                    $next_third_line = trim(strip_tags($next_third_line));
+                                                    //$GLOBALS['log']->debug('--------------------------------------------> at thirdline .php <--------------------------------------------' .$next_third_line );
+                                                    //if(preg_match_all('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line, $match_firstchars,PREG_PATTERN_ORDER))
+                                                    $state           = $match_firstchars[0][0];
+                                                    
+                                                    $match_subburb = preg_split('/VIC|SA|NSW|ACT|TAS|WA|QLD|NT/', $next_third_line);
+                                                    $suburb        = $match_subburb[0];
+                                                    $post_code     = $match_subburb[1];
+                                                }
+                                            }
+                                        }
+                                        $note .= strip_tags($next_line);
+                                        
+                                        if (strpos(strtolower($next_line), "Assigned To") !== false) {
+                                            $note .= strip_tags($next_line);
+                                        }
+                                        
+                                    }
+                                    
+                                    //if (strpos($line1, "Status:") !== false) break;
+                                    
+                                }
+                                // store lead here
+
+                                if ($first_name != "" || $last_name != "") {
+                                    $lead                             = new Lead();
+                                    $lead->first_name                 = $first_name;
+                                    $lead->last_name                  = $last_name;
+                                    $lead->email1                     = $email;
+                                    $lead->phone_mobile               = $phone_mobile;
+                                    $lead->phone_work                 = $phone_work;
+                                    $lead->solargain_lead_number_c    = $solargain_lead_number;
+                                    $lead->primary_address_postalcode = $post_code ? $post_code : "";
+                                    $lead->primary_address_city       = $suburb ? $suburb : "";
+                                    $lead->primary_address_state      = $state ? $state : "";
+                                    $lead->primary_address_street     = $client_primary_address ? $client_primary_address : ($street_address ? $street_address : "");
+                                    if(strtolower(trim($lead->primary_address_street)) == 'n a' || strtolower(trim($lead->primary_address_street)) == 'n/a' || strtolower(trim($lead->primary_address_street)) == 'na'){
+                                        $lead->primary_address_street = "";
+                                    }
+                                    $lead->live_chat_c                = $live_chat_text ? str_replace("\n\n", "", $live_chat_text) : $web_enquiry;
+                                    $lead->lead_source                = "Solargain";
+                                    $full_plain_text_explode          = explode("This e-mail is private and confidential", $full_plain_text);
+                                    $note_des = explode("Notes", $full_plain_text_explode[0]);
+                                    $lead->description                = $note_des[1];
+                                    
+                                    $lead->address_provided_c = $client_primary_address ? "1" : "0";
+                                    $lead->status             = "Assigned";
+
+                                    preg_match('#Return-Path: <(.+?)>#i', $l_file_content, $sent_froms);
+                                    if(isset($sent_froms[1]) && $sent_froms[1] == "Matthew.Wright@solargain.com.au"){
+                                        $random_number = 60;
+                                    } elseif(isset($sent_froms[1]) && (strtolower($sent_froms[1]) == "paul.szuster@solargain.com.au")) {
+                                        $random_number = 40;
+                                    } else {
+                                        $random_number = rand ( 1 , 100 );
+                                    }
+                                    
+                                    if ($random_number <= 50) {
+                                        $lead->assigned_user_id = "61e04d4b-86ef-00f2-c669-579eb1bb58fa"; // Paul
+                                    } else{
+                                        $lead->assigned_user_id = "8d159972-b7ea-8cf9-c9d2-56958d05485e"; // Matth
+                                    }
+                                    
+                                    $lead->save();
+                                    
+                                    if ($random_number <= 50) {
+                                        $from_address = "Paul Szuster - PureElectric &lt;paul.szuster@pure-electric.com.au&gt;";
+                                    } else{
+                                        $from_address = "Matthew Wright - PureElectric &lt;matthew.wright@pure-electric.com.au&gt;";
+                                    }
+                                    
+                                    $matthew_inbound_id = "58cceed9-3dd3-d0b5-43b2-59f1c80e3869";
+                                    $paul_inbound_id    = "ae0192a6-b70b-23a1-8dc0-59f1c819a22c";
+                                    
+                                    if ($lead->primary_address_street == "" || $lead->primary_address_city == "" || $lead->primary_address_state == "" || $lead->primary_address_postalcode == "") {
+                                        $temp_request        = array(
+                                            "module" => "Emails",
+                                            "action" => "send",
+                                            "record" => "",
+                                            "type" => "out",
+                                            "send" => 1,
+                                            "inbound_email_id" => ($random_number > 50) ? "58cceed9-3dd3-d0b5-43b2-59f1c80e3869" : "8dab4c79-32d8-0a26-f471-59f1c4e037cf",
+                                            "emails_email_templates_name" => "Solargain / NO ADDRESS / Solar PV / QCells 300 / Fronius MAIN",
+                                            "emails_email_templates_idb" => "58230a56-82cd-03ae-1d60-59eec0f8582d",
+                                            "parent_type" => "Leads",
+                                            "parent_name" => $lead->first_name .' '. $lead->last_name,
+                                            "parent_id" => $lead->id,
+                                            "from_addr" => $from_address,
+                                            "to_addrs_names" => $lead->email1, //$lead->email1, //"binhdigipro@gmail.com",
+                                            "cc_addrs_names" => "info@pure-electric.com.au",
+                                            "bcc_addrs_names" => "binh.nguyen@pure-electric.com.au",
+                                            "is_only_plain_text" => false
+                                        );
+
+                                        $emailBean           = new Email();
+                                        $emailBean           = $emailBean->populateBeanFromRequest($emailBean, $temp_request);
+                                        $inboundEmailAccount = new InboundEmail();
+                                        $inboundEmailAccount->retrieve($temp_request['inbound_email_id']);
+
+                                        $emailBean->save();
+                                        $emailBean->saved_attachments = handleMultipleFileAttachments($temp_request, $emailBean);
+                                        
+                                        // parse and replace bean variables
+                                        $emailBean = replaceEmailVariables($emailBean, $temp_request);
+                                        
+                                        // Signature
+                                        $matthew_id = "8d159972-b7ea-8cf9-c9d2-56958d05485e";
+                                        $paul_id    = "61e04d4b-86ef-00f2-c669-579eb1bb58fa";
+                                        $user       = new User();
+                                        $user->retrieve($matthew_id);
+                                        if ($random_number <= 50) { // Matthew 
+                                            $emailSignatureId = "4857e8ef-cff5-cefd-9e0b-59f075f61bbe";
+                                        } else{
+                                            $emailSignatureId = "6157d3e7-7183-8197-ed43-59f03cf9ba9d";
+                                        }
+                                        
+                                        $signature = $user->getSignature($emailSignatureId);
+                                        $emailBean->description .= $signature["signature"];
+                                        $emailBean->description_html .= $signature["signature_html"];
+                                        $emailBean->description .= $live_chat_text;
+                                        $emailBean->description_html .= $live_chat_text;
+                                        
+                                        //thien fix save email khi không có live chat
+                                        $emailBean->save();
+                                        
+                                        if ($temp_request["parent_type"] == "Leads") {
+                                            $leadID = $temp_request["parent_id"];
+                                            //updateSolargainLead($leadID, $temp_request, $emailBean);
+                                        }
+                                        
+                                        $lead->email_send_id_c     = $emailBean->id;
+                                        $lead->email_send_status_c = 'pending';
+                                        
+                                        $lead->save();
+                                        
+                                        //thien commnent
+                                        // if ($emailBean->send()) {
+                                        //     $emailBean->status = 'sent';
+                                        //     // Do extended things here
+                                        //     // Save note to solargain
+                                        //     if($temp_request["parent_type"] == "Leads"){
+                                        //         $leadID = $temp_request["parent_id"];
+                                        //         updateSolargainLead($leadID, $temp_request, $emailBean);
+                                        //     }
+                                        //     $emailBean->save();
+                                        // } else {
+                                        //         if ($emailBean->status !== 'draft') {
+                                        //             $emailBean->status = 'send_error';
+                                        //             $emailBean->save();
+                                        //         } else {
+                                        //             $emailBean->status = 'send_error';
+                                        //         }
+                                        // }
+
+                                        // Send SMS To client
+                                        $phone_number = $lead->phone_mobile ? $lead->phone_mobile : $lead->phone_work;
+                                        if($phone_number){
+                                            $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $phone_number));
+                                            if(strlen($phone_number) >= 10){
+                                                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+
+                                                if(strpos($phone_number, "+61") !== false ){
+                                                    $user = new User();
+                                                    $user = $user->retrieve($lead->assigned_user_id);
+                                                    $message_body = 'Hi '.$lead->first_name.', my name is '.$user->first_name.' from Solargain. I received your request for a Solargain solar/battery quote for your place, I have that you are in '.$lead->primary_address_city.' '.$lead->primary_address_state.'. If you could please reply back with your street address I would be more than happy to assist.  Look forward to your response. Regards, '.$user->first_name;
+                                                    // we will not send sms
+                                                    // exec("cd ".$sugar_config["message_command_dir"]."; php send-message.php sms ".$phone_number.' "'.$message_body.'"');
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        //thien fix
+                                        
+                                    }
+                                    $record_id = $lead->id;
+                                    sendDesignRequestToAdmin($record_id);
+                                }
+                                
+                            }
+                            
+                        }
+                    }
+                }
+                
+                fclose($handle);
+                if ($lead->id != "") {
+                    copy($folder . "/" . $file, $folder . "/backup/" . $file);
+                }
+                unlink($folder . "/" . $file);
+                return;
+            } else {
+                // error opening the file.
+            }
+        }
+    }
+}
+custom_readmail();
+function updateDesignForSolargainLead($leadID)
+{
+    $lead = new Lead();
+    $lead->retrieve($leadID);
+    if (!$lead->solargain_lead_number_c) {
+        return;
+    }
+    
+    $solargainLead = $lead->solargain_lead_number_c;
+    
+    $username = "matthew.wright";
+    $password = "MW@pure733";
+    
+    // Get full json response for Leads
+    
+    $url = "https://crm.solargain.com.au/APIv2/leads/" . $solargainLead;
+    //set the url, number of POST vars, POST data
+    
+    $curl = curl_init();
+    
+    curl_setopt($curl, CURLOPT_URL, $url);
+    
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+    
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_ENCODING, "gzip");
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        "Host: crm.solargain.com.au",
+        "User-Agent: " . $_SERVER['HTTP_USER_AGENT'],
+        "Content-Type: application/json",
+        "Accept: application/json, text/plain, */*",
+        "Accept-Language: en-US,en;q=0.5",
+        "Accept-Encoding:   gzip, deflate, br",
+        "Connection: keep-alive",
+        "Authorization: Basic " . base64_encode($username . ":" . $password),
+        "Referer: https://crm.solargain.com.au/lead/edit/" . $solargainLead,
+        "Cache-Control: max-age=0"
+    ));
+    
+    $leadJSON = curl_exec($curl);
+    curl_close($curl);
+    
+    $leadSolarGain = json_decode($leadJSON);
+    
+    // building Note
+    // Logged in user name: Email From name: and email template title 
+    $note                   = "Preparing designs and quote for client";
+    $leadSolarGain->Notes[] = array(
+        "ID" => 0,
+        "Type" => array(
+            "ID" => 1,
+            "Name" => "General",
+            "RequiresComment" => true
+        ),
+        "Text" => $note
+    );
+    
+    $leadSolarGainJSONDecode = json_encode($leadSolarGain, JSON_UNESCAPED_SLASHES);
+    //echo $leadSolarGainJSONDecode;die();
+    // Save back lead 
+    $url                     = "https://crm.solargain.com.au/APIv2/leads/";
+    //set the url, number of POST vars, POST data
+    $curl                    = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    //curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $password);
+    
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_POST, 1);
+    
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $leadSolarGainJSONDecode);
+    
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    //
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        "Host: crm.solargain.com.au",
+        "User-Agent: " . $_SERVER['HTTP_USER_AGENT'],
+        "Content-Type: application/json",
+        "Accept: application/json, text/plain, */*",
+        "Accept-Language: en-US,en;q=0.5",
+        "Accept-Encoding:   gzip, deflate, br",
+        "Connection: keep-alive",
+        "Content-Length: " . strlen($leadSolarGainJSONDecode),
+        "Authorization: Basic " . base64_encode($username . ":" . $password),
+        "Referer: https://crm.solargain.com.au/lead/edit/" . $solargainLead
+    ));
+    
+    $lead = json_decode(curl_exec($curl));
+    curl_close($curl);
+}
+
+function getLatLong($address)
+{
+    
+    $array = array();
+    $geo   = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address) . '&sensor=false');
+    
+    // We convert the JSON to an array
+    $geo = json_decode($geo, true);
+    
+    // If everything is cool
+    if ($geo['status'] = 'OK') {
+        $latitude  = $geo['results'][0]['geometry']['location']['lat'];
+        $longitude = $geo['results'][0]['geometry']['location']['lng'];
+        $array     = array(
+            'lat' => $latitude,
+            'lng' => $longitude
+        );
+    }
+    
+    return $array;
+}
+
+function sendDesignRequestToAdmin($record_id)
+{
+
+    $lead = new Lead();
+    $lead = $lead->retrieve($record_id);
+
+    if($lead->id == ''){
+        return;
+    }
+
+    $description =  $lead->description;
+
+    $address     =  $lead->primary_address_street . ", " . 
+                    $lead->primary_address_city   . ", " . 
+                    $lead->primary_address_state  . ", " . 
+                    $lead->primary_address_postalcode ;
+    $lat_long = getLatLong($address);
+
+    $from_address = "Matthew Wright - PureElectric &lt;matthew.wright@pure-electric.com.au&gt;";
+    $temp_request = array(
+        "module" => "Emails",
+        "action" => "send",
+        "record" => "",
+        "type" => "out",
+        "send" => 1,
+        "inbound_email_id" => "81e9e608-9534-1461-525a-59afe6167eaf",
+        "emails_email_templates_name" => "Solar Design Request",
+        "emails_email_templates_idb" => "4e3a5016-36d2-b85f-aa20-5b10b5756a16",
+        //"emails_email_templates_idb" => "18a02801-a21c-c288-bcd7-5b10427edfc3",
+        "parent_type" => "Leads",
+        "parent_name" => $lead->first_name ." ". $lead->last_name,
+        "parent_id" => $lead->id,
+        "from_addr" => $from_address,
+        "to_addrs_names" => "admin@pure-electric.com.au", //"binhdigipro@gmail.com",//$lead->email1,
+        "cc_addrs_names" => "info@pure-electric.com.au",
+        "bcc_addrs_names" => "binh.nguyen@pure-electric.com.au",
+        "is_only_plain_text" => false,
+        "address" =>$address,
+        "lat_long" =>$lat_long,
+        "description" => $description,
+      
+        
+    );
+    $emailBean = new Email();
+    $emailBean = $emailBean->populateBeanFromRequest($emailBean, $temp_request);
+    $inboundEmailAccount = new InboundEmail();
+    $inboundEmailAccount->retrieve($temp_request['inbound_email_id']);
+    $emailBean->save();
+    $emailBean->saved_attachments = handleMultipleFileAttachments($temp_request, $emailBean);
+
+    // parse and replace bean variables
+    $emailBean = replaceEmailVariables($emailBean, $temp_request);
+    $emailBean->save();
+
+    updateDesignForSolargainLead($record_id);
+    $lead->email_send_design_request_id_c = $emailBean->id;
+    $lead->email_send_design_status_c = 'pending';
+    $lead->save();
+
+    return $emailBean;
+}
+
+die();
+
+ function send_listLookupNotReplyEmail($data){
+    require_once('include/SugarPHPMailer.php');
+    $emailObj = new Email();
+    $defaults = $emailObj->getSystemDefaultEmail();
+    $mail = new SugarPHPMailer();
+    $mail->setMailerForSystem();
+    $mail->From = $defaults['email'];
+    $mail->FromName = $defaults['name'];
+    $mail->IsHTML(true);
+    $mail->Subject = 'Lookup Not Reply Email';
+    
+    //Body Email
+
+    $body_email = '<div dir="ltr">
+    Dear ' . $assigned_user_name .',<br/>
+    This is the list of email that you didn\'t reply: <br/>';
+    foreach($data as $result){
+
+        $lead = new Lead();
+        $lead = $lead->retrieve($result['parent_id']);
+
+        $email_lead = new Email();
+        $email_lead =  $email_lead->retrieve($result['id']);
+
+        $body_email .= '<span>+ </span><a target="_blank" href="https://suitecrm.pure-electric.com.au/index.php?action=DetailView&module=Leads&record=' . $lead->id . '">['.$lead->first_name.' '.$lead->last_name.']</a>';
+        
+        $assigned_by = '';
+        if($lead->assigned_user_id == "8d159972-b7ea-8cf9-c9d2-56958d05485e"){ // Matthew
+            $assigned_by = "Matthew Wright";
+        }elseif($lead->assigned_user_id == "61e04d4b-86ef-00f2-c669-579eb1bb58fa"){
+            $assigned_by = "Paul Szuster";
+        }
+        $body_email .= ' <a target="_blank" href="https://mail.google.com/#search/'.$lead->email1.'">[GM Search]</a>';
+        $body_email .= '. Assigned: '.$assigned_by.'. Date: ' .date("d/m/Y H:i:s", strtotime($result['date_entered']));
+
+        $body_email .= ' <a href="#">Ignore</a><br/>';
+        $email_content =  preg_replace('/CRM Links:(.+?)End CRM Links/s', '', strip_tags($email_lead->description_html));
+
+        $body_email .= '<span>   - Content: </span><span style="font-size:12px;font-style: italic;">'.substr($email_content,0,150).trim().'...</span><br/>';
+    }
+    
+    $body_email .= '</div>';
+
+    $mail->Body = $body_email;
+    //END  Body Email
+
+    $mail->prepForOutbound();
+    $mail->AddAddress('thienpb89@gmail.com');
+    $mail->AddAddress('binhdigipro@gmail.com');
+    $sent = $mail->Send();
+}
+function custom_lookupNotReplyEmail(){
+    date_default_timezone_set('Africa/Lagos');
+    set_time_limit(0);
+    ini_set('memory_limit', '-1');
+    $db = DBManagerFactory::getInstance();
+    $query =   "SELECT emails.id, emails.date_entered, emails.parent_id, emails.deleted, emails.`status` 
+
+    FROM `leads`
+     JOIN emails ON emails.parent_id = leads.id
+     JOIN leads_cstm ON emails.parent_id = leads_cstm.id_c
+    
+     JOIN 
+    (
+        SELECT MAX(emails.date_entered) AS date_entered , emails.parent_id
+    
+    FROM `leads`
+     JOIN emails ON emails.parent_id = leads.id
+     JOIN leads_cstm ON emails.parent_id = leads_cstm.id_c
+     
+    WHERE 1 = 1  
+    AND emails.`parent_type` = 'Leads' 
+    AND emails.date_entered <= DATE_ADD(CURDATE(), INTERVAL -1 DAY) 
+    AND leads.status NOT IN ('Lost_Competitor','Lost_Uncontactable','Lost_Unsuitable_Roof','Lost_Enquiry_Only','Lost_No_Longer_Interested','Lost_Outside_Service_Area','Lost_Duplicate','Lost_Council','Lost_Reassigned_To_Solorgain')
+    AND (leads_cstm.ignore_lead_c != 1 OR leads_cstm.ignore_lead_c IS NULL)   
+    AND emails.deleted = 0
+      
+    GROUP BY emails.parent_id
+    ORDER BY `emails`.`date_entered` DESC
+        ) result_table ON result_table.parent_id = emails.parent_id AND result_table.date_entered = emails.date_entered
+         
+         
+         
+         
+    WHERE 1 = 1 
+    AND emails.`parent_type` = 'Leads' 
+    AND emails.date_entered <= DATE_ADD(CURDATE(), INTERVAL -1 DAY) 
+    AND leads.status NOT IN ('Lost_Competitor','Lost_Uncontactable','Lost_Unsuitable_Roof','Lost_Enquiry_Only','Lost_No_Longer_Interested','Lost_Outside_Service_Area','Lost_Duplicate','Lost_Council','Lost_Reassigned_To_Solorgain')
+    AND (leads_cstm.ignore_lead_c != 1 OR leads_cstm.ignore_lead_c IS NULL)   
+    AND emails.deleted = 0
+    
+    AND emails.status = 'received'
+        
+    ORDER BY `emails`.`date_entered` DESC";
+    $ret = $db->query($query);
+    $data = array();
+    $i = 0;
+    while($row = $db->fetchByAssoc($ret)){
+        if($row['status'] == 'received' && $i < 50){
+            $data[] = $row;
+            $i++;
+        }
+        
+    }
+
+    send_listLookupNotReplyEmail($data);
+}
+
+custom_lookupNotReplyEmail();
+
+die();
+// Uopdate lead that have Design document sent 
+$db =  DBManagerFactory::getInstance();
+$query = "
+    SELECT DISTINCT(leads.id) , leads_cstm.time_completed_job_c  FROM leads  
+        INNER JOIN leads_cstm ON leads.id = leads_cstm.id_c 
+        INNER JOIN emails ON emails.parent_id = leads.id
+        INNER JOIN notes ON notes.parent_id = emails.id
+        WHERE 
+            leads.deleted = 0 
+            AND (leads_cstm.time_sent_to_client_c IS NULL OR leads_cstm.time_sent_to_client_c = '') 
+            AND (emails.parent_type = 'Leads')
+            AND (notes.parent_type = 'Emails')
+            AND (LOWER(notes.filename) LIKE LOWER('%Design_%') OR LOWER(notes.filename) LIKE LOWER('%Quote_%'))
+        ";
+$result = $db->query($query);
+//  var_dump($result);die();
+$array_lead = [];
+while ($row = $db->fetchByAssoc($result)) {
+        //array_push($array_lead,$row['id']);
+        update_data_time_sent_client($row['id'],$row['time_completed_job_c']);
+        echo "<br><a target='_blank' href='/index.php?module=Leads&offset=81&stamp=1547698793066230500&return_module=Leads&action=EditView&record=" .$row['id'] ."'>open lead updated</a>";
+
+}
+// var_dump($array_lead);
+
+function update_data_time_sent_client($record_id,$time_com_job){
+    if(!isset($time_com_job) || $time_com_job == ''){
+        $time_com_job = '2019-01-01 08:00:00';
+    }
+    $db = DBManagerFactory::getInstance();
+    $query = " UPDATE leads_cstm SET time_sent_to_client_c = '$time_com_job' WHERE id_c='$record_id' ";
+    $result = $db->query($query);
+}
+die();
+
+// Update toan bo lead ma co quote da dc convert to invoice tren SG
+// Update all lead that have SG quote converted to invoice
+$db = DBManagerFactory::getInstance();
+$query = "SELECT leads.id as id,time_completed_job_c,solargain_quote_number_c,solargain_tesla_quote_number_c ,date_entered
+FROM leads INNER JOIN leads_cstm  ON leads.id = leads_cstm.id_c 
+WHERE 
+     (leads_cstm.time_sent_to_client_c IS NULL OR leads_cstm.time_sent_to_client_c = '') 
+    AND ( (leads_cstm.solargain_quote_number_c IS NOT NULL AND leads_cstm.solargain_quote_number_c != '') OR  (leads_cstm.solargain_tesla_quote_number_c IS NOT NULL AND leads_cstm.solargain_tesla_quote_number_c != '') )
+    AND leads.deleted = 0
+";
+$result = $db->query($query);
+var_dump($result);
+$array_lead = [];
+while ($row = $db->fetchByAssoc($result)) {
+    $check_status_quote = check_status_quote_SAM($row['solargain_quote_number_c']);
+    $check_status_tesla = check_status_quote_SAM($row['solargain_tesla_quote_number_c']);
+    //echo '<br>hihi: ' .$row['id'] .'---status: ' .$check_status .'<br>' .$row['solargain_quote_number_c'];
+    if( $check_status_quote == 'Converted To Order' || $check_status_tesla == 'Converted To Order'){
+        //array_push($array_lead,$row['id']);
+        update_data_time_sent_client($row['id'],$row['time_completed_job_c']);
+        echo "<br><a target='_blank' href='/index.php?module=Leads&offset=81&stamp=1547698793066230500&return_module=Leads&action=EditView&record=" .$row['id'] ."'>open lead updated</a>";
+    }
+}
+// var_dump($array_lead);
+
+/*function update_data_time_sent_client($record_id,$time_com_job){
+    if($time_com_job != "") {
+    }else {
+        $time_com_job = "30/12/2018 11:00";
+    }
+    $db = DBManagerFactory::getInstance();
+    $query = " UPDATE leads_cstm SET time_sent_to_client_c = '$time_com_job' WHERE id_c='$record_id' ";
+    $result = $db->query($query);
+}
+*/
+// print_r(check_status_quote_SAM('94246'));
+function check_status_quote_SAM($number_quote){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://crm.solargain.com.au/apiv2/quotes/$number_quote");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = "Pragma: no-cache";
+    $headers[] = "Accept-Encoding: gzip, deflate, br";
+    $headers[] = "Accept-Language: en-US,en;q=0.9";
+    $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+    $headers[] = "Accept: application/json, text/plain, */*";
+    $headers[] = "Referer: https://crm.solargain.com.au/order/edit/30962";
+    $headers[] = "Authorization: Basic bWF0dGhldy53cmlnaHQ6TVdAcHVyZTczMw==";
+    $headers[] = "Cookie: SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1";
+    $headers[] = "Connection: keep-alive";
+    $headers[] = "Cache-Control: no-cache";
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $result = curl_exec($ch);
+    curl_close ($ch);
+    $json_result = json_decode($result);
+    return $json_result->Status->Description;
+}
+
+die();
+
+$db =  DBManagerFactory::getInstance();
+$sql = "
+        SELECT * FROM aos_invoices iv LEFT JOIN aos_invoices_cstm cstm ON iv.id = cstm.id_c WHERE 
+            (cstm.sanden_tank_serial_c IS NOT NULL AND cstm.sanden_tank_serial_c != '')
+            OR (cstm.sanden_hp_serial_c IS NOT NULL AND cstm.sanden_hp_serial_c != '') 
+            
+        ";
+echo $sql;
+$ret = $db -> query($sql);
+if($ret->num_rows > 0){
+    while($row = $ret ->fetch_assoc()){
+        echo $row['id']."<br>";
+        $invoice = new AOS_Invoices();
+        $invoice->retrieve($row['id']);
+        if(isset($invoice->id) && $invoice->id != ""){
+            $invoice->save();
+        }
+    }
+}
+die();
+
+$db = DBManagerFactory::getInstance();
+$sql_set_count = "SET @count = 0;";
+$result = $db->query($sql_set_count);
+$sql_number = "UPDATE tasks SET number = @count:=@count+1 ORDER BY date_entered ASC ";
+$result = $db->query($sql_number);
+
+die(); 
+
+$db = DBManagerFactory::getInstance();
+$sql = "SELECT leads.id as id ,
+leads_cstm.solargain_quote_number_c ,
+leads_cstm.solargain_tesla_quote_number_c,
+leads.last_name as last_name ,
+    leads.first_name as first_name ,
+    leads.primary_address_street as primary_address_street ,
+    leads.primary_address_city as primary_address_city ,
+    leads.primary_address_state as primary_address_state ,
+    leads.primary_address_postalcode as primary_address_postalcode ,
+    leads.primary_address_country as primary_address_country ,
+    leads.account_name as account_name,
+    leads.account_id as account_id,
+    leads.assigned_user_id as assigned_user_id,
+    leads.lead_source as lead_source
+FROM leads 
+INNER JOIN leads_cstm ON leads_cstm.id_c = leads.id
+WHERE 
+    1 = 1
+    AND (leads.opportunity_id = '' OR leads.opportunity_id is NULL) 
+    AND (leads.status = 'New' OR leads.status = 'Assigned' OR leads.status = 'In Process') 
+    AND (leads_cstm.create_opportunity_number_c = '' OR leads_cstm.create_opportunity_number_c IS NULL)
+    AND (leads_cstm.create_opportunity_c = '' OR leads_cstm.create_opportunity_c IS NULL)
+    AND (leads_cstm.create_opportunity_number_c = '' OR leads_cstm.create_opportunity_number_c IS NULL)
+    AND ((leads_cstm.solargain_quote_number_c != '' AND leads_cstm.solargain_quote_number_c IS NOT NULL)
+    OR (leads_cstm.solargain_tesla_quote_number_c != '' AND leads_cstm.solargain_tesla_quote_number_c IS NOT NULL))
+    AND leads.deleted = 0
+
+";
+// echo $sql;die();
+$result = $db->query($sql);
+//print_r($result);
+while ($row = $db->fetchByAssoc($result)) {
+    //create account 
+    if($row['account_id'] == '') {
+        $account = new Account();
+        $account->name = $row['first_name'] ." " . $row['last_name'];
+        $account->billing_address_street =  $row['billing_address_street'];
+        $account->billing_address_city =  $row['billing_address_city'];
+        $account->billing_address_state =  $row['billing_address_state'];
+        $account->billing_address_postalcode =  $row['billing_address_postalcode'];
+        $account->billing_address_country =  $row['billing_address_country'];
+        $account->assigned_user_id = $row['assigned_user_id'];
+        $account->save();
+    }else {
+        $account = new Account();
+        $account->retrieve($row['account_id']);
+    }
+    //create account
+    $opportunity = new Opportunity();
+    $opportunity->name = $row['last_name'] .' ' . $row['primary_address_city'].' Solar';
+    $opportunity->assigned_user_id = $row['assigned_user_id'];
+    $opportunity->account_name = $account->name;
+    $opportunity->account_id = $account->id;
+    $opportunity->amount = 600;//$bean->opportunity_amount;
+    $opportunity->sales_stage = 'Negotiation/Review';
+    $opportunity->lead_source = $row['lead_source'];
+    $date = new DateTime('+1 day');
+    $opportunity->date_closed = $date->format('Y-m-d');
+    $opportunity->save();
+    //update lead
+    $sql_update = "UPDATE  leads
+    SET leads.opportunity_id ='" .$opportunity->id
+     ."', leads.account_name ='" .$account->name
+     ."', leads.account_id ='" .$account->id
+     ."', leads.status ='Converted' WHERE leads.id = '" .$row['id'] ."'";
+    $result1 = $db->query( $sql_update);
+
+    $sql_update = "UPDATE leads_cstm 
+    SET leads_cstm.create_solar_number_c = '" .$opportunity->id 
+    ."' WHERE id_c = '" .$row['id'] ."'";
+    $result2 = $db->query( $sql_update);
+
+    echo '<br> Lead id:';
+   echo $row['id'];
+   echo '<br> Opportunity id:';
+   echo $opportunity->id;
+}
+
+die();
+
+$db =  DBManagerFactory::getInstance();
+$sql = "SELECT * FROM aos_invoices iv LEFT JOIN aos_invoices_cstm cstm ON iv.id = cstm.id_c WHERE (cstm.sanden_tank_serial_c IS NOT NULL AND cstm.sanden_tank_serial_c != '')";
+echo $sql;
+$ret = $db -> query($sql);
+if($ret->num_rows > 0){
+    while($row = $ret ->fetch_assoc()){
+        if($row["sanden_tank_serial_c"]!= ""){
+            echo "invoice id: ". $row ['id']."<br>";
+            echo "old serial: ". $row['sanden_tank_serial_c']."<br>";
+            $id     = $row ['id'];
+            $number = str_replace("-","",$row['sanden_tank_serial_c']);
+            $sql_update = "UPDATE aos_invoices_cstm
+            SET sanden_tank_serial_c = '$number'
+            WHERE id_c = '$id '
+            ";
+            echo $number."<br>";
+            $db->query($sql_update);
+        }
+        
+    }
+}
+die();
+
+$db = DBManagerFactory::getInstance();
+    
+$sql = "SELECT * FROM pe_stock_items st
+        LEFT JOIN  pe_stock_items_cstm stcstm ON st.id = stcstm.id_c
+";
+
+$ret = $db->query($sql);
+while ($row = $db->fetchByAssoc($ret)) {
+    $pe_warehouse_log = new pe_warehouse_log();
+    $pe_warehouse_log -> retrieve($row['parent_id']);
+    if($pe_warehouse_log->id != ""){
+        
+        if ($pe_warehouse_log->load_relationship('pe_warehouse_log_pe_warehouse')) {
+            $warehouse = $pe_warehouse_log->pe_warehouse_log_pe_warehouse->getBeans();
+            if($warehouse != false){
+                $stock_item = new pe_stock_items();
+                $stock_item->retrieve($row['id']);
+                if($stock_item->id != ""){
+                    $stock_item-> load_relationship('pe_warehouse_pe_stock_items_1');
+                    $stock_item->pe_warehouse_pe_stock_items_1->add($warehouse);
+                    $stock_item->save();
+                }
+                echo $stock_item->id.'<br>';
+            }
+        }
+    }
+}
+
+die();
+
+$db = DBManagerFactory::getInstance();
+$sql_query =  "SELECT * FROM `pe_warehouse_log` WHERE `purchaseorder_id` != ''";
+$result = $db->query($sql_query);
+$i=0;
+while($row = $db->fetchByAssoc($result)){
+    $id = create_guid();
+    $date  = date('Y-m-d H:s:i');
+    $deleted = $row['deleted'];
+    $po_id = $row['purchaseorder_id'];
+    $warehouse_log_id = $row['id'];
+    $sql_update = "INSERT INTO po_purchase_order_pe_warehouse_log_1_c (id, date_modified, deleted, po_purchase_order_pe_warehouse_log_1po_purchase_order_ida, po_purchase_order_pe_warehouse_log_1pe_warehouse_log_idb) 
+                    VALUES ('$id', '$date' , '$deleted', '$po_id', '$warehouse_log_id')";
+    $db->query($sql_update);
+}
+
+die();
+
+$db = DBManagerFactory::getInstance();
+    
+$sql = "SELECT * FROM pe_stock_items st
+LEFT JOIN  aos_invoices_cstm inv ON 
+                                    inv.sanden_tank_serial_c = st.serial_number 
+                                    OR inv.sanden_hp_serial_c = st.serial_number
+WHERE 1=1 AND st.serial_number != '' AND inv.id_c != ''
+";
+
+$ret = $db->query($sql);
+while ($row = $db->fetchByAssoc($ret)) {
+    if($row["id"] != ""){
+        /*$stock_item = new pe_stock_items();
+        $stock_item->retrieve($row["id"]);
+        if($stock_item->id != ""){
+            $stock_item->aos_invoices_id_c = $bean->id;
+            $stock_item->save();
+        }*/
+
+        // Update query
+        $sql = "UPDATE pe_stock_items_cstm
+                SET aos_invoices_id_c = '".$row['id_c']."'
+                WHERE id_c = '".$row["id"]."'
+                ";
+                echo  $sql ."<br>" ;
+                echo $row["id"]."<br>";
+    }
+}
+
+die();
+
+$db = DBManagerFactory::getInstance();
+    $sql_set_count = "SET @count = 0;";
+    $result = $db->query($sql_set_count);
+    $sql_number_whlog = "UPDATE pe_warehouse_log SET number = @count:=@count+1 ORDER BY date_entered ASC";
+    $result = $db->query($sql_number_whlog);
+
+die(); 
+
+require_once 'modules/SchedulersJobs/SchedulersJob.php';
+$timedate =new TimeDate();
+function create_dae($year=null, $mnth=null, $day=null)
+{
+    global $timedate;
+    $now = $timedate->getNow();
+    if ($day==null) {
+        $day=$now->day+mt_rand(0, 365);
+    }
+    return $timedate->asDbDate($now->get_day_begin($day, $mnth, $year));
+}
+$sched2 = new Scheduler();
+$sched2->name               = 'LBL_OOTB_REPORTS';
+$sched2->job                = 'function::aorRunScheduledReports';
+$sched2->date_time_start    = create_dae(2015, 1, 1) . ' ' . create_dae(0, 0, 1);
+$sched2->date_time_end      = null;
+$sched2->job_interval       = '*::*::*::*::*';
+$sched2->status             = 'Active';
+$sched2->created_by         = '1';
+$sched2->modified_user_id   = '1';
+$sched2->catch_up           = '1';
+$sched2->save();
+die();
+
+function aorRunScheduledReports(){ 
+    require_once 'include/SugarQueue/SugarJobQueue.php';
+    $date = new DateTime();//Ensure we check all schedules at the same instant
+    foreach(BeanFactory::getBean('AOR_Scheduled_Reports')->get_full_list() as $scheduledReport){
+
+        if($scheduledReport->status == 'active' && $scheduledReport->shouldRun($date)){
+            if(empty($scheduledReport->aor_report_id)){
+                continue;
+            }
+            $job = new SchedulersJob();
+            $job->name = "Scheduled report - {$scheduledReport->name} on {$date->format('c')}";
+            $job->data = $scheduledReport->id;
+            $job->target = "class::AORScheduledReportJob";
+            $job->assigned_user_id = 1;
+            $jq = new SugarJobQueue();
+            $jq->submitJob($job);
+        }
+    }
+}
+aorRunScheduledReports();

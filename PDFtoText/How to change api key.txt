@@ -1,0 +1,5 @@
+How to change API the api key:
+
++ Open File Processing.php
+
++ Edit apiKey at line 39 (or simply search for "helloworld")

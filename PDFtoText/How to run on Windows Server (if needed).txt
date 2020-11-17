@@ -1,0 +1,19 @@
+How to install on IIS/Windows (if needed)
+
++ Step 1: Install IIS
+
++ Step 2: Install Microsoft Web Platform Installer 3.0 
+
++ Step 3: Install Php Manager 5.0 + php Inside Program: Microsft Web Platform
+Installer 3.0. (If have problem can’t install Php Manager then go to this link :
+https://github.com/edgardo001/PHPManagerForIIS-Versiones .download and
+install)
+
++ Step 4: Copy file “cacert.pem” to folder “/path to IIS Express/PHP”
+
++ Step 5: Copy file “php.ini” to folder ”/path to IIS/Express/php/php(version)/”
+(replace default php)
+
++ Step 6: In IIS Explorer add a site ( path to the folder of source code)
+
++ Step 7: Run the website and type : http://localhost to view

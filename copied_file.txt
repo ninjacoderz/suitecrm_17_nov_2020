@@ -1,0 +1,14 @@
+
+
+/Users/nguyenbinh/Documents/Sites/PureElectric/pe_crm_21_match/modules/Emails/views/view.compose.php
+
+/Users/nguyenbinh/Documents/Sites/PureElectric/pe_crm_21_match/modules/Emails/include/ComposeView/EmailsComposeView.js
+
+/Users/nguyenbinh/Documents/Sites/PureElectric/pe_crm_21_match/modules/Emails/EmailsController.php
+
+/Users/nguyenbinh/Documents/Sites/PureElectric/pe_crm_21_match/modules/Emails/Email.php
+
+/Users/nguyenbinh/Documents/Sites/PureElectric/pe_crm_21_match/modules/AOS_Quotes/converToInvoice.php
+
+/Users/nguyenbinh/Documents/Sites/PureElectric/pe_crm_21_match/modules/AOS_Products_Quotes/Line_Items.php
+/Users/nguyenbinh/Documents/Sites/PureElectric/pe_crm_21_match/modules/AOS_Products_Quotes/AOS_Products_Quotes.php

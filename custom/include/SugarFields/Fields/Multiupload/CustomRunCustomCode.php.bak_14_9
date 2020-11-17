@@ -1,0 +1,37 @@
+<?php
+ini_set("display_errors",1);
+set_time_limit(0);
+ini_set('memory_limit', '-1');
+$db = DBManagerFactory::getInstance();
+
+// $sql = "SELECT count(*) from po_purchase_order_aos_products_quotes_1_c";
+// $result = $db->query($sql);
+// var_dump($db->fetchByAssoc($result));
+
+// $sql = "TRUNCATE TABLE po_purchase_order_aos_products_quotes_1_c";
+// $result = $db->query($sql);
+// var_dump($result);
+
+// $sql = "SELECT count(*) from po_purchase_order_aos_products_quotes_1_c";
+// $result = $db->query($sql);
+// var_dump($db->fetchByAssoc($result));
+// die;
+    $sql = "select id,parent_type,parent_id,product_id from aos_products_quotes where deleted = 0 and parent_type='PO_purchase_order'";
+    $result = $db->query($sql);
+    if($result->num_rows > 1){
+        while($row =  $db->fetchByAssoc($result)){
+            $sql = "INSERT INTO `po_purchase_order_aos_products_quotes_1_c` (`id`, `date_modified`, `deleted`, `po_purchase_order_aos_products_quotes_1po_purchase_order_ida`, `po_purchase_order_aos_products_quotes_1aos_products_quotes_idb`) VALUES (\"".generateGUID()."\", now() , '0',\"".$row['parent_id']."\" ,\"".$row['id']."\" )";
+            $result1 = $db->query($sql);
+        }
+    }
+    function generateGUID($prefix = '') {
+        $uuid = md5(uniqid(mt_rand(), true));
+        $guid =  $prefix.substr($uuid,0,8)."-".
+                substr($uuid,8,4)."-".
+                substr($uuid,12,4)."-".
+                substr($uuid,16,4)."-".
+                substr($uuid,20,12);
+        return $guid;
+    }
+die;
+?>

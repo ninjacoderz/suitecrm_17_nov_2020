@@ -1,0 +1,306 @@
+<?php
+$module_name = 'pe_warehouse_log';
+$viewdefs [$module_name] = 
+array (
+  'EditView' => 
+  array (
+    'templateMeta' => 
+    array (
+     'includes' => 
+      array (
+        0 => 
+        array (
+          'file' => 'custom/modules/pe_warehouse_log/CustomWarehouse_log.js',
+        ),
+      ),
+      'maxColumns' => '2',
+      'widths' => 
+      array (
+        0 => 
+        array (
+          'label' => '10',
+          'field' => '30',
+        ),
+        1 => 
+        array (
+          'label' => '10',
+          'field' => '30',
+        ),
+      ),
+      'useTabs' => false,
+      'tabDefs' => 
+      array (
+        'DEFAULT' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_EDITVIEW_PANEL1' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_DELIVER_TO' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_CARRIER_DETAILS' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_PURCHASEORDER_DETAILS' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_LINE_ITEMS' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+      ),
+    ),
+    'panels' => 
+    array (
+      'default' => 
+      array (
+        0 => 
+        array (
+          0 => 'name',
+          1 => 'assigned_user_name',
+        ),
+      ),
+      'lbl_editview_panel1' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'installation_pdf_c',
+            'label' => 'LBL_INSTALLATION_PDF',
+          ),
+        ),
+      ),
+      'LBL_DELIVER_TO' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'billing_account',
+            'label' => 'LBL_BILLING_ACCOUNT',
+            'displayParams' => 
+            array (
+              'key' => 
+              array (
+                0 => 'billing',
+              ),
+              'copy' => 
+              array (
+                0 => 'billing',
+              ),
+              'billingKey' => 'billing',
+            ),
+          ),
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'shipping_account',
+            'label' => 'LBL_BILLING_CONTACT',
+            'displayParams' => 
+            array (
+              'key' => 
+              array (
+                0 => 'shipping',
+              ),
+              'copy' => 
+              array (
+                0 => 'shipping',
+              ),
+              'shippingKey' => 'shipping',
+              'initial_filter' => '&account_name="+this.form.{$fields.billing_account.name}.value+"',
+            ),
+          ),
+        ),
+        2 => 
+        array (
+          0 => 
+          array (
+            'name' => 'billing_address_street',
+            'hideLabel' => true,
+            'type' => 'address',
+            'displayParams' => 
+            array (
+              'key' => 'billing',
+              'rows' => 2,
+              'cols' => 30,
+              'maxlength' => 150,
+            ),
+            'label' => 'LBL_BILLING_ADDRESS_STREET',
+          ),
+          1 => 
+          array (
+            'name' => 'shipping_address_street',
+            'hideLabel' => true,
+            'type' => 'address',
+            'displayParams' => 
+            array (
+              'key' => 'shipping',
+              'copy' => 'billing',
+              'rows' => 2,
+              'cols' => 30,
+              'maxlength' => 150,
+            ),
+            'label' => 'LBL_SHIPPING_ADDRESS_STREET',
+          ),
+        ),
+        3 => 
+        array (
+          0 => 'description',
+        ),
+      ),
+      'LBL_CARRIER_DETAILS' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'carrier',
+            'studio' => 'visible',
+            'label' => 'LBL_CARRIER',
+          ),
+          1 => 
+          array (
+            'name' => 'connote',
+            'studio' => 'visible',
+            'label' => 'LBL_CONNOTE',
+          ),
+        ),
+      ),
+      'LBL_PURCHASEORDER_DETAILS' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'purchaseorder',
+            'studio' => 'visible',
+            'label' => 'LBL_PURCHASEORDER',
+          ),
+          1 => 
+          array (
+            'name' => 'warehouse_order_number',
+            'studio' => 'visible',
+            'label' => 'LBL_WAREHOUSE_ORDER_NUMBER',
+          ),
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'estimate_ship_date',
+            'label' => 'LBL_ESTIMATED_SHIPING_DATE',
+          ),
+          1 => 
+          array (
+            'name' => 'delivery_docket_rep',
+            'label' => 'LBL_DELIVER_DOCKET_REP',
+          ),
+        ),
+      ),
+      'lbl_line_items' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'currency_id',
+            'studio' => 'visible',
+            'label' => 'LBL_CURRENCY',
+          ),
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'line_items',
+            'label' => 'LBL_LINE_ITEMS',
+          ),
+        ),
+        2 => 
+        array (
+          0 => '',
+        ),
+        3 => 
+        array (
+          0 => 
+          array (
+            'name' => 'total_amt',
+            'label' => 'LBL_TOTAL_AMT',
+          ),
+        ),
+        4 => 
+        array (
+          0 => 
+          array (
+            'name' => 'discount_amount',
+            'label' => 'LBL_DISCOUNT_AMOUNT',
+          ),
+        ),
+        5 => 
+        array (
+          0 => 
+          array (
+            'name' => 'subtotal_amount',
+            'label' => 'LBL_SUBTOTAL_AMOUNT',
+          ),
+        ),
+        6 => 
+        array (
+          0 => 
+          array (
+            'name' => 'shipping_amount',
+            'label' => 'LBL_SHIPPING_AMOUNT',
+            'displayParams' => 
+            array (
+              'field' => 
+              array (
+                'onblur' => 'calculateTotal(\'lineItems\');',
+              ),
+            ),
+          ),
+        ),
+        7 => 
+        array (
+          0 => 
+          array (
+            'name' => 'shipping_tax_amt',
+            'label' => 'LBL_SHIPPING_TAX_AMT',
+          ),
+        ),
+        8 => 
+        array (
+          0 => 
+          array (
+            'name' => 'tax_amount',
+            'label' => 'LBL_TAX_AMOUNT',
+          ),
+        ),
+        9 => 
+        array (
+          0 => 
+          array (
+            'name' => 'total_amount',
+            'label' => 'LBL_GRAND_TOTAL',
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+;
+?>

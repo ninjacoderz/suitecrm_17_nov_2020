@@ -1,0 +1,8 @@
+<IfModule prefork.c>
+ php_value session.save_path /var/www/suitecrm/sessions
+    php_value session.cookie_lifetime 144000
+    php_value session.gc_maxlifetime 144000
+</IfModule>
+php_value memory_limit 1024M
+
+Options -Indexes

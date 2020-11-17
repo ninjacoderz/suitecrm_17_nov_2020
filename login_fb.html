@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Facebook Login JavaScript Example</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+<script>
+  function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+    
+      if (response.status === 'connected' ) {
+      // testAPI();
+        document.getElementById('login-fb').style.display ="none";
+        document.getElementById('status-login-fb').style.display ="none";
+        $('#select_tem').show();
+        $('#select_tem').change(function (){
+          if( $(this).val() == "tem_1"){
+            $('#content_tem2').hide();
+            $('#content_tem3').hide();
+            $('#content_tem1').show();
+          }else if( $(this).val() == "tem_2") {
+            $('#content_tem1').hide();
+            $('#content_tem3').hide();
+            $('#content_tem2').show();
+          }else {
+            $('#content_tem1').hide();
+            $('#content_tem2').hide();
+            $('#content_tem3').show();
+          }
+          $('#button-post').show();
+           
+        })
+      } else {
+      // document.getElementById('logout-fb').style.display ="none";
+        document.getElementById('login-fb').style.display ="block";          
+        document.getElementById('status-login-fb').innerHTML = 'Please login to FB to continue';
+      }  
+  }
+  function postToFacebook() {  
+    $('#button-post').hide();
+    FB.getLoginStatus(function(response) {   
+      var tem_mes = $('#select_tem').val();
+      var access_token = response.authResponse.accessToken ;
+      document.getElementById('push-to-fb-status').style.display ="block";
+      document.getElementById('push-to-fb-status').innerHTML = "Posting to facebook . . .";  
+      $.ajax({
+            url: "/login_fb.php?accessToken="+access_token+"&template="+tem_mes,   //+"&login_facebook=facebook_login",
+            success: function (data) {
+                if ( data != "" ) {
+                  $('#select_tem').hide();
+                  $('.content_tem').hide();
+                  document.getElementById('push-to-fb-status').innerHTML = data;  
+                }
+            }
+      });
+    });
+  }
+  function checkLoginState() {               // Called when a person is finished with the Login Button.
+    FB.getLoginStatus(function(response) {   // See the onlogin handler
+      statusChangeCallback(response);
+    });
+  }
+//   function LogoutState() {               // Called when a person is finished with the Login Button.
+//     FB.logout(function(response) {
+//    // Person is now logged out
+//     statusChangeCallback(response);  
+//     });
+//   }
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '334019344476743',
+      cookie     : true,                     // Enable cookies to allow the server to access the session.
+      xfbml      : true,                     // Parse social plugins on this webpage.
+      version    : 'v2.8'           // Use this Graph API version for this call.
+    });
+
+    FB.getLoginStatus(function(response) { 
+        // Called after the JS SDK has been initialized.
+      statusChangeCallback(response);        // Returns the login status.
+    });
+  };
+  // function testAPI() { // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+  //   console.log('Welcome!  Fetching your information.... ');
+  //   FB.api('/me', function(response) {
+  //     debugger
+  //    })
+  // }
+</script>
+<!-- The JS SDK Login Button -->
+<fb:login-button id="login-fb" scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+<!-- <button scope="public_profile,email" id="logout-fb"value="Logout" hidden onclick="LogoutState();">Logout
+</button> -->
+<div id="status-login-fb" >
+</div>
+<select id="select_tem" hidden>
+    <option value="">Select message template</option>
+    <option value="tem_1">Template 1</option>
+    <option value="tem_2">Template 2</option>
+    <option value="tem_3">Template 3</option>
+</select>
+<br>
+<div class="content_tem" id="content_tem1" hidden><p>Another very happy Pure Electric (<strong>Install Address SUBURB</strong>) (<strong>Install Address STATE</strong>) efficient electric customer with their new Sanden Eco Plus heat pump hot water system installed!</p></div>    
+<div class="content_tem" id="content_tem2" hidden><p>Another day, another very happy Pure Electric client in (<strong>Install Address SUBURB</strong>) (<strong>Install Address STATE</strong>) with their new Sanden Eco Plus heat pump hot water system installed!</p></div>    
+<div class="content_tem" id="content_tem3" hidden><p>Pure Electric loves solar PV, and so does our very happy client in (<strong>Install Address SUBURB</strong>) (<strong>Install Address STATE</strong>) - smashing bills, smashing emissions. Get a free quote to see how much you can save -> https://pure-electric.com.au/getafreequote</p></div>
+<button  id="button-post" style="background: #1877f2;color: white;border-radius: 4px;padding: 4px;font-weight: 600;"  hidden onclick="postToFacebook();">ACCEPT</button>
+<br>
+<div id="push-to-fb-status" hidden style="font-size: 20px;font-weight: 600;">
+</div>
+<!-- Load the JS SDK asynchronously -->
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+</body>
+</html>

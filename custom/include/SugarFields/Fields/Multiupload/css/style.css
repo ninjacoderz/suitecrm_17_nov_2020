@@ -1,0 +1,34 @@
+@charset "UTF-8";
+/*
+ * jQuery File Upload Plugin CSS Example
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2013, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * https://opensource.org/licenses/MIT
+ */
+
+body {
+  padding-top: 60px;
+}
+.product_group .yui-ac-content{
+  width: 385px;
+}
+#lineItems .group button.populate-default-line-items{
+  text-transform: none;
+  width: auto;
+  padding: 20px;
+}
+
+tr.myDragClass td {
+  /*position: fixed;*/
+  color: yellow;
+  text-shadow: 0 0 10px black, 0 0 10px black, 0 0 8px black, 0 0 6px black, 0 0 6px black;
+  background-color: #999;
+  -webkit-box-shadow: 0 12px 14px -12px #111 inset, 0 -2px 2px -1px #333 inset;
+}
+#lineItems table > thead:nth-child(1) > tr > td:nth-child(1) #group0name {
+  width: 40%;
+}

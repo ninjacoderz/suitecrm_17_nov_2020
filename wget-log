@@ -1,0 +1,6 @@
+--2020-11-09 08:11:04--  https://suitecrmdbs.s3.ap-southeast-2.amazonaws.com/2020-11-08/SuiteCRM-Second.sql.gz?response-content-disposition=attachment
+Resolving suitecrmdbs.s3.ap-southeast-2.amazonaws.com (suitecrmdbs.s3.ap-southeast-2.amazonaws.com)... 52.95.128.98
+Connecting to suitecrmdbs.s3.ap-southeast-2.amazonaws.com (suitecrmdbs.s3.ap-southeast-2.amazonaws.com)|52.95.128.98|:443... connected.
+HTTP request sent, awaiting response... 400 Bad Request
+2020-11-09 08:11:05 ERROR 400: Bad Request.
+

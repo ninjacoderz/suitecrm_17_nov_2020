@@ -1,0 +1,217 @@
+<?php
+$module_name = 'PO_purchase_order';
+$listViewDefs [$module_name] = 
+array (
+  'NUMBER' => 
+  array (
+    'type' => 'int',
+    'label' => 'LBL_QUOTE_NUMBER',
+    'width' => '10%',
+    'default' => true,
+  ),
+  'NAME' => 
+  array (
+    'width' => '32%',
+    'label' => 'LBL_NAME',
+    'default' => true,
+    'link' => true,
+  ),
+  'PO_TYPE_C' => 
+  array (
+    'type' => 'enum',
+    'default' => true,
+    'studio' => 'visible',
+    'label' => 'LBL_PO_TYPE',
+    'width' => '10%',
+  ),
+  'ASSIGNED_USER_NAME' => 
+  array (
+    'width' => '9%',
+    'label' => 'LBL_ASSIGNED_TO_NAME',
+    'module' => 'Employees',
+    'id' => 'ASSIGNED_USER_ID',
+    'default' => true,
+  ),
+  'SUPPLIER_ORDER_NUMBER_C' => 
+  array (
+    'type' => 'varchar',
+    'default' => true,
+    'label' => 'LBL_SUPPLIER_ORDER_NUMBER',
+    'width' => '10%',
+  ),
+  'BILLING_ACCOUNT' => 
+  array (
+    'type' => 'relate',
+    'studio' => 'visible',
+    'label' => 'LBL_BILLING_ACCOUNT',
+    'id' => 'BILLING_ACCOUNT_ID',
+    'link' => true,
+    'width' => '10%',
+    'default' => true,
+  ),
+  'DISPATCH_DATE_C' => 
+  array (
+    'type' => 'date',
+    'default' => true,
+    'label' => 'LBL_DISPATCH_DATE',
+    'width' => '10%',
+  ),
+  'DELIVERY_DATE_C' => 
+  array (
+    'type' => 'date',
+    'default' => true,
+    'label' => 'LBL_DELIVERY_DATE',
+    'width' => '10%',
+  ),
+  'FREIGHT_COMPANY_C' => 
+  array (
+    'type' => 'enum',
+    'default' => false,
+    'studio' => 'visible',
+    'label' => 'LBL_FREIGHT_COMPANY',
+    'width' => '10%',
+  ),
+  'STATUS_C' => 
+  array (
+    'type' => 'enum',
+    'default' => false,
+    'studio' => 'visible',
+    'label' => 'LBL_STATUS',
+    'width' => '10%',
+  ),
+  'SHIPPING_ACCOUNT' => 
+  array (
+    'type' => 'relate',
+    'studio' => 'visible',
+    'label' => 'LBL_BILLING_CONTACT',
+    'id' => 'SHIPPING_ACCOUNT_ID',
+    'link' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'INSTALL_DATE' => 
+  array (
+    'type' => 'date',
+    'label' => 'LBL_INSTALL_DATE',
+    'width' => '10%',
+    'default' => false,
+  ),
+  'ACCEPTANCE_DATE' => 
+  array (
+    'type' => 'date',
+    'label' => 'LBL_ACCEPTANCE_DATE',
+    'width' => '10%',
+    'default' => false,
+  ),
+  'DISTANCE_TO_TRAVEL' => 
+  array (
+    'type' => 'varchar',
+    'label' => 'LBL_DISTANCE_TO_TRAVEL',
+    'width' => '10%',
+    'default' => false,
+  ),
+  'AOS_QUOTES_PO_PURCHASE_ORDER_1_NAME' => 
+  array (
+    'type' => 'relate',
+    'link' => true,
+    'label' => 'LBL_AOS_QUOTES_PO_PURCHASE_ORDER_1_FROM_AOS_QUOTES_TITLE',
+    'id' => 'AOS_QUOTES_PO_PURCHASE_ORDER_1AOS_QUOTES_IDA',
+    'width' => '10%',
+    'default' => false,
+  ),
+  'AOS_INVOICES_PO_PURCHASE_ORDER_1_NAME' => 
+  array (
+    'type' => 'relate',
+    'link' => true,
+    'label' => 'LBL_AOS_INVOICES_PO_PURCHASE_ORDER_1_FROM_AOS_INVOICES_TITLE',
+    'id' => 'AOS_INVOICES_PO_PURCHASE_ORDER_1AOS_INVOICES_IDA',
+    'width' => '10%',
+    'default' => false,
+  ),
+  'SHIPPING_ADDRESS_STREET' => 
+  array (
+    'type' => 'varchar',
+    'label' => 'LBL_SHIPPING_ADDRESS_STREET',
+    'width' => '10%',
+    'default' => false,
+  ),
+  'BILLING_ADDRESS_STREET' => 
+  array (
+    'type' => 'varchar',
+    'label' => 'LBL_BILLING_ADDRESS_STREET',
+    'width' => '10%',
+    'default' => false,
+  ),
+  'SUPPLIER_ORDER_C' => 
+  array (
+    'type' => 'varchar',
+    'default' => false,
+    'label' => 'LBL_SUPPLIER_ORDER',
+    'width' => '10%',
+  ),
+  'SUBTOTAL_AMOUNT' => 
+  array (
+    'type' => 'currency',
+    'label' => 'LBL_SUBTOTAL_AMOUNT',
+    'currency_format' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'TOTAL_AMOUNT' => 
+  array (
+    'type' => 'currency',
+    'label' => 'LBL_GRAND_TOTAL',
+    'currency_format' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'SHIPPING_AMOUNT' => 
+  array (
+    'type' => 'currency',
+    'label' => 'LBL_SHIPPING_AMOUNT',
+    'currency_format' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'SHIPPING_TAX_AMT' => 
+  array (
+    'type' => 'currency',
+    'label' => 'LBL_SHIPPING_TAX_AMT',
+    'currency_format' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'DISCOUNT_AMOUNT' => 
+  array (
+    'type' => 'currency',
+    'label' => 'LBL_DISCOUNT_AMOUNT',
+    'currency_format' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'TAX_AMOUNT' => 
+  array (
+    'type' => 'currency',
+    'label' => 'LBL_TAX_AMOUNT',
+    'currency_format' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'TOTAL_AMT' => 
+  array (
+    'type' => 'currency',
+    'label' => 'LBL_TOTAL_AMT',
+    'currency_format' => true,
+    'width' => '10%',
+    'default' => false,
+  ),
+  'LINE_ITEMS' => 
+  array (
+    'type' => 'function',
+    'label' => 'LBL_LINE_ITEMS',
+    'width' => '10%',
+    'default' => false,
+  ),
+);
+;
+?>

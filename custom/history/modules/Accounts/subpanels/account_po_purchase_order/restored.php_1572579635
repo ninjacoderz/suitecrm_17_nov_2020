@@ -1,0 +1,46 @@
+<?php
+// created: 2019-11-01 14:40:30
+$layout_defs = array (
+  'number' => 
+  array (
+    'type' => 'int',
+    'vname' => 'LBL_QUOTE_NUMBER',
+    'width' => '10%',
+    'default' => true,
+  ),
+  'name' => 
+  array (
+    'vname' => 'LBL_NAME',
+    'widget_class' => 'SubPanelDetailViewLink',
+    'width' => '45%',
+    'default' => true,
+  ),
+  'install_date' => 
+  array (
+    'vname' => 'LBL_INSTALL_DATE',
+    'width' => '45%',
+    'default' => true,
+  ),
+  'date_modified' => 
+  array (
+    'vname' => 'LBL_DATE_MODIFIED',
+    'width' => '45%',
+    'default' => true,
+  ),
+  'edit_button' => 
+  array (
+    'vname' => 'LBL_EDIT_BUTTON',
+    'widget_class' => 'SubPanelEditButton',
+    'module' => 'PO_purchase_order',
+    'width' => '4%',
+    'default' => true,
+  ),
+  'remove_button' => 
+  array (
+    'vname' => 'LBL_REMOVE',
+    'widget_class' => 'SubPanelRemoveButton',
+    'module' => 'PO_purchase_order',
+    'width' => '5%',
+    'default' => true,
+  ),
+);

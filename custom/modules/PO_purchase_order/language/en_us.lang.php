@@ -1,0 +1,26 @@
+<?php
+// created: 2020-10-27 01:47:01
+$mod_strings = array (
+  'LBL_STATUS' => 'Status',
+  'LBL_REQUESTED_DELIVERY_DATE' => 'Requested Delivery Date',
+  'LBL_ESTIMATED_DESPATCH_DATE' => 'Estimated Despatch Date',
+  'LBL_SUPPLIER_ORDER' => 'Supplier Order',
+  'LBL_SHIPPING_ADDRESS_STREET' => 'Client/Warehouse Address',
+  'LBL_SEEK_INSTALL_TIME' => 'Seek Install Time :',
+  'LBL_INSTALLATION_PDF_C' => 'Order Confirmation',
+  'LBL_EDITVIEW_PANEL1' => 'PDF PARSE',
+  'LBL_BILL_STATUS' => 'Bill Status:',
+  'LBL_XERO_PO_ID' => 'Xero PO',
+  'LBL_EDITVIEW_PANEL2' => 'XERO INFOMATION',
+  'LBL_PO_TYPE' => 'PO Type',
+  'LBL_SUPPLIER_ORDER_NUMBER' => 'Supplier Order Number',
+  'LBL_DISPATCH_DATE' => 'Dispatch Date',
+  'LBL_DELIVERY_DATE' => 'Delivery Date',
+  'LBL_DUE_DATE' => 'Install Date',
+  'LBL_FREIGHT_COMPANY' => 'Freight Company',
+  'LBL_PO_PURCHASE_ORDER_PE_INTERNAL_NOTE_1_FROM_PE_INTERNAL_NOTE_TITLE' => 'Internal Notes',
+  'LBL_LOCAL_FREIGHT_COMPANY' => 'Local Freight Company',
+  'LBL_RECEIVER_CONTACT_CONTACT_ID' => 'Receiver Contact (related Contact ID)',
+  'LBL_RECEIVER_CONTACT' => 'Receiver Contact',
+  'LBL_SHIPPING_ADDRESS_STATE' => 'Shipping Address State',
+);

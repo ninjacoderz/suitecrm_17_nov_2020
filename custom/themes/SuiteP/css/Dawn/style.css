@@ -1,0 +1,167 @@
+.yui-ac-content {
+    position: absolute;
+    border: 1px solid #808080;
+    width: 360px;
+   /** BR: Default Value was 160 **/
+    background: #fff;
+    overflow: hidden;
+    z-index: 9050;
+}
+#btnSendLater {
+    background-color: #d14836;
+   font-size: .875rem;
+   letter-spacing: .25px;
+   border-radius: 4px;
+   box-sizing: border-box;
+   color: white;
+   cursor: pointer;
+   font-weight: 500;
+   height: 36px;
+   min-width: 80px;
+   padding: 0 16px;
+   border: none;
+    font-size: 15px;
+    margin-top: 10px;
+}
+#btnSendLater:focus {
+   outline: none;
+}
+#btnSendLater:hover {
+   background: #E0513E!important;
+   box-shadow: 0 1px 3px 0 rgba(224,81,62,0.74)!important;
+}
+.sms-schedule .popup{
+   display: none;
+   position: absolute;
+   padding: 0px;
+   overflow-x: hidden;
+   left: 15px;
+   padding: 10px 0;
+   bottom: 80px;
+   z-index: 1000;
+   background-color: white;
+   user-select: none;
+   min-width: 17em;
+   max-width: 20em;
+   width: 100%;
+   max-height: 290px;
+   overflow-y: auto;
+   border-radius: 3px;
+   box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+   font-size: 14px;
+   font-family: 'Roboto', sans-serif;
+}
+.sms-schedule .popup .listOption li {
+   padding: 5px 0;
+   cursor: pointer;
+}
+.sms-schedule .popup .listOption li.chooseAction {
+   padding: 5px 20px;
+}
+.sms-schedule .popup .listOption li.chooseAction:hover {
+   background: #eeeeee;
+}
+.sms-schedule .popup .listOption span.setting {
+   float: right;
+   cursor: pointer;
+}
+.sms-schedule .popup .confirm span {
+   font-size: 10px;
+   font-style: italic;
+   padding-top: 5px;
+}
+.sms-schedule .popup .form-control {
+   background: none;
+    border: none;
+    height: auto;
+    width: auto;
+   padding: 0;
+    line-height: 1
+}
+.sms-schedule .popup hr {
+    background: gray;
+    margin:5px auto;
+}
+.sms-schedule .pd30 {
+   padding: 0 20px;
+}
+.sms-schedule .popup.active-popup-sms {
+   display:block;
+}
+.k-picker-wrap {
+   width: 230px!important;
+    padding:0!important;
+}
+input#datetimepicker{
+   width: 160px!important;
+    background:none;
+}
+.sms-schedule .mt10 {
+   margin: 10px 0;
+}
+.sms-schedule .btnSuccess {
+   width: 200px;
+   text-align: center;
+   background: #1a73e8;
+   padding: 10px 20px;
+   vertical-align: middle;
+   line-height: 40px;
+   color: white;
+   text-decoration: none;
+   margin-top: 10px;
+   border-radius: 5px;
+   font-weight: 500;
+}
+.k-icon {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+.k-icon.k-i-calendar {
+   background-image: url('../images/loading.gif');
+}
+.k-icon.k-i-clock {
+   background-image: url('../images/timer.png');
+}
+.k-icon.k-i-arrow-60-left {
+   background-image: url('../images/back.png');
+}
+.k-icon.k-i-arrow-60-right {
+   background-image: url('../images/nexty.png');
+}
+.k-icon.k-i-calendar::before, .k-icon.k-i-clock::before, .k-icon.k-i-arrow-60-left::before, .k-icon.k-i-arrow-60-right::before {
+   content: '';
+}
+.result-schedule {
+    color: green;
+}
+
+/* Fix Nav Bar */
+.nav-tabs > li {
+   float: none;
+   margin-bottom: 5px;
+   display: inline-block;
+   vertical-align: top;
+}
+
+@media (min-width: 1201px){
+    .navbar-fixed-top > .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+        height: 60px;
+    }
+}
+.suitepicon-module-po-purchase-order:before, .suitepicon-module-po-purchase-order:before {
+   content : "\f1a9";
+}
+
+#billing_address_street,#shipping_address_street, #primary_address_street, #alt_address_street{
+   height: 45px;
+ }
+ #EditView input[type="checkbox"] {
+   border-style: solid ;
+   border-width: 2px ;
+   height: 20px ;
+   width: 20px ;
+}
+ 

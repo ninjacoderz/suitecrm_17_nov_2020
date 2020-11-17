@@ -1,0 +1,225 @@
+<?php
+$module_name = 'pe_service_case';
+$viewdefs [$module_name] = 
+array (
+  'EditView' => 
+  array (
+    'templateMeta' => 
+    array (
+      'maxColumns' => '2',
+      'widths' => 
+      array (
+        0 => 
+        array (
+          'label' => '10',
+          'field' => '30',
+        ),
+        1 => 
+        array (
+          'label' => '10',
+          'field' => '30',
+        ),
+      ),
+      'useTabs' => false,
+      'tabDefs' => 
+      array (
+        'DEFAULT' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_EDITVIEW_PANEL1' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_EDITVIEW_PANEL2' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+      ),
+      'includes' => 
+      array (
+        0 => 
+        array (
+          'file' => 'custom/modules/pe_service_case/pe_service_case.js',
+        ),
+      ),
+    ),
+    'panels' => 
+    array (
+      'default' => 
+      array (
+        0 => 
+        array (
+          0 => 'name',
+          1 => 'assigned_user_name',
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'number',
+            'label' => 'LBL_SERVICE_CASE_NUMBER',
+            'customCode' => '{$fields.number.value}',
+          ),
+          1 => 
+          array (
+            'name' => 'created_by_name',
+            'label' => 'LBL_CREATED',
+          ),
+        ),
+      ),
+      'lbl_editview_panel1' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'billing_account',
+            'label' => 'LBL_BILLING_ACCOUNT',
+            'displayParams' => 
+            array (
+              'key' => 'billing',
+              'copy' => 'billing',
+              'billingKey' => 'billing',
+            ),
+          ),
+          1 => 
+          array (
+            'name' => 'billing_contact',
+            'label' => 'LBL_SHIPPING_CONTACT',
+            'displayParams' => 
+            array (
+              'field_to_name_array' => 
+              array (
+                'id' => 'billing_contact_id',
+                'name' => 'billing_contact',
+                'primary_address_street' => 'shipping_address_street',
+                'primary_address_city' => 'shipping_address_city',
+                'primary_address_state' => 'shipping_address_state',
+                'primary_address_postalcode' => 'shipping_address_postalcode',
+                'primary_address_country' => 'shipping_address_country',
+              ),
+              'additionalFields' => 
+              array (
+                'primary_address_street' => 'shipping_address_street',
+                'primary_address_city' => 'shipping_address_city',
+                'primary_address_state' => 'shipping_address_state',
+                'primary_address_postalcode' => 'shipping_address_postalcode',
+                'primary_address_country' => 'shipping_address_country',
+              ),
+              'shippingKey' => 'shipping',
+            ),
+          ),
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'phone_number_c',
+            'label' => 'LBL_PHONE_NUMBER',
+          ),
+          1 => 
+          array (
+            'name' => 'email_service_case_c',
+            'label' => 'LBL_EMAIL_SERVICE_CASE',
+          ),
+        ),
+        2 => 
+        array (
+          0 => 
+          array (
+            'name' => 'billing_address_street',
+            'hideLabel' => true,
+            'type' => 'address',
+            'displayParams' => 
+            array (
+              'key' => 'billing',
+              'rows' => 2,
+              'cols' => 30,
+              'maxlength' => 150,
+            ),
+            'label' => 'LBL_BILLING_ADDRESS_STREET',
+          ),
+          1 => 
+          array (
+            'name' => 'shipping_address_street',
+            'hideLabel' => true,
+            'type' => 'address',
+            'displayParams' => 
+            array (
+              'key' => 'shipping',
+              'rows' => 2,
+              'cols' => 30,
+              'maxlength' => 150,
+            ),
+            'label' => 'LBL_SHIPPING_ADDRESS_STREET',
+          ),
+        ),
+      ),
+      'lbl_editview_panel2' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'quote_type_c',
+            'studio' => 'visible',
+            'label' => 'LBL_QUOTE_TYPE',
+          ),
+          1 => '',
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'fault_type_c',
+            'studio' => 'visible',
+            'label' => 'LBL_FAULT_TYPE',
+          ),
+          1 => 
+          array (
+            'name' => 'fault_type_other_c',
+            'studio' => 'visible',
+            'label' => 'LBL_ FAULT_TYPE_OTHER',
+          ),
+        ),
+        2 => 
+        array (
+          0 => 
+          array (
+            'name' => 'message_c',
+            'studio' => 'visible',
+            'label' => 'LBL_MESSAGE',
+          ),
+        ),
+        3 => 
+        array (
+          0 => 
+          array (
+            'name' => 'brief_description_c',
+            'studio' => 'visible',
+            'label' => 'LBL_BRIEF_DESCRIPTION',
+          ),
+        ),
+        4 => 
+        array (
+          0 => 
+          array (
+            'name' => 'detailed_desciption_c',
+            'studio' => 'visible',
+            'label' => 'LBL_DETAILED_DESCIPTION',
+          ),
+        ),
+        5 => 
+        array (
+          0 => 'description',
+        ),
+      ),
+    ),
+  ),
+);
+;
+?>

@@ -1,0 +1,9 @@
+upload/*
+custom/include/SugarFields/Fields/Multiupload/server/php/*
+public/*
+price_csv/*
+public_files/*
+cache/*
+sessions/*
+email/*
+email
