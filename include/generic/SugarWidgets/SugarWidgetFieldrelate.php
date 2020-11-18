@@ -58,20 +58,34 @@ class SugarWidgetFieldRelate extends SugarWidgetReportField
         } else {
             $values[] = $layout_def['input_name0'];
         }
-        $html = '<select name="' . $layout_def['name'] . '[]" multiple="true">';
-
+        //$html = '<select name="' . $layout_def['name'] . '[]" multiple="true">';
+        //thienpb custom
+        $html = '<select name="' . $layout_def['name'] . '[]" data-placeholder="" multiple class="chosen-select" tabindex="-1">';
         $query = $this->displayInputQuery($layout_def);
         $result = $this->reporter->db->query($query);
         while ($row = $this->reporter->db->fetchByAssoc($result)) {
-            $html .= '<option value="' . $row['id'] . '"';
-            if (in_array($row['id'], $values)) {
+            $html .= '<option value="' . $row['title'] . '"';
+            if (in_array($row['title'], $values)) {
                 $html .= ' selected="selected"';
             }
             $html .= '>' . htmlspecialchars($row['title']) . '</option>';
         }
 
         $html .= '</select>';
-        return $html;
+        $script = '<script>$(function(){ $(".chosen-select").chosen({no_results_text: "Oops, nothing found!"}); });</script>';
+        // $options = '';
+        // $option_selected = '';
+        // $query = $this->displayInputQuery($layout_def);
+        // $result = $this->reporter->db->query($query);
+        // while ($row = $this->reporter->db->fetchByAssoc($result)) {
+        //     $options .= '<option>' . $row['title'] . '</option>';
+        //     if (in_array($row['title'], $values)) {
+        //         $option_selected = $row['title'];
+        //     }
+        // }
+        // $html = '<input type="text" value ="'.$option_selected.'"  name="' . $layout_def['name'] .'[]" list="cars"  multiple="multiple" />';
+        // $html .= '<datalist id="cars">'.$options.'</datalist>';
+        return $html.$script;
     }
 
     /**
@@ -93,12 +107,12 @@ class SugarWidgetFieldRelate extends SugarWidgetReportField
         if (!empty($concat_fields)) {
             $title = $this->reporter->db->concat($table, $concat_fields);
         }
-
+        //thienpb custom
         $query = "SELECT
                 id,
                 $title title
             FROM $table
-            WHERE deleted = 0
+            WHERE deleted = 0 and name != ''
             ORDER BY title ASC";
         return $query;
     }
@@ -156,7 +170,9 @@ class SugarWidgetFieldRelate extends SugarWidgetReportField
             } else {
                 $filter = array('id', $layout_def['name']);
             }
-            $where = $layout_def['id_name']."='$beanId' ";
+            //thienpb - fixed search field relate of dashlet in dashboard.
+            // $where = $layout_def['id_name']."='$beanId' ";
+            $where = $layout_def['name']."='$beanId' ";
             $sql = $seed->create_new_list_query('', $where, $filter, array(), 0, '', false, $seed, true);
             $result = $this->reporter->db->query($sql);
             while ($row = $this->reporter->db->fetchByAssoc($result)) {
