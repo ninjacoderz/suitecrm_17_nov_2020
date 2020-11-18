@@ -38,8 +38,8 @@
  *}
 
 <!-- [TinyMCE Editor implementation] -->
-
-<script src='vendor/tinymce/tinymce/tinymce.min.js'></script>
+{* thienpb note use old lib link *}
+<script src='include/javascript/mozaik/vendor/tinymce/tinymce/tinymce.min.js'></script>
 <script>
 
     /**
