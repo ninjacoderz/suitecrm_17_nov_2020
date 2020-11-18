@@ -465,7 +465,7 @@
         $body_html = str_replace("\$aos_quotes_installation address_c",  $your_street.' '.$primary_address_city.' '.$primary_address_state.' '.$primary_address_postalcode , $body_html);
         $body_html = str_replace("\$aos_quotes_distributor_c",  $distributor , $body_html);
         $body_html = str_replace("\$aos_quotes_first_solar_c", $first_solar , $body_html);
-        $body_html = str_replace("\$aos_quotes_roof_type_c",  $roof_type_c[$focus->roof_type_c] , $body_html);
+        $body_html = str_replace("\$aos_quotes_roof_type_c",  $roof_type , $body_html);
         $body_html = str_replace("\$aos_quotes_roof_pitch_c",  $roof_pitch , $body_html);
         $body_html = str_replace("\$aos_quotes_stroreys_c",  $storeys , $body_html);
         $body_html = str_replace("\$aos_quotes_meter_phase_c",  $meter_phase_c[$focus->meter_phase_c] , $body_html);
