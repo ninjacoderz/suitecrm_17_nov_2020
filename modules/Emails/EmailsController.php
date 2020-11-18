@@ -3301,13 +3301,13 @@ class EmailsController extends SugarController
 
         if($_REQUEST['email_type'] == "solar_design_complete" || $_REQUEST['email_type'] == "send_tesla_quote"){
             $macro_nv = array();
-            $focusName = "Leads";
-            $focus = BeanFactory::getBean($focusName, $_REQUEST['lead_id']);
+            $focusName = "AOS_Quotes";
+            $focus = BeanFactory::getBean($focusName, $_REQUEST['quote_id']);
             
 
             if(!$focus->id) return;
             //VUT-create mirror lead 
-            $mirror_lead = $focus; 
+            // $mirror_lead = $focus; 
             
             /**
              * @var EmailTemplate $emailTemplate
@@ -3390,17 +3390,17 @@ class EmailsController extends SugarController
             $this->bean->description = $templateData['body_html'];
 
             // Solve logic for Attachment 
-            if($_REQUEST['quote_id']!="") {
-                $quote = new AOS_Quotes();
-                $quote = $quote->retrieve($_REQUEST['quote_id']);
+            // if($_REQUEST['quote_id']!="") {
+            //     $quote = new AOS_Quotes();
+            //     $quote = $quote->retrieve($_REQUEST['quote_id']);
 
-            }
-            if($quote->id != ""){
-                $focus = $quote;
+            // }
+            // if($quote->id != ""){
+            //     $focus = $quote;
                 $this->bean->description_html = str_replace("\$aos_quotes_id",$_REQUEST['quote_id'], $this->bean->description_html);
                 $this->bean->return_module = 'AOS_Quotes';
                 $this->bean->return_id = $focus->id;
-            }
+            // }
 
             if($_REQUEST['quote_id'] != "") {
                 $file_attachmens = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c ."/");
@@ -3481,20 +3481,22 @@ class EmailsController extends SugarController
                     $assigned_name = $focus->assigned_user_name;
                     $this->bean->sms_message = "Hi $first_name, Your Solar PV quote has been prepared and sent to your email inbox. If you can't find it, check your spam folder and if no success still, please don't hesitate to contact us. Regards, $assigned_name";
                 }
-                //start - code render sms_template  
-                global $current_user;
-                $smsTemplate = BeanFactory::getBean(
-                    'pe_smstemplate',
-                    '5999d6d4-d1b7-161d-c1eb-5ecc6b2df036' 
-                );
-                $body =  $smsTemplate->body_c;
-                $body = str_replace("\$first_name", $mirror_lead->first_name, $body);
-                $smsTemplate->body_c = $body;
-                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
-                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
-                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
-                //end - code render sms_template
+                
             }
+
+            //start - code render sms_template  
+            global $current_user;
+            $smsTemplate = BeanFactory::getBean(
+                'pe_smstemplate',
+                '5999d6d4-d1b7-161d-c1eb-5ecc6b2df036' 
+            );
+            $body =  $smsTemplate->body_c;
+            $body = str_replace("\$first_name", $focus->account_firstname_c, $body);
+            $smsTemplate->body_c = $body;
+            $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+            $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+            $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+            //end - code render sms_template
         }
 
         //End Dung code - popup email solar design complete
@@ -6547,7 +6549,12 @@ class EmailsController extends SugarController
                 $this->bean->name = "Pure Electric ". $this->bean->name;
             }
         }else{
-            $this->bean->name = "Pure Electric ". $this->bean->name;
+            if(strpos($this->bean->name,"Pure Electric") !== false){
+                $this->bean->name = $this->bean->name;
+            }else{
+                $this->bean->name = "Pure Electric ". $this->bean->name;
+            }
+            
         }
 
         // Move body into original message
