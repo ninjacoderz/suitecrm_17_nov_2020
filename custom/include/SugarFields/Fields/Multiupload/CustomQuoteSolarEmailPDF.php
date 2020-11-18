@@ -2,27 +2,20 @@
 //Thienpb code
 // ini_set("display_errors",1);
     $macro_nv = array();
-    $focusName = "Leads";
+    $focusName = "AOS_Quotes";
     $quote = new AOS_Quotes();
     $quote->retrieve($_REQUEST['quote_id']);
     $email_bean->return_module = 'AOS_Quotes';
     $email_bean->return_id = $quote->id;
-    $lead =  new Lead();
-    $focus = $lead->retrieve($quote->leads_aos_quotes_1leads_ida);
 
     $contact =  new Contact();
     $contact->retrieve($quote->billing_contact_id);
 
-    if(!$focus->id) return;
-    /**
-     * @var EmailTemplate $emailTemplate
-     */
+    if($quote->id != ""){
+        $focus = $quote;
+    }
+
     $email_bean = new Email();
-
-    /**
-     * @var EmailTemplate $emailTemplate
-     */
-
     $emailTemplate_id = '64084c36-9ba4-68fd-20c8-5ecc3b51c593';
     $emailTemplate = BeanFactory::getBean(
         'EmailTemplates',
@@ -89,9 +82,7 @@
             $email_bean->attachNote($noteTemplate);
         }
     }
-    if($quote->id != ""){
-        $focus = $quote;
-    }
+   
     
     $email_bean->name = $templateData['subject'];
     $email_bean->description_html = $templateData['body_html'];
@@ -143,10 +134,10 @@
             }
         }
         
-        $first_name = $lead->first_name;
+        $first_name = $contact->first_name;
         $email_bean->send_sms = 1;
 
-        $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $lead->phone_mobile));
+        $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
         $phone_number = preg_replace("/^61/", "+61", $phone_number);
         $email_bean->number_client = $phone_number;//$_REQUEST['sms_received'];
         $email_bean->number_receive_sms = "matthew_paul_client";
@@ -161,7 +152,7 @@
             '5999d6d4-d1b7-161d-c1eb-5ecc6b2df036' 
         );
         $body =  $smsTemplate->body_c;
-        $body = str_replace("\$first_name", $lead->first_name, $body);
+        $body = str_replace("\$first_name", $first_name, $body);
         $smsTemplate->body_c = $body;
         $email_bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
         $email_bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
@@ -192,7 +183,7 @@ function parse_sms_template($smsTemplate, $focus)
     {
         global $beanList, $app_list_strings;
         $body =  $smsTemplate->body_c;
-        $address_customer =  $focus->primary_address_street . ' ' .$focus->primary_address_city . ' ' .$focus->primary_address_state . ' ' .$focus->primary_address_postalcode;
+        $address_customer =  $focus->install_address_c . ' ' .$focus->install_address_city_c . ' ' .$focus->install_address_state_c . ' ' .$focus->install_address_postalcode_c;
         $body = str_replace("\$first_name", $focus->first_name, $body);
         $body = str_replace("\$last_name", $focus->last_name,$body);
         $body = str_replace("\$address",$address_customer, $body);

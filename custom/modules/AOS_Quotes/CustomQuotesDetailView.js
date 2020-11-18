@@ -435,12 +435,7 @@ $(function () {
         $('body').on("click","#send_quote_pdf, #send_tesla_quote_pdf",function() {
             if (!compareToday()) return false;
             // alert require lead 
-            var data_error =  $(this).attr('data-error');
-            console.log(data_error);
-            if(data_error == 'Not have lead source'){
-                alert("Please Fill Lead Sourece Related.");
-                return false;
-            }
+            
             if( $(this).attr("data-email-type") == "solar_design_complete"){
                 if($('div[field="assigned_user_c"] input').prop("checked" ) == false) {
                     $(document).openComposeViewModal_SendSolarQuote(this);
@@ -809,20 +804,7 @@ $(function () {
         $("#quote_follow_up").after('<button style="margin: 0px 3px;background:#945596;" type="button" id="btn_pe_sanden_form_new" class="button btn_pe_sanden_form_new" title="PE Sanden Form">Sanden Quote Form</button>');
         $("#quote_follow_up").after('<button style="margin: 0px 3px;background:#f48c21;" type="button" id="btn_pe_solar_form" class="button btn_pe_solar_form" title="PE Solar Form">Solar Quote Form</button>');
         $("#quote_follow_up").after('<button style="margin: 0px 3px;background:#009acf;" type="button" id="btn_pe_daikin_new_form" class="button btn_pe_daikin_new_form" title="PE Daikin Form">Daikin Quote Form</button>');
-        $("#quote_follow_up").after('<button style="margin: 0px 3px;background:#5628b4;" type="button" id="btn_pe_daikin_tool" class="button btn_pe_daikin_tool" title="PE Daikin Tool">Daikin Design Tool</button>');
-        $("#quote_follow_up").before('<button style="margin: 0px 3px;background:#945596;" type="button" id="btn_quote_design_tool" class="button btn_quote_design_tool" title="Quote Design Tool">Quote Design Tool</button>');
-        $("#quote_follow_up").after(' <button style="margin: 0px 3px;" class="button primary" id="acceptJob"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Accept Job</button>');
         var lead_id = $('#leads_aos_quotes_1leads_ida').attr('data-id-value');
-        $("#btn_pe_daikin_tool").click(function(e) {
-            if($('input[name="record"]').val() != '') {
-                window.open(
-                    'http://daikintool.pure-electric.com.au/index.php?quote_id='+$('input[name="record"]').val(),
-                    '_blank' // <- This is what makes it open in a new window.
-                );
-            } else {
-                alert('No leads in quote, please add lead information !')
-            }
-        });
         $("#btn_pe_daikin_form").click(function(e) {
             if(lead_id != '') {
                 window.open(
@@ -881,153 +863,6 @@ $(function () {
                 // );
             }
         });
-        $("#btn_quote_design_tool").click(function(e) {
-            if($("#quote_type_c").val() != "quote_type_solar"){
-                alert("Quote type isn't a solar!");
-                return false;
-            }
-            
-            var dsg_lat,dsg_lng;
-            $.ajax({
-                url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' 
-                +  encodeURIComponent($('#address').text())
-                + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
-                type: 'GET',
-                success: function(result) {
-                    var location = result.results[0].geometry.location;
-                    if (result.status == "OK"){
-                        dsg_lat = location.lat;
-                        dsg_lng = location.lng;
-                    }else{
-                        alert("Address invalid! Please check Quote address.")
-                    }
-                }
-            });
-            if($("#billing_account_id").attr('data-id-value') == ''){
-                alert("Account is invalid for create quote design tool.");
-                return;
-            }
-            $.ajax({
-                type: "GET",
-                cache: false,
-                url: "?entryPoint=getLeadFromAccount&account_id="+$("#billing_account_id").attr('data-id-value')+'&lead_id='+$("#leads_aos_quotes_1leads_ida").attr('data-id-value'),
-            }).done(function (data) {
-               if(data == '' && typeof data == undefined)return;
-                var json = $.parseJSON(data);
-                if(json.id == ''){
-                    alert("Please check acount field or lead source field!");
-                    return false;
-                }
-                var roof_type_arr ={"Tin"       :2,
-                                "Tile"          :3,  
-                                "klip_loc"      :4,
-                                "Concrete"      :5,    
-                                "Trim_Deck"     :6,
-                                "Insulated"     :7,
-                                "Asbestos"      :8,
-                                "Ground_Mount"  :9,
-                                "Terracotta"    :10,
-                                "Other"         :1};
-                var json_data;
-                $.ajax({
-                    url: "/index.php?entryPoint=APIGetDataQuotes&record_id=" + $('input[name="record"]').val(),
-                    success: function(data){
-                        json_data = JSON.parse(data);}
-                    })
-                var data_quote = {
-                    "LeadID"        : parseInt(json.number),
-                    "ID"            : parseInt($("#number").text().trim('')),
-                    "Name"          : html_entity_decode((json.first_name +' '+json.last_name)),
-                    "FirstName"     : html_entity_decode(json.first_name),
-                    "LastName"      : html_entity_decode(json.last_name),
-                    "Mobile"        : html_entity_decode(json.phone_number),
-                    "Email"         : html_entity_decode(json.email),
-                    "Address"       :{
-                        "ID"                    :1,
-                        "Street1"               :html_entity_decode(json_data.billing_address_street[1]),
-                        "Locality"              :html_entity_decode(json_data.billing_address_city[1]),
-                        "State"                 :html_entity_decode(json_data.billing_address_state[1]),
-                        "PostCode"              :parseInt(html_entity_decode(json_data.billing_address_postalcode[1])),
-                        "Street1NotProvided"    :false,
-                        "LocalityNotProvided"   :false,
-                        "Latitude"              :dsg_lat,
-                        "Longitude"             :dsg_lng,
-                        "Value"                 :json_data.billing_address_street[1]+', '+json_data.billing_address_city[1]+' '+json_data.billing_address_state[1]+' '+json_data.billing_address_postalcode[1],
-                    },
-                    "RoofType"     : encodeURIComponent(roof_type_arr[$("#roof_type_c").val()]),
-                    "CustomerTypeID": parseInt($("#customer_type_c").val()),
-                    "BuildHeight"   : $("#gutter_height_c").val(),
-                    "EnergyRetailer": $("#energy_retailer_c").val(),
-                    "NetworkOperator"   : $("#distributor_c").val(),
-                    "ConnectionType": $("#connection_type_c").val(),
-                    "Photo"         : {
-                        "Name"      : "Image_Site_Detail.jpg",
-                        "Data"      : $("#Map_Template_Image").attr("src"),
-                    }
-                }
-                $.ajax({
-                    type: "GET",
-                    cache: false,
-                    url: "http://loc.designtools.com/APIv2/SAM_API.php?query=quotes/"+$("#number").text().trim('')+'&data_quote='+JSON.stringify(data_quote),
-                    // url: "https://designtool.pure-electric.com.au/APIv2/SAM_API.php?query=quotes/"+$("#number").text().trim('')+'&data_quote='+JSON.stringify(data_quote),
-                    success: function(result) {
-                        debugger
-                        if(result == 'done'){
-                            $("#link_quote_design").remove();
-                            window.open("http://loc.designtools.com/quote.php?quoteID="+$("#number").text().trim(''));
-                            // window.open("https://designtool.pure-electric.com.au/quote.php?quoteID="+$("#number").text().trim(''));
-                        }
-                    }
-                })
-    
-            });
-        });
-        $("#acceptJob").click(function(){
-            $('#acceptJob span.glyphicon-refresh').removeClass('hidden');
-            var record_id = $("input[name='record']").val();
-            var account_id = $("#billing_account_id").attr('data-id-value');
-            var solargain_quote_number_c = $("div[field='solargain_quote_number_c'] a").text();
-            if(account_id == '') {
-                alert('Please Select Account!');
-                $("#billing_account").focus();
-                $('#acceptJob span.glyphicon-refresh').addClass('hidden');
-                return false;
-            }
-            if(solargain_quote_number_c == '') {
-                alert('Please Insert Number Quote!');
-                $("#solargain_quote_number_c").focus();
-                $('#acceptJob span.glyphicon-refresh').addClass('hidden'); 
-                return false;
-            }
-    
-            var build_url_quote = "?entryPoint=customQuotesAcceptJob&record_id="+record_id;
-            $.ajax({
-                url: build_url_quote,
-                type: "GET",
-                success: function (data) {
-                    if(typeof(data) !== 'undefined'){
-                        try {
-                            data = JSON.parse(data);
-                        } catch (error) {
-                            $('#acceptJob span.glyphicon-refresh').addClass('hidden');
-                            return false;
-                        }
-                        
-                    }else{
-                        $('#acceptJob span.glyphicon-refresh').addClass('hidden');
-                        return;
-                    }
-                    if(data['message'] != 'done'){
-                        alert(data['message']);
-                    }else{
-                        debugger
-                        alert('Successfully!');
-                    }
-                    $('#acceptJob span.glyphicon-refresh').addClass('hidden');
-                },
-            });
-            return false;
-        })
         SUGAR.quoteFollowUp =  function(elem){
             $(document).openComposeViewModal_quoteFollowUp(elem);
         };
