@@ -2454,7 +2454,7 @@ $(function () {
                createSupplyPO("3");
                return false;
            });
-           
+           // because reuse field from daikin supply PO => Sanden SupplyPO
            function createSupplyPO(id){
                $('#createSupplyPO'+id+' span.glyphicon-refresh').removeClass('hidden');
                if($("#plumber_po_c").val == ""){
@@ -2462,12 +2462,12 @@ $(function () {
                    return false;
                }
                var record_id = $("input[name='record']").val();
-               var daikin_supplier = $("#account_id2_c").val();
                $.ajax({
-                   url: "?entryPoint=createPurchaseOrder&type=daikin&record_id=" + record_id +"&daikin_supplier="+daikin_supplier,
+                   url: "?entryPoint=createPurchaseOrder&type=sanden_supply&record_id=" + record_id ,
                    context: document.body,
                    async: true
                }).done(function (data) {
+                   data = data.trim();
                    $('#createSupplyPO'+id+' span.glyphicon-refresh').addClass('hidden');
                    $("#daikin_po_"+id+"_c").val(data);
                    if (data == "") return false;
