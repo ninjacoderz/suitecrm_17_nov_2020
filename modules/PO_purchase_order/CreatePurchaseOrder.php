@@ -65,7 +65,11 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $purchaseOrder->billing_account_id       = $_GET['electrical_account_id']?$_GET['electrical_account_id']:$invoice->account_id_c;
     } elseif ($po_type == "daikin"){
         $purchaseOrder->billing_account_id       = $_REQUEST["daikin_supplier"]?$_REQUEST["daikin_supplier"]: $invoice->account_id2_c;
-    }else {
+    }
+    elseif ($po_type == "sanden_supply"){
+        $purchaseOrder->billing_account_id       = '86516ff6-0cd7-9ccc-4373-58ad559a8e12'; //Sanden International (Australia) Pty Ltd
+    }
+    else {
         // Todo
         $purchaseOrder->billing_account_id       = $invoice->account_id_c;
     }
@@ -80,6 +84,9 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $supplier = BeanFactory::getBean("Accounts", $_REQUEST["daikin_supplier"]?$_REQUEST["daikin_supplier"]: $invoice->account_id2_c);
     }    
     //End Dung code
+    elseif ($po_type == "sanden_supply"){
+        $supplier =  BeanFactory::getBean("Accounts", '86516ff6-0cd7-9ccc-4373-58ad559a8e12'); //Sanden International (Australia) Pty Ltd
+    }
     else {
         // Todo
         $supplier =  BeanFactory::getBean("Accounts", $invoice->account_id2_c);
@@ -389,6 +396,155 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $purchaseOrder->subtotal_amount = format_number($total_price);
         $purchaseOrder->tax_amount = format_number($total_price/10);
         $purchaseOrder->total_amount = format_number($total_price + $total_price/10);
+        $purchaseOrder->save();
+        
+    }
+    // Sanden Supply 
+    if($is_sanden && $po_type == "sanden_supply"){
+        $purchaseOrder->po_type_c = 'sanden_supply';
+        $purchaseOrder->name = 'Sanden';
+        $group_total = 0;
+        // save Group
+        $row['id'] = '';
+        $row['name'] = 'Sanden';
+        $row['currency_id'] = '-99';
+        $row['number'] = '2';
+        $row['assigned_user_id'] = $purchaseOrder->assigned_user_id;
+        $row['parent_id'] = $purchaseOrder->id;
+        $row['parent_type'] = 'PO_purchase_order';
+        $group_invoice = new AOS_Line_Item_Groups();
+        $group_invoice->populateFromRow($row);
+        $group_invoice->save();
+        $purchaseOrder->dispatch_date_c = explode(" ",$invoice->dispatch_date_c)[0];
+        $dateInfos = explode("/", explode(" ",$invoice->dispatch_date_c)[0]);
+        $inv_dispatch_date_str = "$dateInfos[2]-$dateInfos[0]-$dateInfos[1]T00:00:00";
+        $string_dispatch_date = date("d M Y", strtotime($inv_dispatch_date_str));
+        //Setting Group Line Items
+        $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoice->id."' AND deleted = 0";
+        $result = $db->query($sql);
+        while ($row = $db->fetchByAssoc($result)) {
+            if(strpos($row['part_number'], "GAUS-") !== false  || strpos($row['part_number'], "QIK15−HPUMP") !== false ){
+                $purchaseOrder->name .= ' '.(int)$row['product_qty'].'x' .$row['part_number'];
+                if(strpos($row['part_number'], "GAUS-") !== false ){
+                    $row['number'] = '1';
+                }
+                $row['id'] = '';
+                $row['parent_id'] = $purchaseOrder->id;
+                $row['parent_type'] = 'PO_purchase_order';
+                $row['group_id'] = $group_invoice->id;
+                $part_number_product = $row['part_number'];
+                $sql_pruduct = "SELECT * FROM aos_products WHERE part_number IN ('".$part_number_product."') LIMIT 1";
+                $return_product = $db->query($sql_pruduct);
+        
+                $products = array();
+                while ($row_pruduct = $db->fetchByAssoc($return_product))
+                {
+                    if($row['product_cost_price'] != null)
+                    {
+                        $row['product_cost_price'] = format_number($row_pruduct['cost']);
+                    }
+                    $group_total += ((float)(str_replace(",","",$row_pruduct['cost']))) * $row['product_qty'];
+                    $row['product_list_price'] = $row_pruduct['cost'];
+                    if($row['product_discount'] != null)
+                    {
+                        $row['product_discount'] = format_number($row['cost']);
+                        $row['product_discount_amount'] = format_number($row['cost']);
+                    }
+                    $row['product_cost_price'] = format_number($row_pruduct['cost']);
+                    $row['product_list_price'] = format_number($row_pruduct['cost']);
+                    $row['discount'] = "Percentage";
+                    $row['product_unit_price'] = format_number($row_pruduct['cost']);
+                    $row['product_amt'] = 'vat_amt';
+                    $row['product_total_price'] = format_number($row_pruduct['cost'])*format_number($row['product_qty']);
+                    $row['vat_amt'] = format_number($row['product_total_price']/10);
+                    $row['vat'] = "10.0";
+                    $row['product_qty'] = format_number($row['product_qty']);
+                }
+
+                $prod_invoice = new AOS_Products_Quotes();
+                $prod_invoice->populateFromRow($row);
+                $prod_invoice->save();
+            }
+            // logic get product with part number GAUS
+            if(strpos($row['part_number'], "GAUS-") !== false ){
+                $row['number'] ++;
+                $part_numbers = ["HPFT-1","GAU-A45HPC"];
+                switch ($row['part_number']) {
+                    case 'GAUS-315FQS':
+                        $part_numbers[] = "SAN-315SAQA";
+                        break;
+                    case 'GAUS-315FQV':
+                        $part_numbers[] = "SAN-315VE";
+                        break;
+                    case 'GAUS-250FQS':
+                        $part_numbers[] = "SAN-250SAQA";
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
+                $part_numbers_implode = implode("','", $part_numbers);
+           
+                $sql_pruduct = "SELECT * FROM aos_products WHERE part_number IN ('".$part_numbers_implode."')";
+                $return_product = $db->query($sql_pruduct);
+        
+                $products = array();
+                while ($row_pruduct = $db->fetchByAssoc($return_product))
+                {
+                    $row['id'] = '';
+                    $row['parent_id'] = $purchaseOrder->id;
+                    $row['parent_type'] = 'PO_purchase_order';
+                    $row['group_id'] = $group_invoice->id;
+                    $row['part_number'] = $row_pruduct['part_number'];
+                    $row['item_description'] = $row_pruduct['description'];
+                    if($row['product_cost_price'] != null)
+                    {
+                        $row['product_cost_price'] = format_number($row_pruduct['cost']);
+                    }
+                    $group_total += ((float)(str_replace(",","",$row_pruduct['cost']))) * $row['product_qty'];
+                    $row['product_list_price'] = $row_pruduct['cost'];
+                    if($row['product_discount'] != null)
+                    {
+                        $row['product_discount'] = format_number($row['cost']);
+                        $row['product_discount_amount'] = format_number($row['cost']);
+                    }
+                    $row['product_cost_price'] = format_number($row_pruduct['cost']);
+                    $row['product_list_price'] = format_number($row_pruduct['cost']);
+                    $row['discount'] = "Percentage";
+                    $row['product_unit_price'] = format_number($row_pruduct['cost']);
+                    $row['product_amt'] = 'vat_amt';
+                    $row['product_total_price'] = format_number($row_pruduct['cost'])*format_number($row['product_qty']);
+                    $row['vat_amt'] = format_number($row['product_total_price']/10);
+                    $row['vat'] = "0.0";
+                    $row['product_qty'] = format_number($row['product_qty']);
+                    
+                    $prod_invoice = new AOS_Products_Quotes();
+                    $prod_invoice->populateFromRow($row);
+                    $prod_invoice->save();
+                }
+
+            }
+
+        }
+
+   
+        $group_total += $total_price;
+
+        $group_invoice->total_amt = format_number($group_total);
+        $group_invoice->discount_amount = format_number($group_total);
+        $group_invoice->subtotal_amount = format_number($group_total);
+        $group_invoice->tax_amount = format_number($group_total/10);
+        $group_invoice->total_amount = format_number($group_total*1.1);
+        $group_invoice->save();
+
+        $purchaseOrder->total_amt = format_number($group_total);
+        $purchaseOrder->subtotal_amount = format_number($group_total);
+        $purchaseOrder->tax_amount = format_number($group_total/10);
+        $purchaseOrder->total_amount = format_number($group_total*1.1);
+
+        $purchaseOrder->name .= ' ' .$purchaseOrder->shipping_address_city 
+        . ' ' .$purchaseOrder->shipping_address_state .' '.$string_dispatch_date;
+
         $purchaseOrder->save();
         
     }
