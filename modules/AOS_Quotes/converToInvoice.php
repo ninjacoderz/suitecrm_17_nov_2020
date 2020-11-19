@@ -87,6 +87,15 @@
         $invoice->account_id1_c = $quote->account_id3_c;
         $invoice->account_id_c = $quote->account_id2_c;
         $plumber_account->retrieve($invoice->account_id1_c);
+        //tuan code plumping template default
+        $template = file_get_contents('custom/modules/AOS_Invoices/json_plumbing_template.json');
+        $template = json_decode($template);
+        foreach( $template as $key => $val){
+            if($key == "1585189464"){
+                $content = $val->content;
+                $invoice->plumbing_notes_c = $content;
+            }
+        }    
     }
     $invoice->invoice_note_c = $quote->quote_note_c;
     if( isset($_REQUEST['orderID']) ){
