@@ -1382,8 +1382,12 @@ class EmailsController extends SugarController
                 $description = '';
                 if($po_type == 'Plumbing'){
                     $account_name= $bean_invoice->plumber_contact_c;
-                }else if('Electrical'){
+                    $contact = new Contact();
+                    $contact->retrieve($bean_invoice->contact_id4_c);
+                } else if($po_type =='Electrical'){
                     $account_name= $bean_invoice->electrician_contact_c;
+                    $contact = new Contact();
+                    $contact->retrieve($bean_invoice->contact_id_c);
                 }else{
                     $account_name ='';
                 }
@@ -1395,7 +1399,7 @@ class EmailsController extends SugarController
                     if($po_type == 'Plumbing'){
                         $distance = $bean_invoice->distance_to_suite_c;
 
-                    }else if('Electrical'){
+                    }else if($po_type =='Electrical'){
                         $distance = $bean_invoice->distance_to_suitecrm_c;
                     }else{
                         $distance = '';
@@ -1438,7 +1442,7 @@ class EmailsController extends SugarController
                     if($po_type == 'Plumbing'){
                         $description = $bean_invoice->plumbing_notes_c;
 
-                    }else if('Electrical'){
+                    }else if($po_type =='Electrical'){
                         $description = $bean_invoice->electrical_notes_c;
                     }else{
                         $description = '';
@@ -1452,6 +1456,11 @@ class EmailsController extends SugarController
                 $this->bean->description_html = str_replace("Customer Phone: M: XX W: XX", 'Customer Phone: '.$phone, $this->bean->description_html);
                 $this->bean->description_html = str_replace("XX km",$distance, $this->bean->description_html);
                 $this->bean->description_html = str_replace("\$aos_invoices_plumbing_notes_c", $description, $this->bean->description_html);
+                //VUT - Add phone number SMS
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client = $phone_number;//$_REQUEST['sms_received'];
+                $this->bean->number_receive_sms = "matthew_paul_client";
             }
 
             if($_REQUEST['email_type'] == "first-daikin"){
