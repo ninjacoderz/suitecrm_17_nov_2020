@@ -27,6 +27,7 @@ function populatePaymentAmout(){
     }
 
     $('#total_balance_owing_c').val(nextPaymentAmount);
+    $('#sanden_revenue').val(nextPaymentAmount);
     display_text_payment();
 }
 
@@ -80,6 +81,7 @@ function populatePaymentAmout_change_total(){
     }
 
     $('#total_balance_owing_c').val(nextPaymentAmount);
+    $('#sanden_revenue').val(nextPaymentAmount);
     display_text_payment();
 }
 $(function () {
