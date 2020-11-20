@@ -240,6 +240,15 @@ if($short_description_c != ""){
     //reset($array);
 
     // CUSTOM Replacement
+    if($bean->quote_type_c == 'quote_type_sanden') {
+        $url_acceptance = '<a target="_blank" href="https://pure-electric.com.au/pe-sanden-quote-form/acceptance?quote-id='.$bean->id.'">here is our URL link.</a>';
+        $url_upload_photo = '<a target="_blank" href="https://pure-electric.com.au/pe-sanden-quote-form/confirm?quote-id='.$bean->id.'">here is the link to upload photos</a>';
+    } else if ($bean->quote_type_c == 'quote_type_daikin' || $bean->quote_type_c == 'quote_type_nexura') {
+        $url_acceptance = '<a target="_blank" href="https://pure-electric.com.au/pedaikinform-new/acceptance?quote-id='.$bean->id.'">here is our URL link.</a>';
+        $url_upload_photo = '<a target="_blank" href="https://pure-electric.com.au/pedaikinform-new/confirm?quote-id='.$bean->id.'">here is the link to upload photos</a>';
+    }
+    $short_description_c = str_replace("\$link_acceptance", $url_acceptance, $short_description_c);
+    $short_description_c = str_replace("\$link_upload_photo", $url_upload_photo, $short_description_c);
 
     $group_id = key($lineItemsGroups);
     $group = new AOS_Line_Item_Groups();
