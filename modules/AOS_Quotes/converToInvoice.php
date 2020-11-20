@@ -82,11 +82,13 @@
     if (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false ) {
             $invoice->account_id2_c = 'def803db-f1ea-5f11-305e-5db106d4cf1e'; //old logic (daikin supplier)
             $invoice->account_id1_c = $quote->account_id4_c;
+            $invoice->delivery_date_time_c = $quote->proposed_delivery_date_c;
         $plumber_account->retrieve($quote->account_id4_c);
     } else if ($quote->quote_type_c == 'quote_type_sanden' || strpos(strtolower($quote->name),'sanden') !== false) {
         $invoice->account_id1_c = $quote->account_id3_c;
         $invoice->account_id_c = $quote->account_id2_c;
         $plumber_account->retrieve($invoice->account_id1_c);
+        $invoice->dispatch_date_c = $quote->proposed_dispatch_date_c;
         //tuan code plumping template default
         $template = file_get_contents('custom/modules/AOS_Invoices/json_plumbing_template.json');
         $template = json_decode($template);
@@ -98,6 +100,9 @@
         }    
     }
     $invoice->invoice_note_c = $quote->quote_note_c;
+	//VUT - convert Proposed install Date > Installation Date
+    $invoice->installation_date_c = $quote->proposed_install_date_c;
+
     if( isset($_REQUEST['orderID']) ){
         $invoice->order_number_c = $_REQUEST['orderID'];
     }
