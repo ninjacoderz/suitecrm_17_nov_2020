@@ -109,7 +109,114 @@ $(function () {
         var html_generate_promo_code = '<div class="clear"></div><br>\
         <button type="button" class="button primary" id="generate_promo_code"> \
         <span class="glyphicon  glyphicon-gift"></span> Generate Promo Code</button>';
-        $("#promo_methven_3_c").parent().parent().append(html_generate_promo_code);
+           //button Generate Button Generate Promo Code 
+           var html_generate_promo_code = '<div class="clear"></div><br>\
+           <button type="button" class="button primary" id="generate_promo_code"> \
+           <span class="glyphicon  glyphicon-gift"></span> Generate Promo Code</button>';
+           html_generate_promo_code += '<br>\
+           <button style="background:#009acf;" type="button" class="button primary" id="custom_generate_promo_code"> \
+           <span class="glyphicon  glyphicon-gift"></span>Custom Generate Promo Code</button>'; 
+           $("#promo_methven_3_c").parent().parent().append(html_generate_promo_code);
+           
+           $("#custom_generate_promo_code").click(function(){
+               var body_modal_html =    
+               '<div id="body_customize_promocode"><div class="form-group"> \
+                   <label for="name_promotion">Name Promotion:</label> \
+                   <input type="name_promotion" class="form-control" id="name_promotion"> \
+               </div> \
+               <div class="form-group">\
+                   <label for="offer_type_promotion">Offer type:</label> \
+                   <select onchange="SUGAR.ChangeOptionPromoCode(this);" class="form-control" id="offer_type_promotion">\
+                       <option selected="selected" value="order_fixed_grand_total_off">Fixed amount off the order Grand Total</option> \
+                       <option value="order_percentage_off_grand_total">Percentage off the order Grand Total</option> \
+                   </select>\
+               </div> \
+               <div class="form-group option_order_fixed_grand_total_off">\
+                   <label for="amount_off_promotion">Amount off:*</label> \
+                   <input placeholder="9.99" type="amount_off_promotion" class="form-control" id="amount_off_promotion">\
+               </div> \
+               <div class="form-group option_order_percentage_off_grand_total" hidden>\
+                   <label for="percentage_off_promotion">Percentage off (%):*</label> \
+                   <input placeholder="9.99" type="percentage_off_promotion" class="form-control" id="percentage_off_promotion">\
+               </div> \
+               <button disable type="submit_custom_generate" onClick="SUGAR.CustomGeneratePromoCode(this);" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span> Generate Promo Code</button></div>';
+               $('#alert_modal').find('.modal-body').empty();
+               $('#alert_modal').find('.modal-body').append(body_modal_html); 
+               $('#alert_modal').find('.modal-header').empty();
+               $('#alert_modal').find('.modal-header').append('<h3 style="text-align:center;">Create Promotion</h3>');
+               $('#alert_modal').modal('show'); 
+           })
+   
+           SUGAR.ChangeOptionPromoCode = function(){
+               var val_select = $('#offer_type_promotion').val();
+               if(val_select == 'order_fixed_grand_total_off'){
+                   $(".option_order_fixed_grand_total_off").show();
+                   $(".option_order_percentage_off_grand_total").hide();        
+                   $("#percentage_off_promotion").val();
+               }else{
+                   $(".option_order_fixed_grand_total_off").hide();
+                   $(".option_order_percentage_off_grand_total").show();
+                   $("#amount_off_promotion").val();
+               }
+           };
+   
+           SUGAR.CustomGeneratePromoCode = function(){
+              
+               var offer_type_promotion = $('#offer_type_promotion').val();
+               var amount_off_promotion =  $('#amount_off_promotion').val();
+               var percentage_off_promotion =  $('#percentage_off_promotion').val();
+               var invoice_id = $("input[name='record']").val();
+               var invoice_number = $("div[field='number']").text().trim(); 
+               var name_promotion = $("#name_promotion").text().trim(); 
+               
+               if(amount_off_promotion == '' && percentage_off_promotion == '' ){
+                   alert('Please fill out fields!');
+                   return false;
+               }
+               if(invoice_id !='')  {
+                   SUGAR.ajaxUI.showLoadingPanel(); 
+                   var data_post = {
+                       'method': 'customize',
+                       'invoiceID':invoice_id,
+                       'invoiceNum':invoice_number,
+                       'offer_type_promotion': offer_type_promotion,
+                       'name_promotion': name_promotion,
+                       'amount_off_promotion': amount_off_promotion,
+                       'percentage_off_promotion': percentage_off_promotion
+                   } ;  
+                   $.ajax({
+                       url:"?entryPoint=APIGeneratePromoCode",
+                       type: 'POST',
+                       data: data_post,
+                       success:function(data){   
+                           SUGAR.ajaxUI.hideLoadingPanel();                             
+                           try {
+                               var json = $.parseJSON(data);
+                               var html_result = "";
+                               if(json.code_customize != ''){
+                                   html_result += "Your Promo Code is <strong>" + json.code_customize + "</strong>";
+                                   
+                               }else{
+                                   html_result += "Can't Create Promo Code";
+                               }
+                               $('#alert_modal').find('.modal-header').empty();
+                               $('#alert_modal').find('.modal-body').empty();
+                               $('#alert_modal').find('.modal-body').append(html_result); 
+                               $('#alert_modal').modal('show'); 
+                               return false;
+                           } catch (e) {
+                               return false;
+                           }                   
+                       }
+                   });
+               }else{
+                   $('#alert_modal').find('.modal-body').empty();
+                   $('#alert_modal').find('.modal-body').append('Could you saving Invoice before, please?'); 
+                   $('#alert_modal').modal('show'); 
+                   SUGAR.ajaxUI.hideLoadingPanel(); 
+                   return false;
+               }
+           };
         $("#generate_promo_code").click(function(){
 
             SUGAR.ajaxUI.showLoadingPanel(); 
