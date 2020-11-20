@@ -1038,6 +1038,14 @@ function getInfoProductDaikin() {
                     obj.push(product);
                 }  
             }
+            if( partNumber.indexOf("BRP072") != -1){
+                product_name = "Wifi";
+                let product = {
+                    qty: qty,
+                    product_name: product_name
+                }
+                obj.push(product);
+            }
         }
     }
     return obj;
