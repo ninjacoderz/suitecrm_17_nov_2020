@@ -3,6 +3,7 @@
 {/php}
 
 {assign var="value" value={{sugarvar key='value' string=true}}}
+{**
 <style type="text/css">
     #daikininfo td{ldelim}
         padding-bottom: 20px;
@@ -230,3 +231,4 @@
 
 
 </script>
+*}

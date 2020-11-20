@@ -1515,6 +1515,11 @@ $(function () {
 
 
         SUGAR.createAssignment = function (elem) {
+            //thienpb code -- disable button for daikin
+            if($("#quote_type_c").val() == "quote_type_daikin" || $("#quote_type_c").val() == "quote_type_nexura"){
+                alert("Function disabled for Daikin.");
+                return false;
+            }
             //dung code - alert confirm
             var dialog = $('<p>CONFIRM with PE Contact if this Customer is GST Registered? If UNSURE, click CANCEL</p>').dialog({
                 buttons: {
@@ -2019,7 +2024,11 @@ $(function () {
         )
 
         SUGAR.sendGeoReminder = function (elem) {
-
+            //thienpb code -- disable button for daikin
+            if($("#quote_type_c").val() == "quote_type_daikin" || $("#quote_type_c").val() == "quote_type_nexura"){
+                alert("Function disabled for Daikin.");
+                return false;
+            }
             $('#send_geo_reminder span.glyphicon-refresh').removeClass('hidden');
             var billing_account_id = $('#billing_account_id').val();
             $.ajax({
