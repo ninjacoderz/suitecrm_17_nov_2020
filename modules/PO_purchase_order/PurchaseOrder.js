@@ -952,14 +952,17 @@ function generatePOname() {
             $.each(productSanden,function(k,v){
                 infoSanden += `${v['qty']}x ${v['partNumber']} `;
             });
-            namePO = `Sanden ${infoSanden} ${shipping_city} ${shipping_state} ${dispatch_date} ${order_number}`;
+            namePO = `Sanden ${infoSanden} to ${shipping_city} ${shipping_state} ${dispatch_date} ${order_number}`;
             break;
 
-        // case 'daikin_supply':
-        //     let infodaikin = getInfoProductDaikin(invoice_id);
-        //     debugger
-        //     namePO = `Daikin ${infodaikin} ${shipping_state} ${delivery_date} ${order_number}`;
-        //     break;
+        case 'daikin_supply':
+            let productdaikin = getInfoProductDaikin();
+            let infoDaikin='';
+            $.each(productdaikin,function(k,v){
+                infoDaikin += `${v['qty']}x ${v['product_name']} `;
+            });
+            namePO = `Daikin ${infoDaikin} to ${shipping_city} ${shipping_state} ${delivery_date} ${order_number}`;
+            break;
 
         // case 'installer':
         //     break;
@@ -980,15 +983,20 @@ function getInfoProductSanden() {
             let partNumber = $(`#product_part_number${i}`).val();
             if (partNumber.indexOf("GAUS-") != -1) {
                 partNumber = partNumber.replace("GAUS-", "");
+                let product = {
+                    qty: qty,
+                    partNumber: partNumber
+                }
+                obj.push(product);
             }
             if (partNumber.indexOf("−HPUMP") != -1) {
                 partNumber = partNumber.replace("−HPUMP", "");
+                let product = {
+                    qty: qty,
+                    partNumber: partNumber
+                }
+                obj.push(product);
             }
-            let product = {
-                qty: qty,
-                partNumber: partNumber
-            }
-            obj.push(product);
         }
     }
     return obj;
@@ -1005,16 +1013,35 @@ function formatTimeforPOname(date) {
 }
 
 // //VUT- Get info Product Daikin to create PO's name
-// function getInfoProductDaikin(invoice_id) {
-//     let result;
-//     $.ajax({
-//         url: "?entryPoint=readGoogleSheet&invoice_id="+invoice_id,
-//         async:false
-//     }).done(function (data) {
-//         result = data;
-//     });
-//     return result;
-// }
+function getInfoProductDaikin() {
+    let products = $('#lineItems').find('.product_group').children('tbody');
+    let i; 
+    let obj = [];
+    for (i=0;i< products.length; i++) {
+        if (parseFloat($(`#product_product_list_price${i}`).val()) !== 0) {
+            let qty = $(`#product_product_qty${i}`).val();
+            let partNumber = $(`#product_part_number${i}`).val();
+            let product_name = $(`#product_name${i}`).val();
+            if (partNumber.indexOf("FTXM") != -1 || partNumber.indexOf("FVXG") != -1 || partNumber.indexOf("FTXZ") != -1 || partNumber.indexOf("FTXJ") != -1) {
+                product_name = product_name.replace("Daikin ", "");
+                if(JSON.stringify(obj).includes(product_name) == true){
+                    obj.forEach(function (val,key) {
+                        if (val['product_name'] == product_name) {
+                            obj[key]['qty'] = parseInt(val['qty'])  + parseInt(qty);
+                        }
+                    });
+                }else {
+                    let product = {
+                        qty: qty,
+                        product_name: product_name
+                    }
+                    obj.push(product);
+                }  
+            }
+        }
+    }
+    return obj;
+}
 
 
 // $(document).ready(function(){
