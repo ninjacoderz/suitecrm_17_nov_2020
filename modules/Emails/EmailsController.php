@@ -633,7 +633,7 @@ class EmailsController extends SugarController
                 if( $_REQUEST['email_type'] == 'clients_calendar' ){
                     $emailTemplateID =  '3d130783-62df-4eaa-c1c5-5dee208d3e02';
                     $contact = new Contact;
-                    $contact->retrieve($invoice->billing_contact_id);
+                    $contact->retrieve($invoice->contact_id3_c);
                     $link_calendar = "https://calendar.pure-electric.com.au/#/installation-booking/".$invoice->installation_calendar_id_c."/client";
                     if ($invoice->quote_type_c ==  "quote_type_sanden" ) {
                         $product = "Sanden";
@@ -673,7 +673,7 @@ class EmailsController extends SugarController
                     $description_html = str_replace("\$name", $contact->first_name , $description_html);
                     //VUT - S - customer infomation
                     $contact_customer = new Contact();
-                    $contact_customer->retrieve($invoice->billing_contact_id);
+                    $contact_customer->retrieve($invoice->contact_id3_c);
                     $customer_address = $invoice->install_address_c . " ".  $invoice->install_address_city_c . " ".  $invoice->install_address_state_c. " ".  $invoice->install_address_postalcode_c;
 
                     $customer_phone = '';
