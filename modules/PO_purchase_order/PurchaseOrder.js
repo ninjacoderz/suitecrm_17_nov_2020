@@ -976,30 +976,27 @@ function generatePOname() {
 function getInfoProductSanden() {
     let products = $('#lineItems').find('.product_group').children('tbody');
     let i; 
-    let obj = [];
+    let sanden_groups = {};
     for (i=0;i< products.length; i++) {
         if (parseFloat($(`#product_product_list_price${i}`).val()) !== 0) {
             let qty = $(`#product_product_qty${i}`).val();
+            let product_id = $(`#product_product_id${i}`).val();
             let partNumber = $(`#product_part_number${i}`).val();
-            if (partNumber.indexOf("GAUS-") != -1) {
-                partNumber = partNumber.replace("GAUS-", "");
-                let product = {
-                    qty: qty,
-                    partNumber: partNumber
+            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1) {
+                if (sanden_groups.hasOwnProperty(product_id)) {
+                    sanden_groups[product_id].qty += parseInt(qty);
+                } else {
+                    partNumber = partNumber.replace("GAUS-", "");
+                    partNumber = partNumber.replace("−HPUMP", "");
+                    sanden_groups[product_id] = {
+                        'partNumber': partNumber,
+                        'qty': parseInt(qty),
+                    };
                 }
-                obj.push(product);
-            }
-            if (partNumber.indexOf("−HPUMP") != -1) {
-                partNumber = partNumber.replace("−HPUMP", "");
-                let product = {
-                    qty: qty,
-                    partNumber: partNumber
-                }
-                obj.push(product);
             }
         }
     }
-    return obj;
+    return sanden_groups;
 }
 /**
  * VUT-Format Time

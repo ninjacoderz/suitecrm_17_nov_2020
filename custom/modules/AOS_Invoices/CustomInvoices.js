@@ -2398,7 +2398,7 @@ $(function () {
             var daikin_product = $("input[name='daikin_product_infomation_c']").val();
             var delivery_contact_suburb = $("#delivery_contact_suburb_c").val();
             var delivery_contact_state = $("#delivery_contact_state_c").val();
-            var delivery_date = $("#delivery_date_c").val();
+            var delivery_date = $("#delivery_date_time_c").val();
             //VUT-E-Create subject PO
             // submit form before create PO - daikin by buttom
             SUGAR.ajaxUI.showLoadingPanel();
