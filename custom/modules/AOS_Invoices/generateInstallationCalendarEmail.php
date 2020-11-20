@@ -129,10 +129,10 @@
                 //'EmailTemplates',"3d130783-62df-4eaa-c1c5-5dee208d3e02"
             );
             $body = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$contact_first_name',$name,$emailTemplate->body));
-            $body = str_replace('$aos_invoices_quote_type_c', $quote_type,$body);
+            $body = str_replace('$aos_invoices_quote_type_c', $quote_type, $body);
 
             $body_html = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$contact_first_name',$name,$emailTemplate->body_html));
-            $body_html = str_replace('$aos_invoices_quote_type_c', $quote_type,$body_html);
+            $body_html = str_replace('$aos_invoices_quote_type_c', $quote_type, $body_html);
             // generate sms template
             $smsTemplate = BeanFactory::getBean(
                 'pe_smstemplate',
@@ -151,91 +151,124 @@
             $email->sms_message =trim(strip_tags(html_entity_decode($body_sms.' '.$current_user->sms_signature_c,ENT_QUOTES)));
             //end generate sms template
 
-        }else if($role == "plumber"){
-            $emailTemplate = BeanFactory::getBean(
-                'EmailTemplates',"3722ae7c-d8b7-e03f-559c-5df843678e41"
-                //'EmailTemplates',"3d130783-62df-4eaa-c1c5-5dee208d3e02"
-            );
+        }else{
+            if($role == "plumber"){
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',"3722ae7c-d8b7-e03f-559c-5df843678e41"
+                    //'EmailTemplates',"3d130783-62df-4eaa-c1c5-5dee208d3e02"
+                );
 
-            $body = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body));
-            $body_html = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body_html));
+                $body = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body));
+                $body = str_replace('$aos_invoices_plumbing_notes_c',$invoice->plumbing_notes_c , $body);
+                $body = str_replace('$distance_to_suite_c',$invoice->distance_to_suite_c , $body);
+
+                $body_html = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body_html));
+                $body_html = str_replace('$aos_invoices_plumbing_notes_c', $invoice->plumbing_notes_c , $body_html);
+                $body_html = str_replace('$distance_to_suite_c', $invoice->distance_to_suite_c , $body_html);
+            }else if($role == "electrician"){
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',"dc0416cd-6867-5508-3d20-5df843ba69dc"
+                    //'EmailTemplates',"3d130783-62df-4eaa-c1c5-5dee208d3e02"
+                );
+
+                $body = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body));
+                $body = str_replace('$aos_invoices_electrical_notes_c',$invoice->electrical_notes_c , $body);
+                $body = str_replace('$distance_to_suite_c',$invoice->distance_to_suitecrm_c , $body);
+
+                $body_html = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body_html));
+                $body_html = str_replace('$aos_invoices_electrical_notes_c', $invoice->electrical_notes_c , $body_html);
+                $body_html = str_replace('$distance_to_suite_c', $invoice->distance_to_suitecrm_c , $body_html);
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    '303a9b3e-d0be-344a-1ddb-5fb2264b8860' 
+                );
             
-        }else if($role == "electrician"){
-            $emailTemplate = BeanFactory::getBean(
-                'EmailTemplates',"dc0416cd-6867-5508-3d20-5df843ba69dc"
-                //'EmailTemplates',"3d130783-62df-4eaa-c1c5-5dee208d3e02"
-            );
+            }
 
-            $body = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body));
-            $body_html = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body_html));
-        
+            $contact_customer = new Contact();
+            $contact_customer->retrieve($invoice->contact_id3_c);
+            $customer_address = $invoice->install_address_c . " ".  $invoice->install_address_city_c . " ".  $invoice->install_address_state_c. " ".  $invoice->install_address_postalcode_c;
+
+            $customer_phone = '';
+            if ($contact_customer->phone_mobile != '') {
+                $customer_phone .= 'M: '.$contact_customer->phone_mobile;
+            } 
+            if ($contact_customer->phone_work != '') {
+                $customer_phone .= ' W: '.$contact_customer->phone_work;
+            }
+            $body = str_replace("\$aos_invoices_billing_contact",$contact_customer->name , $body);
+            $body = str_replace("\$aos_invoices_install_address_c",$customer_address , $body);
+            $body = str_replace("\$aos_invoices_contact_id3_c",$customer_phone , $body);
+
+            $body_html = str_replace("\$aos_invoices_billing_contact", $contact_customer->name , $body_html);
+            $body_html = str_replace("\$aos_invoices_install_address_c", $customer_address , $body_html);
+            $body_html = str_replace("\$aos_invoices_contact_id3_c", $customer_phone , $body_html);
         }
-
         $email->emails_email_templates_name = $emailTemplate->name;
         $email->emails_email_templates_idb = $emailTemplate->id;
 
         $email->name = str_replace('$aos_invoices_name',$invoice->name,$emailTemplate->subject);
 
-        $customer = $invoice->contact_id3_c;
-        $contact = new Contact();
-        $contact = $contact->retrieve($customer);
-        $account = new Account();
-        $account = $account->retrieve( $contact->account_id);
+        // $customer = $invoice->contact_id3_c;
+        // $contact = new Contact();
+        // $contact = $contact->retrieve($customer);
+        // $account = new Account();
+        // $account = $account->retrieve( $contact->account_id);
 
-        $address_customer =$invoice->shipping_address_street .' '.$invoice->shipping_address_city .' ' .$invoice->shipping_address_state .' '. $invoice->shipping_address_postalcode;
-        if($address_customer) {
-            $address_customer = $contact->alt_address_street .' '.$contact->alt_address_city .' ' .$contact->alt_address_state .' '. $contact->alt_address_postalcode;
-        }
-        if($address_customer) {
-            $address_customer = $contact->primary_address_street .' '.$contact->primary_address_city .' ' .$contact->primary_address_state .' '. $contact->primary_address_postalcode;
-        }
+        // $address_customer =$invoice->shipping_address_street .' '.$invoice->shipping_address_city .' ' .$invoice->shipping_address_state .' '. $invoice->shipping_address_postalcode;
+        // if($address_customer) {
+        //     $address_customer = $contact->alt_address_street .' '.$contact->alt_address_city .' ' .$contact->alt_address_state .' '. $contact->alt_address_postalcode;
+        // }
+        // if($address_customer) {
+        //     $address_customer = $contact->primary_address_street .' '.$contact->primary_address_city .' ' .$contact->primary_address_state .' '. $contact->primary_address_postalcode;
+        // }
 
-        if($address_customer) {
-            $address_customer = $account->billing_address_street .' '.$account->billing_address_city .' ' .$account->billing_address_state .' '. $account->billing_address_postalcode;
-        }
+        // if($address_customer) {
+        //     $address_customer = $account->billing_address_street .' '.$account->billing_address_city .' ' .$account->billing_address_state .' '. $account->billing_address_postalcode;
+        // }
 
-        if($contact->phone_home){
-            $phone .= " H: ".$contact->phone_home;
-        }
-        if($contact->phone_mobile){
-            $phone .= " M: ".$contact->phone_mobile;
-        }
-        if($contact->phone_work){
-            $phone .= " W: ".$contact->phone_work;
-        }
+        // if($contact->phone_home){
+        //     $phone .= " H: ".$contact->phone_home;
+        // }
+        // if($contact->phone_mobile){
+        //     $phone .= " M: ".$contact->phone_mobile;
+        // }
+        // if($contact->phone_work){
+        //     $phone .= " W: ".$contact->phone_work;
+        // }
 
-        if($phone){
-            if($account->home_phone_c){
-                $phone .= " H: ".$account->home_phone_c;
-            }
-            if($account->mobile_phone_c){
-                $phone .= " M: ".$account->mobile_phone_c;
-            }
-            if($account->phone_office){
-                $phone .= " W: ".$account->phone_office;
-            }
-        }
+        // if($phone){
+        //     if($account->home_phone_c){
+        //         $phone .= " H: ".$account->home_phone_c;
+        //     }
+        //     if($account->mobile_phone_c){
+        //         $phone .= " M: ".$account->mobile_phone_c;
+        //     }
+        //     if($account->phone_office){
+        //         $phone .= " W: ".$account->phone_office;
+        //     }
+        // }
 
-        $body = str_replace('$$ XX (Contact)',$invoice->site_contact_c,$body);
-        $body = str_replace('$$ XX (Install Address)',$address_customer,$body);
-        $body = str_replace('M: XX W: XX (Contact Mobile Number / Contact Work Number)',$phone,$body);
-        if($role == "plumber"){
-            $body      = str_replace('XX km',$invoice->distance_to_suite_c,$body);
-            $body_html = str_replace('XX km',$invoice->distance_to_suitecrm_c,$body_html);
-            $body      = str_replace('$aos_invoices_plumbing_notes_c',$bean_invoice->plumbing_notes_c,$body);
-            $body_html = str_replace('$aos_invoices_plumbing_notes_c',$bean_invoice->plumbing_notes_c,$body_html);
-        }else{
-            $body      = str_replace('XX km',$invoice->distance_to_suitecrm_c,$body);
-            $body_html = str_replace('XX km',$invoice->distance_to_suitecrm_c,$body_html);
-            $body      = str_replace('$aos_invoices_electrical_notes_c',$invoice->electrical_notes_c,$body);
-            $body_html = str_replace('$aos_invoices_electrical_notes_c',$invoice->electrical_notes_c,$body_html);
-        }
-        $body = str_replace('$aos_invoices_electrical_notes_c',$invoice->electrical_notes_c,$body);
-        $body = str_replace('$aos_invoices_plumbing_notes_c',$bean_invoice->plumbing_notes_c,$body);
+        // $body = str_replace('$$ XX (Contact)',$invoice->site_contact_c,$body);
+        // $body = str_replace('$$ XX (Install Address)',$address_customer,$body);
+        // $body = str_replace('M: XX W: XX (Contact Mobile Number / Contact Work Number)',$phone,$body);
+        // if($role == "plumber"){
+        //     $body      = str_replace('XX km',$invoice->distance_to_suite_c,$body);
+        //     $body_html = str_replace('XX km',$invoice->distance_to_suitecrm_c,$body_html);
+        //     $body      = str_replace('$aos_invoices_plumbing_notes_c',$bean_invoice->plumbing_notes_c,$body);
+        //     $body_html = str_replace('$aos_invoices_plumbing_notes_c',$bean_invoice->plumbing_notes_c,$body_html);
+        // }else{
+        //     $body      = str_replace('XX km',$invoice->distance_to_suitecrm_c,$body);
+        //     $body_html = str_replace('XX km',$invoice->distance_to_suitecrm_c,$body_html);
+        //     $body      = str_replace('$aos_invoices_electrical_notes_c',$invoice->electrical_notes_c,$body);
+        //     $body_html = str_replace('$aos_invoices_electrical_notes_c',$invoice->electrical_notes_c,$body_html);
+        // }
+        // $body = str_replace('$aos_invoices_electrical_notes_c',$invoice->electrical_notes_c,$body);
+        // $body = str_replace('$aos_invoices_plumbing_notes_c',$bean_invoice->plumbing_notes_c,$body);
 
-        $body_html = str_replace('$$ XX (Contact)',$invoice->site_contact_c,$body_html);
-        $body_html = str_replace('$$ XX (Install Address)',$address_customer,$body_html);
-        $body_html = str_replace('M: XX W: XX (Contact Mobile Number / Contact Work Number)',$phone,$body_html);
+        // $body_html = str_replace('$$ XX (Contact)',$invoice->site_contact_c,$body_html);
+        // $body_html = str_replace('$$ XX (Install Address)',$address_customer,$body_html);
+        // $body_html = str_replace('M: XX W: XX (Contact Mobile Number / Contact Work Number)',$phone,$body_html);
 
         $email->description = $body;
         $email->description_html = $body_html;
