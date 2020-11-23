@@ -360,6 +360,7 @@
 
         $lead->description = $decription_internal_notes;
         $lead->status = 'Converted';
+        $lead->lead_source = $rq_data['hear_about'];
 
         if (strpos($products, 'FQV') === 0 ) {
             $lead->create_solar_quote_fqv_c = "1";
