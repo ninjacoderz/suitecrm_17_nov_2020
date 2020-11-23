@@ -557,6 +557,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
     
     if($po_type == "daikin"){
+        $purchaseOrder->po_type_c = 'daikin_supply';
         $group_total = 0;
         // save Group
         $row['id'] = '';
@@ -715,16 +716,16 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $purchaseOrder->name .= $quantity.'x'.$name.' ';
         }
         //**address + time */
-        $invoice->delivery_contact_suburb_c = $_REQUEST["delivery_contact_suburb"];
-        $invoice->delivery_contact_state_c = $_REQUEST["delivery_contact_state"];
-        $invoice->delivery_date_time_c = $_REQUEST["delivery_date"];
+        // $invoice->delivery_contact_suburb_c = $_REQUEST["delivery_contact_suburb"];
+        // $invoice->delivery_contact_state_c = $_REQUEST["delivery_contact_state"];
+        // $invoice->delivery_date_time_c = $_REQUEST["delivery_date"];
         $purchaseOrder->delivery_date_c = explode(" ",$invoice->delivery_date_time_c)[0];
         $dateInfos = explode("/", explode(" ",$invoice->delivery_date_time_c)[0]);
         $inv_delivery_date_str = "$dateInfos[2]-$dateInfos[1]-$dateInfos[0]T00:00:00";
         $string_delivery_date = date("d M Y", strtotime($inv_delivery_date_str));
 
 
-        $purchaseOrder->name .= "to ".$invoice->delivery_contact_suburb_c." ".$invoice->delivery_contact_state_c." ".$string_delivery_date;
+        $purchaseOrder->name .= " to ".$invoice->delivery_contact_suburb_c." ".$invoice->delivery_contact_state_c." ".$string_delivery_date;
         //VUT-E-Create subject for Daikin PO
         $purchaseOrder->save();
     }

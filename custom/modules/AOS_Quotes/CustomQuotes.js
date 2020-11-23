@@ -2154,7 +2154,23 @@ function genExtraDaikinItemFunc(elem){
      //tu-code add field covert to invoices
      $('input[id="CANCEL"]').after(' <input title="Save" accesskey="a" class="button primary" type="submit" name="button" value="Convert To Invoice" id="convert_to_invoice">');
      $("#convert_to_invoice").click(function(){
-         var record = encodeURIComponent($("input[name='record']").val());
+        if ($('#proposed_dispatch_date_c').val() == '' && $('#quote_type_c').val() == "quote_type_sanden") {
+            var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
+            if (question) {
+            }
+            else {
+                return false;
+            }
+        }
+        if ($('#proposed_delivery_date_c').val() == '' && $('#quote_type_c').val() == "quote_type_daikin") {
+            var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
+            if (question) {
+            }
+            else {
+                return false;
+            }
+        }
+        var record = encodeURIComponent($("input[name='record']").val());
          $.ajax({
                  url: '/index.php?entryPoint=checkSwitchBoardAttached&record='+record,                
                  success: function (data) {                    

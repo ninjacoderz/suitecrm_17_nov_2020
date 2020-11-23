@@ -72,7 +72,6 @@
     $invoice->process_save_dates =false;
     $invoice->save();
     // BinhNT
-
     // Do special things to make it convert exactly
     // // VUT - comment because change logic
     // $invoice->account_id1_c = $quote->account_id_c;
@@ -200,64 +199,68 @@
         $quote->$key->add($invoice->id);
     }
 
-    //Setting Group Line Items
-    $db = DBManagerFactory::getInstance();
-    $sql = "SELECT * FROM aos_line_item_groups WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
-    $result = $db->query($sql); //$this->bean->db
-    $quoteToInvoiceGroupIds = array();
-    while ($row = $db->fetchByAssoc($result) ) {
-        $quoteGroupId = $row['id'];
-        $row['id'] = '';
-        $row['parent_id'] = $invoice->id;
-        $row['parent_type'] = 'AOS_Invoices';
-        if ($row['total_amt'] != null) {
-            $row['total_amt'] = format_number($row['total_amt']);
-        }
-        if ($row['discount_amount'] != null) {
-            $row['discount_amount'] = format_number($row['discount_amount']);
-        }
-        if ($row['subtotal_amount'] != null) {
-            $row['subtotal_amount'] = format_number($row['subtotal_amount']);
-        }
-        if ($row['tax_amount'] != null) {
-            $row['tax_amount'] = format_number($row['tax_amount']);
-        }
-        if ($row['subtotal_tax_amount'] != null) {
-            $row['subtotal_tax_amount'] = format_number($row['subtotal_tax_amount']);
-        }
-        if ($row['total_amount'] != null) {
-            $row['total_amount'] = format_number($row['total_amount']);
-        }
-        $group_invoice = BeanFactory::newBean('AOS_Line_Item_Groups');
-        $group_invoice->populateFromRow($row);
-        $group_invoice->save();
-        $quoteToInvoiceGroupIds[$quoteGroupId] = $group_invoice->id;
-    }
+    // //Setting Group Line Items
+    // $db = DBManagerFactory::getInstance();
+    // $sql = "SELECT * FROM aos_line_item_groups WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
+    // $result = $db->query($sql); //$this->bean->db
+    // $quoteToInvoiceGroupIds = array();
+    // while ($row = $db->fetchByAssoc($result) ) {
+    //     $quoteGroupId = $row['id'];
+    //     $row['id'] = '';
+    //     $row['parent_id'] = $invoice->id;
+    //     $row['parent_type'] = 'AOS_Invoices';
+    //     if ($row['total_amt'] != null) {
+    //         $row['total_amt'] = format_number($row['total_amt']);
+    //     }
+    //     if ($row['discount_amount'] != null) {
+    //         $row['discount_amount'] = format_number($row['discount_amount']);
+    //     }
+    //     if ($row['subtotal_amount'] != null) {
+    //         $row['subtotal_amount'] = format_number($row['subtotal_amount']);
+    //     }
+    //     if ($row['tax_amount'] != null) {
+    //         $row['tax_amount'] = format_number($row['tax_amount']);
+    //     }
+    //     if ($row['subtotal_tax_amount'] != null) {
+    //         $row['subtotal_tax_amount'] = format_number($row['subtotal_tax_amount']);
+    //     }
+    //     if ($row['total_amount'] != null) {
+    //         $row['total_amount'] = format_number($row['total_amount']);
+    //     }
+    //     $group_invoice = BeanFactory::newBean('AOS_Line_Item_Groups');
+    //     $group_invoice->populateFromRow($row);
+    //     $group_invoice->save();
+    //     $quoteToInvoiceGroupIds[$quoteGroupId] = $group_invoice->id;
+    // }
 
-    //Setting Line Items
-    $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
-    $result = $db->query($sql);
-    while ($row = $db->fetchByAssoc($result)) {
-        $row['id'] = '';
-        $row['parent_id'] = $invoice->id;
-        $row['parent_type'] = 'AOS_Invoices';
-        $row['group_id'] = $quoteToInvoiceGroupIds[$row['group_id']];
-        if ($row['product_cost_price'] != null) {
-            $row['product_cost_price'] = format_number($row['product_cost_price']);
-        }
-        $row['product_list_price'] = format_number($row['product_list_price']);
-        if ($row['product_discount'] != null) {
-            $row['product_discount'] = format_number($row['product_discount']);
-            $row['product_discount_amount'] = format_number($row['product_discount_amount']);
-        }
-        $row['product_unit_price'] = format_number($row['product_unit_price']);
-        $row['vat_amt'] = format_number($row['vat_amt']);
-        $row['product_total_price'] = format_number($row['product_total_price']);
-        $row['product_qty'] = format_number($row['product_qty']);
-        $prod_invoice = BeanFactory::newBean('AOS_Products_Quotes');
-        $prod_invoice->populateFromRow($row);
-        $prod_invoice->save();
-    }
+    // //Setting Line Items
+    // $isSandenSupply = false;
+    // $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
+    // $result = $db->query($sql);
+    // while ($row = $db->fetchByAssoc($result)) {
+    //     $row['id'] = '';
+    //     $row['parent_id'] = $invoice->id;
+    //     $row['parent_type'] = 'AOS_Invoices';
+    //     $row['group_id'] = $quoteToInvoiceGroupIds[$row['group_id']];
+    //     if ($row['product_cost_price'] != null) {
+    //         $row['product_cost_price'] = format_number($row['product_cost_price']);
+    //     }
+    //     $row['product_list_price'] = format_number($row['product_list_price']);
+    //     if ($row['product_discount'] != null) {
+    //         $row['product_discount'] = format_number($row['product_discount']);
+    //         $row['product_discount_amount'] = format_number($row['product_discount_amount']);
+    //     }
+    //     $row['product_unit_price'] = format_number($row['product_unit_price']);
+    //     $row['vat_amt'] = format_number($row['vat_amt']);
+    //     $row['product_total_price'] = format_number($row['product_total_price']);
+    //     $row['product_qty'] = format_number($row['product_qty']);
+    //     $prod_invoice = BeanFactory::newBean('AOS_Products_Quotes');
+    //     $prod_invoice->populateFromRow($row);
+    //     $prod_invoice->save();
+    //     if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
+    //         $isSandenSupply = true;
+    //     }
+    // }
 	//Dung code
 	$invoice_title  = strtolower($rawRow['name']);
 	if (strpos($invoice_title,'daikin') !== false) {
@@ -361,7 +364,16 @@
     ob_clean();
 	$create_three_po = true;
 	// BinhNT;   
-	require_once('modules/PO_purchase_order/CreatePurchaseOrder.php');
+    require_once('modules/PO_purchase_order/CreatePurchaseOrder.php');
+    //VUT - S - Auto create PO
+    $invoiceBean = BeanFactory::getBean("AOS_Invoices", $invoice->id);
+    if (isSanden($invoiceBean->id) && $quote->proposed_dispatch_date_c != '') {
+       createPO('sanden_supply', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+    }
+    if ($invoiceBean->delivery_date_time_c != '' && (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false )) {
+        createPO('daikin', $invoiceBean, $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+    }
+    //VUT - E - Auto create PO
     header('Location: index.php?module=AOS_Invoices&action=EditView&record='.$invoice->id);
 
     function dirToArray($dir) { 
@@ -608,4 +620,20 @@
             $pe_warehouse_log->connote = $connote_id;
             $pe_warehouse_log->save(); 
         }
+    }
+
+    /**
+     * VUT - Check is Sanden Supply for PO
+     * @param string $invoiceID
+     */
+    function isSanden($invoiceID) {
+        $db = DBManagerFactory::getInstance();
+        $query = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '$invoiceID' AND deleted = 0";
+        $ret = $db->query($query);
+        while($row = $db->fetchByAssoc($ret)){
+            if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
+              return true;
+            }
+        }
+        return false;
     }
