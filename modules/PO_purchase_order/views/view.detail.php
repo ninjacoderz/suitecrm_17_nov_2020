@@ -55,18 +55,21 @@ class PO_purchase_orderViewDetail extends ViewDetail {
 						<b>'.$app_strings['LBL_SELECT_TEMPLATE'].':-</b>
 						</td>
 					</tr>';
-			foreach($templates as $template){
-				$template = str_replace('^','',$template);
 				//VUT-S-PO Sanden supply >> Selected pdf template PO For Electrical & Plumber
 				if ($this->bean->po_type_c == 'sanden_supply') {
-					if ($template != '3bd2f6d5-46f9-d804-9d5b-5a407d37d4c5') continue; 
-				}
+					$template = '3bd2f6d5-46f9-d804-9d5b-5a407d37d4c5';
+					$templates = array();
+					$templates[0]= $template;
+				} else {
 				//VUT-E-PO Sanden supply >> Selected pdf template PO For Electrical & Plumber
-				$js = "document.getElementById('popupDivBack_ara').style.display='none';document.getElementById('popupDiv_ara').style.display='none';var form=document.getElementById('popupForm');if(form!=null){form.templateID.value='".$template."';form.submit();}else{alert('Error!');}";
-				echo '<tr height="20">
-				<td width="17" valign="center"><a href="#" onclick="'.$js.'"><img src="themes/default/images/txt_image_inline.gif" width="16" height="16" /></a></td>
-				<td><b><a href="#" onclick="'.$js.'">'.$app_list_strings['template_ddown_c_list'][$template].'</a></b></td></tr>';
-			}
+					foreach($templates as $template){
+						$template = str_replace('^','',$template);
+						$js = "document.getElementById('popupDivBack_ara').style.display='none';document.getElementById('popupDiv_ara').style.display='none';var form=document.getElementById('popupForm');if(form!=null){form.templateID.value='".$template."';form.submit();}else{alert('Error!');}";
+						echo '<tr height="20">
+						<td width="17" valign="center"><a href="#" onclick="'.$js.'"><img src="themes/default/images/txt_image_inline.gif" width="16" height="16" /></a></td>
+						<td><b><a href="#" onclick="'.$js.'">'.$app_list_strings['template_ddown_c_list'][$template].'</a></b></td></tr>';
+					}
+				}
 		echo '		<input type="hidden" name="templateID" value="" />
 				<input type="hidden" name="task" value="pdf" />
 				<input type="hidden" name="module" value="'.$_REQUEST['module'].'" />
