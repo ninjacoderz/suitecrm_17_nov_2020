@@ -21,24 +21,31 @@ if($invoice->id == ""){
 function createPO($po_type="", $invoice,$invoice_installation,$purchase_installation){
     $purchaseOrder = new PO_purchase_order();
     $purchaseOrder->name = $invoice->name;
-    if($po_type == "plumber"){
-        $purchaseOrder->name .= " Plumbing";
-    }
-    if($po_type == "electrical"){
-        $purchaseOrder->name .= " Electrical";
+    $purchaseOrder->assigned_user_id = $invoice->assigned_user_id;
+    
+    switch ($po_type) {
+        case 'plumber':
+            $purchaseOrder->name .= " Plumbing";
+            $purchaseOrder->install_date = $invoice->plumber_install_date_c;
+            break;
+        case 'electrical':
+            $purchaseOrder->name .= " Electrical";
+            $purchaseOrder->install_date = $invoice->electrician_install_date_c;
+            break;
+        case 'electrical':
+            $purchaseOrder->name = "PureElectric Daikin ";
+            $purchaseOrder->install_date = $invoice->electrician_install_date_c;
+            break;        
+        default:
+            break;
     }
 
-    if($po_type == "daikin"){
-        $purchaseOrder->name = "PureElectric Daikin "; //VUT
-        // $purchaseOrder->name .= " Supply";
-    }
-    $purchaseOrder->assigned_user_id = $invoice->assigned_user_id;
-    $purchaseOrder->install_date = $invoice->plumber_install_date_c;
-    if($po_type == "plumber" && $invoice->installation_date_c){
+    if(!($purchaseOrder->install_date)&& $invoice->installation_date_c){
         $installation_date_explode = explode(" ", $invoice->installation_date_c);
         if(count($installation_date_explode) >= 2)
             $purchaseOrder->install_date = $installation_date_explode[0];
     }
+
     if(isset($invoice->id) && $invoice->id != ""){
         $quote_numer = $invoice->quote_number;
         
