@@ -3,7 +3,7 @@ $record_id =$_REQUEST['record_id'];
 $bean =  new Lead();
 $bean->retrieve($record_id); 
 if($bean->id == '') {
-    echo date("Y-m-d");
+    echo date("d-m-Y");
 }else{
     // $date_last =$bean->date_entered ;
     // $timestamp = substr($date_last, 0, 10);
@@ -13,7 +13,7 @@ if($bean->id == '') {
     //VUT-S-Calculate date_create to change status converted date
     /**Lead - date_entered */
     $date_start = $bean->date_entered;
-    $date = DateTime::createFromFormat('d/m/Y H:i',$date_start);
+    $date = DateTime::createFromFormat('d/m/Y H:i',$date_start, new DateTimeZone('UTC'));
     $gr_status = ['Converted','Dead','Spam','Test'];
     $calculator = false;
     if (in_array($bean->status,$gr_status)) { 
@@ -40,7 +40,7 @@ if($bean->id == '') {
                 $note = new pe_internal_note();
                 $note->retrieve($note_id);
                 $date_last = $note->date_entered;
-                $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last);
+                $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone('UTC'));
                 $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
                 $bean->age_days_c = $date_diff;
                 $bean->save();
@@ -51,7 +51,7 @@ if($bean->id == '') {
                     $note = new pe_internal_note();
                     $note->retrieve($note_id_new);
                     $date_last = $note->date_entered;
-                    $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last);
+                    $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone('UTC'));
                     $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
                     // $bean->age_days_c = $date_diff;
                     // $bean->save();
