@@ -424,7 +424,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $group_invoice->save();
         $purchaseOrder->dispatch_date_c = explode(" ",$invoice->dispatch_date_c)[0];
         $dateInfos = explode("/", explode(" ",$invoice->dispatch_date_c)[0]);
-        $inv_dispatch_date_str = "$dateInfos[2]-$dateInfos[0]-$dateInfos[1]T00:00:00";
+        $inv_dispatch_date_str = "$dateInfos[2]-$dateInfos[1]-$dateInfos[0]T00:00:00";
         $string_dispatch_date = date("d M Y", strtotime($inv_dispatch_date_str));
         //Setting Group Line Items
         $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoice->id."' AND deleted = 0";
