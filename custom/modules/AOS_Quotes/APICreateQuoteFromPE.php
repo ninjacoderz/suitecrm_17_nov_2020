@@ -64,7 +64,7 @@ $quote = new AOS_Quotes();
 //Update Quote Suburb, Postcode, State
 $quote->name = 'GUEST ' .$_REQUEST['suburb'] .' '.$_REQUEST['state'].' '.$_REQUEST['product_choice'];
 $quote->pre_install_photos_c = $_REQUEST['pre_install_photos_c'];
-date_default_timezone_set('UTC+11:00');
+date_default_timezone_set('UTC');
 $dateQuote = new DateTime();
 $quote->quote_date_c = date('Y-m-d H:i:s', time());
 $quote->quote_type_c = 'quote_type_sanden';

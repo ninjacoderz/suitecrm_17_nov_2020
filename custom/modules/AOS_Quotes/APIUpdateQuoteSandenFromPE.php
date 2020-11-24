@@ -68,7 +68,7 @@ if($quote->id == '') {
 
 //Update Quote Suburb, Postcode, State
 $quote->pre_install_photos_c = $_REQUEST['pre_install_photos_c'];
-date_default_timezone_set('UTC+11:00');
+date_default_timezone_set('UTC');
 $dateQuote = new DateTime();
 $quote->quote_date_c = $dateQuote->format('Y-m-d H:i:s');
 $quote->install_address_postalcode_c = $_REQUEST['post_code'];
