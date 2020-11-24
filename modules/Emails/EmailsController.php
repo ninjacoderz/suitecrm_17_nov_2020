@@ -4808,6 +4808,17 @@ class EmailsController extends SugarController
                 $smtpGmail->send();
             }
             if ($this->bean->send()) {
+                //VUT - S - Change status PO 
+                if ($_REQUEST["return_module"] == "PO_purchase_order" && isset($_REQUEST["pdf_id"]) && $_REQUEST["pdf_id"] != '') {
+                    $po = new PO_purchase_order();
+                    $po->retrieve($_REQUEST["return_id"]);
+                    if (($po->po_type_c == "sanden_supply" || $po->po_type_c == "daikin_supply") && ($po->status_c == 'PE_Mgmt_Approved'|| $po->status_c == 'Draft' )) {
+                        $po->status_c = 'Sent_To_Supplier';
+                        $po->save();
+                    }
+                }
+                //VUT - E - Change status PO 
+
                 //thienpb code - Update status sent_pricing_option
                 if($_REQUEST['emails_email_templates_idb'] == '9d9f03ae-fe75-68d0-72ad-5d5b95cda15b'){
                     $quote = new AOS_Quotes();

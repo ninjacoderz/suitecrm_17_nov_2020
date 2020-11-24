@@ -56,6 +56,7 @@
      <input type="hidden" name="email_return_module" value="{$email_return_module}">
     <input type="hidden" name="email_return_id" value="{$email_return_id}">
     <input type="hidden" name="email_id" value="{$email_id}">
+    <input type="hidden" name="pdf_id" value="{$pdf_id}">
 <div id="EditView_tabs">
     {*display tabs*}
     {{counter name="tabCount" start=-1 print=false assign="tabCount"}}
