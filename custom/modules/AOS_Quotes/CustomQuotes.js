@@ -2154,12 +2154,15 @@ function genExtraDaikinItemFunc(elem){
      //tu-code add field covert to invoices
      $('input[id="CANCEL"]').after(' <input title="Save" accesskey="a" class="button primary" type="submit" name="button" value="Convert To Invoice" id="convert_to_invoice">');
      $("#convert_to_invoice").click(function(){
-        if ($('#proposed_dispatch_date_c').val() == '' && $('#quote_type_c').val() == "quote_type_sanden") {
-            var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
-            if (question) {
-            }
-            else {
-                return false;
+        var check = isSandenSupply();
+        if ($('#quote_type_c').val() == "quote_type_sanden") {
+            if ($('#proposed_dispatch_date_c').val() == '' && (check.SSI || check.SSO)) {
+                var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
+                if (question) {
+                }
+                else {
+                    return false;
+                }
             }
         }
         if ($('#proposed_delivery_date_c').val() == '' && $('#quote_type_c').val() == "quote_type_daikin") {
@@ -2370,8 +2373,30 @@ function genExtraDaikinItemFunc(elem){
             });
             return $(self);
         };
-    
-    //VUT-E
+        /**VUT - Check SSI and SSO for Quote type Sanden to create PO Sanden Supply*/
+        function isSandenSupply() {
+            let products = $('#lineItems').find('.product_group').children('tbody');
+            let state = $('#install_address_state_c').val();
+            let states = ['NSW', 'QLD', 'SA', 'WA'];
+            let i=0, SSI=false; 
+            let sanden_groups = {
+                SSI : false,
+                SSO : false,
+            };
+            for (i=0;i< products.length; i++) {
+                let partNumber = $(`#product_part_number${i}`).val();
+                if (partNumber.indexOf("SSI") != -1) {
+                    SSI = true;
+                } else if (partNumber.indexOf("SANDEN_SUPPLY_ONLY") != -1) {
+                    sanden_groups.SSO = true;
+                }
+            }
+            if (SSI && states.includes(state)) {
+                sanden_groups.SSI = true;
+            }
+            return sanden_groups;
+        } 
+        //VUT-E
 
  });
  
