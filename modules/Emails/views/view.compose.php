@@ -109,6 +109,9 @@ class EmailsViewCompose extends ViewEdit
         $this->ev->ss->assign('email_return_module', $this->bean->return_module);
         $this->ev->ss->assign('email_return_id', $this->bean->return_id);
         $this->ev->ss->assign('email_id', $record);
+        if ($this->action == "ComposeViewWithPdfTemplate" && isset($_REQUEST["template_id"])) {
+            $this->ev->ss->assign('pdf_id', $_REQUEST["template_id"]);
+        }
 
         $this->ev->ss->assign('RECORD', $record);
         $this->ev->ss->assign('ACTION', isset($_REQUEST['action']) ? $_REQUEST['action'] : 'send');

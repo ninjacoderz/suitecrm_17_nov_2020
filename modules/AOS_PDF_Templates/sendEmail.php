@@ -298,7 +298,9 @@ class sendEmail
             echo "Unable to initiate Email Client";
             exit;
         } else {
-            header('Location: index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=' . $module_type . '&return_action=DetailView&return_id=' . $module->id . '&record=' . $email_id."&sms_template_id=".$smsTemplateID);
+            //VUT - Add pdf_template_ID
+            $templateID = $_REQUEST['templateID'];
+            header('Location: index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=' . $module_type . '&return_action=DetailView&return_id=' . $module->id . '&record=' . $email_id."&template_id=".$templateID."&sms_template_id=".$smsTemplateID);
         }
     }
 
