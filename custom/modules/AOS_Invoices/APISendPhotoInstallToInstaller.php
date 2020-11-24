@@ -19,8 +19,7 @@ require_once('include/SugarPHPMailer.php');
             strpos( $each_photo,'New_Install_Water_Pressure_Property') ||
             strpos( $each_photo,'Tank_Serial_Number') ||
             strpos( $each_photo,'HP_Serial_Number') ||
-            strpos( $each_photo,'Decommission_HWS') ||
-            strpos( $each_photo,'Old_Existing_Hws') ){
+            strpos( $each_photo,'Decommission_HWS') ){
     
             $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$each_photo.'">'.$each_photo.'</a>';
         }
