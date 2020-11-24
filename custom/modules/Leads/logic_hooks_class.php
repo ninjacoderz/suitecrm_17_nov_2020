@@ -336,7 +336,7 @@
                             $new_name = "L".$bean->number.'_Remittance_Advice';
                             break;
                         case "38":
-                            $new_name = "L".$bean->number.'_Existing_HWS';
+                            $new_name = "L".$bean->number.'_Old_Existing_HWS';
                             break;
                     }
                     // If new name look like old name
