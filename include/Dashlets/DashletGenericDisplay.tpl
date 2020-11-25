@@ -43,14 +43,13 @@
 {assign var="alt_next" value=$navStrings.next}
 {assign var="alt_prev" value=$navStrings.previous}
 {assign var="alt_end" value=$navStrings.end}
-
 <table id="dashletPanel" cellpadding='0' cellspacing='0' width='100%' border='0' class='list view default dashletPanel'>
 	<thead>
     <tr class="pagination" role=”presentation”>
         <td colspan='{$colCount+1}' align='right'>
             <table border='0' cellpadding='0' cellspacing='0' width='100%'>
                 <tr>
-                    <td align='left'>&nbsp;</td>
+                    <td align='left'>{$saveSearch}</td>
                     <td align='right' nowrap='nowrap'>
 						{*Dung code*}
 						{if $pageData.bean.moduleDir == 'Opportunities'}

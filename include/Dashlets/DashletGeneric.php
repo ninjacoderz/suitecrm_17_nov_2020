@@ -1,4 +1,5 @@
 <?php
+// ini_set("display_errors",1);
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
@@ -226,7 +227,7 @@ class DashletGeneric extends Dashlet
         $chooser->args['left_name'] = 'display_tabs';
         $chooser->args['right_name'] = 'hide_tabs';
         // BinhNT Edit here
-        $chooser->args['max_left'] = '20';
+        $chooser->args['max_left'] = '15';
 
         $chooser->args['left_label'] =  $GLOBALS['app_strings']['LBL_DISPLAY_COLUMNS'];
         $chooser->args['right_label'] =  $GLOBALS['app_strings']['LBL_HIDE_COLUMNS'];
@@ -355,6 +356,17 @@ class DashletGeneric extends Dashlet
                             if (!empty($params['date'])) {
                                 $widgetDef['input_name0'] = $params['date'];
                             }
+                            //thienpb custom
+                            if (!empty($params['start_date'])) {
+                                $widgetDef['input_name0'] = $params['start_date'];
+                            }
+                            if (!empty($params['end_date'])) {
+                                $widgetDef['input_name1'] = $params['end_date'];
+                            }else{
+                                if (!empty($params['start_date'])) {
+                                    $widgetDef['input_name1'] = $params['start_date'];
+                                }
+                            }
                             $filter = 'queryFilter' . $params['type'];
                         } else {
                             $filter = 'queryFilter' . $params;
@@ -475,6 +487,10 @@ class DashletGeneric extends Dashlet
                 }
                 $this->filters['status'] = array(0 =>'Unpaid',1 =>'Partpaid',2 =>'Deposit_Paid',3 =>'Progress_Paid',4 =>'Variation_Unpaid',5 =>'STC_VEEC_Unpaid',6 =>'STC_Unpaid',7 =>'VEEC_Unpaid',8 =>'Paid');
             }
+            if(!empty($_REQUEST["cal_filter"])){
+                $this->customConvertFilter($_REQUEST["cal_filter"]);
+            }
+
             $whereArray = $this->buildWhere();
         }
         //dung code -  find value offset_today
@@ -598,8 +614,37 @@ class DashletGeneric extends Dashlet
             //thienpb code
             $this->lvs->data['pageData']['urls']['product_type'] =  'index.php?action=DynamicAction&DynamicAction=displayDashlet&session_commit=1&lvso=DESC&Home2_AOS_INVOICES_ORDER_BY=number&module=Home&to_pdf=1&id=' . $this->id;
             $this->lvs->data['pageData']['urls']['reset_product_type'] = 'index.php?action=DynamicAction&DynamicAction=displayDashlet&session_commit=1&lvso=DESC&Home2_AOS_INVOICES_ORDER_BY=number&module=Home&to_pdf=1&id=' . $this->id;
-
+            
+            //thienpb code UI add select filter to dashboard
             $this->lvs->ss->assign('dashletId', $this->id);
+            if($this->seedBean->object_name == "Call"){
+                global $app_strings;
+                $SAVED_SEARCHES_OPTIONS = '';
+                $savedSearch = BeanFactory::newBean('SavedSearch');
+                $SAVED_SEARCHES_OPTIONS = $savedSearch->getSelect('Calls');
+                $strSaveSearch = '';
+                if (!empty($SAVED_SEARCHES_OPTIONS)) {
+                    $SAVED_SEARCHES_OPTIONS = str_replace('SUGAR.savedViews.shortcut_select(this, "Calls");','return SUGAR.mySugar.retrieveDashlet("'.$this->id.'", "index.php?action=DynamicAction&DynamicAction=displayDashlet&session_commit=1&lvso=DESC&module=Home&to_pdf=1&id='.$this->id.'&cal_filter="+this.value, false, false, true, $(this).closest("div[id^=pageNum_][id$=_div]").parent().parent())',$SAVED_SEARCHES_OPTIONS);
+                    $SAVED_SEARCHES_OPTIONS = str_replace('saved_search_select','saved_search_select_'.str_replace('-','_',$this->id), $SAVED_SEARCHES_OPTIONS);
+                    $strSaveSearch .= "
+                        <span style='padding-left:20px;' class='white-space'><b>{$app_strings['LBL_SAVED_FILTER_SHORTCUT']}</b>
+                            {$SAVED_SEARCHES_OPTIONS}
+                        </span>";
+                }
+                $strSaveSearch .= "
+                    <script>
+                        var cal_filter_".str_replace('-','_',$this->id)." = '".$this->lvs->data['pageData']['queries']['baseURL']['cal_filter']."';
+                        if(cal_filter_".str_replace('-','_',$this->id)." =='' || cal_filter_".str_replace('-','_',$this->id)." == 1){
+                            $('body').find('#saved_search_select_".str_replace('-','_',$this->id)."').val('_none');
+                            console.log('1',cal_filter_".str_replace('-','_',$this->id).")
+                        }else{
+                            console.log('2',cal_filter_".str_replace('-','_',$this->id).")
+                            $('body').find('#saved_search_select_".str_replace('-','_',$this->id)."').val(cal_filter_".str_replace('-','_',$this->id).");
+                        }
+                    </script>";
+                $this->lvs->ss->assign('saveSearch',$strSaveSearch);
+            }
+            //end
         }
     }
 
@@ -712,5 +757,87 @@ class DashletGeneric extends Dashlet
                 }
             }
         }
+    }
+
+    /**
+     * Function custom filter
+     */
+    public function customConvertFilter($filter_id){
+        global $timedate, $current_user;
+        $now = $timedate->tzUser($timedate->getNow(), $current_user);
+        $this->filters = [];
+        if(!empty($filter_id)){
+            $db = DBManagerFactory::getInstance();
+            $sql = "SELECT id, name, contents FROM saved_search
+                    WHERE deleted = 0 AND
+                            id =  '$filter_id'";
+            $ret =$db->query($sql);
+            $saveSearch = [];
+            while ($row = $ret->fetch_assoc()) {
+                $saveSearch = $row['contents'];
+            }
+            $fields = array();
+            $saveSearch = unserialize(base64_decode($saveSearch));
+            $ignores = ["searchFormTab", "query", "search_module", "saved_search_action", "displayColumns", "hideTabs", "orderBy", "sortOrder","advanced"];
+            $operator_date = ["=","not_equal","greater_than","less_than"];
+            $operator_date_func_1 = ["="=>"Between_Dates","not_equal"=>"Not_Equals_str","greater_than"=>"After","less_than"=>"Before"];
+            $operator_date_func_2 = ["last_7_days","next_7_days","last_30_days","next_30_days","last_month","this_month","next_month","last_year","this_year","next_year","between"];
+            foreach ($saveSearch as $key => $value) {
+                if (in_array($key, $ignores) || $value == null || $value =='') {
+                    continue;
+                }
+                if(strpos($key,"date_") !== false){
+                    preg_match('/^(.*?)_advanced_range_choice/',$key, $match);
+                    if(count($match) > 1){
+                        $field = $match[1];
+                        if(in_array($value,$operator_date)){
+                            $type = $operator_date_func_1[$value];
+                            if($saveSearch['range_'.$field.'_advanced'] != ''){
+                                $this->filters[$field]['type'] = $type;
+                                $this->filters[$field]['start_date'] = $saveSearch['range_'.$field.'_advanced'];
+                            }
+                        }else{
+                            if($value == "between_days" || $value == 'between_last_and_next_7_days'){
+                                $this->filters[$field]['type'] = 'Between_Dates';
+                            }else{
+                                $this->filters[$field]['type'] = 'TP_'.$value;
+                            }
+                            if($saveSearch['start_days_range_'.$field.'_advanced'] != ''){
+                                $this->filters[$field]['start_date'] =  $now->get('-'.$saveSearch['start_days_range_'.$field.'_advanced'].' days')->get_day_begin();
+                            }
+                            if($saveSearch['start_range_'.$field.'_advanced'] != ''){
+                                $this->filters[$field]['start_date'] =  $saveSearch['start_range_'.$field.'_advanced'];
+                            }
+                            if($saveSearch['end_days_range_'.$field.'_advanced'] != ''){
+                                $this->filters[$field]['end_date'] =  $now->get('+'.$saveSearch['end_days_range_'.$field.'_advanced'].' days')->get_day_begin();
+                            }
+                            if($saveSearch['end_range_'.$field.'_advanced'] != ''){
+                                $this->filters[$field]['end_date'] =  $saveSearch['end_range_'.$field.'_advanced'];
+                            }
+                        }
+                        if($this->filters[$field]['start_date'] == '' && $this->filters[$field]['end_date'] == ''){
+                            if($value == 'between_last_and_next_7_days'){
+                                $this->filters[$field]['start_date'] =  $now->get('-7 days')->get_day_begin();
+                                $this->filters[$field]['end_date'] =  $now->get('+7 days')->get_day_begin();
+                            }else{
+                                if(!in_array($value,$operator_date_func_2)){
+                                    unset($this->filters[$field]);
+                                }
+                            }
+                        }
+                    }else{
+                        continue;
+                    }
+                }else if($key == "current_user_only_advanced"){
+                    if($value == "1"){
+                        global $current_user;
+                        $this->filters["assigned_user_id"][0] = $current_user->id;
+                    }
+                }else{
+                    $new_key = str_replace('_advanced', '', $key);
+                    $this->filters[$new_key] = $saveSearch[$key];   
+                }
+            }
+        } 
     }
 }
