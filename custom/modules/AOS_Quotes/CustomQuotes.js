@@ -5796,8 +5796,8 @@ $(function() {
                 var sanden_equipment_cost = calculate_equipment_cost_gp();
                 $('#sanden_supply_bill').val(sanden_equipment_cost);
             }
-
-            $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
+            calculation_gross_profit_sanden_quote();
+            // $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
         }, 100);
     });
 
@@ -5822,8 +5822,8 @@ $(function() {
             var sanden_equipment_cost = calculate_equipment_cost_gp();
             $('#sanden_supply_bill').val(sanden_equipment_cost);
         }
-        
-        $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
+        calculation_gross_profit_sanden_quote();
+        // $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
         
     }, 500);
 

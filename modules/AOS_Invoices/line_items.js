@@ -962,7 +962,8 @@ function calculateTotal(key)
   //     console.log(error);
   //   }
   // }
-
+  //VUT- GP Calculation -
+  $('#sanden_revenue_c').val(formatCurrency(tot_amt));
 }
 
 function set_value(id, value){

@@ -845,6 +845,10 @@ function calculateTotal(key)
 
   set_value(key+'subtotal_tax_amount',subtotal + tax);
   set_value(key+'total_amount',subtotal + tax + shipping);
+  //VUT- GP Calculation -
+  if (module_sugar_grp1 == "AOS_Quotes") {
+    $('#sanden_revenue').val(formatCurrency(tot_amt));
+  }
 }
 
 function set_value(id, value){

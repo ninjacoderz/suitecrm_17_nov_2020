@@ -203,7 +203,8 @@ $(document).ready(function() {
                 var sanden_equipment_cost = calculate_sanden_equipment_cost_gp();
                 $('#sanden_supply_bill_c').val(sanden_equipment_cost);
             }
-            $('#sanden_revenue_c').val($('#total_amt').val()).trigger('change');
+            calculation_gross_profit_sanden();
+            // $('#sanden_revenue_c').val($('#total_amt').val()).trigger('change');
         }, 100);
     });
     //VUT-fill GP Calculation first time
@@ -233,7 +234,8 @@ $(document).ready(function() {
             var sanden_equipment_cost = calculate_sanden_equipment_cost_gp();
             $('#sanden_supply_bill_c').val(sanden_equipment_cost);
         }
-        $('#sanden_revenue_c').val($('#total_amt').val()).trigger('change');
+        calculation_gross_profit_sanden();
+        // $('#sanden_revenue_c').val($('#total_amt').val()).trigger('change');
     }, 500);
 
     /**
