@@ -750,15 +750,29 @@ if(count($matches) && $matches[1] != ""){
 						}else{
 							$group_name ='';
 						}
+						//fix task matt -  add the word SOL after PEQ XXXX for solar ie PEQ XXXX SOL
+						if($group_name ==''){
+							if (isset($quote->solargain_quote_number_c) && $quote->solargain_quote_number_c !="") {
+								$group_name =' SOL';
+							}elseif (isset($quote->solargain_lead_number_c) && $quote->solargain_lead_number_c !="") {
+								$group_name =' SOL';
+							}elseif (isset($quote->solargain_tesla_quote_number_c) && $quote->solargain_tesla_quote_number_c !="") {
+								$group_name =' SOL';
+							}else{
+								$group_name ='';
+							}
+						}
+
 						if(strpos($email_segments[$i], "Content-Transfer-Encoding: quoted-printable") !== false) {
 							$crm_links .= '<a href=3D"https://suitecrm.pure-electric.com.au/index.php?module=3DAOS_Quotes&action=3DEditView&record=3D'.$quote->id.'">[PEQ '.$quote->number.$group_name.']</a>'.PHP_EOL;
 							//VUT-shortcut link SG
 							if (isset($quote->solargain_quote_number_c) && $quote->solargain_quote_number_c !="") {
 								$crm_links .= '<a href=3D"https://crm.solargain.com.au/quote/edit/'.$quote->solargain_quote_number_c.'">(SQ '.$quote->solargain_quote_number_c.')</a>'.PHP_EOL;
 							}
-							if (isset($quote->solargain_lead_number_c) && $quote->solargain_lead_number_c !="") {
-								$crm_links .= '<a href=3D"https://crm.solargain.com.au/lead/edit/'.$quote->solargain_lead_number_c.'">(SL '.$quote->solargain_lead_number_c.')</a>'.PHP_EOL;
-							}
+							//fix task - matt remove link (SLxxxx)
+							// if (isset($quote->solargain_lead_number_c) && $quote->solargain_lead_number_c !="") {
+							// 	$crm_links .= '<a href=3D"https://crm.solargain.com.au/lead/edit/'.$quote->solargain_lead_number_c.'">(SL '.$quote->solargain_lead_number_c.')</a>'.PHP_EOL;
+							// }
 							if (isset($quote->solargain_tesla_quote_number_c) && $quote->solargain_tesla_quote_number_c !="") {
 								$crm_links .= '<a href=3D"https://crm.solargain.com.au/lead/edit/'.$quote->solargain_tesla_quote_number_c.'">(SQ '.$quote->solargain_tesla_quote_number_c.')</a>'.PHP_EOL;
 							}
@@ -770,9 +784,10 @@ if(count($matches) && $matches[1] != ""){
 							if (isset($quote->solargain_quote_number_c) && $quote->solargain_quote_number_c !="") {
 								$crm_links .= '<a href="https://crm.solargain.com.au/quote/edit/'.$quote->solargain_quote_number_c.'">(SQ '.$quote->solargain_quote_number_c.')</a>'.PHP_EOL;
 							}
-							if (isset($quote->solargain_lead_number_c) && $quote->solargain_lead_number_c !="") {
-								$crm_links .= '<a href="https://crm.solargain.com.au/lead/edit/'.$quote->solargain_lead_number_c.'">(SL '.$quote->solargain_lead_number_c.')</a>'.PHP_EOL;
-							}
+							//fix task - matt remove link (SLxxxx)
+							// if (isset($quote->solargain_lead_number_c) && $quote->solargain_lead_number_c !="") {
+							// 	$crm_links .= '<a href="https://crm.solargain.com.au/lead/edit/'.$quote->solargain_lead_number_c.'">(SL '.$quote->solargain_lead_number_c.')</a>'.PHP_EOL;
+							// }
 							if (isset($quote->solargain_tesla_quote_number_c) && $quote->solargain_tesla_quote_number_c !="") {
 								$crm_links .= '<a href="https://crm.solargain.com.au/lead/edit/'.$quote->solargain_tesla_quote_number_c.'">(SQ '.$quote->solargain_tesla_quote_number_c.')</a>'.PHP_EOL;
 							}
