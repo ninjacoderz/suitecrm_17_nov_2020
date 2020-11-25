@@ -53,7 +53,11 @@ foreach ($array_products as $key_product => $value_product) {
         case 'sanden eco heat pump hot water':
             // $type_button = 'convert_sanden_button';
             // convert_lead_to_quote_api_from_pe($bean,$type_button);
-            send_email_schedule_info_pack($bean,'dbf622ae-bb45-cb79-eb97-5cd287c48ac3',$schedule_time);                  
+            if( $bean->primary_address_state == "WA" ){
+                send_email_schedule_info_pack($bean,'ad1f03d0-dc47-7f39-fbb9-5cd289eafcf5',$schedule_time);                  
+            }else {
+                send_email_schedule_info_pack($bean,'dbf622ae-bb45-cb79-eb97-5cd287c48ac3',$schedule_time);                  
+            }
             break;
         case 'daikin us7':
             // $type_button = 'convert_daikin_button';
@@ -1951,11 +1955,11 @@ function send_email_schedule_info_pack($lead, $emailTemplateID,$schedule_time ='
     $link_upload_files = '';
     $string_link_upload_files = '';
     switch ($emailTemplateID) {
-        case 'dbf622ae-bb45-cb79-eb97-5cd287c48ac3':
+        case 'dbf622ae-bb45-cb79-eb97-5cd287c48ac3': //FQS
             $link_upload_files = 'https://pure-electric.com.au/pe-sanden-quote-form/confirm-to-lead?lead-id=' . $lead->id;
             $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
             break;
-        case 'ad1f03d0-dc47-7f39-fbb9-5cd289eafcf5':
+        case 'ad1f03d0-dc47-7f39-fbb9-5cd289eafcf5': // FQV
             $link_upload_files = 'https://pure-electric.com.au/pe-sanden-quote-form/confirm-to-lead?lead-id=' . $lead->id;
             $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
             break;
