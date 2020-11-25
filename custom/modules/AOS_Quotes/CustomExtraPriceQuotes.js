@@ -14,7 +14,7 @@ $(function () {
         if(state == 'VIC' && state == 'NSW' && state == 'ACT'){
             installYear = 2021;
         }else{
-            installYear = 2020;
+            installYear = 2021;
         }
         if($("#distance_to_sg_c").val() != ""){
             $("input[id*='travel_km_']").val($("#distance_to_sg_c").val().replace(" km",""));
@@ -25,7 +25,7 @@ $(function () {
         if($(this).val() == "VIC" && $(this).val() != ''){
             installYear = 2021;
         }else{
-            installYear = 2020;
+            installYear = 2021;
         }
         $("#installYear").html(installYear);
         $("#table_pricing_state").val(convert_state($(this).val()));
@@ -103,7 +103,7 @@ $(function () {
     + '<div class="col-xs-12 col-sm-2 label" data-label="">'
     + 'State:</div>'
     + '<div class="" type="bool" field="send_sms" colspan="3">'
-    + '<input disabled type="text" class=" solar_pv_pricing_input table_pricing_state" id="table_pricing_state" name="table_pricing_state" value="" title="" tabindex="0">'                  
+    + '<input disabled type="text" class=" solar_pv_pricing_input table_pricing_state" id="table_pricing_state" name="table_pricing_state" value="'+state+'" title="" tabindex="0">'                  
     +'</div>'
     +'</div>';
     
@@ -216,12 +216,13 @@ $(function () {
                 alert('Please filling full address.'); return;
             }
             loadJSON(state);
+            $("#table_pricing_state").val(state);
             if(state == 'VIC'){
                 installYear = 2021;
                 $("#installYear").html("2021");
             }else{
-                installYear = 2020;
-                $("#installYear").html("2020");
+                installYear = 2021;
+                $("#installYear").html("2021");
             }
         }
         for(var i = 1 ; i < 7 ; i++){
@@ -679,7 +680,7 @@ $(function () {
                     // }
                     var total_kw = panel_kw*number_panel/1000;
                     if(!isNaN(total_kw))$('#total_kW_'+i).val(total_kw);
-                    if(json_val['total_kW_'+i] == total_kw){
+                    if(json_val['total_kW_'+i] == total_kw && !isNaN(parseInt($('#stc_value_'+i).val()))){
                         calc_total_price();
                     }else{
                         $.ajax({
