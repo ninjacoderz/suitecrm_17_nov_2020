@@ -236,7 +236,7 @@
         }
 
         //Setting Line Items
-        $isSandenSupply = false;
+        // $isSandenSupply = false;
         $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
         $result = $db->query($sql);
         while ($row = $db->fetchByAssoc($result)) {
@@ -259,9 +259,9 @@
             $prod_invoice = BeanFactory::newBean('AOS_Products_Quotes');
             $prod_invoice->populateFromRow($row);
             $prod_invoice->save();
-            if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
-                $isSandenSupply = true;
-            }
+            // if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
+            //     $isSandenSupply = true;
+            // }
         }
     }
 	//Dung code
@@ -370,7 +370,8 @@
     require_once('modules/PO_purchase_order/CreatePurchaseOrder.php');
     //VUT - S - Auto create PO
     $invoiceBean = BeanFactory::getBean("AOS_Invoices", $invoice->id);
-    if (isSanden($invoiceBean->id) && $quote->proposed_dispatch_date_c != '') {
+    $isSandenSupply = isSandenSupply($invoiceBean->id, $quote);
+    if (($isSandenSupply['SSI'] || $isSandenSupply['SSO']) && $quote->proposed_dispatch_date_c != '') {
        createPO('sanden_supply', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
     }
     if ($invoiceBean->delivery_date_time_c != '' && (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false )) {
@@ -628,15 +629,30 @@
     /**
      * VUT - Check is Sanden Supply for PO
      * @param string $invoiceID
+     * @param Module $quote
+     * 
      */
-    function isSanden($invoiceID) {
+    function isSandenSupply($invoiceID, $quote) {
+        $sanden_supply = array (
+            SSI => false,
+            SSO => false,
+        );
+        $SSI = false;
+        $states = ['NSW', 'QLD', 'SA', 'WA'];
+      
         $db = DBManagerFactory::getInstance();
         $query = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '$invoiceID' AND deleted = 0";
         $ret = $db->query($query);
         while($row = $db->fetchByAssoc($ret)){
             if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
-              return true;
+              $sanden_supply['SSO'] = true;
+            }
+            if ($row['part_number'] == 'SSI') {
+                $SSI = true;
             }
         }
-        return false;
-    }
+        if ($SSI && in_array(trim($quote->install_address_state_c),$states)) {
+          $sanden_supply['SSI'] = true;
+        }
+        return $sanden_supply;
+      }
