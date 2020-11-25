@@ -680,7 +680,7 @@ $(function () {
                     // }
                     var total_kw = panel_kw*number_panel/1000;
                     if(!isNaN(total_kw))$('#total_kW_'+i).val(total_kw);
-                    if(json_val['total_kW_'+i] == total_kw){
+                    if(json_val['total_kW_'+i] == total_kw && !isNaN(parseInt($('#stc_value_'+i).val()))){
                         calc_total_price();
                     }else{
                         $.ajax({
