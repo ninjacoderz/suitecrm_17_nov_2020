@@ -898,12 +898,24 @@ $invoice->retrieve($invoice_id);
 $subject = $emailTemplate->subject;
 $subject = str_replace('Plumbing PO',$email_for,$subject);
 $subject = str_replace('$po_number',$PO_number,$subject);
+
+$plumber_install_date_with_dayname = '';
+if(!empty($plumber_install_date)){
+    $date = DateTime::createFromFormat('d/m/Y',$plumber_install_date);
+    $plumber_install_date_with_dayname = $date->format('D').' '.$plumber_install_date;
+}
+$electrical_install_date_with_dayname = '';
+if(!empty($electrical_install_date)){
+    $date = DateTime::createFromFormat('d/m/Y',$electrical_install_date);
+    $electrical_install_date_with_dayname = $date->format('D').' '.$electrical_install_date;
+}
+
 if ($mail_format == "plumber") {
-    $subject = str_replace('$pl_elec_install_date',$plumber_install_date,$subject);
+    $subject = str_replace('$pl_elec_install_date',$plumber_install_date_with_dayname,$subject);
     $cert_notes =  'PCOC Cert Note: '.$invoice->pcoc_cert_wording_c;
 }
 else if($mail_format == "electrical"){
-    $subject = str_replace('$pl_elec_install_date',$electrical_install_date,$subject);
+    $subject = str_replace('$pl_elec_install_date',$electrical_install_date_with_dayname,$subject);
     $cert_notes = 'CES Cert Note: '.$invoice->ces_cert_wording_c;
 }
 
