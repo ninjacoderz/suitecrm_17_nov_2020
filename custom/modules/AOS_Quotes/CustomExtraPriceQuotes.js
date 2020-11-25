@@ -321,9 +321,9 @@ $(function () {
     
     if($("#solar_pv_pricing_input_c").val() == '' && $("#quote_type_c").val() == 'quote_type_solar'){
         if($("#pe_pricing_options_id_c").val() == ''){
-            $("#pe_pricing_options_id_c").val('a09301d4-33f3-ef1d-a9fb-5e5496b08f7e');
-            $("#pricing_option_type_c").val('Default');
-            loadPricingOptions('a09301d4-33f3-ef1d-a9fb-5e5496b08f7e');
+            $("#pe_pricing_options_id_c").val('406fbeb4-0614-3bcd-7e15-5fbdea690303');
+            $("#pricing_option_type_c").val('Sunpower Single Phase STRING');
+            loadPricingOptions('406fbeb4-0614-3bcd-7e15-5fbdea690303');
         }else{
             loadPricingOptions();
         }
@@ -331,10 +331,10 @@ $(function () {
 
     $("#quote_type_c").on("change",function(){
         if($(this).val() == 'quote_type_solar'){
-            $("#pe_pricing_options_id_c").val('a09301d4-33f3-ef1d-a9fb-5e5496b08f7e');
-            $("#pricing_option_type_c").val('Default');
+            $("#pe_pricing_options_id_c").val('406fbeb4-0614-3bcd-7e15-5fbdea690303');
+            $("#pricing_option_type_c").val('Sunpower Single Phase STRING');
             $("#link_pricing_option").remove();
-            loadPricingOptions('a09301d4-33f3-ef1d-a9fb-5e5496b08f7e');
+            loadPricingOptions('406fbeb4-0614-3bcd-7e15-5fbdea690303');
         }
     })
 });

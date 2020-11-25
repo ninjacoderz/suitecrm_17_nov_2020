@@ -303,7 +303,7 @@ function update_solar_quote($SGquote_ID, $quoteSuite) {
   
   //SETUP  DEFAULT OPTIONS
   $pe_pricing_options = new pe_pricing_options();
-  $pe_pricing_options->retrieve("a09301d4-33f3-ef1d-a9fb-5e5496b08f7e");
+  $pe_pricing_options->retrieve("406fbeb4-0614-3bcd-7e15-5fbdea690303");
   $defaultOptions = json_decode(htmlspecialchars_decode($pe_pricing_options->pricing_option_input_c),true);
 
   $curl = curl_init();
