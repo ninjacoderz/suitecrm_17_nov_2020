@@ -371,7 +371,7 @@
     //VUT - S - Auto create PO
     $invoiceBean = BeanFactory::getBean("AOS_Invoices", $invoice->id);
     $isSandenSupply = isSandenSupply($invoiceBean->id, $quote);
-    if (($isSandenSupply['SSI'] || $isSandenSupply['SSO']) && $quote->proposed_dispatch_date_c != '') {
+    if (($isSandenSupply['SSI'] || $isSandenSupply['SSO']) && $quote->proposed_dispatch_date_c != '' && ($quote->quote_type_c == 'quote_type_sanden' || strpos(strtolower($quote->name),'sanden') !== false)) {
        createPO('sanden_supply', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
     }
     if ($invoiceBean->delivery_date_time_c != '' && (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false )) {
