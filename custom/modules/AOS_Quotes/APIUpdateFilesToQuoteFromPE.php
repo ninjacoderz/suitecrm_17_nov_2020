@@ -159,7 +159,7 @@ if (!file_exists($folderName)) {
                 if( $info['Exif_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_New_Install_Water_Pressure_Property'.$i.'.'.pathinfo($_POST['files']['data-pe-files-water-pressure-property']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'New_Install_Water_Pressure_Property');
@@ -177,7 +177,7 @@ if (!file_exists($folderName)) {
                 if( $info['Exif_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Old_Existing_Hws'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Old_Existing_Hws');
@@ -195,7 +195,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Old_Existing_Hws_Brand_Model'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Old_Existing_Hws_Brand_Model');
@@ -213,7 +213,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Decommission_HWS'.$i.'.'.pathinfo($_POST['files']['data-pe-files-decommission-hws']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Decommission_HWS');
@@ -231,7 +231,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Tank_Serial_Number'.$i.'.'.pathinfo($_POST['files']['data-pe-files-tank-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Tank_Serial_Number');
@@ -249,7 +249,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_HP_Serial_Number'.$i.'.'.pathinfo($_POST['files']['data-pe-files-hp-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_HP_Serial_Number');
@@ -267,7 +267,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Measure_Water_Pressure_NRIPRV'.$i.'.'.pathinfo($_POST['files']['data-pe-files-water-pressure-nriprv']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'Measure_Water_Pressure_NRIPRV');
@@ -285,7 +285,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_New_Install_Photo'.$i.'.'.pathinfo($_POST['files']['data-pe-files-install-photo']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_New_Install_Photo');
@@ -303,7 +303,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'PCOC'.$i.'.'.pathinfo($_POST['files']['data-pe-files-plumbing-pcoc']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'PCOC');
@@ -334,7 +334,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Switchboard_Sanden_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-switchboard-sanden']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Switchboard_Sanden_');
@@ -352,7 +352,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-ces']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'CES');
@@ -594,7 +594,7 @@ if (!file_exists($folderName)) {
                 if( $info['Exif_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_New_Install_Water_Pressure_Property'.$i.'.'.pathinfo($_POST['files']['data-pe-files-water-pressure-property']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'New_Install_Water_Pressure_Property');
@@ -612,7 +612,7 @@ if (!file_exists($folderName)) {
                 if( $info['Exif_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Old_Existing_Hws'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Old_Existing_Hws');
@@ -630,7 +630,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Old_Existing_Hws_Brand_Model'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Old_Existing_Hws_Brand_Model');
@@ -648,7 +648,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Decommission_HWS'.$i.'.'.pathinfo($_POST['files']['data-pe-files-decommission-hws']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Decommission_HWS');
@@ -666,7 +666,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Tank_Serial_Number'.$i.'.'.pathinfo($_POST['files']['data-pe-files-tank-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Tank_Serial_Number');
@@ -684,7 +684,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_HP_Serial_Number'.$i.'.'.pathinfo($_POST['files']['data-pe-files-hp-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_HP_Serial_Number');
@@ -702,7 +702,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Measure_Water_Pressure_NRIPRV'.$i.'.'.pathinfo($_POST['files']['data-pe-files-water-pressure-nriprv']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'Measure_Water_Pressure_NRIPRV');
@@ -720,7 +720,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_New_Install_Photo'.$i.'.'.pathinfo($_POST['files']['data-pe-files-install-photo']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_New_Install_Photo');
@@ -738,7 +738,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'PCOC'.$i.'.'.pathinfo($_POST['files']['data-pe-files-plumbing-pcoc']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'PCOC');
@@ -769,7 +769,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Switchboard_Sanden_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-switchboard-sanden']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Switchboard_Sanden_');
@@ -787,7 +787,7 @@ if (!file_exists($folderName)) {
                 if( $info['GPS_IFD_Pointer'] == ""){
                     $checkgeo = "( without GEOTAGGED )";
                 }else {
-                    $checkgeo = "";
+                    $checkgeo = "( GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-ces']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'CES');
