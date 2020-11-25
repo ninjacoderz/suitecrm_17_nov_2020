@@ -778,7 +778,7 @@ class UpdateLeadSourceInLeadModule {
 class AutoFillPricingOption {
     function before_save_method_autoFillPricingOption ($bean, $event, $arguments){
         if($bean->quote_type_c == 'quote_type_solar' && $bean->solargain_quote_number_c == ''){
-            $bean->pe_pricing_options_id_c = 'a09301d4-33f3-ef1d-a9fb-5e5496b08f7e';
+            $bean->pe_pricing_options_id_c = '406fbeb4-0614-3bcd-7e15-5fbdea690303';
             //$bean->pe_pricing_options_id_c = '17c42ed8-fc5b-c93c-e23a-5e412bf10680';
         }
     }
