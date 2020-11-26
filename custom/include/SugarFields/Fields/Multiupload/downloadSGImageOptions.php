@@ -42,7 +42,7 @@
 //Thienpb code for change account if download false
     if(!isset($decode_result['ID'])){
         $username = 'paul.szuster@solargain.com.au';
-        $password = 'Baited@42';
+        $password = 'S0larga1n$';
         //CURL for get json from quotesg
         $url = 'https://crm.solargain.com.au/APIv2/quotes/' .$quote_solorgain;
         $ch = curl_init();

@@ -65,7 +65,7 @@
             $GLOBALS['password'] =  "MW@pure733";
         }else{
             $GLOBALS['username'] = 'paul.szuster@solargain.com.au';
-            $GLOBALS['password'] = 'Baited@42';
+            $GLOBALS['password'] = 'S0larga1n$';
         }
     }
 //END
@@ -84,7 +84,7 @@
             $GLOBALS['password'] =  "MW@pure733";
         }else{
             $GLOBALS['username'] = 'paul.szuster@solargain.com.au';
-            $GLOBALS['password'] = 'Baited@42';
+            $GLOBALS['password'] = 'S0larga1n$';
         }
         
         //get data from SG quote

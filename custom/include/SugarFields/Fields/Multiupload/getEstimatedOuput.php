@@ -68,7 +68,7 @@
 //Thienpb code for change account if download false
     if(!isset($quote_decode->ID)){
         $GLOBALS['username'] = 'paul.szuster@solargain.com.au';
-        $GLOBALS['password'] = 'Baited@42';
+        $GLOBALS['password'] = 'S0larga1n$';
         //get data from SG quote
         $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$quoteSG_id;
         $quoteSG = curlSG('GET','',$url,$quoteSG_id);
