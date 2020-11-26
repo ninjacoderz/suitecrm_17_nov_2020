@@ -47,7 +47,7 @@ function updateSolargainLead($leadID, $request, $email, $sg_user = "matthew")
         $password = "MW@pure733";
     }else{
         $username = "paul.szuster";
-        $password = "Baited@42";
+        $password = "S0larga1n$";
     }
     // Get full json response for Leads
     

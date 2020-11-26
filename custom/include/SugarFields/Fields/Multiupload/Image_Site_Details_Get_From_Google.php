@@ -37,9 +37,9 @@ if(!isset($lat) && !isset($lng)){
           $('.dismissButton').click();
           });
       }
-        let allScripts = document.getElementsByTagName( 'script' );
+        // let allScripts = document.getElementsByTagName( 'script' );
         [].filter.call(
-          allScripts, 
+          document.getElementsByTagName('script'), 
           ( scpt ) => scpt.src.indexOf( 'maps.googleapis.com/maps/api/js' ) >= 0
         )[ 0 ].remove();
         window.google = {};

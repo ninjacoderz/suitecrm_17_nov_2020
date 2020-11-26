@@ -4,7 +4,7 @@ array_push($job_strings, 'custom_readmailsam');
 function custom_readmailsam(){
     $hostname = '{webmail.solargain.com.au:993/imap/ssl/novalidate-cert}INBOX'; 
     $username = 'paul.szuster@solargain.com.au';
-    $password = 'Baited@42';
+    $password = 'S0larga1n$';
 
     /* try to connect */
     $inbox = imap_open($hostname,$username,$password) or die('Cannot connect to Exchange: ' . imap_last_error());
@@ -706,7 +706,7 @@ function custom_updateDesignForSolargainLead($leadID)
     $solargainLead = $lead->solargain_lead_number_c;
     
     $username = "paul.szuster@solargain.com.au";
-    $password = "Baited@42";
+    $password = "S0larga1n$";
     
     // Get full json response for Leads
     
