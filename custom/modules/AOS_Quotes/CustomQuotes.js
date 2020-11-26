@@ -2173,6 +2173,9 @@ function genExtraDaikinItemFunc(elem){
                 return false;
             }
         }
+        /**Save before*/
+        $('#save_and_edit').trigger('click');
+        
         var record = encodeURIComponent($("input[name='record']").val());
          $.ajax({
                  url: '/index.php?entryPoint=checkSwitchBoardAttached&record='+record,                
