@@ -69,7 +69,7 @@ $decode_result = json_decode($result,true);
 //Thienpb code for change account if download false
 if(!isset($decode_result['ID'])){
     $username = 'paul.szuster@solargain.com.au';
-    $password = 'Baited@42';
+    $password = 'S0larga1n$';
     $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$quote_solorgain;
     //set the url, number of POST vars, POST data
     $curl = curl_init();

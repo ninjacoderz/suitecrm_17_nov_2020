@@ -4,7 +4,7 @@ $db = DBManagerFactory::getInstance();
 date_default_timezone_set('STC');
 $time_condition = date('m/d/Y h:i:s a', time());
 $quoteJSON_MT = GetJson_CRMSolargainQuotes('matthew.wright','MW@pure733');
-$quoteJSON_PS = GetJson_CRMSolargainQuotes('paul.szuster@solargain.com.au','Baited@42');
+$quoteJSON_PS = GetJson_CRMSolargainQuotes('paul.szuster@solargain.com.au','S0larga1n$');
 $data_json = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results),SORT_REGULAR);
 
 $aray_order_number = [];
@@ -38,7 +38,7 @@ while($row = $db->fetchByAssoc($ret)){
     $quote_decode = get_data_sam($quote_id,$username,$password);
     if(!isset($quote_decode)){
         $username = 'paul.szuster@solargain.com.au';
-        $password =  'Baited@42';
+        $password =  'S0larga1n$';
         $quote_decode = get_data_sam($quote_id,$username,$password);
     };
     date_default_timezone_set('Australia/Melbourne');

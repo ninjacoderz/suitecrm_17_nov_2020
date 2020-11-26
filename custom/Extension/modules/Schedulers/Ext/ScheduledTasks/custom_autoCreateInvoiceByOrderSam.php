@@ -4,7 +4,7 @@ array_push($job_strings, 'custom_autoCreateInvoiceByOrderSam');
 function custom_autoCreateInvoiceByOrderSam(){
 
         $quoteJSON_MT = GetJson_CRMSolargainOrders('matthew.wright','MW@pure733');
-        $quoteJSON_PS = GetJson_CRMSolargainOrders('paul.szuster@solargain.com.au','Baited@42');
+        $quoteJSON_PS = GetJson_CRMSolargainOrders('paul.szuster@solargain.com.au','S0larga1n$');
         $data_json = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results),SORT_REGULAR);
         $aray_order_number = [];
         foreach ($data_json as $key => $value) {
@@ -201,7 +201,7 @@ function Create_Invoice_By_Order_Number($sg_order_number){
   //change account paul
   if(!isset($json_result->ID)) {
       $username = 'paul.szuster@solargain.com.au';
-      $password = 'Baited@42';
+      $password = 'S0larga1n$';
 
       $assigned_user_id = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
       $assigned_user_name = 'Paul Szuster';
@@ -473,7 +473,7 @@ function Update_Invoice_By_InvoiceID($record_id){
     //change account paul
     if(!isset($json_result->ID)) {
         $username = 'paul.szuster@solargain.com.au';
-        $password = 'Baited@42';
+        $password = 'S0larga1n$';
   
         $assigned_user_id = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
         $assigned_user_name = 'Paul Szuster';

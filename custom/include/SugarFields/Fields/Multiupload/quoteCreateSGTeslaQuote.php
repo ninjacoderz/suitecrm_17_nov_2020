@@ -40,7 +40,7 @@
             $password =  "MW@pure733";
         }else{
             $username = 'paul.szuster@solargain.com.au';
-            $password = 'Baited@42';
+            $password = 'S0larga1n$';
         }
     }else{
         die;
