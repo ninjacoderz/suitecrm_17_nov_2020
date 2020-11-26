@@ -1031,30 +1031,47 @@ if($_POST['to_module'] == "aos_invoice"){
         email_notification_for_client($quote->account_firstname_c,$quote->account_lastname_c,$account->email1,$list_photos);
 
     }else if( $lead_id != ""){
-        if($_POST['type_product'] == "Solar"){
-            $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
-            $curl = curl_init();
-            $source = "https://suitecrm.pure-electric.com.au/index.php?entryPoint=CustomButtonConvertLead&record_id=".$lead_id."&type_convert=convert_solar_button&product_type=quote_type_solar&from_upload_solar=solar";
-
-            curl_setopt($curl, CURLOPT_URL, $source);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER,false);
-            curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
-            curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
-            curl_setopt($curl, CURLOPT_HEADER, true);
-            curl_setopt($curl, CURLOPT_VERBOSE, 1);
-            curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($curl, CURLOPT_HEADERFUNCTION, "readHeader");
-            $result = curl_exec($curl);
-            curl_close($curl);
-        }
-        
         $lead = new Lead();
         $lead->retrieve($lead_id);
-        if( $lead->create_solar_quote_num_c != ""){
-            $quote_slgain = new AOS_Quotes();
-            $quote_slgain->retrieve($lead->create_solar_quote_num_c);
+        if( $_POST['type_product'] == "Solar" ){
+            $lead->name_on_billing_account_c = $_POST['name_as_it_appears_on_bill']? $_POST['name_as_it_appears_on_bill']: $lead->name_on_billing_account_c;
+            $lead->meter_number_c = $_POST['meter_number']? $_POST['meter_number']:$lead->meter_number_c;
+            $lead->account_number_c = $_POST['account_number']? $_POST['account_number']:$lead->account_number_c;
+            $lead->nmi_c = $_POST['NMI_number']? $_POST['NMI_number']:$lead->nmi_c;
+            $lead->roof_type_c = $_POST['main_roof_type']? $_POST['main_roof_type']:$lead->roof_type_c;
+            $lead->save();
+            if( $lead->create_solar_quote_num_c != ""){
+                $quote_slgain = new AOS_Quotes();
+                $quote_slgain->retrieve($lead->create_solar_quote_num_c);
+                $quote_slgain->name_on_billing_account_c =($_POST['name_as_it_appears_on_bill'])? ($_POST['name_as_it_appears_on_bill']) : $quote_slgain->name_on_billing_account_c;
+                $quote_slgain->meter_number_c = ($_POST['meter_number'])? ($_POST['meter_number']) : $quote_slgain->meter_number_c;
+                $quote_slgain->account_number_c = ($_POST['account_number'])? ($_POST['account_number']) : $quote_slgain->account_number_c;
+                $quote_slgain->nmi_c = ($_POST['NMI_number'])? ($_POST['NMI_number']) : $quote_slgain->nmi_c;
+                $quote_slgain->roof_typec = ($_POST['main_roof_type'])? ($_POST['main_roof_type']) : $quote_slgain->roof_typec;
+                $quote_slgain->save();
+                convert_file_and_photo_to_quote($lead,$quote_slgain);
+            }else {
+                $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+                $curl = curl_init();
+                $source = "https://suitecrm.pure-electric.com.au/index.php?entryPoint=CustomButtonConvertLead&record_id=".$lead_id."&type_convert=convert_solar_button&product_type=quote_type_solar&from_upload_solar=solar";
+    
+                curl_setopt($curl, CURLOPT_URL, $source);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER,false);
+                curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+                curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+                curl_setopt($curl, CURLOPT_HEADER, true);
+                curl_setopt($curl, CURLOPT_VERBOSE, 1);
+                curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);                                      
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);                                      
+                curl_setopt($curl, CURLOPT_HEADERFUNCTION, "readHeader");
+                $result = curl_exec($curl);
+                curl_close($curl);
+                $quote_slgain = new AOS_Quotes();
+                $quote_slgain->retrieve($lead->create_solar_quote_num_c);
+            }
         }
         $mail = new SugarPHPMailer();  
         $mail->setMailerForSystem();  
@@ -1424,4 +1441,59 @@ function render_json_invoice($result ,$record_id){
         }   
     }
 return $result;
+}
+function convert_file_and_photo_to_quote($lead,$quote){
+    $get_all_photo = dirToArray($_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$lead->installation_pictures_c.'/') ;
+    $array_convert_file_name = array(
+        'switchboard' => '_Switchboard_',
+        'upclose' => '_Photo_upclose_',
+        'meterbox' => '_Photo_meterbox_',
+        'floorplan' => '_Floorplan_',
+        'electricity_bill' => '_Electricity_bill_',
+    );
+
+    foreach($get_all_photo as $photo){
+        $file_name = $photo;
+        foreach ($array_convert_file_name as $key => $label_new_file) {
+            $condition_change_file = false;
+            $array_explode_name =  explode('_',$key);
+            // check file in quote include name in array convert file
+            foreach ($array_explode_name as $value_name) {
+                if(strpos(strtolower($file_name), strtolower($value_name)) !== false ){
+                    $condition_change_file = true;
+                }else{
+                    $condition_change_file = false;
+                }
+            }  
+            if($condition_change_file){    
+                $extension=end(explode(".", $file_name));
+                $new_file_name = 'Q'.$quote->number.$label_new_file;
+                $inv_file_path = 
+                $i = 1;
+                $will_rename = $new_file_name;
+                $current_file_path_quote = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$quote->pre_install_photos_c;
+                while( !empty(glob($current_file_path_quote.'/'.$will_rename."*"))){
+                  $will_rename = $new_file_name.$i;
+                  $i++;
+                }
+               
+                $will_rename .= ('.'.$extension);
+                $new_file_name = $will_rename; 
+                break;
+            }else{
+                $new_file_name = $file_name;
+            }
+        }
+
+        $folderName_old  = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$lead->installation_pictures_c.'/'.$file_name;
+        $folderName_new  = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$quote->pre_install_photos_c.'/';
+      
+
+        //check exists folder
+        if(!file_exists ($folderName_new)) {
+            mkdir($folderName_new);
+        }
+        copy($folderName_old, $folderName_new.$new_file_name);
+        resize_image($new_file_name,$folderName_new);
+    }   
 }
