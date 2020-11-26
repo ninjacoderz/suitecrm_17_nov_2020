@@ -2154,7 +2154,26 @@ function genExtraDaikinItemFunc(elem){
      //tu-code add field covert to invoices
      $('input[id="CANCEL"]').after(' <input title="Save" accesskey="a" class="button primary" type="submit" name="button" value="Convert To Invoice" id="convert_to_invoice">');
      $("#convert_to_invoice").click(function(){
-         var record = encodeURIComponent($("input[name='record']").val());
+        var check = isSandenSupply();
+        if ($('#quote_type_c').val() == "quote_type_sanden") {
+            if ($('#proposed_dispatch_date_c').val() == '' && (check.SSI || check.SSO)) {
+                var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
+                if (question) {
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        if ($('#proposed_delivery_date_c').val() == '' && $('#quote_type_c').val() == "quote_type_daikin") {
+            var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
+            if (question) {
+            }
+            else {
+                return false;
+            }
+        }
+        var record = encodeURIComponent($("input[name='record']").val());
          $.ajax({
                  url: '/index.php?entryPoint=checkSwitchBoardAttached&record='+record,                
                  success: function (data) {                    
@@ -2354,8 +2373,30 @@ function genExtraDaikinItemFunc(elem){
             });
             return $(self);
         };
-    
-    //VUT-E
+        /**VUT - Check SSI and SSO for Quote type Sanden to create PO Sanden Supply*/
+        function isSandenSupply() {
+            let products = $('#lineItems').find('.product_group').children('tbody');
+            let state = $('#install_address_state_c').val();
+            let states = ['NSW', 'QLD', 'SA', 'WA'];
+            let i=0, SSI=false; 
+            let sanden_groups = {
+                SSI : false,
+                SSO : false,
+            };
+            for (i=0;i< products.length; i++) {
+                let partNumber = $(`#product_part_number${i}`).val();
+                if (partNumber.indexOf("SSI") != -1) {
+                    SSI = true;
+                } else if (partNumber.indexOf("SANDEN_SUPPLY_ONLY") != -1) {
+                    sanden_groups.SSO = true;
+                }
+            }
+            if (SSI && states.includes(state)) {
+                sanden_groups.SSI = true;
+            }
+            return sanden_groups;
+        } 
+        //VUT-E
 
  });
  
@@ -3947,7 +3988,8 @@ function genExtraDaikinItemFunc(elem){
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#945596;" type="button" id="btn_pe_sanden_form_new" class="button btn_pe_sanden_form_new" title="PE Sanden Form">Sanden Quote Form</button>');
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#f48c21;" type="button" id="btn_pe_solar_form" class="button btn_pe_solar_form" title="PE Solar Form">Solar Quote Form</button>');
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#009acf;" type="button" id="btn_pe_daikin_new_form" class="button btn_pe_daikin_new_form" title="PE Daikin Form">Daikin Quote Form</button>');
-     $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#5628b4;" type="button" id="btn_pe_daikin_tool" class="button btn_pe_daikin_tool" title="PE Daikin Tool">Daikin Design Tool</button>');
+     $("#btn_view_change_log").after('<button style="margin: 0px 3px;background-image: linear-gradient(to right, #0acffe 0%, #495aff 100%);" type="button" id="btn_pe_daikin_tool" class="button btn_pe_daikin_tool" title="PE Daikin Tool">Daikin Design Tool</button>');
+     $("#btn_view_change_log").after('<button style="margin: 0px 3px;background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" type="button" id="btn_pe_sanden_tool" class="button btn_pe_sanden_tool" title="PE Sanden Tool">Sanden Design Tool</button>');
      $("#btn_pe_daikin_new_form").click(function(e) {
         if(lead_id_solar != '') {
             window.open(
@@ -3966,6 +4008,20 @@ function genExtraDaikinItemFunc(elem){
         if(lead_id_solar != '') {
             window.open(
                 'http://daikintool.pure-electric.com.au/index.php?quote_id='+record_id,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        } else {
+            alert('No leads in quote, please add lead information !')
+            // window.open(
+            //     'https://pure-electric.com.au/pedaikinform',
+            //     '_blank' // <- This is what makes it open in a new window.
+            // );
+        }
+    });
+    $("#btn_pe_sanden_tool").click(function(e) {
+        if(lead_id_solar != '') {
+            window.open(
+                'http://sandentool.pure-electric.com.au/index.php?quote_id='+record_id,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {
@@ -5755,8 +5811,8 @@ $(function() {
                 var sanden_equipment_cost = calculate_equipment_cost_gp();
                 $('#sanden_supply_bill').val(sanden_equipment_cost);
             }
-
             $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
+            calculation_gross_profit_sanden_quote();
         }, 100);
     });
 
@@ -5781,10 +5837,9 @@ $(function() {
             var sanden_equipment_cost = calculate_equipment_cost_gp();
             $('#sanden_supply_bill').val(sanden_equipment_cost);
         }
-        
         $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
-        
-    }, 500);
+        calculation_gross_profit_sanden_quote();
+    }, 100);
 
 
 });
