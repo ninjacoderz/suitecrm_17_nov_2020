@@ -326,7 +326,7 @@ $(function () {
                 var id_folder_file = $('input[name="installation_pictures_c"]').val();
              } else if(module_sugar_grp1 == 'AOS_Quotes'){
                 var id_folder_file = $('input[name="pre_install_photos_c"]').val();
-             } else if(module_sugar_grp1 == 'pe_warehouse_log'){
+             } else if(module_sugar_grp1 == 'pe_warehouse_log' || module_sugar_grp1== 'pe_bills'){
                 var id_folder_file = $('input[name="installation_pdf_c"]').val();
              } else {
                 var id_folder_file = '';
@@ -371,7 +371,7 @@ $(function () {
             recordID = $('input[name="installation_pdf_c"]').val();
         }
 
-        if(module_sugar_grp1 == 'PO_purchase_order'){
+        if(module_sugar_grp1 == 'PO_purchase_order' ||module_sugar_grp1== 'pe_bills'){
             if (typeof recordID === "undefined")
             recordID = $('input[name="installation_pdf_c"]').val();
         }
