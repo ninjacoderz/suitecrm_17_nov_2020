@@ -2155,6 +2155,12 @@ function genExtraDaikinItemFunc(elem){
      $('input[id="CANCEL"]').after(' <input title="Save" accesskey="a" class="button primary" type="submit" name="button" value="Convert To Invoice" id="convert_to_invoice">');
      $("#convert_to_invoice").click(function(){
         var check = isSandenSupply();
+        if ($('#proposed_install_date_c').val() == '') {
+            var question = confirm("No Proposed Installer - are you sure to continue?");
+            if (!question) {
+                return false;
+            }
+        }
         if ($('#quote_type_c').val() == "quote_type_sanden") {
             if ($('#proposed_dispatch_date_c').val() == '' && (check.SSI || check.SSO)) {
                 var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
