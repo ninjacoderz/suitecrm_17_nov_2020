@@ -191,7 +191,7 @@ function generatePOPDF($record_id, &$attached_file_name = ""){
 
     
     //$file_name = $mod_strings['LBL_PDF_NAME'] . "_" . str_replace(" ", "_", $bean->name) . ".pdf";
-    $file_name = $mod_strings['LBL_PDF_NAME'] . "_".(isset($bean->number)?($bean->number."_"):"") . str_replace(" ", "_", $bean->name) ."_".date("dMy"). ".pdf";
+    $file_name = $mod_strings['LBL_PDF_NAME'] . "_".(isset($bean->number)?($bean->number."_"):"") . str_replace([" ","/"], ["_","-"], $bean->name) ."_".date("dMy"). ".pdf";
     ob_clean();
     try {
         $orientation = ($template->orientation == "Landscape") ? "-L" : "";
@@ -200,11 +200,11 @@ function generatePOPDF($record_id, &$attached_file_name = ""){
         $pdf->SetHTMLHeader($header);
         $pdf->SetHTMLFooter($footer);
         $pdf->WriteHTML($printable);
-        $fp = fopen($sugar_config['upload_dir'] . "PO-#".$bean->number."-".str_replace(" ", "_",$bean->name).'.pdf', 'wb');
+        $fp = fopen($sugar_config['upload_dir'] . "PO-#".$bean->number."-".str_replace([" ","/"], ["_","-"],$bean->name).'.pdf', 'wb');
         fclose($fp);
-        $pdf->Output($sugar_config['upload_dir'] . "PO-#".$bean->number."-".str_replace(" ", "_",$bean->name).'.pdf', 'F');
+        $pdf->Output($sugar_config['upload_dir'] . "PO-#".$bean->number."-".str_replace([" ","/"], ["_","-"],$bean->name).'.pdf', 'F');
         //$sendEmail->send_email($bean, $bean->module_dir, '', $file_name, true);
-        $attached_file_name = "PO-#".$bean->number."-".str_replace(" ", "_", $bean->name).'.pdf';
+        $attached_file_name = "PO-#".$bean->number."-".str_replace([" ","/"], ["_","-"], $bean->name).'.pdf';
     } catch (mPDF_exception $e) {
         echo $e;
     }
@@ -665,7 +665,7 @@ if($mail_format == "daikin_info"){
 
 
     if(isset($_REQUEST['po_record']) && $_REQUEST['po_record'] !== ""){
-        $attached_file_name = "PO-#".$bean->number."-".str_replace(" ", "_", $bean->name).'.pdf';
+        $attached_file_name = "PO-#".$bean->number."-".str_replace([" ","/"], ["_","-"], $bean->name).'.pdf';
         generatePOPDF($_REQUEST['po_record'], $attached_file_name);
         global $sugar_config;
         global $current_user;
