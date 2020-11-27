@@ -634,14 +634,14 @@
      */
     function isSandenSupply($invoiceID, $quote) {
         $sanden_supply = array (
-            SSI => false,
-            SSO => false,
+            'SSI' => false,
+            'SSO' => false,
         );
         $SSI = false;
         $states = ['NSW', 'QLD', 'SA', 'WA'];
       
         $db = DBManagerFactory::getInstance();
-        $query = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '$invoiceID' AND deleted = 0";
+        $query = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoiceID."' AND deleted = 0";
         $ret = $db->query($query);
         while($row = $db->fetchByAssoc($ret)){
             if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
@@ -655,4 +655,4 @@
           $sanden_supply['SSI'] = true;
         }
         return $sanden_supply;
-      }
+    }
