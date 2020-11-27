@@ -2173,9 +2173,6 @@ function genExtraDaikinItemFunc(elem){
                 return false;
             }
         }
-        /**Save before*/
-        $('#save_and_edit').trigger('click');
-        
         var record = encodeURIComponent($("input[name='record']").val());
          $.ajax({
                  url: '/index.php?entryPoint=checkSwitchBoardAttached&record='+record,                
@@ -3991,7 +3988,8 @@ function genExtraDaikinItemFunc(elem){
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#945596;" type="button" id="btn_pe_sanden_form_new" class="button btn_pe_sanden_form_new" title="PE Sanden Form">Sanden Quote Form</button>');
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#f48c21;" type="button" id="btn_pe_solar_form" class="button btn_pe_solar_form" title="PE Solar Form">Solar Quote Form</button>');
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#009acf;" type="button" id="btn_pe_daikin_new_form" class="button btn_pe_daikin_new_form" title="PE Daikin Form">Daikin Quote Form</button>');
-     $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#5628b4;" type="button" id="btn_pe_daikin_tool" class="button btn_pe_daikin_tool" title="PE Daikin Tool">Daikin Design Tool</button>');
+     $("#btn_view_change_log").after('<button style="margin: 0px 3px;background-image: linear-gradient(to right, #0acffe 0%, #495aff 100%);" type="button" id="btn_pe_daikin_tool" class="button btn_pe_daikin_tool" title="PE Daikin Tool">Daikin Design Tool</button>');
+     $("#btn_view_change_log").after('<button style="margin: 0px 3px;background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" type="button" id="btn_pe_sanden_tool" class="button btn_pe_sanden_tool" title="PE Sanden Tool">Sanden Design Tool</button>');
      $("#btn_pe_daikin_new_form").click(function(e) {
         if(lead_id_solar != '') {
             window.open(
@@ -4010,6 +4008,20 @@ function genExtraDaikinItemFunc(elem){
         if(lead_id_solar != '') {
             window.open(
                 'http://daikintool.pure-electric.com.au/index.php?quote_id='+record_id,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        } else {
+            alert('No leads in quote, please add lead information !')
+            // window.open(
+            //     'https://pure-electric.com.au/pedaikinform',
+            //     '_blank' // <- This is what makes it open in a new window.
+            // );
+        }
+    });
+    $("#btn_pe_sanden_tool").click(function(e) {
+        if(lead_id_solar != '') {
+            window.open(
+                'http://sandentool.pure-electric.com.au/index.php?quote_id='+record_id,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {
