@@ -303,7 +303,7 @@ if($short_description_c != ""){
             if ($bean->supplier_order_number_c != '') {
                 $short_description_c = str_replace("\$sanden_supplier_order_number", "This is an EXISTING Sanden order #".$bean->supplier_order_number_c, $short_description_c);
             } else {
-                $short_description_c = str_replace("\$sanden_supplier_order_number", "This is NEW Sanden order", $short_description_c);
+                $short_description_c = str_replace("\$sanden_supplier_order_number", "This is a NEW Sanden order", $short_description_c);
             }
             $short_description_c = str_replace("\$sanden_dispatch_date", $dispatch_date, $short_description_c);
             $short_description_c = str_replace("\$sanden_freight_company", $freight_company, $short_description_c);
