@@ -613,7 +613,7 @@ $(function () {
 function compareToday() {
     var today = new Date().toLocaleString('default',{day: '2-digit', month: '2-digit',year: 'numeric'}); //mm/dd/yyyy
     today = new Date(today);
-    var date = $('#quote_date_c').text().split(' ')[0].split('/'); //dd/mm/yyyy
+    var date = $('div[field="quote_date_c"]').text().trim().split(' ')[0].split('/'); //dd/mm/yyyy
     var new_date = date[1]+'/'+date[0]+'/'+date[2];
     new_date = new Date(new_date); 
     if (today.getTime()!==new_date.getTime()) {
