@@ -467,21 +467,60 @@ $(function () {
             /* your code continues ... */
         });
 
-        $('#convert_to_invoice_button').attr('onclick',
-            ' var record = encodeURIComponent($("input[name=\'record\']").val()); \
-            $.ajax({\
-                url: \'/index.php?entryPoint=checkSwitchBoardAttached&record=\'+ record,\
-                success: function (data) {\
-                    console.log(data);\
-                    if(data){\
-                        var _form = document.getElementById(\'formDetailView\');_form.action.value=\'converToInvoice\';_form.submit();\
-                    }\
-                    else {\
-                        alert(\'Please add Switchboard photo to Attachment!\');\
-                    }\
-                }\
-            });\
-            ')
+        // $('#convert_to_invoice_button').attr('onclick',
+        //     ' var record = encodeURIComponent($("input[name=\'record\']").val()); \
+        //     $.ajax({\
+        //         url: \'/index.php?entryPoint=checkSwitchBoardAttached&record=\'+ record,\
+        //         success: function (data) {\
+        //             console.log(data);\
+        //             if(data){\
+        //                 var _form = document.getElementById(\'formDetailView\');_form.action.value=\'converToInvoice\';_form.submit();\
+        //             }\
+        //             else {\
+        //                 alert(\'Please add Switchboard photo to Attachment!\');\
+        //             }\
+        //         }\
+        //     });\
+        //     ')
+
+        //Convert to Invoice QuoteDetailView
+        var record = encodeURIComponent($("input[name='record']").val());
+        $('#convert_to_invoice_button').attr('onclick',`$(document).convert_to_invoice("${record}")`);
+        $.fn.convert_to_invoice = function (id_quote) {
+            if ($('div[field="proposed_install_date_c"]').text().trim() == '') {
+                var question = confirm("No Proposed Installer - are you sure to continue?");
+                if (!question) {
+                    return false;
+                }
+            }
+            if ($('#quote_type_c').val() == 'quote_type_sanden' && $('div[field="proposed_dispatch_date_c"]').text().trim() == '') {
+                var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
+                if (!question) {
+                    return false;
+                }
+            }
+            if ($('#quote_type_c').val() == 'quote_type_daikin' && $('div[field="proposed_delivery_date_c"]').text().trim() == '') {
+                var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
+                if (!question) {
+                    return false;
+                }
+            }
+            $.ajax({
+                url: '/index.php?entryPoint=checkSwitchBoardAttached&record='+id_quote,                
+                success: function (data) {                    
+                    console.log(data);                    
+                    if(data){                        
+                        var _form = document.getElementById('formDetailView');
+                        _form.action.value='converToInvoice';
+                        _form.submit();
+                    }else{
+                        alert('Please add Switchboard photo to Attachment!'); 
+                    }
+                }            
+            });            
+        }
+        
+
         $('#tab-actions').after($('<li></li>').append($("li#tab-actions li:nth-child(6)").attr('id','hiddeninput').clone() ));
         $('#hiddeninput input').hide();
         // $('#tab-actions').after($('#tab-actions li:first').clone());
