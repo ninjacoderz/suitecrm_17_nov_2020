@@ -13,6 +13,10 @@ if($Invoice->id == ""){
     echo json_encode(array('msg'=>'error'));die();
 }
 
+if($Invoice->installation_pictures_c == ''){
+    $Invoice->installation_pictures_c = create_guid();
+    $Invoice->save();
+}
 
 switch ($method) {
     case 'getCustomerInfo':
@@ -32,6 +36,7 @@ switch ($method) {
         $dataRequest = $_REQUEST['dataRequest'];
         $data_return = render_json_invoice($Invoice);
         CustomerAgree($Invoice->installation_pictures_c);
+        Send_Email_Notification($Invoice,$dataRequest);
         echo json_encode($data_return);die();
         break;
     case 'generatePDF_solor':
@@ -61,11 +66,14 @@ function render_json_invoice($Invoice){
     $Contact = new Contact();
     $Contact->retrieve($Invoice->billing_contact_id);
 
-    $dateInfos = explode(" ",$Invoice->installation_date_c);
-    $dateInfos = explode("/",$dateInfos[0]);
-    $inv_install_date_str = "$dateInfos[2]-$dateInfos[0]-$dateInfos[1]T00:00:00";
-    $installation_date_c = date("d/m/Y", strtotime($inv_install_date_str));
-   
+    if($Invoice->installation_date_c != ''){
+        $dateInfos = explode(" ",$Invoice->installation_date_c);
+        $dateInfos = explode("/",$dateInfos[0]);
+        $inv_install_date_str = "$dateInfos[2]-$dateInfos[0]-$dateInfos[1]T00:00:00";
+        $installation_date_c = date("d/m/Y", strtotime($inv_install_date_str));
+    }else{
+        $installation_date_c = date("d/m/Y", time());
+    }
 
     $result = array(
         'id' =>$Invoice->id,
@@ -247,8 +255,7 @@ function CustomerAgree($foldeId){
     rename($ds_dir ."/thumbnail/signature_draft.png",$ds_dir ."/thumbnail/signature.png");
 
     rename($ds_dir ."/CustomerAgreement_Draft.pdf",$ds_dir ."/CustomerAgreement.pdf");
-    create_image_from_pdf($ds_dir ."/CustomerAgreement.pdf", 'CustomerAgreement.pdf', $ds_dir.'/');
-
+   // create_image_from_pdf($ds_dir ."/CustomerAgreement.pdf", 'CustomerAgreement.pdf', $ds_dir.'/');
 }
 
 function CustomerAgreeSolor($foldeId){
@@ -286,4 +293,126 @@ function create_image_from_pdf($source,$file_name,$path_save_file){
             create_thumbnail($path_to_write,$new_name_file_pdf.'.jpg',$path_save_file);
     }
     return $path_to_write;
+}
+
+function Send_Email_Notification($Invoice,$dataRequest){
+    global $sugar_config;
+    if($Invoice->id == '') { return false;}
+    $foldeId = $Invoice->installation_pictures_c;
+    $ds_dir =  $_SERVER['DOCUMENT_ROOT'] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' .$foldeId;
+    
+    $files = array(
+        'signature_link' => $ds_dir ."/signature.png",
+        'CustomerAgreement_link' => $ds_dir ."/CustomerAgreement.pdf",
+    );
+
+    $customer_name = $dataRequest['first_name'] .' '.$dataRequest['last_name'] ;
+    $your_company_name = $dataRequest['your_company_name'];
+    $your_position = $dataRequest['your_position'];
+    $phone_number = $dataRequest['phone_number'];
+    $your_address = $dataRequest['your_street'].','.$dataRequest['suburb_customer'].','.$dataRequest['state_customer'].','.$dataRequest['postcode_customer'];
+    $your_email = $dataRequest['email_customer'];
+    $your_install_date = $dataRequest['your_install_date'];
+
+    $emailObj = new Email();
+    $defaults = $emailObj->getSystemDefaultEmail();
+    $mail = new SugarPHPMailer();
+    $mail->setMailerForSystem();
+    $mail->From = $defaults['email'];
+    $mail->FromName = $defaults['name'];
+    $mail->IsHTML(true);
+    $mail->ClearAllRecipients();
+    $mail->ClearReplyTos();
+    $mail->Subject =  $customer_name.' Inv#'.$Invoice->number.' submitted the Customer Agreement Form';
+
+    $style_td = 'padding-top: 5px; font-weight: bold;  text-align: left;border: 1px solid black;';
+
+    $style_button  = 'color:#fff;font-family:Helvetica;font-size: 15px;margin:3px;line-height:100%;text-align:center;text-decoration:none;background-color:#428bca;border:1px solid #428bca;display:inline-block;font-weight:bold;padding-top: 10px;padding-right: 16px;padding-bottom: 10px;padding-left: 16px;border-radius:5px;';
+    
+    $InformationInvoice = 
+    '<h2 style="text-align:center;">Customer Agreement Form</h2>'
+    .'<table style="
+            border-collapse: collapse;
+            border: 1px solid black;
+            table-layout: auto;
+            width: 100%;" style="
+            border-collapse: collapse;
+            border: 1px solid black;
+            table-layout: auto;
+            width: 100%;">
+        <tbody style="padding-top: 15px; padding-bottom:15px; width: 100%">
+            <tr>
+                <td style="'. $style_td .'">Invoice Name:</td>
+                <td style="'. $style_td .'">'.$Invoice->name.'</td>
+                <td style="'. $style_td .'">Invoice Number:</td>
+                <td style="'. $style_td .'">'.$Invoice->number.'</td>
+            </tr>
+            <tr>
+                <td style="'. $style_td .'">Customer Name:</td>
+                <td style="'. $style_td .'">'. $customer_name.'</td>
+                <td style="'. $style_td .'">Customer Email:</td>
+                <td style="'. $style_td .'">'.$your_email.'</td>
+            </tr>
+            <tr>
+                <td style="'. $style_td .'">Customer Phone Number:</td>
+                <td style="'. $style_td .'">'.$phone_number.'</td>
+                <td style="'. $style_td .'">Customer Position:</td>
+                <td style="'. $style_td .'">'.$your_position.'</td>
+            </tr>
+            <tr>
+                <td style="'. $style_td .'">Customer Company Name:</td>
+                <td style="'. $style_td .'">'.$your_company_name.'</td>
+                <td style="'. $style_td .'">Install Date:</td>
+                <td style="'. $style_td .'">'.$your_install_date.'</td>
+            </tr>
+        </tbody>
+    </table>';
+    $mail->Body = '<div><p>Hi Accounts Team,</p><p>' 
+        . $customer_name . ' submitted the Customer Agreement Form</p>' 
+        . '</div>'
+    .$InformationInvoice
+    .'<br><div><a style="'.$style_button.'" target="_blank" href="https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record='.$Invoice->id.'">Link CRM Invoice →</a></div>';
+ 
+    foreach ($files as $key => $value) {
+        $note = addToNotes_Invoice($value,$Invoice);
+        if($note){
+            $file_name = $note->filename;
+      
+            $location = $sugar_config['upload_dir'].$note->id;
+            $mime_type = $note->file_mime_type;
+            // Add attachment to email
+            $mail->AddAttachment($location, $file_name, 'base64', $mime_type);
+        }
+    }
+
+    $mail->AddAddress('info@pure-electric.com.au');
+    //$mail->AddAddress("nguyenphudung93.dn@gmail.com");
+    //$mail->AddAddress('accounts@pure-electric.com.au');
+    $mail->prepForOutbound();    
+    $mail->setMailerForSystem();   
+    $sent = $mail->send();
+}
+
+function addToNotes_Invoice($link_file,$Invoice){
+    global $sugar_config;
+    if(is_file($link_file)) {
+        $file_info = pathinfo ($link_file);
+        $note = new Note();
+        $note->id = create_guid();
+        $note->new_with_id = true; 
+        $note->parent_id = $Invoice->id;
+        $note->parent_type = 'AOS_Invoices';
+        $note->date_entered = '';
+        $note->file_mime_type = mime_content_type($link_file);
+        $note->filename =  $file_info['filename'];
+        $note->name = $file_info['filename'];
+        $note->save();
+        $destination = $sugar_config['upload_dir'].$note->id;;
+        if (!copy($link_file, $destination)) {
+            $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+        }
+        return $note;
+    }else{
+        return false;
+    }
 }
