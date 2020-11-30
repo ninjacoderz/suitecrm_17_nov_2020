@@ -5764,7 +5764,7 @@ $(function() {
         $('#sanden_stcs').val(sanden_STCs_revenue);
         $('#veec_revenue').val(sanden_VEECs_revenue);
         //field "sanden_supply_bill_c" Sanden Equipment Cost
-        if ($('#quote_type').val() == 'quote_type_sanden') {
+        if ($('#quote_type_c').val() == 'quote_type_sanden') {
             var sanden_equipment_cost = calculate_equipment_cost_gp();
             $('#sanden_supply_bill').val(sanden_equipment_cost);
         }
