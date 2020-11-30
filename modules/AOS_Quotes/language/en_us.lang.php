@@ -218,5 +218,6 @@ $mod_strings = array(
     'LBL_VEEC_REVENUE' => 'VEEC Revenue',
     'LBL_SOLAR_VIC_REVENUE' => 'Solar VIC Revenue',
     'LBL_SA_REPS_REVENUE' => 'SA Reps Revenue',
+    'LBL_GP_MANUAL' => 'GP MANUAL',
     //VUT-E- Label for Sanden profit fields
 );

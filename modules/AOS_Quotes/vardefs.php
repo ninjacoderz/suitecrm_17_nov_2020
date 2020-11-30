@@ -979,6 +979,13 @@ $dictionary['AOS_Quotes'] = array(
             'importable' => 'true',
             'duplicate_merge' => 'disabled',
         ),
+        'gb_manual' =>
+        array(
+            'name' => 'gb_manual',
+            'vname' => 'LBL_GP_MANUAL',
+            'type' => 'bool',
+            'default' => '0',
+        ),
         //VUT-E-Create fields for Sanden profit
 
     ),

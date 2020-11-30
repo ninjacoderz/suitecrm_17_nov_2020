@@ -5753,7 +5753,24 @@ $(function() {
         SUGAR.ajaxUI.hideLoadingPanel();
         return total_equipment_cost;
     }
-
+    /**
+     * VUT - fill input follow line items
+     */
+    function calculateGP() {
+        //STC = $36.55 && VEECs = $30 :: fixed
+        var qty = getSTCsLineItem();
+        var sanden_STCs_revenue = parseFloat(qty.STCs*36.55);
+        var sanden_VEECs_revenue = parseFloat(qty.VEECs*30);
+        $('#sanden_stcs').val(sanden_STCs_revenue);
+        $('#veec_revenue').val(sanden_VEECs_revenue);
+        //field "sanden_supply_bill_c" Sanden Equipment Cost
+        if ($('#quote_type').val() == 'quote_type_sanden') {
+            var sanden_equipment_cost = calculate_equipment_cost_gp();
+            $('#sanden_supply_bill').val(sanden_equipment_cost);
+        }
+        $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
+        calculation_gross_profit_sanden_quote();
+    }
     /**
      * GP Calculation in Quote
      */
@@ -5809,46 +5826,45 @@ $(function() {
     //VUT- GP Calculation - update Equipment Cost  && Sanden Customer/STCs/VEEC Revenue when lineItem change
     $('#line_items_span').find('.product_group').on('change', 'input',function() {
         setTimeout(function(){
-            //STC = $36.55 && VEECs = $30 :: fixed
-            var qty = getSTCsLineItem();
-            var sanden_STCs_revenue = parseFloat(qty.STCs*36.55);
-            var sanden_VEECs_revenue = parseFloat(qty.VEECs*30);
-            $('#sanden_stcs').val(sanden_STCs_revenue);
-            $('#veec_revenue').val(sanden_VEECs_revenue);
-            //field "sanden_supply_bill_c" Sanden Equipment Cost
-            if ($('#quote_type_c').val() == 'quote_type_sanden') {
-                var sanden_equipment_cost = calculate_equipment_cost_gp();
-                $('#sanden_supply_bill').val(sanden_equipment_cost);
-            }
-            $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
-            calculation_gross_profit_sanden_quote();
+            calculateGP();
+            // //STC = $36.55 && VEECs = $30 :: fixed
+            // var qty = getSTCsLineItem();
+            // var sanden_STCs_revenue = parseFloat(qty.STCs*36.55);
+            // var sanden_VEECs_revenue = parseFloat(qty.VEECs*30);
+            // $('#sanden_stcs').val(sanden_STCs_revenue);
+            // $('#veec_revenue').val(sanden_VEECs_revenue);
+            // //field "sanden_supply_bill_c" Sanden Equipment Cost
+            // if ($('#quote_type_c').val() == 'quote_type_sanden') {
+            //     var sanden_equipment_cost = calculate_equipment_cost_gp();
+            //     $('#sanden_supply_bill').val(sanden_equipment_cost);
+            // }
+            // $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
+            // calculation_gross_profit_sanden_quote();
         }, 100);
     });
 
-
-    //Calulation first time
-    setTimeout(function(){
-        //VUT- get Customer/STC/VEEC Revenue from Line Item
-        var qty = getSTCsLineItem();
-        //STC = $36.55 && VEECs = $30 :: fixed
-        var sanden_STCs_revenue =parseFloat(qty.STCs*36.55);
-        var sanden_VEECs_revenue = parseFloat(qty.VEECs*30);
-        $('#sanden_stcs').val(sanden_STCs_revenue);
-        $('#veec_revenue').val(sanden_VEECs_revenue);
-
-        //get po plumb/elec total_amt
-        var po_total_amt = getPOforQuote($("input[name='record']").val());
-        $('#plumbing_bill').val(po_total_amt['plumb_po']);
-        $('#electrician_bill').val(po_total_amt['elec_po']);
-
-        //GP Calculation - fill field "sanden_supply_bill_c" Sanden Equipment Cost
-        if ($('#quote_type_c').val() == 'quote_type_sanden') {
-            var sanden_equipment_cost = calculate_equipment_cost_gp();
-            $('#sanden_supply_bill').val(sanden_equipment_cost);
+    var fields_auto_fill = '#sanden_supply_bill, #plumbing_bill, #electrician_bill, #sanden_total_costs, #sanden_gross_profit, #sanden_revenue, #sanden_stcs, #veec_revenue, #sanden_total_revenue, #sanden_gprofit_percent';
+    $(document).on('change', '#gb_manual', function(){
+        if ($("#gb_manual").is(":checked")) {
+            $(fields_auto_fill).removeAttr('disabled');
+        } else {
+            $(fields_auto_fill).attr('disabled', 'disabled');
         }
-        $('#sanden_revenue').val($('#total_amt').val()).trigger('change');
+    });
+    if ($("#gb_manual").is(":checked")) {
+        $(fields_auto_fill).removeAttr('disabled');
         calculation_gross_profit_sanden_quote();
-    }, 100);
+    } else {
+        //Calulation first time
+        setTimeout(function(){
+            $(fields_auto_fill).attr('disabled', 'disabled');
+            //get po plumb/elec total_amt
+            var po_total_amt = getPOforQuote($("input[name='record']").val());
+            $('#plumbing_bill').val(po_total_amt['plumb_po']);
+            $('#electrician_bill').val(po_total_amt['elec_po']);
+            calculateGP();
+        }, 100);
+    }
 
 
 });
