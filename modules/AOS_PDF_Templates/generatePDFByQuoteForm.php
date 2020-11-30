@@ -796,7 +796,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                 echo 'https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $dirName. '/'.$name_file;
                 // echo 'http://new.suitecrm-pure.com/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $dirName. '/'.$name_file;
 
-                if($_REQUEST['list_infomation']['phone_number'] != ''){
+                if($_REQUEST['list_infomation']['phone_number'] != '' && $_REQUEST['list_infomation']['send_sms']=="Yes"){
 
                     // $number_receive_sms = $request['number_receive_sms'];
                     $file_path = '';
