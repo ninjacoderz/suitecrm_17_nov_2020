@@ -32,7 +32,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $purchaseOrder->name .= " Electrical";
             $purchaseOrder->install_date = $invoice->electrician_install_date_c;
             break;
-        case 'electrical':
+        case 'daikin':
             $purchaseOrder->name = "PureElectric Daikin ";
             $purchaseOrder->install_date = $invoice->electrician_install_date_c;
             break;        
