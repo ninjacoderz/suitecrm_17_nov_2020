@@ -1340,3 +1340,9 @@ $entry_point_registry['API_Auspost'] = array(
     'file' => 'custom/modules/pe_warehouse_log/API_Auspost.php',
     'auth' => false
 );
+
+//thienpb code  -- convert heic file to jpg
+$entry_point_registry['convertHEICtoJPG'] = array( 
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomConvertHEICtoJPG.php',
+    'auth' => true
+);
