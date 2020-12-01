@@ -43,14 +43,16 @@ if(count($lookup_result)){
             $bean_quote->retrieve( $lead->create_solar_quote_num_c);
             if($bean_quote->id != '') {
                 $number_lead = $bean_quote->solargain_lead_number_c;
-                if(isset($bean_quote->solargain_lead_number_c) && $bean_quote->solargain_lead_number_c!= ""){
-                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/lead/edit/'.$bean_quote->solargain_lead_number_c.'">SG Lead</a>';
-                }
+                
                 if(isset($bean_quote->solargain_quote_number_c) && $bean_quote->solargain_quote_number_c!= ""){
-                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_quote_number_c.'">SG Quote</a>';
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_quote_number_c.'">SG '.$bean_quote->solargain_quote_number_c.'</a>';
+                }else{
+                    if(isset($bean_quote->solargain_lead_number_c) && $bean_quote->solargain_lead_number_c!= ""){
+                        $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/lead/edit/'.$bean_quote->solargain_lead_number_c.'">SG '.$bean_quote->solargain_lead_number_c.'</a>';
+                    }
                 }
                 if(isset($bean_quote->solargain_tesla_quote_number_c) && $bean_quote->solargain_tesla_quote_number_c!= ""){
-                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_tesla_quote_number_c.'">SG Quote</a>';
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_tesla_quote_number_c.'">SG '.$bean_quote->solargain_tesla_quote_number_c.'</a>';
                 }
             } 
 
@@ -60,16 +62,18 @@ if(count($lookup_result)){
             $bean_quote->retrieve( $lead->create_tesla_quote_num_c);
             if($bean_quote->id != '') {
                 $number_lead = $bean_quote->solargain_lead_number_c;
-                if(isset($bean_quote->solargain_lead_number_c) && $bean_quote->solargain_lead_number_c!= ""){
-                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/lead/edit/'.$bean_quote->solargain_lead_number_c.'">SG Lead</a>';
-                }
+                
                 if(isset($bean_quote->solargain_quote_number_c) && $bean_quote->solargain_quote_number_c!= ""){
-                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_quote_number_c.'">SG Quote</a>';
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_quote_number_c.'">SG '.$bean_quote->solargain_quote_number_c.'</a>';
+                }else{
+                    if(isset($bean_quote->solargain_lead_number_c) && $bean_quote->solargain_lead_number_c!= ""){
+                        $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/lead/edit/'.$bean_quote->solargain_lead_number_c.'">SG '.$bean_quote->solargain_lead_number_c.'</a>';
+                    }
                 }
                 if(isset($bean_quote->solargain_tesla_quote_number_c) && $bean_quote->solargain_tesla_quote_number_c!= ""){
-                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_tesla_quote_number_c.'">SG Quote</a>';
+                    $crm_links .= '<a class="link-button buttons" href="https://crm.solargain.com.au/quote/edit/'.$bean_quote->solargain_tesla_quote_number_c.'">SG '.$bean_quote->solargain_tesla_quote_number_c.'</a>';
                 }
-                } 
+            } 
 
             if(isset($lead->phone_work) && $lead->phone_work != ""){
                 $crm_links .= '<a class="link-button buttons" href="http://message.pure-electric.com.au/#'.preg_replace("/^0/", "61", preg_replace('/\D/', '', $lead->phone_work)).'">P.Work('.preg_replace("/^0/", "61", preg_replace('/\D/', '', $lead->phone_work)).')</a>';
