@@ -2156,7 +2156,7 @@ function genExtraDaikinItemFunc(elem){
      $("#convert_to_invoice").click(function(){
         var check = isSandenSupply();
         if ($('#proposed_install_date_c').val() == '') {
-            var question = confirm("No Proposed Installer - are you sure to continue?");
+            var question = confirm("No Proposed Install Date - are you sure to continue?");
             if (!question) {
                 return false;
             }

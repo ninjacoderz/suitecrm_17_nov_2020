@@ -488,7 +488,7 @@ $(function () {
         $('#convert_to_invoice_button').attr('onclick',`$(document).convert_to_invoice("${record}")`);
         $.fn.convert_to_invoice = function (id_quote) {
             if ($('div[field="proposed_install_date_c"]').text().trim() == '') {
-                var question = confirm("No Proposed Installer - are you sure to continue?");
+                var question = confirm("No Proposed Install Date - are you sure to continue?");
                 if (!question) {
                     return false;
                 }
