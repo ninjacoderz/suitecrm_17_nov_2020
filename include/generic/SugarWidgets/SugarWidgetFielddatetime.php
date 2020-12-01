@@ -321,6 +321,15 @@ class SugarWidgetFieldDateTime extends SugarWidgetReportField
         return $this->queryDay($layout_def, $this->now());
     }
 
+    // custom code function for button today dashlets
+    public function queryFilterTP_equals_today($layout_def)
+    {
+        global $timedate;
+        $begin = $this->now()->get_day_begin();
+        $end = $this->now()->get_day_end();
+        return $this->get_start_end_date_filter($layout_def, $begin->asDb(), $end->asDb());
+    }
+
     public function queryFilterTP_tomorrow(& $layout_def)
     {
         global $timedate;

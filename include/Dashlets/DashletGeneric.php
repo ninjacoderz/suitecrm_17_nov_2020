@@ -490,6 +490,27 @@ class DashletGeneric extends Dashlet
             if(!empty($_REQUEST["cal_filter"])){
                 $this->customConvertFilter($_REQUEST["cal_filter"]);
             }
+            // custom button today filter in dashlets
+            foreach ($_REQUEST as $key => $val) {
+                if (str_end($key, '_ORDER_BY')) {
+                    $field_OrderBy = $val;
+                }
+            }
+            if(strpos($field_OrderBy,"date_") !== false){
+                if(!empty($_REQUEST["custom_filter"]) ){ 
+                    switch ($_REQUEST["custom_filter"]) {
+                        case 'today':
+                                $this->filters[$field_OrderBy] = array ('type' => 'TP_equals_today');             
+                            break;
+                        case 'reset':
+                            $this->filters = array();
+                            break;                    
+                        default:
+                            $this->filters = array();
+                            break;
+                    }
+                }
+            }
 
             $whereArray = $this->buildWhere();
         }
@@ -611,6 +632,19 @@ class DashletGeneric extends Dashlet
                 $this->lvs->data['pageData']['urls']['reset_today'] = "index.php?page_id=0&entryPoint=retrieve_dash_page&lvso=DESC&Home2_OPPORTUNITY_offset=0&sugar_body_only=1&id=" .$this->id;
             }
 
+            $url_custom_today = 'index.php?action=DynamicAction&DynamicAction=displayDashlet&session_commit=1&module=Home&to_pdf=1&id=' . $this->id;
+            foreach ($this->lvs->data['pageData']['queries']['orderBy'] as $key => $value) {
+                if ($key == 'lvso') {
+                    $url_custom_today .= '&lvso='.$value;
+                } 
+                // $field_OrderBy;
+                if (str_end($key, '_ORDER_BY')) {
+                    $url_custom_today .= '&'.$key.'=' .$this->lvs->data['pageData']['ordering']['orderBy'];
+                }
+            }
+  
+             
+            $this->lvs->data['pageData']['urls']['url_custom_today'] =  $url_custom_today;
             //thienpb code
             $this->lvs->data['pageData']['urls']['product_type'] =  'index.php?action=DynamicAction&DynamicAction=displayDashlet&session_commit=1&lvso=DESC&Home2_AOS_INVOICES_ORDER_BY=number&module=Home&to_pdf=1&id=' . $this->id;
             $this->lvs->data['pageData']['urls']['reset_product_type'] = 'index.php?action=DynamicAction&DynamicAction=displayDashlet&session_commit=1&lvso=DESC&Home2_AOS_INVOICES_ORDER_BY=number&module=Home&to_pdf=1&id=' . $this->id;
