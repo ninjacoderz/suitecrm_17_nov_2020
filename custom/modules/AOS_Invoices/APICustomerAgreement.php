@@ -115,11 +115,11 @@ function generatePDF($dataRequest,$foldeId){
     
     
     $pdf->Write($pdf->SetXY(128, 214), $dataRequest['your_install_date']);
-    $pdf->Write($pdf->SetXY(128, 227), $dataRequest['your_company_name']);
-    $pdf->Write($pdf->SetXY(35, 229), $dataRequest['first_name'] .' '.$dataRequest['last_name'] );
-    $pdf->Write($pdf->SetXY(35, 240), $dataRequest['your_position']);
-    $pdf->Write($pdf->SetXY(128, 240), $dataRequest['phone_number']);
-    $pdf->Write($pdf->SetXY(35, 255),$dataRequest['your_street'].','.$dataRequest['suburb_customer'].','.$dataRequest['state_customer'].','.$dataRequest['postcode_customer']);
+    $pdf->Write($pdf->SetXY(128, 227), html_entity_decode($dataRequest['your_company_name'],ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(35, 229), html_entity_decode($dataRequest['first_name'] .' '.$dataRequest['last_name'],ENT_QUOTES) );
+    $pdf->Write($pdf->SetXY(35, 240), html_entity_decode($dataRequest['your_position'],ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(128, 240), html_entity_decode($dataRequest['phone_number'],ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(35, 255),html_entity_decode($dataRequest['your_street'].','.$dataRequest['suburb_customer'].','.$dataRequest['state_customer'].','.$dataRequest['postcode_customer'],ENT_QUOTES));
     $ds_dir =  $_SERVER['DOCUMENT_ROOT'] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' .$foldeId;
     $pdf->Image($ds_dir.'/signature_draft.png' ,35,210,50,10);
     $fp = fopen($ds_dir.'/CustomerAgreement_Draft.pdf', 'wb');
