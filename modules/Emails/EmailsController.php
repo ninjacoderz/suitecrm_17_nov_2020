@@ -1763,6 +1763,11 @@ class EmailsController extends SugarController
                 $name = $emailTemplate->subject;
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
+                 //parse value - custom value
+                 $pe_warehouse_log_arrival_date_c = explode(" ",$focus->arrival_date_c)[0];
+                 $description = str_replace("\$pe_warehouse_log_arrival_date_c",$pe_warehouse_log_arrival_date_c , $description);
+                 $description_html = str_replace("\$pe_warehouse_log_arrival_date_c",$pe_warehouse_log_arrival_date_c , $description_html);
+                
                 $templateData = $emailTemplate->parse_email_template(
                     array(
                         'subject' => $name,
