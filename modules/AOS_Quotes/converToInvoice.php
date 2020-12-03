@@ -80,12 +80,15 @@
     $plumber_account =  new Account();
     if (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false ) {
             $invoice->account_id2_c = 'def803db-f1ea-5f11-305e-5db106d4cf1e'; //old logic (daikin supplier)
-            $invoice->account_id1_c = $quote->account_id4_c;
+            $invoice->account_id1_c = $quote->account_id4_c; //Plumber
+            $invoice->distance_to_suite_c = $quote->distance_to_daikin_installer_c;
             $invoice->delivery_date_time_c = $quote->proposed_delivery_date_c;
         $plumber_account->retrieve($quote->account_id4_c);
     } else if ($quote->quote_type_c == 'quote_type_sanden' || strpos(strtolower($quote->name),'sanden') !== false) {
-        $invoice->account_id1_c = $quote->account_id3_c;
-        $invoice->account_id_c = $quote->account_id2_c;
+        $invoice->account_id1_c = $quote->account_id3_c; //Plumber
+        $invoice->distance_to_suite_c = $quote->distance_to_travel_c;
+        $invoice->account_id_c = $quote->account_id2_c; //Electrician
+        $invoice->distance_to_suitecrm_c = $quote->distance_to_electrician_c;
         $plumber_account->retrieve($invoice->account_id1_c);
         $invoice->dispatch_date_c = $quote->proposed_dispatch_date_c;
         //tuan code plumping template default
@@ -198,9 +201,6 @@
         $quote->load_relationship($key);
         $quote->$key->add($invoice->id);
     }
-    if (count($_REQUEST['group_id']) > 0 && isset($_REQUEST['group_id'])) { 
-        //no thing
-    } else {
         //Setting Group Line Items
         $db = DBManagerFactory::getInstance();
         $sql = "SELECT * FROM aos_line_item_groups WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
@@ -262,9 +262,8 @@
             // if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
             //     $isSandenSupply = true;
             // }
-        }
     }
-	//Dung code
+    //Dung code
 	$invoice_title  = strtolower($rawRow['name']);
 	if (strpos($invoice_title,'daikin') !== false) {
 		$accout_daikin = new Account();
@@ -369,13 +368,28 @@
 	// BinhNT;   
     require_once('modules/PO_purchase_order/CreatePurchaseOrder.php');
     //VUT - S - Auto create PO
-    $invoiceBean = BeanFactory::getBean("AOS_Invoices", $invoice->id);
+    // $invoiceBean = BeanFactory::getBean("AOS_Invoices", $invoice->id);
+    $invoiceBean = new AOS_Invoices();
+    $invoiceBean->retrieve($invoice->id);
     $isSandenSupply = isSandenSupply($invoiceBean->id, $quote);
     if (($isSandenSupply['SSI'] || $isSandenSupply['SSO']) && $quote->proposed_dispatch_date_c != '' && ($quote->quote_type_c == 'quote_type_sanden' || strpos(strtolower($quote->name),'sanden') !== false)) {
        createPO('sanden_supply', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
     }
     if ($invoiceBean->delivery_date_time_c != '' && (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false )) {
         createPO('daikin', $invoiceBean, $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+    }
+    if ($invoiceBean->quote_type_c == 'quote_type_sanden') {
+        if ( $invoiceBean->account_id1_c != '' ) {
+            createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+        }
+        if ($invoiceBean->account_id_c != '' ) {
+            createPO('electrical', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+        }
+    }
+    if ($invoiceBean->quote_type_c == 'quote_type_daikin') {
+        if ( $invoiceBean->account_id1_c != '' ) {
+            createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+        }
     }
     //VUT - E - Auto create PO
     header('Location: index.php?module=AOS_Invoices&action=EditView&record='.$invoice->id);
