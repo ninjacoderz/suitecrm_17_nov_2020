@@ -800,4 +800,18 @@ class DuplicateSolarQuote {
         }
     }
 }
+
+//Thienpb - set default quote field
+class SetDefaultField {
+    function before_save_method_setDefaultField($bean, $event, $arguments){
+        $old_fields = $bean->fetched_row;
+        if(!$old_fields){
+            if($bean->the_quote_prepared_c != 'solar_quote_form'){
+                $bean->meter_type_c = 'SmartMeter';
+                $bean->main_switch_c = 'Yes';
+                $bean->inverter_to_mainswitch_c = '5';
+            }
+        }
+    }
+}
 ?>

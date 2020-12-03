@@ -94,5 +94,8 @@
     //VUT -- Check duplicate Quote Solar and create Sam Quote
     $hook_array['before_save'][] = Array(20,'duplicate_solar_quote','custom/modules/AOS_Quotes/logic_hooks_class.php','DuplicateSolarQuote','before_save_method_duplicateSolarQuote');
 
+    //thienpb -- set default field for quote
+    $hook_array['before_save'][] = Array(21,'set_default_field','custom/modules/AOS_Quotes/logic_hooks_class.php','SetDefaultField','before_save_method_setDefaultField');
+
 
 ?>
