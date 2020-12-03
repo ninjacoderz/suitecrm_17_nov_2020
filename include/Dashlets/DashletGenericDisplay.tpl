@@ -61,6 +61,15 @@
 								</button>
 						{/if}
 
+				
+						<button title='Filter Today For Column Selected' class='button primary' style='padding: 5px;background-color: #0768EA;' id="op_btn_today" onclick='return SUGAR.mySugar.retrieveDashlet("{$dashletId}", "{$pageData.urls.url_custom_today}&custom_filter=today", false, false, true, $(this).closest("div[id^=pageNum_][id$=_div]").parent().parent())'>
+							<span class='glyphicon glyphicon-filter'></span>
+							Today
+						</button>
+						<button title='Reset Filter' class='button primary' style='padding: 5px;background-color: #F73902;' id="op_btn_reset" onclick='return SUGAR.mySugar.retrieveDashlet("{$dashletId}", "{$pageData.urls.url_custom_today}&custom_filter=reset", false, false, true, $(this).closest("div[id^=pageNum_][id$=_div]").parent().parent())'>
+								<span class='glyphicon glyphicon-refresh'></span>
+							RESET
+						</button>
 						{*Thienpb code*}
 						{if $pageData.bean.moduleDir == 'AOS_Invoices'}
                                 <button title='Filter Sanden' class='button primary' style='padding: 5px;background-color: #f08377;' id="op_btn_sanden" onclick='return SUGAR.mySugar.retrieveDashlet("{$dashletId}", "{$pageData.urls.product_type}&product_type=sanden", false, false, true, $(this).closest("div[id^=pageNum_][id$=_div]").parent().parent())'>
