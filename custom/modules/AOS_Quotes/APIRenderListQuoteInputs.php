@@ -1,6 +1,6 @@
 <?php
 include dirname(__FILE__) . '/vardef_list_quote.php';
-
+// var_dump($vardefs_array); die;
 $html_group_check_list = render_html_list_quote_inputs($vardefs_array);
 $result = array (
     'data' => json_encode($vardefs_array),
@@ -16,9 +16,18 @@ function render_html_list_quote_inputs($vardefs_array){
             .  $v[0]
             . '</div>'
             .'<div class="col-md-6 col-xs-12 col-sm-5 edit-view-field " type="varchar">'
-                . '<input type="text" style="width:100%" id="'.$v[1]."_input".'" name="'.$v[1]."_input".'" value="" title="" tabindex="">'
+                .'<select name="'.$v[1].'" id="'.$v[1].'" title="">'
+                    .render_option_quote_input($v['list_array'])
+                .'</select>'
             . '</div>'
             .'</div>' ;
     }
     return $html_group_check_list;
+}
+function render_option_quote_input($option_array) {
+    $option_group = '';
+    foreach($option_array as $option) {
+        $option_group .= '<option label="'.$option.'" value="'.$option.'">'.$option.'</option>';
+    };
+    return $option_group;
 }
