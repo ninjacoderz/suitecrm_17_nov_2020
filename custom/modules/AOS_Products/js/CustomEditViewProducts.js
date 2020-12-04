@@ -6,7 +6,7 @@ $(function () {
         //button CRUD Product SuiteCRM with PE Site
         var html_CRUD_Product_SuiteCRM_PESite = '<div class="clear"></div><br>\
         <button type="button" class="button primary" id="button_CRUD_Product_SuiteCRM_PESite"> \
-        <span class="glyphicon glyphicon-modal-window"></span> Generate Promo Code</button>';
+        <span class="glyphicon glyphicon-modal-window"></span> Async Product PE Site</button>';
 
         $("#id_product_drupal").parent().parent().append(html_CRUD_Product_SuiteCRM_PESite);
         
@@ -56,7 +56,7 @@ $(function () {
                     $('#alert_modal').find('.modal-body').empty();
                     $('#alert_modal').find('.modal-body').append(body_modal_html); 
                     $('#alert_modal').find('.modal-header').empty();
-                    $('#alert_modal').find('.modal-header').append('<h3 style="text-align:center;">Select Option GET - Update - Create Products</h3>');
+                    $('#alert_modal').find('.modal-header').append('<h3 style="text-align:center;">Select Option GET - UPDATE Products</h3>');
                     $('#alert_modal').modal('show'); 
         })
 
