@@ -296,7 +296,7 @@
                             $new_name = "Design_".str_replace(' ', '_', $address_city);
                             break;
                         case "22":
-                            $new_name = "Switchboard";
+                            $new_name = "L".$bean->number."Switchboard";
                             break;
                         case "23":
                             $new_name = "Map";
@@ -305,10 +305,10 @@
                             $new_name = "Street_View";
                             break;
                         case "25":
-                            $new_name = "Bill";
+                            $new_name = "L".$bean->number."Bill";
                             break;
                         case "26"://dung code - add option Meter Box
-                            $new_name = "Meter_Box";
+                            $new_name = "L".$bean->number."_Meter_Box";
                             break;
                         case "27"://dung code - add option Meter Box
                             $new_name = "Acceptance";
@@ -324,7 +324,7 @@
                             $new_name = $path_parts['filename'] ."_" .$bean->distributor_c;
                             break;
                         case "32"://thienpb code
-                            $new_name = "Roof_Pitch";
+                            $new_name = "L".$bean->number."Roof_Pitch";
                             break;
                         case "35":
                             $new_name = "L".$bean->number."_Meter_UpClose";

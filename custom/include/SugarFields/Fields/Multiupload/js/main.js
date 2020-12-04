@@ -1373,5 +1373,19 @@ $(document).ready(function(){
         });
         
     });
+    $(document).on('click','.reload_after_rename',function(){
+        SUGAR.ajaxUI.showLoadingPanel(); 
+        $(".files").empty();
+        $.ajax({
+            url: $('#fileupload').fileupload('option', 'url'),
+            dataType: 'json',
+            context: $('#fileupload')[0]
+        }).always(function () {
+            $(this).removeClass('fileupload-processing');
+        }).done(function (result) {
+            $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
+        });
+        SUGAR.ajaxUI.hideLoadingPanel(); 
+    });
 });
 

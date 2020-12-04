@@ -14,6 +14,9 @@
         <div class="row fileupload-buttonbar">
             <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
+                <button type="button" class="button primary reload_after_rename">
+                    <span>RELOAD IMG</span>
+                </button>
                 <span class="btn btn-success fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Add files...</span>
