@@ -2202,8 +2202,9 @@ function genExtraDaikinItemFunc(elem){
                  success: function (data) {                    
                      console.log(data);                    
                      if(data){                        
-                         var _form = document.getElementById('EditView');
-                         _form.action.value='converToInvoice';
+                        //  var _form = document.getElementById('EditView');
+                        var _form = document.getElementById('DetailView');
+                        _form.action.value='converToInvoice';
                          _form.submit();
                      }else{
                          alert('Please add Switchboard photo to Attachment!'); 
