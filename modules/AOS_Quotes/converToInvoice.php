@@ -381,19 +381,19 @@
     if ($invoiceBean->delivery_date_time_c != '' && (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false )) {
         createPO('daikin', $invoiceBean, $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
     }
-    if ($invoiceBean->quote_type_c == 'quote_type_sanden') {
-        if ( $invoiceBean->account_id1_c != '' ) {
-            createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
-        }
-        if ($invoiceBean->account_id_c != '' ) {
-            createPO('electrical', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
-        }
-    }
-    if ($invoiceBean->quote_type_c == 'quote_type_daikin') {
-        if ( $invoiceBean->account_id1_c != '' ) {
-            createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
-        }
-    }
+    // if ($invoiceBean->quote_type_c == 'quote_type_sanden') {
+    //     if ( $invoiceBean->account_id1_c != '' ) {
+    //         createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+    //     }
+    //     if ($invoiceBean->account_id_c != '' ) {
+    //         createPO('electrical', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+    //     }
+    // }
+    // if ($invoiceBean->quote_type_c == 'quote_type_daikin') {
+    //     if ( $invoiceBean->account_id1_c != '' ) {
+    //         createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+    //     }
+    // }
     //VUT - E - Auto create PO
     header('Location: index.php?module=AOS_Invoices&action=EditView&record='.$invoice->id);
 
