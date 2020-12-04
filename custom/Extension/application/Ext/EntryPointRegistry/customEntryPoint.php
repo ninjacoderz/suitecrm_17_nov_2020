@@ -1353,3 +1353,9 @@ $entry_point_registry['convertHEICtoJPG'] = array(
     'auth' => true
 
 );
+///
+//Tri code -- custom api get template checklist Quote Input
+$entry_point_registry['APIRenderListQuoteInputs'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIRenderListQuoteInputs.php',
+    'auth' => true
+);
