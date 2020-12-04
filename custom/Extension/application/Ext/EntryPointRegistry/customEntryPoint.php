@@ -1340,3 +1340,9 @@ $entry_point_registry['API_Auspost'] = array(
     'file' => 'custom/modules/pe_warehouse_log/API_Auspost.php',
     'auth' => false
 );
+
+//CRUD Product PE Site
+$entry_point_registry['CRUD_Product_PESite'] = array( 
+    'file' => 'custom/modules/AOS_Products/CRUD_Product_PESite.php',
+    'auth' => false
+);
