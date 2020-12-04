@@ -37,6 +37,11 @@ array (
           'newTab' => false,
           'panelDefault' => 'expanded',
         ),
+        'LBL_EDITVIEW_PANEL15' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
         'LBL_EDITVIEW_PANEL11' => 
         array (
           'newTab' => false,
@@ -119,6 +124,10 @@ array (
         4 => 
         array (
           'file' => 'custom/include/SugarFields/Fields/Multiupload/js/canvas2image.js',
+        ),
+        5 => 
+        array (
+          'file' => 'custom/modules/AOS_Quotes/CustomQuoteInputsView.js',
         ),
       ),
     ),
@@ -364,6 +373,19 @@ array (
             'name' => 'proposed_install_date_c',
             'label' => 'LBL_PROPOSED_INSTALL_DATE',
           ),
+        ),
+      ),
+      'lbl_editview_panel15' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'quote_note_inputs_c',
+            'studio' => 'visible',
+            'label' => 'LBL_QUOTE_NOTE_INPUTS',
+          ),
+          1 => '',
         ),
       ),
       'lbl_editview_panel11' => 
