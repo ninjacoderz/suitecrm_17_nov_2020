@@ -2156,27 +2156,41 @@ function genExtraDaikinItemFunc(elem){
      $("#convert_to_invoice").click(function(){
         var check = isSandenSupply();
         if ($('#proposed_install_date_c').val() == '') {
-            var question = confirm("No Proposed Installer - are you sure to continue?");
+            $('#proposed_install_date_c_date').focus();
+            $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
+            var question = confirm("No Proposed Install Date - are you sure to continue?");
             if (!question) {
                 return false;
             }
+        } else {
+            $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
         }
         if ($('#quote_type_c').val() == "quote_type_sanden") {
             if ($('#proposed_dispatch_date_c').val() == '' && (check.SSI || check.SSO)) {
+                $('#proposed_dispatch_date_c_date').focus();
+                $('#proposed_dispatch_date_c_date').css('border', '4px solid #ff0000');
                 var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
                 if (question) {
                 }
                 else {
                     return false;
                 }
+            } else {
+                $('#proposed_dispatch_date_c_date').css('border', '1px solid #a5e8d6');
             }
         }
-        if ($('#proposed_delivery_date_c').val() == '' && $('#quote_type_c').val() == "quote_type_daikin") {
-            var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
-            if (question) {
-            }
-            else {
-                return false;
+        if ($('#quote_type_c').val() == "quote_type_daikin") {
+            if ($('#proposed_delivery_date_c').val() == '') {
+                $('#proposed_delivery_date_c_date').focus();
+                $('#proposed_delivery_date_c_date').css('border', '4px solid #ff0000');
+                var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
+                if (question) {
+                }
+                else {
+                    return false;
+                }
+            } else {
+                $('#proposed_delivery_date_c_date').css('border', '1px solid #a5e8d6');
             }
         }
         /**Save before*/
