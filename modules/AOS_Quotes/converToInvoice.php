@@ -81,14 +81,17 @@
     if (in_array($quote->quote_type_c,$array_product_type_daikin) || strpos(strtolower($quote->name),'daikin') !== false ) {
             $invoice->account_id2_c = 'def803db-f1ea-5f11-305e-5db106d4cf1e'; //old logic (daikin supplier)
             $invoice->account_id1_c = $quote->account_id4_c; //Plumber
+            $invoice->plumber_install_date_c = explode(" ",$quote->proposed_install_date_c)[0];
             $invoice->distance_to_suite_c = $quote->distance_to_daikin_installer_c;
             $invoice->delivery_date_time_c = $quote->proposed_delivery_date_c;
         $plumber_account->retrieve($quote->account_id4_c);
     } else if ($quote->quote_type_c == 'quote_type_sanden' || strpos(strtolower($quote->name),'sanden') !== false) {
         $invoice->account_id1_c = $quote->account_id3_c; //Plumber
         $invoice->distance_to_suite_c = $quote->distance_to_travel_c;
+        $invoice->plumber_install_date_c = explode(" ",$quote->proposed_install_date_c)[0];
         $invoice->account_id_c = $quote->account_id2_c; //Electrician
         $invoice->distance_to_suitecrm_c = $quote->distance_to_electrician_c;
+        $invoice->electrician_install_date_c = explode(" ",$quote->proposed_install_date_c)[0];
         $plumber_account->retrieve($invoice->account_id1_c);
         $invoice->dispatch_date_c = $quote->proposed_dispatch_date_c;
         //tuan code plumping template default
