@@ -70,7 +70,7 @@ class AOS_QuotesViewEdit extends ViewEdit
                     <input type="hidden" name="isDuplicate" value="'.$isDuplicate.'">
                     <input type="hidden" name="offset" value="'.$this->ev->offset.'">
                     <input type="hidden" name="action" value="'.$this->action.'">
-                    // <input type="hidden" name="sugar_body_only">
+                    <input type="hidden" name="sugar_body_only">
                 </form>';
         echo '<div id="hack_code">';
         echo $subpanel->display();
