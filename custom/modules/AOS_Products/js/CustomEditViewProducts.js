@@ -31,7 +31,7 @@ $(function () {
             var id_product_drupal = $('#id_product_drupal').val().trim();
             $("#link_edit_product_pesite").remove();
             if(id_product_drupal != ''){
-                let url_link_edit = "http://pure-electric.loc/product/"+id_product_drupal+"/edit?destination=/admin/commerce/products";
+                let url_link_edit = "https://pure-electric.com.au/product/"+id_product_drupal+"/edit?destination=/admin/commerce/products";
                 $("#id_product_drupal").parent().append("<p id='link_edit_product_pesite'><a  href='" +url_link_edit+ "' target='_blank'>Edit Product PE Site</a></p>");
             }
         }
