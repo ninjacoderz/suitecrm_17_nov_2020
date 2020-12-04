@@ -1,6 +1,6 @@
 <?php
     $fields = $_REQUEST;
-    $url = "http://pure-electric.com.au/pe_commerce/APIv1";
+    $url = "https://pure-electric.com.au/pe_commerce/APIv1";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
