@@ -96,6 +96,7 @@ $(function () {
                     break;
             }
             $('#alert_modal').modal('hide'); 
+            display_link_product_pesite();
         }
 
         function parse_textarea_to_fill_html(value){
