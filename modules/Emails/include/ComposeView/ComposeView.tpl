@@ -335,7 +335,7 @@
         var email_return_module = $('input[name="return_module"]').val();
         var email_id = $('input[name="record"]').val();
         var email_return_id = $('input[name="return_id"]').val();
-        if(email_return_module == ''){
+        if(email_return_module == '' || email_return_id == ''){
             email_return_module = $('input[name="email_return_module"]').val();
             email_id = $('input[name="email_id"]').val();
             email_return_id = $('input[name="email_return_id"]').val();

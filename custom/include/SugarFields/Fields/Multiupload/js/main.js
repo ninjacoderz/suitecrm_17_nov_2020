@@ -1373,81 +1373,19 @@ $(document).ready(function(){
         });
         
     });
-
-    //thienpb code 
-    $(document).on('click','.convert_img',function(){
+    $(document).on('click','.reload_after_rename',function(){
         SUGAR.ajaxUI.showLoadingPanel(); 
-        const files = [];
-        $("input[name='delete']").each(function(e){
-            if($(this).prop('checked')){
-                var filePath = $(this).closest('td').find(".download").data("url");
-                filePaths = filePath.split('/');
-                if(filePaths[filePaths.length -1].toLowerCase().indexOf('.heic') >= 0){
-                    files.push(filePath);
-                }
-            }
+        $(".files").empty();
+        $.ajax({
+            url: $('#fileupload').fileupload('option', 'url'),
+            dataType: 'json',
+            context: $('#fileupload')[0]
+        }).always(function () {
+            $(this).removeClass('fileupload-processing');
+        }).done(function (result) {
+            $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
         });
-        const funcs = files.map((file) => () => loadHEIC(file));
-        serial(funcs).then(() => {
-            setTimeout(function(){
-                $(".files").empty();                
-            $.ajax({
-                url: $('#fileupload').fileupload('option', 'url'),
-                dataType: 'json',
-                context: $('#fileupload')[0]
-            }).always(function () {
-                $(this).removeClass('fileupload-processing');
-    
-            }).done(function (result) {
-                $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
-                $('#get_all_files_sms span.glyphicon-refresh').addClass('hidden');
-            });
-            SUGAR.ajaxUI.hideLoadingPanel(); 
-            },2000);
-        }).catch((e) => console.log(e));
+        SUGAR.ajaxUI.hideLoadingPanel(); 
     });
 });
-
-function loadHEIC(url) {
-	return new Promise((resolve, reject) => {
-		fetch(url)
-			.then(function (x) {
-				return x.blob();
-			})
-			.then(function (x) {
-				return heic2any({  
-                    blob: x,
-                    toType: "image/jpg",
-                    quality: 0.5
-                });
-			})
-			.then(function (x) {
-				$.ajax({
-                    type: 'POST',
-                    url: 'index.php?entryPoint=convertHEICtoJPG&filePath='+url,
-                    data: x,
-                    async:false,
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                }).done(function(data) {
-                    
-                })
-				resolve();
-			})
-			.catch(function (e) {
-				reject(e);
-			});
-	});
-}
-
-const serial = (funcs) =>funcs.reduce(
-    (promise, func) =>
-        promise.then((result) =>
-            func().then(Array.prototype.concat.bind(result))
-        ),
-    Promise.resolve([])
-);
-
-
 

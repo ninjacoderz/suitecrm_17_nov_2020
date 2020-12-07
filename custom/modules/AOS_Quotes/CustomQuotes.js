@@ -2158,44 +2158,41 @@ function genExtraDaikinItemFunc(elem){
         if ($('#proposed_install_date_c').val() == '') {
             $('#proposed_install_date_c_date').focus();
             $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
-            setTimeout(function(){
-                var question = confirm("No Proposed Install Date - are you sure to continue?");
-                if (!question) {
-                    return false;
-                }
-            },1000);
+            var question = confirm("No Proposed Install Date - are you sure to continue?");
+            if (!question) {
+                return false;
+            }
+        } else {
+            $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
         }
         if ($('#quote_type_c').val() == "quote_type_sanden") {
             if ($('#proposed_dispatch_date_c').val() == '' && (check.SSI || check.SSO)) {
                 $('#proposed_dispatch_date_c_date').focus();
                 $('#proposed_dispatch_date_c_date').css('border', '4px solid #ff0000');
-                setTimeout(function(){
-                    var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
-                    if (question) {
-                    }
-                    else {
-                        return false;
-                    }
-                },1000);
+                var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
+                if (question) {
+                }
+                else {
+                    return false;
+                }
+            } else {
+                $('#proposed_dispatch_date_c_date').css('border', '1px solid #a5e8d6');
             }
         }
-        if ($('#proposed_delivery_date_c').val() == '' && $('#quote_type_c').val() == "quote_type_daikin") {
-            $('#proposed_delivery_date_c_date').focus();
-            $('#proposed_delivery_date_c_date').css('border', '4px solid #ff0000');
-            setTimeout(function(){
+        if ($('#quote_type_c').val() == "quote_type_daikin") {
+            if ($('#proposed_delivery_date_c').val() == '') {
+                $('#proposed_delivery_date_c_date').focus();
+                $('#proposed_delivery_date_c_date').css('border', '4px solid #ff0000');
                 var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
                 if (question) {
                 }
                 else {
                     return false;
                 }
-            },1000);
+            } else {
+                $('#proposed_delivery_date_c_date').css('border', '1px solid #a5e8d6');
+            }
         }
-        setTimeout(function(){
-            $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
-            $('#proposed_dispatch_date_c_date').css('border', '1px solid #a5e8d6');
-            $('#proposed_delivery_date_c_date').css('border', '1px solid #a5e8d6');
-        },5000);
         /**Save before*/
         $('#save_and_edit').trigger('click');
         

@@ -1341,8 +1341,21 @@ $entry_point_registry['API_Auspost'] = array(
     'auth' => false
 );
 
+//CRUD Product PE Site
+$entry_point_registry['CRUD_Product_PESite'] = array( 
+    'file' => 'custom/modules/AOS_Products/CRUD_Product_PESite.php',
+    'auth' => false
+);
+
 //thienpb code  -- convert heic file to jpg
 $entry_point_registry['convertHEICtoJPG'] = array( 
     'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomConvertHEICtoJPG.php',
+    'auth' => true
+
+);
+///
+//Tri code -- custom api get template checklist Quote Input
+$entry_point_registry['APIRenderListQuoteInputs'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIRenderListQuoteInputs.php',
     'auth' => true
 );

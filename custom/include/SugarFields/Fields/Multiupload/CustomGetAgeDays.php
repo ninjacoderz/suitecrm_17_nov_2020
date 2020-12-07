@@ -24,7 +24,7 @@ if($bean->id == '') {
     if (!$calculator) {
         $check = strtolower($bean->age_days_c);
         if (!(strpos($check,'days') !== false && strpos($check,'hours') !== false && strpos($check, 'minutes') !== false)) {
-            $date_converted = new DateTime();
+            $date_converted = DateTime::createFromFormat('U', time(), new DateTimeZone('UTC'));
             $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
             echo $date_diff;
         }

@@ -103,6 +103,22 @@ $dictionary['AOS_Products'] = array(
                 'reportable' => true,
                 'len' => '25',
             ),
+        'id_product_drupal' =>
+            array(
+                'required' => false,
+                'name' => 'id_product_drupal',
+                'vname' => 'LBL_ID_PRODUCT_DRUPAL',
+                'type' => 'varchar',
+                'massupdate' => 0,
+                'comments' => '',
+                'help' => '',
+                'importable' => 'true',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => '0',
+                'audited' => 1,
+                'reportable' => true,
+                'len' => '10',
+            ),
         'category' =>
             array(
                 'required' => false,

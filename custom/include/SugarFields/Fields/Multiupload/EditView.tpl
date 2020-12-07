@@ -14,6 +14,9 @@
         <div class="row fileupload-buttonbar">
             <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
+                <button type="button" class="button primary reload_after_rename">
+                    <span>RELOAD IMG</span>
+                </button>
                 <span class="btn btn-success fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Add files...</span>
@@ -36,10 +39,6 @@
                     <span>Delete</span>
                 </button>
                 <input type="checkbox" class="toggle">
-                <button type="button" class="button primary convert_img">
-                    <i class="glyphicon glyphicon-refresh"></i>
-                    <span>HEIC to JPG</span>
-                </button>
                 <!-- The global file processing state -->
                 <span class="fileupload-process"></span>
             </div>
@@ -107,5 +106,3 @@
 <script src="custom/include/SugarFields/Fields/Multiupload/js/jquery.fileupload-ui.js"></script>
 <!-- The main application script -->
 <script src="custom/include/SugarFields/Fields/Multiupload/js/main.js"></script>
-<!-- The heic application script -->
-<script src="custom/include/heic2any/heic2any.js"></script>
