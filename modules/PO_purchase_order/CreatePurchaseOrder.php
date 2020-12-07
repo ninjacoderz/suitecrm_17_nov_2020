@@ -500,6 +500,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
                 {
                     $row['id'] = '';
                     $row['parent_id'] = $purchaseOrder->id;
+                    $row['name'] = $row_pruduct['name'];
                     $row['parent_type'] = 'PO_purchase_order';
                     $row['group_id'] = $group_invoice->id;
                     $row['part_number'] = $row_pruduct['part_number'];
