@@ -7342,7 +7342,7 @@ $(document).ready(function(){
             var xeroType = "";
             if(previous == 'STC_Unpaid' && $(this).val() == 'Paid'){
                 xeroType = "STC";
-            }else if(previous == 'STC&VEEC Unpaid' && $(this).val() == 'STC_Unpaid'){
+            }else if(previous == 'STC_VEEC_Unpaid' && $(this).val() == 'STC_Unpaid'){
                 xeroType = "VEEC";
             }
             if(xeroType != ""){
