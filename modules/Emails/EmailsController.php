@@ -2015,7 +2015,89 @@ class EmailsController extends SugarController
                 //end - code render sms_template
             }
             //VUT-E- Invoice - Edit - Free promo code
-            
+
+
+            //EMAIL GET ROT Agreement
+            if($_REQUEST['email_type'] == 'EMAIL_GET_ROT_Agreement') {
+                $macro_nv = array();
+                $focusName = "AOS_Invoices";
+                $focus = BeanFactory::getBean($focusName, $_REQUEST['record_id']);
+    
+                if(!$focus->id) return;
+                /**
+                 * get Contact
+                 */
+                $contact = new Contact();
+                $contact->retrieve($focus->billing_contact_id);
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',
+                    '872b8b71-0374-c4ee-50aa-5f0e99e1728a'
+                );
+    
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+                //Change variables
+                $description_html = str_replace("\$aos_invoices_name",$focus->name,$description_html);
+                $description = str_replace("\$aos_invoices_name",$focus->name,$description);
+
+                $description_html = str_replace("\$aos_customer_name",$contact->first_name,$description_html);
+                $description = str_replace("\$aos_customer_name",$contact->first_name,$description);
+    
+                $customer_address = $focus->install_address_c . " ".  $focus->install_address_city_c . " ".  $focus->install_address_state_c. " ".  $focus->install_address_postalcode_c;
+                $description_html = str_replace("\$aos_invoices_install_address_c",$customer_address,$description_html);
+                $description = str_replace("\$aos_invoices_install_address_c",$customer_address,$description);
+
+                $custom_link_ROT_Agreement = '<a href="https://pure-electric.com.au/pesignaturepad?invoiceID=' .$focus->id .'&method=getCustomerInfo" target="_blank">Link Customer Agreement</a>' ;
+                
+                $description_html = str_replace("\$custom_link_ROT_Agreement",$custom_link_ROT_Agreement,$description_html);
+                $description = str_replace("\$custom_link_ROT_Agreement",$custom_link_ROT_Agreement,$description);
+               
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
+    
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; // duplicating the note with files
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+    
+                        //$noteTemplate->file_mime_type = 'application/pdf';
+                        //$noteTemplate->filename = $att;
+                        //$noteTemplate->name = $att;
+    
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+    
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+    
+                $this->bean->to_addrs_names = $contact->first_name.' '.$contact->last_name." <$contact->email1>";
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+
+            }
+
             //TriTruong Button Payment Reminder
             if($_REQUEST['email_type'] == "invoice_payment_reminder"){
                 $macro_nv = array();
