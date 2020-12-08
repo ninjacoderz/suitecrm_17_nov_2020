@@ -183,5 +183,12 @@ $vardefs_array = array(
                                             "", 
                                             "cl_Send_out_the_Certificates", 
                                             "" 
-                                        ] 
+    ],
+    "cl_Send_ROT_Link" => [
+                                            "Send ROT Link", 
+                                            "", 
+                                            "cl_Send_ROT_Link", 
+                                            "" 
+    ],
+
 );
