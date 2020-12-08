@@ -4216,7 +4216,7 @@ function genExtraDaikinItemFunc(elem){
          + "&assigned_user_id=" + $('input[name="assigned_user_id"]').val()
          + "&assigned_user_name=" + $('input[name="assigned_user_name"]').val()
          + "&billing_address_street=" + $("#billing_address_street").val()
-         + "&billing_address_street=" + $("#billing_address_street").val()
+         + "&billing_address_city=" + $("#billing_address_city").val()
          + "&billing_address_state=" + $("#billing_address_state").val()
          + "&billing_address_postalcode=" + $("#billing_address_postalcode").val();
      

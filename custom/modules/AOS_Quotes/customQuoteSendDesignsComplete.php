@@ -315,7 +315,7 @@ if ($quote->user_id_c == '')
 
 $quote->save();
 $address = $_GET["billing_address_street"] . ", " . 
-            $_GET["billing_address_street"] . ", " . 
+            $_GET["billing_address_city"] . ", " . 
             $_GET["billing_address_state"] . ", " . 
             $_GET["billing_address_postalcode"] ;
 $lat_long = get_lat_long($address);
@@ -337,7 +337,7 @@ $body = '
 Dear ' . $assigned_user_name . ',
 <br>Your solar designs for ' . $firstName . ' ' . $lastName . ' ' . $email1 . $email2
 . $_GET["billing_address_street"] . ' '
-. $_GET["billing_address_street"]. ' '
+. $_GET["billing_address_city"]. ' '
 . $_GET["billing_address_state"]. ' '
 . $_GET["billing_address_postalcode"] . ' are ready.<br>Designed by ' . $designerName .
 '.<br>
