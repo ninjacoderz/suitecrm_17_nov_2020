@@ -1466,6 +1466,15 @@
               } 
             }
             //VUT-E- From follow assign current id 
+            if ($(self).find("[name=return_module]").val() == "AOS_Invoices" || module_sugar_grp1 == 'AOS_Invoices') {
+              if($(self).find('[id=emails_email_templates_idb]').val() == '872b8b71-0374-c4ee-50aa-5f0e99e1728a'){
+                if(v.attributes.from == 'accounts@pure-electric.com.au'){
+                  selectOption.attr('selected', 'true');
+                  $(self).find('[name=inbound_email_id]').val($(self).find('[name=from_addr] option:selected').attr('inboundid'));
+                  $(self).find('[id=bcc_addrs_names]').val('');
+                }
+              } 
+            }
               // include signature for account
               $('<textarea></textarea>')
                 .val(v.emailSignatures.html)

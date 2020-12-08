@@ -2095,7 +2095,20 @@ class EmailsController extends SugarController
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
-
+                //start - code render sms_template  
+                global $current_user;
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    '45161090-6c10-3134-3a77-5f0ff10ec644' 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$first_name",  $contact->first_name , $body);
+                $custom_link_ROT_Agreement = ' https://pure-electric.com.au/pesignaturepad?invoiceID=' .$focus->id .'&method=getCustomerInfo' ;
+                $smsTemplate->body_c = $body . $custom_link_ROT_Agreement;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                //end - code render sms_template
             }
 
             //TriTruong Button Payment Reminder
