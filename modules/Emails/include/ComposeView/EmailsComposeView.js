@@ -1314,6 +1314,17 @@
               selectOption.text(optionValue);
               
             selectOption.appendTo(selectFrom);
+
+            if ($(self).find("[name=return_module]").val() == "AOS_Invoices" || module_sugar_grp1 == 'AOS_Invoices') {
+              if($(self).find('[id=emails_email_templates_idb]').val() == '872b8b71-0374-c4ee-50aa-5f0e99e1728a'){
+                if(v.attributes.from == 'accounts@pure-electric.com.au'){
+                  selectOption.attr('selected', 'true');
+                  $(self).find('[name=inbound_email_id]').val($(self).find('[name=from_addr] option:selected').attr('inboundid'));
+                  $(self).find('[id=bcc_addrs_names]').val('');
+                  selected_from = true;
+                }
+              } 
+            }
             //VUT-S-Select email operations@pure-electric.com.au when click Button Delivery Coming and Schedule / Sanden Tip
             if (module_sugar_grp1 == 'AOS_Invoices' || $(self).find("[name=return_module]").val() == "AOS_Invoices") {
               if($(self).find('[id=name]').val().indexOf('Delivery') >= 0 || $(self).find('[id=name]').val().indexOf('Sanden Service Tips') >= 0 || $(self).find('[id=emails_email_templates_idb]').val() == 'c537f9f6-99d8-231d-3e80-5d50acd8af6a') {
@@ -1466,15 +1477,7 @@
               } 
             }
             //VUT-E- From follow assign current id 
-            if ($(self).find("[name=return_module]").val() == "AOS_Invoices" || module_sugar_grp1 == 'AOS_Invoices') {
-              if($(self).find('[id=emails_email_templates_idb]').val() == '872b8b71-0374-c4ee-50aa-5f0e99e1728a'){
-                if(v.attributes.from == 'accounts@pure-electric.com.au'){
-                  selectOption.attr('selected', 'true');
-                  $(self).find('[name=inbound_email_id]').val($(self).find('[name=from_addr] option:selected').attr('inboundid'));
-                  $(self).find('[id=bcc_addrs_names]').val('');
-                }
-              } 
-            }
+
               // include signature for account
               $('<textarea></textarea>')
                 .val(v.emailSignatures.html)
