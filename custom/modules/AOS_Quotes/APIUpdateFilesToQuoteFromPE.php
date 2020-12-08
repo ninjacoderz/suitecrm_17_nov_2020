@@ -1049,7 +1049,6 @@ if($_POST['to_module'] == "aos_invoice"){
                 $quote_slgain->nmi_c = ($_POST['NMI_number'])? ($_POST['NMI_number']) : $quote_slgain->nmi_c;
                 $quote_slgain->roof_typec = ($_POST['main_roof_type'])? ($_POST['main_roof_type']) : $quote_slgain->roof_typec;
                 $quote_slgain->save();
-                convert_file_and_photo_to_quote($lead,$quote_slgain);
             }else {
                 $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
                 $curl = curl_init();
@@ -1063,16 +1062,38 @@ if($_POST['to_module'] == "aos_invoice"){
                 curl_setopt($curl, CURLOPT_HEADER, true);
                 curl_setopt($curl, CURLOPT_VERBOSE, 1);
                 curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
-                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);                                      
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);                                      
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);                                                                         
                 curl_setopt($curl, CURLOPT_HEADERFUNCTION, "readHeader");
                 $result = curl_exec($curl);
                 curl_close($curl);
-                $quote_slgain = new AOS_Quotes();
-                $quote_slgain->retrieve($lead->create_solar_quote_num_c);
             }
         }
+            
+        //thienpb update
+        $lead = new Lead();//refresh field
+        $lead->retrieve($lead_id);
+
+        $fields = ['create_daikin_quote_num_c' ,'daikin_nexura_quote_num_c' ,'create_solar_quote_fqv_num_c' , 'create_methven_quote_num_c' , 'create_solar_quote_fqs_num_c' , 'create_off_grid_button_num_c', 'create_solar_quote_num_c'];
+        foreach($fields as $fieldName){
+            if($lead->$fieldName != ''){
+                $quoteNew =  new AOS_Quotes();
+                $quoteNew->retrieve($lead->$fieldName);
+                if(!empty($quoteNew->id)){
+                    convert_file_and_photo_to_quote($lead,$quoteNew);
+
+                    //copy to invoice
+                    $quoteNew->load_relationships('AOS_Invoices');                    
+                    $invoices = $quoteNew->get_linked_beans('aos_quotes_aos_invoices','AOS_Invoices');
+                    if(count($invoices) > 0){
+                        foreach($invoices as $invoiceNew){
+                            convert_file_and_photo_to_quote($quoteNew,$invoiceNew);
+                        }
+                    }
+                    
+                }
+            }
+        }
+
         $mail = new SugarPHPMailer();  
         $mail->setMailerForSystem();  
         $mail->From = 'info@pure-electric.com.au';  
@@ -1442,8 +1463,26 @@ function render_json_invoice($result ,$record_id){
     }
 return $result;
 }
-function convert_file_and_photo_to_quote($lead,$quote){
-    $get_all_photo = dirToArray($_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$lead->installation_pictures_c.'/') ;
+function convert_file_and_photo_to_quote($from,$to){
+    
+    $location = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
+    
+    if($from->module_name == "Leads" || $from->module_name == "AOS_Invoices"){
+        $fromFolderName = $from->installation_pictures_c ;
+    }else{
+        $fromFolderName = $from->pre_install_photos_c ;
+    }
+
+    if($to->module_name == "Leads"  || $to->module_name == "AOS_Invoices"){
+        $toFolderName   = $to->installation_pictures_c;
+    }else{
+        $toFolderName   = $to->pre_install_photos_c;
+    }
+    
+    $fromDir = $location. $fromFolderName;
+    $toDir   = $location. $toFolderName;
+    
+    $allPhotos = dirToArray($fromDir) ;
     $array_convert_file_name = array(
         'switchboard' => '_Switchboard_',
         'upclose' => '_Photo_upclose_',
@@ -1452,7 +1491,7 @@ function convert_file_and_photo_to_quote($lead,$quote){
         'electricity_bill' => '_Electricity_bill_',
     );
 
-    foreach($get_all_photo as $photo){
+    foreach($allPhotos as $photo){
         $file_name = $photo;
         foreach ($array_convert_file_name as $key => $label_new_file) {
             $condition_change_file = false;
@@ -1471,8 +1510,7 @@ function convert_file_and_photo_to_quote($lead,$quote){
                 $inv_file_path = 
                 $i = 1;
                 $will_rename = $new_file_name;
-                $current_file_path_quote = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$quote->pre_install_photos_c;
-                while( !empty(glob($current_file_path_quote.'/'.$will_rename."*"))){
+                while( !empty(glob($toDir.'/'.$will_rename."*"))){
                   $will_rename = $new_file_name.$i;
                   $i++;
                 }
@@ -1485,13 +1523,20 @@ function convert_file_and_photo_to_quote($lead,$quote){
             }
         }
 
-        $folderName_old  = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$lead->installation_pictures_c.'/'.$file_name;
-        $folderName_new  = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$quote->pre_install_photos_c.'/';
+        $folderName_old  = $fromDir .'/'.$file_name;
+        $folderName_new  = $toDir.'/';
       
 
         //check exists folder
         if(!file_exists ($folderName_new)) {
             mkdir($folderName_new);
+            if($to->module_name == "Leads" || $to->module_name == "AOS_Invoices"){
+                $to->installation_pictures_c = $folderName_new;
+                $to->save();
+            }else{
+                $to->pre_install_photos_c = $folderName_new;
+                $to->save();
+            }
         }
         copy($folderName_old, $folderName_new.$new_file_name);
         resize_image($new_file_name,$folderName_new);
