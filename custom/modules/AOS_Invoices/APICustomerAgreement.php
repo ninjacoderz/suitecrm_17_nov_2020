@@ -52,6 +52,7 @@ switch ($method) {
         $dataRequest = $_REQUEST['dataRequest'];
         $data_return = render_json_invoice($Invoice);
         CustomerAgreeSolor($Invoice->installation_pictures_c);
+        Send_Email_Notification_solor($Invoice,$dataRequest);
         echo json_encode($data_return);die();
         break;
         
@@ -145,10 +146,9 @@ function generatePDF_solor($dataRequest,$foldeId){
     // now write some text above the imported page
     $pdf->SetFont('Helvetica');
     $pdf->SetTextColor(0, 0, 0);
-    
-    $pdf->Write($pdf->SetXY(35, 65), $dataRequest['account_name']);
+    $pdf->Write($pdf->SetXY(35, 65),  html_entity_decode($dataRequest['account_name'],ENT_QUOTES));
     $pdf->Write($pdf->SetXY(118, 275), $dataRequest['your_date']);
-    $pdf->Write($pdf->SetXY(118, 235), $dataRequest['customer_contact_name'] );
+    $pdf->Write($pdf->SetXY(118, 235), html_entity_decode($dataRequest['customer_contact_name'],ENT_QUOTES));
     $pdf->Write($pdf->SetXY(118, 262), $dataRequest['your_abn']);
     $ds_dir =  $_SERVER['DOCUMENT_ROOT'] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' .$foldeId;
     $pdf->Image($ds_dir.'/signature_solor_draft.png' ,120,213,50,10);
@@ -415,4 +415,95 @@ function addToNotes_Invoice($link_file,$Invoice){
     }else{
         return false;
     }
+}
+
+function Send_Email_Notification_solor($Invoice,$dataRequest){
+    global $sugar_config;
+    if($Invoice->id == '') { return false;}
+    $foldeId = $Invoice->installation_pictures_c;
+    $ds_dir =  $_SERVER['DOCUMENT_ROOT'] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' .$foldeId;
+    
+    $files = array(
+        'signature_link' => $ds_dir ."/signature_solor.png",
+        'CustomerAgreement_link' => $ds_dir ."/CustomerAgreement_Solar.pdf",
+    );
+
+
+    $customer_name = html_entity_decode($dataRequest['account_name'],ENT_QUOTES) ;
+    $your_date = $dataRequest['your_date'];
+    $customer_contact_name = html_entity_decode($dataRequest['customer_contact_name'],ENT_QUOTES);
+    $your_abn = $dataRequest['your_abn'];
+
+
+    $emailObj = new Email();
+    $defaults = $emailObj->getSystemDefaultEmail();
+    $mail = new SugarPHPMailer();
+    $mail->setMailerForSystem();
+    $mail->From = $defaults['email'];
+    $mail->FromName = $defaults['name'];
+    $mail->IsHTML(true);
+    $mail->ClearAllRecipients();
+    $mail->ClearReplyTos();
+    $mail->Subject =  $customer_name.' Inv#'.$Invoice->number.' submitted the Customer Agreement Solor Form';
+
+    $style_td = 'padding-top: 5px; font-weight: bold;  text-align: left;border: 1px solid black;';
+
+    $style_button  = 'color:#fff;font-family:Helvetica;font-size: 15px;margin:3px;line-height:100%;text-align:center;text-decoration:none;background-color:#428bca;border:1px solid #428bca;display:inline-block;font-weight:bold;padding-top: 10px;padding-right: 16px;padding-bottom: 10px;padding-left: 16px;border-radius:5px;';
+    
+    $InformationInvoice = 
+    '<h2 style="text-align:center;">Customer Agreement Solor Form</h2>'
+    .'<table style="
+            border-collapse: collapse;
+            border: 1px solid black;
+            table-layout: auto;
+            width: 100%;" style="
+            border-collapse: collapse;
+            border: 1px solid black;
+            table-layout: auto;
+            width: 100%;">
+        <tbody style="padding-top: 15px; padding-bottom:15px; width: 100%">
+            <tr>
+                <td style="'. $style_td .'">Invoice Name:</td>
+                <td style="'. $style_td .'">'.$Invoice->name.'</td>
+                <td style="'. $style_td .'">Invoice Number:</td>
+                <td style="'. $style_td .'">'.$Invoice->number.'</td>
+            </tr>
+            <tr>
+                <td style="'. $style_td .'">Account Name:</td>
+                <td style="'. $style_td .'">'. $customer_name.'</td>
+                <td style="'. $style_td .'">Customer Contact Name:</td>
+                <td style="'. $style_td .'">'.$customer_contact_name.'</td>
+            </tr>
+            <tr>
+                <td style="'. $style_td .'">Date:</td>
+                <td style="'. $style_td .'">'.$your_date.'</td>
+                <td style="'. $style_td .'">ABN:</td>
+                <td style="'. $style_td .'">'.$your_abn.'</td>
+            </tr>
+        </tbody>
+    </table>';
+    $mail->Body = '<div><p>Hi Accounts Team,</p><p>' 
+        . $customer_name . ' submitted the Customer Agreement Solor Form</p>' 
+        . '</div>'
+    .$InformationInvoice
+    .'<br><div><a style="'.$style_button.'" target="_blank" href="https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record='.$Invoice->id.'">Link CRM Invoice →</a></div>';
+ 
+    foreach ($files as $key => $value) {
+        $note = addToNotes_Invoice($value,$Invoice);
+        if($note){
+            $file_name = $note->filename;
+      
+            $location = $sugar_config['upload_dir'].$note->id;
+            $mime_type = $note->file_mime_type;
+            // Add attachment to email
+            $mail->AddAttachment($location, $file_name, 'base64', $mime_type);
+        }
+    }
+
+    $mail->AddAddress('info@pure-electric.com.au');
+    //$mail->AddAddress("nguyenphudung93.dn@gmail.com");
+    //$mail->AddAddress('accounts@pure-electric.com.au');
+    $mail->prepForOutbound();    
+    $mail->setMailerForSystem();   
+    $sent = $mail->send();
 }
