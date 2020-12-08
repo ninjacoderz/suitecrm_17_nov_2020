@@ -357,6 +357,9 @@ $(document).ready(function(){
                         }
                     });
                     
+                    if ($('#quote_type_c').val() != 'quote_type_sanden') {
+                        $('#cl_Send_ROT_Link').closest('.edit-view-row-item').hide();
+                   }
                     if(data_string == '') {
                         data_string = json_data['data'];
                     }
