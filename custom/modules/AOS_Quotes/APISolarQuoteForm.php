@@ -481,21 +481,24 @@
         }
         
         if(  $primary_address_state == "VIC"){
-            $html_vic = '<table style="margin-bottom:20px;text-align:left;border-collapse:collapse;width:735px;">
-                        <tbody>
-                        <tr>
-                            <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
-                            <td style="padding: 5px; border: .5px solid #8a8a8a;">'. (($vic_rebate == "yes_rebate") ? "Yes": 'No') .'</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Loan to your solar pricing?</td>
-                            <td style="padding: 5px; border: .5px solid #8a8a8a;width: 45%;" >'. (($vic_loan == "yes_loan") ? "Yes": 'No') .'</td>
-                        </tr>
-                        </tbody></table>';
-            $body_html = str_replace("\$aos_solar_vic_loan_c", $html_vic , $body_html);
+            $body_html = str_replace("\$aos_quote_solar_vic_rebate_c",   (($vic_rebate == "yes_rebate") ? "Yes": 'No')  , $body_html);
+            $body_html = str_replace("\$aos_quote_solar_loan_c",   (($vic_rebate == "yes_loan") ? "Yes": 'No')  , $body_html);
+            // $html_vic = '<table style="margin-bottom:20px;text-align:left;border-collapse:collapse;width:735px;">
+            //             <tbody>
+            //             <tr>
+            //                 <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
+            //                 <td style="padding: 5px; border: .5px solid #8a8a8a;">'. (($vic_rebate == "yes_rebate") ? "Yes": 'No') .'</td>
+            //             </tr>
+            //             <tr>
+            //                 <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Loan to your solar pricing?</td>
+            //                 <td style="padding: 5px; border: .5px solid #8a8a8a;width: 45%;" >'. (($vic_loan == "yes_loan") ? "Yes": 'No') .'</td>
+            //             </tr>
+            //             </tbody></table>';
+            // $body_html = str_replace("\$aos_solar_vic_loan_c", $html_vic , $body_html);
             // $body_html = str_replace("\$aos_quotes_loan_c",    ($vic_loan == "yes_loan") ? "Yes": 'No' , $body_html);
         }else {
-            $body_html = str_replace("\$aos_solar_vic_loan_c", " " , $body_html);
+            $body_html = str_replace("\$aos_quote_solar_vic_rebate_c",  "No" , $body_html);
+            $body_html = str_replace("\$aos_quote_solar_loan_c",   "No"  , $body_html);
         }
         
 

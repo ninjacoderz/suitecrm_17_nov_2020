@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    var dataType = "Sanden";
     $("#quote_note_inputs_c").closest('.edit-view-field').parent().parent().hide();
     var html_group_custom_quote_inputs = 
     '<div id="group_custom_quote_inputs_checklist" class="row detail-view-row"></div>';
@@ -40,7 +41,7 @@ $(document).ready(function() {
         var jsonString= JSON.stringify(data);
         return jsonString;
     }
-    function render_checkbox_invoice_checklist(){
+    function render_checkbox_quote_checklist(){
         $.ajax({
             url: '/index.php?entryPoint=APIRenderListQuoteInputs&action=render',
             success: function (result) {
@@ -49,14 +50,14 @@ $(document).ready(function() {
                    var json_data = $.parseJSON(result);
                    $("#group_custom_quote_inputs_checklist").append(json_data['template_html']);
                    
-                //    render_data_checkbox_invoice_checklist();
+                   render_select_option_quote_input();
                 } catch (error) {
                     console.log(error)
                 }
             }
         });
     }
-    render_checkbox_invoice_checklist();
+    render_checkbox_quote_checklist();
     function render_data_quoteInputs(data) {
         if(data == '') {
             data = '{"quote_main_tank_water":"","quote_number_sanden":"","quote_tank_size":"","quote_plumbing_installation_by_pure":"","quote_electrical_installation_by_pure":"","quote_quick_connection_kit":"","quote_provide_stcs":"","quote_pickup_site_delivery":"","quote_choice_type_install":"","quote_replacement_urgent":"","quote_choice_type_product":"","quote_gas_connection":"","quote_product_choice_type_gas":"","quote_electric_storage_located":"","quote_about_outside":"","quote_about_inside":"","quote_product_choice_type_solar":"","quote_solar_boosted":"","quote_product_choice_type_wood":"","quote_product_choice_type_lpg":"","quote_new_place_choice":"","quote_existing_install_location":"","quote_install_location_access":"","quote_stair_access":"","quote_alectrical_already":"","quote_hot_cold_connections":"","quote_product_choice_type_electric":"","quote_located_within":"Underground","quote_additional_untempered":"","quote_concrete_slab":"","quote_concrete_pavers":"","quote_hot_water_rebate":""}';
@@ -64,27 +65,24 @@ $(document).ready(function() {
         }else{
             data =  $.parseJSON(data);
         }  
-        console.log(data);
-        $.each(data,function(k,v){
-            console.log(k, v);
-            // $('#'+k).val(v);
-        });
+        return data;
     }
-    var dataType = "Sanden";
-    if(dataType == "Sanden") {
-        debugger;
-        var data = $("#quote_note_inputs_c").val();
-        render_data_quoteInputs(data);
-        var group_address_install = '<div id="group_address_install" class="col-xs-12 edit-view-row-item col-sm-6"><fieldset> <legend> Install Address </legend></fieldset>';
-        $("#install_address_c").parent().parent().parent().children().each(function(index,item){      
-                if(index >=8 && index <= 20){
-                    if(this.className != 'clear'){
-                        group_address_install += this.innerHTML; 
-                    }
-                    item.remove();
-                }               
-        });
-        group_address_install += '</div>';
+    
+    
+    function render_select_option_quote_input(){
+        if(dataType == "Sanden") {
+            var data = $("#quote_note_inputs_c").val();
+            const parseData = render_data_quoteInputs(data);
+            if(parseData != '') {
+                for (const [key, value] of Object.entries(parseData)) {
+                    selectElement(key, value);
+                }
+            }
+        }
     }
 
-})
+});
+function selectElement(id, valueToSelect) {    
+    var element = document.getElementById(id);
+    element.value = valueToSelect;
+}

@@ -675,7 +675,7 @@ $(function () {
             
             if ($("#plumber_po_c").val() != "") {
                 //?module=PO_purchase_order&offset=1&stamp=1517294972082855000&return_module=PO_purchase_order&action=EditView&record=3b056120-a5d4-ae50-8e32-5a7015aedb4a
-                var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#plumber_po_c").val().trim() + "'>" + "Open Purchase Order" + "</a></div>";
+                var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=DetailView&record=" + $("#plumber_po_c").val().trim() + "'>Open Purchase Order</a><a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#plumber_po_c").val().trim() + "'>[E]</a></div>";
                 if( $('#quote_type_c').val() =="quote_type_daikin" || $('#quote_type_c').val() =="quote_type_nexura"){
                     href += "<div class='open-upload-install-photos'>Upload Install Photos: <a target='_blank' href='https://pure-electric.com.au/upload_file_daikin/for-daikin-plumbing?invoice_id="+$('input[name="record"]').val()+"'>Open Upload For Daikin Plumber</a></div>";
                 }else {
@@ -690,7 +690,7 @@ $(function () {
 
             if ($("#electrical_po_c").val() != "") {
                 //?module=PO_purchase_order&offset=1&stamp=1517294972082855000&return_module=PO_purchase_order&action=EditView&record=3b056120-a5d4-ae50-8e32-5a7015aedb4a
-                var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#electrical_po_c").val().trim() + "'>" + "Open Purchase Order" + "</a></div>";
+                var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=DetailView&record=" + $("#electrical_po_c").val().trim() + "'>Open Purchase Order</a><a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#electrical_po_c").val().trim() + "'>[E]</a></div>";
                     href += "<div class='open-upload-install-photos'>Upload Install Photos: <a target='_blank' href='https://pure-electric.com.au/upload_file_sanden/for-electrician?invoice_id="+$('input[name="record"]').val()+"'>Open Upload For Electrician</a></div>";
                 $('#createElectricalPO').siblings().empty();
                 $('#createElectricalPO').parent().append(href);

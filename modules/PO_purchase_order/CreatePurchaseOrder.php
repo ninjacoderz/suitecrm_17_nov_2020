@@ -127,7 +127,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
                 
     if($is_sanden && $po_type == "plumber"){
-
+        $purchaseOrder->po_type_c = 'installer';
         $row['id'] = "";
         $row['name'] = 'Sanden Install';
         $row['currency_id'] = '-99';
@@ -227,7 +227,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
 
     if($is_daikin && $po_type == "plumber"){
-
+        $purchaseOrder->po_type_c = 'installer';
         $row['id'] = "";
         $row['name'] = 'Daikin Install';
         $row['currency_id'] = '-99';
@@ -317,7 +317,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
     // Electrical 
     if($is_sanden && $po_type == "electrical"){
-
+        $purchaseOrder->po_type_c = 'installer';
         $row['id'] = "";
         $row['name'] = 'Sanden Install';
         $row['currency_id'] = '-99';
@@ -701,20 +701,39 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $purchaseOrder->tax_amount = format_number($group_total/10);
         $purchaseOrder->total_amount = format_number($group_total*1.1);
         //VUT-S-Create subject for Daikin PO
-        $daikin_product_infomation = $_REQUEST['daikin_product'];
-        $daikin_products = html_entity_decode($daikin_product_infomation);
-        $daikin_product = json_decode($daikin_products);
-        $product_names = array();
-        foreach ($daikin_product as $key => $value) {
-            if (strpos(strtolower($value->product_name), 'small') !== false) { $value->product_name = str_ireplace('small','', $value->product_name);} 
-            if (strpos(strtolower($value->product_name), 'medium') !== false) { $value->product_name = str_ireplace('medium','', $value->product_name);} 
-            if (strpos(strtolower($value->product_name), 'large') !== false) { $value->product_name = str_ireplace('large','', $value->product_name);} 
-            array_push($product_names, trim($value->product_name));
+        $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'PO_purchase_order' AND parent_id = '".$purchaseOrder->id."' AND deleted = 0";
+        $result = $db->query($sql);
+        $daikin_products = array();
+        while ($row = $db->fetchByAssoc($result)) {
+          $product_name = $row['name'];
+          $partnumber = $row['part_number'];
+          if (strpos($partnumber,'FTXM')!== false || strpos($partnumber,'FVXG')!== false || strpos($partnumber,'FTXZ')!== false || strpos($partnumber,'FTXJ')!== false ) {
+            $product_name = trim(str_replace("Daikin", "",$product_name));
+            array_push($daikin_products,$product_name);
+          }
+          if (strpos($partnumber,'BRP072') !== false) {
+            array_push($daikin_products, 'Wifi');
+          }
         }
-        $array_product = array_count_values($product_names);        
-        foreach ($array_product as $name => $quantity) {
+        $daikin_products = array_count_values($daikin_products);
+        foreach ($daikin_products as $name => $quantity) {
             $purchaseOrder->name .= $quantity.'x'.$name.' ';
         }
+                
+        // $daikin_product_infomation = $_REQUEST['daikin_product'];
+        // $daikin_products = html_entity_decode($daikin_product_infomation);
+        // $daikin_product = json_decode($daikin_products);
+        // $product_names = array();
+        // foreach ($daikin_product as $key => $value) {
+        //     if (strpos(strtolower($value->product_name), 'small') !== false) { $value->product_name = str_ireplace('small','', $value->product_name);} 
+        //     if (strpos(strtolower($value->product_name), 'medium') !== false) { $value->product_name = str_ireplace('medium','', $value->product_name);} 
+        //     if (strpos(strtolower($value->product_name), 'large') !== false) { $value->product_name = str_ireplace('large','', $value->product_name);} 
+        //     array_push($product_names, trim($value->product_name));
+        // }
+        // $array_product = array_count_values($product_names);        
+        // foreach ($array_product as $name => $quantity) {
+        //     $purchaseOrder->name .= $quantity.'x'.$name.' ';
+        // }
         //**address + time */
         // $invoice->delivery_contact_suburb_c = $_REQUEST["delivery_contact_suburb"];
         // $invoice->delivery_contact_state_c = $_REQUEST["delivery_contact_state"];
@@ -748,7 +767,9 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $invoice->daikin_po_c = $purchaseOrder->id;
     }
     $invoice->save();
-    echo $purchaseOrder->id;
+    if ($_REQUEST["type"] != '') {
+        echo $purchaseOrder->id;
+    }
 
 }
 

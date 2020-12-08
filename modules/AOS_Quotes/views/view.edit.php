@@ -62,9 +62,15 @@ class AOS_QuotesViewEdit extends ViewEdit
         $subpanel = new SubPanelTiles($this->bean, $this->module);
         $subpanel_internal_notes = $subpanel->subpanel_definitions->layout_defs['subpanel_setup']['aos_quotes_pe_internal_note_1'];
         $subpanel->subpanel_definitions->layout_defs['subpanel_setup'] = ['aos_quotes_pe_internal_note_1' => $subpanel_internal_notes ];
+        $isDuplicate = $this->ev->isDuplicate ? 'true' : 'false'; //VUT
+
         echo '<form id="DetailView" method="POST" name="DetailView">
-                    <input hidden name="module" value="AOS_Quotes" />
-                    <input hidden name="record" value="'. $this->ev->focus->id.'" />
+                    <input type="hidden" name="module" value="AOS_Quotes" />
+                    <input type="hidden" name="record" value="'. $this->ev->focus->id.'" />
+                    <input type="hidden" name="isDuplicate" value="'.$isDuplicate.'">
+                    <input type="hidden" name="offset" value="'.$this->ev->offset.'">
+                    <input type="hidden" name="action" value="'.$this->action.'">
+                    // <input type="hidden" name="sugar_body_only">
                 </form>';
         echo '<div id="hack_code">';
         echo $subpanel->display();
