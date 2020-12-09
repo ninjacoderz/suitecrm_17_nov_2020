@@ -389,7 +389,22 @@ $(function () {
 
     //VUT-S-Create button "update infomation"
     $("#home_phone_c").parents('.edit-view-row-item').append('<br> <button type="button" class="button primary" id="update_phone_number"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Update infomation</button>');
-    $('#abn_c').parents('.edit-view-row-item').append('<br> <button type="button" class="button primary" id="getData_ABN"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Get ABN</button>');
+    $('#abn_c').parent().siblings('.label').append('<br><button type="button" class="button primary" id="getData_ABN"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Get ABN</button>');
+    $(document).on('change', '#abn_c',function(){
+        showlinkABN();
+    });
+    showlinkABN();
+    function showlinkABN() {
+        // debugger
+        if ($("#abn_c").val() == "") {
+            $('.link_abn').remove();
+            return;
+        }
+        var abn_num = $("#abn_c").val().replace(/\s+/g,'');
+        var href = "<a class='link_abn' target='_blank' href='https://abr.business.gov.au/ABN/View?id=" + abn_num +"'> https://abr.business.gov.au/ABN/View?id=" + abn_num + "</a>";
+        $('.link_abn').remove();
+        $('#abn_c').parent().after(href);
+    }
 
     $('#update_phone_number').click(function(){
         var build_url = "/index.php?entryPoint=UpdateInfomationAccount";
