@@ -212,9 +212,10 @@
         // dung code --  update check filename
         $file_arr = array_map('strtolower', $file_arr);      
         if(in_array(strtolower($note['file_name']),$file_arr)){
-            $fp = fopen($destination, "w+");
-            fwrite($fp, '');
-            fclose($fp);
+            continue; // thienpb update logic show image
+            // $fp = fopen($destination, "w+");
+            // fwrite($fp, '');
+            // fclose($fp);
         }else{
             copy( $source, $destination);
         }
@@ -333,10 +334,11 @@
             // Thienpb update check filename
             $file_arr = array_map('strtolower', $file_arr);
             $check_= false;
-            $fp = fopen($folder.'/'. $filename, "w+");
             if(in_array(strtolower($filename),$file_arr)){
-                fwrite($fp, '');
+                //$fp = fopen($folder.'/'. $filename, "w+");
+                //fwrite($fp, '');
                 $check_ = true;
+                continue; // thienpb update logic show image
             }else{
                 $fp = fopen($folder.'/'. $filename, "w+");
                 fwrite($fp, $data);
