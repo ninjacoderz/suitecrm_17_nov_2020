@@ -2108,6 +2108,15 @@ class EmailsController extends SugarController
                 $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
                 $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
                 $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                $path_file_json_sms_signture = dirname(__FILE__) .'/../../custom/modules/Users/json_sms_signture.json';
+                $json_data = json_decode(file_get_contents($path_file_json_sms_signture),true);
+                if(isset($json_data)) {
+                    if(isset($json_data['1588918966'])) {
+                        $this->bean->sms_message .='.'. PHP_EOL.PHP_EOL .$json_data['1588918966']['content'];
+                        $this->bean->sms_signture = $json_data['1588918966']['content'];
+                    }
+                }
+
                 //end - code render sms_template
             }
 
@@ -4432,8 +4441,12 @@ class EmailsController extends SugarController
         //end - code render sms_template
         //devise content sms and sms signture
         if( $this->bean->emails_pe_smstemplate_idb != ''){
-            $this->bean->sms_signture = $current_user->sms_signature_c;
-            $this->bean->sms_content = trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus),ENT_QUOTES)));
+            if( $this->bean->sms_signture == '') {
+                $this->bean->sms_signture = $current_user->sms_signature_c;
+            };
+            if(  $this->bean->sms_content == '') {
+                $this->bean->sms_content = trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus),ENT_QUOTES)));
+            };       
         }
         //dung code-- display number client 
         if($focus->id != ''){
