@@ -1092,8 +1092,9 @@ if($_POST['to_module'] == "aos_invoice"){
                     
                 }
             }
-        }
-
+        }     
+        $lead->status = "Info_Uploaded";
+        $lead->save();   
         $mail = new SugarPHPMailer();  
         $mail->setMailerForSystem();  
         $mail->From = 'info@pure-electric.com.au';  
