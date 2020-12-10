@@ -2,7 +2,7 @@
     /*
         thienpb code for create lead and quote fromPE
     */
-    //$rq_data = json_decode('{"module_name":"Leads","name_value_list":{"account_name":"Demo Demo","first_name":"Demo","last_name":"Demo","primary_address_street":"38 Ewing St","primary_address_city":"BRUNSWICK","primary_address_state":"VIC","primary_address_postalcode":"3056","primary_address_country":"Australia","email1":"demo2@gmail.com","phone_mobile":"0404820895","lead_source":"Web Site","orderID":"558","products":[{"title":"Methven Kiri Satinjet Graphite ULF Showerhead Handset","quantity":"1.00"}],"assigned_user_id":"61e04d4b-86ef-00f2-c669-579eb1bb58fa","couponCode":[{"label":"PE 146$","amount":"-15"}],"ship_method_id":"2"}}',true);
+    // $rq_data = json_decode('{"module_name":"Leads","name_value_list":{"account_name":"Thien Test","first_name":"Thien","last_name":"Test","primary_address_street":"142 Alabaster Terrace","primary_address_city":"HILLARYS","primary_address_state":"WA","primary_address_postalcode":"6025","primary_address_country":"Australia","email1":"thienpb89@gmail.com","phone_mobile":"0404820895","lead_source":"Web Site","orderID":"558","products":[{"title":"Methven Kiri Satinjet Graphite ULF Showerhead Handset","quantity":"1.00"}],"assigned_user_id":"61e04d4b-86ef-00f2-c669-579eb1bb58fa","couponCode":[{"label":"PE 146$","amount":"-15"}],"ship_method_id":"2"}}',true);
     $rq_data = $_POST;
     if(isset($rq_data['module_name']) && isset($rq_data['name_value_list'])){
         $rq_lead_info = $rq_data['name_value_list'];
@@ -26,7 +26,7 @@
         // $couponCode = '';
         //check Lead existing
         $db = DBManagerFactory::getInstance();
-        $sql ="SELECT leads.id FROM leads INNER JOIN email_addr_bean_rel ON email_addr_bean_rel.bean_id = leads.id INNER JOIN email_addresses ON email_addr_bean_rel.email_address_id = email_addresses.id WHERE leads.deleted = 0 AND email_addresses.email_address = '$email1' LIMIT 1";
+        $sql ="SELECT leads.id FROM leads INNER JOIN email_addr_bean_rel ON email_addr_bean_rel.bean_id = leads.id INNER JOIN email_addresses ON email_addr_bean_rel.email_address_id = email_addresses.id WHERE leads.deleted = 0 AND email_addresses.email_address = '$email1' ORDER BY leads.date_entered DESC  LIMIT 1";
         $ret = $db->query($sql);
         $row = $db->fetchByAssoc($ret);
 
@@ -112,11 +112,61 @@
         }else{
             $lead =  new Lead();
             $lead->retrieve($row['id']);
-            $lead->status = 'Converted';
-            convertNewLeadToQuote($lead, $orderID , $products,$couponCode,$ship_method_id);
-            $lead->save();
+            if($lead->id){
+                $account = new Account();
+                $account->retrieve($lead->account_id);
+                if($account->id){
+                    $account->load_relationships('Contacts');
+                    $contacts = $account->get_linked_beans('contacts','Contacts');
+                    $contactOld = array_filter($contacts,function($a) use($email1){
+                        return ($a->email1 == $email1 && $a->primary_address_street == $primary_address_street);
+                    });
+
+                    if(count($contactOld) > 0){
+                        usort($contactOld, function($a, $b) {
+                            return strtotime($b->date_modified) - strtotime($a->date_modified);
+                        });
+                        $contact =  $contactOld[0];
+                    }else{
+                        // create new contact
+                        $contact = new Contact();
+                        $contact->first_name = $first_name;
+                        $contact->last_name = $last_name;
+                        $contact->phone_mobile = $phone_mobile;
+                        $contact->primary_address_street = $primary_address_street;
+                        $contact->primary_address_city = $primary_address_city;
+                        $contact->primary_address_state = $primary_address_state;
+                        $contact->primary_address_postalcode = $primary_address_postalcode;
+                        $contact->primary_address_country = $primary_address_country;
+                        $contact->assigned_user_id = $assigned_user_id;
+                        $contact->email1 = $email1;
+                        $contact->account_id = $account->id;
+                        $contact->save();
+
+                        //set primaty contact for account
+                        $account->primary_contact_c = $contact->id;
+                        $account->save();
+                    }
+                }
+                //clone new lead
+                $leadClone =  clone $lead;
+                $leadClone->first_name                  = $first_name;
+                $leadClone->last_name                   = $last_name;
+                $leadClone->primary_address_street      = $primary_address_street;
+                $leadClone->primary_address_city        = $primary_address_city;
+                $leadClone->primary_address_state       = $primary_address_state;
+                $leadClone->primary_address_postalcode  = $primary_address_postalcode;
+                $leadClone->primary_address_country     = $primary_address_country;
+                $leadClone->email1                      = $email1;
+                $leadClone->account_id                  = $account->id;
+                $leadClone->contact_id                  = $contact->id;
+
+                convertNewLeadToQuote($leadClone, $orderID , $products,$couponCode,$ship_method_id);
+                //save lead old
+                $lead->status = 'Converted';
+                $lead->save();
+            }
         }
-        
     }
     //data demo
     // $bean = new Lead();
@@ -304,10 +354,12 @@
         $product_quote_group->subtotal_amount = round($subtotal_amount , 2);
         $product_quote_group->save();
 
-        $bean->create_methven_quote_c = 1;
-        $bean->create_methven_quote_num_c =  $new_quote->id;
-        $bean->save();
-        
+        $lead_new = new Lead();
+        $lead_new = $lead_new->retrieve($bean->id);
+        $lead_new->create_methven_quote_c = 1;
+        $lead_new->create_methven_quote_num_c =  $new_quote->id;
+        $lead_new->save();
+
         require_once('include/SugarPHPMailer.php');
         $emailObj = new Email();
         $defaults = $emailObj->getSystemDefaultEmail();
