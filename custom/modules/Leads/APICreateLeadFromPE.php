@@ -255,7 +255,10 @@
         $products_title = implode("','", $products_title);
 
         $db = DBManagerFactory::getInstance();
-        $sql = "SELECT * FROM aos_products WHERE `name` IN ('".$products_title."') ORDER BY price ASC";
+        $sql = "SELECT * FROM aos_products 
+                LEFT JOIN aos_products_cstm ON aos_products.id = aos_products_cstm.id_c
+                WHERE `name` IN ('".$products_title."') 
+                ORDER BY price ASC";
         $ret = $db->query($sql);
 
         $total_amt = 0;
@@ -297,26 +300,32 @@
                 foreach ($products as $key => $value) {
                     if($value['title'] == $row['name']){
                         $product_line->product_qty = (int) $products[$key]['quantity'] ; 
+                        $check_qty = (int) $products[$key]['quantity'] ;
                     }
                 }
             }
-            
-            if( $row['part_number'] == "13-8265 (FLX252)_H" ){ //Handheld with only
-                $weight = 0.66;
-                $length = 29.6;
-                $width = 19.0;
-                $height = 8.5;
-            }else if( $row['part_number'] == "13-8258" ){
-                $weight = 0.26;
-                $length = 10.7;
-                $width = 11.7;
-                $height = 7.6;
-            }else if( $row['part_number'] == "13-8265 (FLX252)" ){ //Handheld only
-                $weight = 0.66;
-                $length = 29.6;
-                $width = 19.0;
-                $height = 8.5;
+            if ($check_qty != 0) {
+                $weight = floatval($row['weight_c']);
+                $length = floatval($row['length_c']);
+                $width  = floatval($row['width_c']);
+                $height = floatval($row['height_c']);
             }
+            // if( $row['part_number'] == "13-8265 (FLX252)_H" ){ //Handheld with only
+            //     $weight = 0.66;
+            //     $length = 29.6;
+            //     $width = 19.0;
+            //     $height = 8.5;
+            // }else if( $row['part_number'] == "13-8258" ){
+            //     $weight = 0.26;
+            //     $length = 10.7;
+            //     $width = 11.7;
+            //     $height = 7.6;
+            // }else if( $row['part_number'] == "13-8265 (FLX252)" ){ //Handheld only
+            //     $weight = 0.66;
+            //     $length = 29.6;
+            //     $width = 19.0;
+            //     $height = 8.5;
+            // }
             if($row['part_number'] == 'Pure_Electric_Promo_Code'){
                 $priceCoupon = (float)$couponCode[0]['amount'];
                 $product_line->product_total_price =$priceCoupon* $product_line->product_qty;
