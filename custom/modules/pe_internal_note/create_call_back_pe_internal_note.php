@@ -149,9 +149,9 @@ function create_call_Immediate_Post_Install($InvoiceCRM){
             $time_hours = $dateInfos[1];
             $dateInfos = explode("/",$dateInfos[0]);
             $inv_install_date_str = "$dateInfos[2]-$dateInfos[1]-$dateInfos[0]T00:00:00";
-            $dateAUS = date("Y-m-d H:i:s", (strtotime($inv_install_date_str)+24*60*60*7));
+            $dateAUS = date("Y-m-d H:i:s", (strtotime($inv_install_date_str)+24*60*60*8));
         }else{
-            $dateAUS = date('Y-m-d H:i:s', (time()+24*60*60*7));
+            $dateAUS = date('Y-m-d H:i:s', (time()+24*60*60*8));
         }
        
         $call->date_start = $dateAUS;
