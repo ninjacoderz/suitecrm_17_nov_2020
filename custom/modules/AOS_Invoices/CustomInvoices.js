@@ -1871,6 +1871,7 @@ $(function () {
                 var ces_link = "";
                 var geo_tag_link = [];
                 var System_Owver_Tax_Invoice_link="";
+                var CustomerAgreement="";
                 $("#fileupload tr p.name a").each(function() {
                     if ($(this).attr("href").toLowerCase().indexOf("pcoc") != -1) {
                         vba_link.push($(this).attr("href"));
@@ -1914,11 +1915,21 @@ $(function () {
                         }
                     }
                 });
+
+                // file customer agreement 
+                $("#fileupload tr p.name a").each(function(){
+                    if($(this).attr("href").toLowerCase().indexOf("customeragreement") != -1){
+                        CustomerAgreement = $(this).attr("href");
+                        if($(this).attr("href").toLowerCase().indexOf("pdf") != -1){
+                            CustomerAgreement = $(this).attr("href");
+                        }
+                    }
+                });
                 build_url += '&vba_link='+ encodeURIComponent(vba_link) ;
                 build_url += '&geo_tag_link='+ encodeURIComponent(geo_tag_link) ;
                 build_url += '&ces_link='+ encodeURIComponent(ces_link) ;
                 build_url += '&System_Owver_Tax_Invoice_link='+ encodeURIComponent(System_Owver_Tax_Invoice_link) ;
-
+                build_url += '&CustomerAgreement_link='+ encodeURIComponent(CustomerAgreement) ;
                 var recycling_receipt_link="";
                 // $("#fileupload tr p.name a").each(function(){
                 //     if($(this).attr("href").toLowerCase().indexOf("recyclingreceipt") != -1){

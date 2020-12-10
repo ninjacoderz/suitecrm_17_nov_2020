@@ -251,11 +251,56 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
     $benefitInvoiceTotal = urldecode($_GET['benefitInvoiceTotal']);
     $gstRegistered = urldecode($_GET['registered_for_gst_c']);
     $gstRegistered = (urldecode($_GET['registered_for_gst_c']) == "true") ? true:false;
+    $phone = urldecode($_GET['owner_phone']) ;
+    $email = urldecode($_GET['owner_email']) ;
+    $postalAddress =null;
+    $activityAddressIsPostalAddress = true;
+    if($gstRegistered) {
+        $lastName = 'Paul' ;
+        $surName = 'Szuster';
+        $email = "accounts@pure-electric.com.au";
+        $abn = "67 603 174 661";
+        $activityAddressIsPostalAddress = false;
+        $postalAddress = array(
+            "geocodedCoordinates"=>[
+                    "longitude"=>null,
+                    "latitude"=>null
+                ],
+            "country"=>"AU",
+            "barcode"=>"1301011030023022211021332232331212113",
+            "dpid"=>39298737,
+            "streetSuffix"=>null,
+            "secondaryName"=>"",
+            "inputMethod"=>null,
+            "streetNumber"=>"38",
+            "phoneNumber"=>"",
+            "coordinates"=>array(
+                "longitude"=>144.967835,
+                "latitude"=>-37.773204
+            ),
+            "propertyName"=>null,
+            "displayAddress"=>"MS, 38 Ewing ST, BRUNSWICK VIC 3056",
+            "hashAtValidation"=>"2D409A03691219460D73EEBE5C0596B3",
+            "postcode"=>"3056",
+            "postalDeliveryType"=>"MS",
+            "importText"=>"",
+            "state"=>"VIC",
+            "streetType"=>"ST",
+            "business"=>false,
+            "unitType"=>null,
+            "checkProvider"=>"TotalCheck",
+            "streetName"=>"Ewing",
+            "postalDeliveryNumber"=>null,
+            "suburb"=>"BRUNSWICK",
+            "unitNumber"=>null,
+            "primaryName"=>"",
+        );        
+    }
     $data = array("assignment" => array(
             "clientReference" => $clientRef,
             "yourReference"=> $yourReference,
             "commonSection" => array(
-                "clientIsSystemOwner" => false,
+                "clientIsSystemOwner" => $gstRegistered,
                 "entityType" => $systemOwnerType,
                 "firstName" => $lastName,
                 "surname" =>$surName,
@@ -264,6 +309,8 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
                 "position" => 'Director',
                 "benefitInvoiceTotal" => $benefitInvoiceTotal,
                 "gstRegistered"=> $gstRegistered,
+                "email"=> $email,
+            
             ),
             "type" => $installation_type_c,
         ),
@@ -501,7 +548,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
         $sanden_model = urldecode($_GET['sanden_model_c']) ;
         $veec_model = urldecode($_GET['veec_model']);
         $yesterday = date('Y-m-d',strtotime("-1 days"));
-        if(isset($veec_model) && $veec_model != ""){
+        if(isset($veec_model) && $veec_model != "" && $veec_model != 'undefined'){
             $veec_model = str_replace(" ", "+", $veec_model);
             //https://api.geocreation.com.au/api/products/search?q=FTXZ25N+/+RXZ25N&productType=spaceHeaterVeet&filters[date]=2017-05-18&filters[status]=approved&filters[activityCode]=10
             $url = "https://api.greenenergytrading.com.au/api/products/search?q=".$veec_model."&productType=spaceHeaterVeet&filters[date]=".$yesterday."&filters[status]=approved&filters[activityCode]=10";
@@ -555,12 +602,12 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
         $result = curl_exec($curl);
 
         $json_decode = json_decode($result);
-        if(isset($veec_model) && $veec_model != ""){
+        if(isset($veec_model) && $veec_model != "" && $veec_model != 'undefined'){
             $product_json_object = $json_decode->spaceHeaterVeet[0]; //spaceHeaterVeet
         }else {
             $product_json_object = $json_decode->waterHeaterRet[0]; //spaceHeaterVeet
         }
-        if(isset($veec_model) && $veec_model != "") {
+        if(isset($veec_model) && $veec_model != "" && $veec_model != 'undefined') {
             //thienpb fix
             $geo_product_product_total_price = $_REQUEST['geo_product_product_total_price'];
             $data = array("assignment" => array(
@@ -652,7 +699,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
         if (isset($ces_cert_c) && $ces_cert_c!="") $lvWiring = true;
         $sanden_tank_serial_c = urldecode($_GET['sanden_tank_serial_c']);
 
-        if(isset($veec_model) && $veec_model != "") {
+        if(isset($veec_model) && $veec_model != "" && $veec_model != 'undefined') {
             $data = array("assignment" => array(
                 "shSection" => array(
                     "propertyType" => $property_type_c,
@@ -667,7 +714,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
         }else{
             $data = array("assignment" => array(
                 "whSection" => array(
-                    "multipleInstallations" => false, //$number_of_installations_c,
+                    "multipleInstallations" => false, //,
                     "propertyType" => $property_type_c,
                     "lvWiring" => $lvWiring,
                     "tankSerialNumbers" => array($sanden_tank_serial_c),
@@ -715,7 +762,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
 
         $installer_origin  = urldecode($_GET['installer']) ;
         $installer = str_replace(" ", "+", $installer_origin);
-        $url = "https://api.greenenergytrading.com.au/api/contacts/search?q=".$installer."&filters[whInstaller]=true&clientReference=".$clientRef;
+        $url = "https://api.greenenergytrading.com.au/api/contacts/" . $clientRef;
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
@@ -741,7 +788,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
         
         if($installation_type_c=="whInstallation") {
             //https://api.geocreation.com.au/api/contacts/search?q=PJT+Green+Plumbing&filters[whInstaller]=true&clientReference=C23091
-            $url = "https://api.greenenergytrading.com.au/api/contacts/search?q=" . $installer . "&filters[whInstaller]=true&clientReference=" . $clientRef;
+            $url = "https://api.greenenergytrading.com.au/api/contacts/" . $clientRef;
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
@@ -765,10 +812,11 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
             $result = curl_exec($curl);
 
             $result_object = json_decode($result);
-            if (isset($result_object->contact) && count($result_object->contact)) {
-                foreach ($result_object->contact as $key => $value) {
+            if (isset($result_object->contact->result->favoriteContacts) && count($result_object->contact->result->favoriteContacts)) {
+              
+                foreach ($result_object->contact->result->favoriteContacts as $key => $value) {
                     if($value->companyName == $installer_origin) {
-                        $contact = $result_object->contact[$key];
+                        $contact =   $result_object->contact->result->favoriteContacts[$key];
                     }
                 }
                 if ($contact->companyName == $installer_origin) {
@@ -813,7 +861,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
             if($_GET['electrician_name'] != '') {
                 $installer = $_GET['electrician_name'];
                 $installer_search = str_replace(" ", "+", $installer);
-                $url = "https://api.greenenergytrading.com.au/api/contacts/search?q=" . $installer_search . "&filters[electrician]=true&clientReference=" . $clientRef;
+                $url = "https://api.greenenergytrading.com.au/api/contacts/" . $clientRef;
                 curl_setopt($curl, CURLOPT_URL, $url);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
@@ -837,9 +885,13 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
                 $result = curl_exec($curl);
     
                 $result_object = json_decode($result);
-    
-                if (isset($result_object->contact) && count($result_object->contact)) {
-                    $contact = $result_object->contact[0];
+                if (isset($result_object->contact->result->favoriteContacts) && count($result_object->contact->result->favoriteContacts)) {
+                    foreach ($result_object->contact->result->favoriteContacts as $key => $value) {
+                        if($value->companyName == $installer_origin) {
+                            $contact =   $result_object->contact->result->favoriteContacts[$key];
+                        }
+                    }
+                   
                     //if ($contact->companyName == $installer_origin) {
                     $contact_id = $contact->_id;
                     $data = array("assignment" => array(
@@ -884,7 +936,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
             if($plumber_id == $electrical_id){
                 $installer = $_GET['plumber_name'];
                 $installer_search = str_replace(" ", "+", $installer);
-                $url = "https://api.greenenergytrading.com.au/api/contacts/search?q=" . $installer_search . "&filters[whInstaller]=true&clientReference=" . $clientRef;
+                $url = "https://api.greenenergytrading.com.au/api/contacts/" . $clientRef;
                 curl_setopt($curl, CURLOPT_URL, $url);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
@@ -909,8 +961,12 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
 
                 $result_object = json_decode($result);
 
-                if (isset($result_object->contact) && count($result_object->contact)) {
-                    $contact = $result_object->contact[0];
+                if (isset($result_object->contact->result->favoriteContacts) && count($result_object->contact->result->favoriteContacts)) {
+                    foreach ($result_object->contact->result->favoriteContacts as $key => $value) {
+                        if($value->companyName == $installer_origin) {
+                            $contact =   $result_object->contact->result->favoriteContacts[$key];
+                        }
+                    }
                     //if ($contact->companyName == $installer_origin) {
                     $contact_id = $contact->_id;
                     $data = array("assignment" => array(
@@ -951,7 +1007,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
             }else{
                 $installer = $_GET['electrician_name'];
                 $installer_search = str_replace(" ", "+", $installer);
-                $url = "https://api.greenenergytrading.com.au/api/contacts/search?q=" . $installer_search . "&filters[electrician]=true&clientReference=" . $clientRef;
+                $url = "https://api.greenenergytrading.com.au/api/contacts/" . $clientRef;
                 curl_setopt($curl, CURLOPT_URL, $url);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
@@ -976,8 +1032,12 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
 
                 $result_object = json_decode($result);
 
-                if (isset($result_object->contact) && count($result_object->contact)) {
-                    $contact = $result_object->contact[0];
+                if (isset($result_object->contact->result->favoriteContacts) && count($result_object->contact->result->favoriteContacts)) {
+                    foreach ($result_object->contact->result->favoriteContacts as $key => $value) {
+                        if($value->companyName == $installer_origin) {
+                            $contact =   $result_object->contact->result->favoriteContacts[$key];
+                        }
+                    }
                     //if ($contact->companyName == $installer_origin) {
                     $contact_id = $contact->_id;
                     $data = array("assignment" => array(
@@ -1017,7 +1077,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
 
                 $plumber_installer = $_GET['plumber_name'];
                 $plumber_search = str_replace(" ", "+", $plumber_installer);
-                $plumber_url = "https://api.greenenergytrading.com.au/api/contacts/search?q=" . $plumber_search . "&filters[whInstaller]=true&clientReference=" . $clientRef;
+                $plumber_url = "https://api.greenenergytrading.com.au/api/contacts/" . $clientRef;
                 curl_setopt($curl, CURLOPT_URL, $plumber_url);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
@@ -1041,8 +1101,12 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
                 $result = curl_exec($curl);
 
                 $result_object = json_decode($result);
-                if (isset($result_object->contact) && count($result_object->contact)) {
-                    $contact = $result_object->contact[0];
+                if (isset($result_object->contact->result->favoriteContacts) && count($result_object->contact->result->favoriteContacts)) {
+                    foreach ($result_object->contact->result->favoriteContacts as $key => $value) {
+                        if($value->companyName == $installer_origin) {
+                            $contact =   $result_object->contact->result->favoriteContacts[$key];
+                        }
+                    }
                     //if ($contact->companyName == $installer_origin) {
                     $contact_id = $contact->_id;
                     $data = array("assignment" => array(
@@ -1083,14 +1147,14 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
             }
         }
 
-        $phone = urldecode($_GET['owner_phone']) ;
-        $email = urldecode($_GET['owner_email']) ;
+
 
         $data = array("assignment" => array(
                 "commonSection" => array(
                     "phone" => $phone,
                     "email" => $email,
-                    "activityAddressIsPostalAddress" => true,
+                    "activityAddressIsPostalAddress" => $activityAddressIsPostalAddress,
+                    "postalAddress" => $postalAddress
                 ),
                 "reference" => $reference,
             ),
@@ -1691,6 +1755,177 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
     }
 //End Dung code - upload file System Owner Tax Invoice
 
+//Start upload file ROT Customer Agreement
+if($_GET['CustomerAgreement_link'] !== '') {
+    $url = "https://api.greenenergytrading.com.au/api/documents/";
+    // Response
+    
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_HTTPGET, true);
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding:   gzip, deflate, br",
+            "Access-Control-Request-Method: POST",
+            "Access-Control-Request-Headers: authorization,content-type",
+            "Connection: keep-alive",
+            "Origin: https://geocreation.com.au",
+        )
+    );
+    $result = curl_exec($curl);
+    
+    $data = array("document" => array(
+        "name" => "ROT Customer Agreement",
+        "parentType" => "Assignment",
+        "parentId" => $parent_id,
+        )
+    );
+    $data_string = json_encode($data);
+    
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+           
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Accept: */*",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding:   gzip, deflate, br",
+            "Connection: keep-alive",
+            "Authorization: token ".$IdToken,
+            "Referer: https://geocreation.com.au/assignments/".$reference."/edit/documents",
+            "Content-Length: " .strlen($data_string),
+            "Content-Type: application/json",
+            "Origin: https://geocreation.com.au",
+        )
+    );
+    $result = curl_exec($curl);
+    $result_object = json_decode($result);
+    $document_id = $result_object->document->result->_id;
+    $requirementID = $result_object->document->result->parentId;
+    
+    $CustomerAgreement_link = urldecode($_GET['CustomerAgreement_link']);
+    $filename = basename($CustomerAgreement_link);
+    $filecontent =  file_get_contents($CustomerAgreement_link);
+    $eol = "\r\n";
+    $BOUNDARY = md5(time());
+    $BODY="";
+    $BODY.= '-----------------------------'.$BOUNDARY. $eol; //start param header
+    $BODY .= 'Content-Disposition: form-data; name="name"' . $eol . $eol; // last Content with 2 $eol, in this case is only 1 content.
+    $BODY .= $filename . $eol;
+    $BODY.= '-----------------------------'.$BOUNDARY. $eol; // start 2nd param,
+    $BODY.= 'Content-Disposition: form-data;  name="size"'.$eol . $eol;
+    
+    $BODY.= strlen ($filecontent). $eol;
+    
+    $BODY.= '-----------------------------'.$BOUNDARY. $eol; // start 2nd param,
+    
+    $BODY.= 'Content-Disposition: form-data; name="file"; filename="'.$filename.'"'.$eol;
+    $BODY.= 'Content-Type: application/pdf' . $eol. $eol; //Same before row image/png
+    //Content-Disposition: form-data; name="file"; filename="Screen Shot 2017-06-12 at 10.30.04 AM.png"
+    
+    $BODY.= $filecontent . $eol; // we write the Base64 File Content and the $eol to finish the data,
+    $BODY.= '-----------------------------'.$BOUNDARY .'--' . $eol; // we close the param and the post width "--" and 2 $eol at the end of our boundary header.
+    //upload_file
+    
+    $url = "https://api.greenenergytrading.com.au/api/documents/".$document_id."/upload_file";
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_HTTPGET, true);
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding:   gzip, deflate, br",
+            "Access-Control-Request-Method: POST",
+            "Access-Control-Request-Headers: authorization",
+            "Connection: keep-alive",
+            "Origin: https://geocreation.com.au",
+        )
+    );
+    $result = curl_exec($curl);
+    
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfname);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $BODY);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfname);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Accept: application/json",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding:   gzip, deflate, br",
+            "Connection: keep-alive",
+            "Authorization: token ".$accesstoken,
+            "Referer: https://geocreation.com.au/assignments/".$reference."/edit/documents",
+            "Content-Length: " .strlen($BODY),
+            "Content-Type: multipart/form-data; boundary=---------------------------".$BOUNDARY,
+            "Origin: https://geocreation.com.au",
+        )
+    );
+    
+    $result = curl_exec($curl);
+    
+    $data = array("response" => array(
+        "requirementId" => $system_owner_tax_invoice,
+        "documentId" => $document_id,
+    )
+    );
+    $data_string = json_encode($data);
+    $url = "https://api.greenenergytrading.com.au/api/audits/".$audit_id."/respond";
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);   
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+           
+            "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+            "Content-Type:application/json",
+            "Accept: */*",
+            "Accept-Language: en-US,en;q=0.5",
+            "Accept-Encoding:   gzip, deflate, br",
+            "Connection: keep-alive",
+            "Content-Length: " .strlen($data_string),
+            "Authorization: token ".$IdToken,
+            "Referer: https://geocreation.com.au/assignments/".$reference."/edit/documents",
+            "Origin: https://geocreation.com.au",
+        )
+    );
+    $result = curl_exec($curl);
+}
+//End  upload file ROT Customer Agreement
 //thien code upload Recycling Receipt
     if($_GET['recycling_receipt_link'] !='' && $installType == 'replacedElectricHeater' && (strtolower($stateVic) == "victoria" || strtolower($stateVic) == "vic") ){
         $url = "https://api.greenenergytrading.com.au/api/documents/";
