@@ -294,7 +294,9 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
             "suburb"=>"BRUNSWICK",
             "unitNumber"=>null,
             "primaryName"=>"",
-        );        
+        );  
+        $systemOwnerType = 'corporateBody'; 
+        $companyName = '';     
     }
     $data = array("assignment" => array(
             "clientReference" => $clientRef,
@@ -315,6 +317,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
             "type" => $installation_type_c,
         ),
     );
+     
     $data_string = json_encode($data);
 
     //post create geo
