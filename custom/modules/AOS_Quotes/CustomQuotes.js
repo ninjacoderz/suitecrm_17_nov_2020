@@ -2158,7 +2158,7 @@ function genExtraDaikinItemFunc(elem){
         if ($('#proposed_install_date_c').val() == '') {
             $('#proposed_install_date_c_date').focus();
             $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
-            var question = confirm("No Proposed Install Date - are you sure to continue?");
+            var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
             if (!question) {
                 return false;
             }
@@ -2169,7 +2169,7 @@ function genExtraDaikinItemFunc(elem){
             if ($('#proposed_dispatch_date_c').val() == '' && (check.SSI || check.SSO)) {
                 $('#proposed_dispatch_date_c_date').focus();
                 $('#proposed_dispatch_date_c_date').css('border', '4px solid #ff0000');
-                var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
+                var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
                 if (question) {
                 }
                 else {
@@ -2183,7 +2183,7 @@ function genExtraDaikinItemFunc(elem){
             if ($('#proposed_delivery_date_c').val() == '') {
                 $('#proposed_delivery_date_c_date').focus();
                 $('#proposed_delivery_date_c_date').css('border', '4px solid #ff0000');
-                var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
+                var question = confirm("Field Proposed Delivery Date is not filled - are you sure to continue?");
                 if (question) {
                 }
                 else {

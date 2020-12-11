@@ -488,19 +488,19 @@ $(function () {
         $('#convert_to_invoice_button').attr('onclick',`$(document).convert_to_invoice("${record}")`);
         $.fn.convert_to_invoice = function (id_quote) {
             if ($('div[field="proposed_install_date_c"]').text().trim() == '') {
-                var question = confirm("No Proposed Installer - are you sure to continue?");
+                var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
                 if (!question) {
                     return false;
                 }
             }
             if ($('#quote_type_c').val() == 'quote_type_sanden' && $('div[field="proposed_dispatch_date_c"]').text().trim() == '') {
-                var question = confirm("No Proposed Dispatch Date is not filled - are you sure to continue?");
+                var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
                 if (!question) {
                     return false;
                 }
             }
             if ($('#quote_type_c').val() == 'quote_type_daikin' && $('div[field="proposed_delivery_date_c"]').text().trim() == '') {
-                var question = confirm("No Proposed Delivery Date is not filled - are you sure to continue?");
+                var question = confirm("Field Proposed Delivery Date is not filled - are you sure to continue?");
                 if (!question) {
                     return false;
                 }
