@@ -2150,75 +2150,117 @@ function genExtraDaikinItemFunc(elem){
      });
  
  });
+ /**VUT - Check SSI and SSO for Quote type Sanden to create PO Sanden Supply*/
+ function isSandenSupply() {
+    let products = $('#lineItems').find('.product_group').children('tbody');
+    let state = $('#install_address_state_c').val();
+    let states = ['NSW', 'QLD', 'SA', 'WA'];
+    let i=0, SSI=false; 
+    let sanden_groups = {
+        SSI : false,
+        SSO : false,
+    };
+    for (i=0;i< products.length; i++) {
+        let partNumber = $(`#product_part_number${i}`).val();
+        if (partNumber.indexOf("SSI") != -1) {
+            SSI = true;
+        } else if (partNumber.indexOf("SANDEN_SUPPLY_ONLY") != -1) {
+            sanden_groups.SSO = true;
+        }
+    }
+    if (SSI && states.includes(state)) {
+        sanden_groups.SSI = true;
+    }
+    return sanden_groups;
+} 
+ function convertToInvoice(){ /////
+    var check = isSandenSupply();
+    if ($('#quote_type_c').val() == "quote_type_sanden") {
+        if( $('#proposed_dispatch_date_c').val() == "" && (check.SSO == true || check.SSI == true) ){
+            var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
+            if (question) {
+            }
+            else {
+                return false;
+            }
+        }else if ( $('#proposed_install_date_c').val() == ''  && check.SSO == false && check.SSI == false ) {
+            var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
+            if (question) {
+            }
+            else {
+                return false;
+            }
+        } else {
+            $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
+        }
+    }else if ($('#quote_type_c').val() == "quote_type_daikin") {
+        if ($('#proposed_delivery_date_c').val() == '') {
+            var question = confirm("Field Proposed Delivery Date is not filled - are you sure to continue?");
+            if (question) {
+            }
+            else {
+                return false;
+            }
+        } else {
+            $('#proposed_delivery_date_c_date').css('border', '1px solid #a5e8d6');
+        }
+        if($('#proposed_install_date_c').val() == '') {
+            var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
+            if (!question) {
+                return false;
+            }
+        } else {
+            $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
+        }
+    }
+    /**Save before*/
+    $('#save_and_edit').trigger('click');
+    
+    var record = encodeURIComponent($("input[name='record']").val());
+     $.ajax({
+             url: '/index.php?entryPoint=checkSwitchBoardAttached&record='+record,                
+             success: function (data) {                    
+                 console.log(data);                    
+                 if(data){                        
+                    //  var _form = document.getElementById('EditView');
+                    var _form = document.getElementById('DetailView');
+                    _form.action.value='converToInvoice';
+                     _form.submit();
+                 }else{
+                     alert('Please add Switchboard photo to Attachment!'); 
+                 }
+             }            
+         });            
+ }
  $(document).ready(function(){
      //tu-code add field covert to invoices
-     $('input[id="CANCEL"]').after(' <input title="Save" accesskey="a" class="button primary" type="submit" name="button" value="Convert To Invoice" id="convert_to_invoice">');
-     $("#convert_to_invoice").click(function(){ /////
-        var check = isSandenSupply();
-        if ($('#quote_type_c').val() == "quote_type_sanden") {
+     $('input[id="CANCEL"]').after(' <input title="Save" accesskey="a" class="button primary" type="button" name="button" value="Convert To Invoice" id="convert_to_invoice">');
+     
+     $("#convert_to_invoice").click(function(e) {
+         e.preventDefault();
+         var check = isSandenSupply();
+         if ($('#quote_type_c').val() == "quote_type_sanden") {
             if( $('#proposed_dispatch_date_c').val() == "" && (check.SSO == true || check.SSI == true) ){
                 $('#proposed_dispatch_date_c_date').focus();
-                $('#proposed_dispatch_date_c_date').css('border', '4px solid #ff0000');
-                var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
-                if (question) {
-                }
-                else {
-                    return false;
-                }
+                $('#proposed_dispatch_date_c_date').css('border', '1px solid #ff0000');
             }else if ( $('#proposed_install_date_c').val() == ''  && check.SSO == false && check.SSI == false ) {
                 $('#proposed_install_date_c_date').focus();
-                $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
-                var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
-                if (question) {
-                }
-                else {
-                    return false;
-                }
-            } else {
-                $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
+                $('#proposed_install_date_c_date').css('border', '1px solid #ff0000');
             }
         }else if ($('#quote_type_c').val() == "quote_type_daikin") {
             if ($('#proposed_delivery_date_c').val() == '') {
                 $('#proposed_delivery_date_c_date').focus();
-                $('#proposed_delivery_date_c_date').css('border', '4px solid #ff0000');
-                var question = confirm("Field Proposed Delivery Date is not filled - are you sure to continue?");
-                if (question) {
-                }
-                else {
-                    return false;
-                }
-            } else {
-                $('#proposed_delivery_date_c_date').css('border', '1px solid #a5e8d6');
+                $('#proposed_delivery_date_c_date').css('border', '1px solid #ff0000');
             }
             if($('#proposed_install_date_c').val() == '') {
                 $('#proposed_install_date_c_date').focus();
-                $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
-                var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
-                if (!question) {
-                    return false;
-                }
-            } else {
-                $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
+                $('#proposed_install_date_c_date').css('border', '1px solid #ff0000');
             }
         }
-        /**Save before*/
-        $('#save_and_edit').trigger('click');
+        setTimeout(function(){
+            convertToInvoice();
+        },100)
         
-        var record = encodeURIComponent($("input[name='record']").val());
-         $.ajax({
-                 url: '/index.php?entryPoint=checkSwitchBoardAttached&record='+record,                
-                 success: function (data) {                    
-                     console.log(data);                    
-                     if(data){                        
-                        //  var _form = document.getElementById('EditView');
-                        var _form = document.getElementById('DetailView');
-                        _form.action.value='converToInvoice';
-                         _form.submit();
-                     }else{
-                         alert('Please add Switchboard photo to Attachment!'); 
-                     }
-                 }            
-             });            
      })
      //tu-code Add the Suite LEAD number and hyperlink it 
      // if($("#billing_account_id").val() != ''){
@@ -2405,29 +2447,7 @@ function genExtraDaikinItemFunc(elem){
             });
             return $(self);
         };
-        /**VUT - Check SSI and SSO for Quote type Sanden to create PO Sanden Supply*/
-        function isSandenSupply() {
-            let products = $('#lineItems').find('.product_group').children('tbody');
-            let state = $('#install_address_state_c').val();
-            let states = ['NSW', 'QLD', 'SA', 'WA'];
-            let i=0, SSI=false; 
-            let sanden_groups = {
-                SSI : false,
-                SSO : false,
-            };
-            for (i=0;i< products.length; i++) {
-                let partNumber = $(`#product_part_number${i}`).val();
-                if (partNumber.indexOf("SSI") != -1) {
-                    SSI = true;
-                } else if (partNumber.indexOf("SANDEN_SUPPLY_ONLY") != -1) {
-                    sanden_groups.SSO = true;
-                }
-            }
-            if (SSI && states.includes(state)) {
-                sanden_groups.SSI = true;
-            }
-            return sanden_groups;
-        } 
+        
         //VUT-E
 
  });
