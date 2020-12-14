@@ -726,8 +726,10 @@ $(function () {
     
         //dung code
         $("#btn_view_change_log").after(
-            '&nbsp;<button type="button" id="save_and_edit" class="button saveAndEdit" title="Save and Edit" onClick="SUGAR.saveAndEdit(this);">Save and Edit</button>'
+            '&nbsp;<button style="margin: 1px;" type="button" id="save_and_edit" class="button saveAndEdit" title="Save and Edit" onClick="SUGAR.saveAndEdit(this);">Save and Edit</button>'
         )
+        //VUT - clone button Email Freight Company
+        $('#save_and_edit').after($('#email_freight_company').clone()); 
 
         SUGAR.saveAndEdit = function (elem) {
             let condition = checkDistanceTravel();
