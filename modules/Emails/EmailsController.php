@@ -541,7 +541,7 @@ class EmailsController extends SugarController
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
                 //parse value
-
+                $name = str_replace("\$aos_connote", $connote .' - '.$purchase_bean->shipping_address_city , $name);
                 $description = str_replace("\$aos_cope", "Cope ".$purchase_bean->shipping_address_state , $description);
                 $description = str_replace("\$aos_connote", $connote .' - '.$purchase_bean->shipping_address_city , $description);
 
