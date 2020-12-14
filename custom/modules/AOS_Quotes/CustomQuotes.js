@@ -2153,20 +2153,10 @@ function genExtraDaikinItemFunc(elem){
  $(document).ready(function(){
      //tu-code add field covert to invoices
      $('input[id="CANCEL"]').after(' <input title="Save" accesskey="a" class="button primary" type="submit" name="button" value="Convert To Invoice" id="convert_to_invoice">');
-     $("#convert_to_invoice").click(function(){
+     $("#convert_to_invoice").click(function(){ /////
         var check = isSandenSupply();
-        if ($('#proposed_install_date_c').val() == '') {
-            $('#proposed_install_date_c_date').focus();
-            $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
-            var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
-            if (!question) {
-                return false;
-            }
-        } else {
-            $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
-        }
         if ($('#quote_type_c').val() == "quote_type_sanden") {
-            if ($('#proposed_dispatch_date_c').val() == '' && (check.SSI || check.SSO)) {
+            if( $('#proposed_dispatch_date_c').val() == "" && (check.SSO == true || check.SSI == true) ){
                 $('#proposed_dispatch_date_c_date').focus();
                 $('#proposed_dispatch_date_c_date').css('border', '4px solid #ff0000');
                 var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
@@ -2175,11 +2165,19 @@ function genExtraDaikinItemFunc(elem){
                 else {
                     return false;
                 }
+            }else if ( $('#proposed_install_date_c').val() == ''  && check.SSO == false && check.SSI == false ) {
+                $('#proposed_install_date_c_date').focus();
+                $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
+                var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
+                if (question) {
+                }
+                else {
+                    return false;
+                }
             } else {
-                $('#proposed_dispatch_date_c_date').css('border', '1px solid #a5e8d6');
+                $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
             }
-        }
-        if ($('#quote_type_c').val() == "quote_type_daikin") {
+        }else if ($('#quote_type_c').val() == "quote_type_daikin") {
             if ($('#proposed_delivery_date_c').val() == '') {
                 $('#proposed_delivery_date_c_date').focus();
                 $('#proposed_delivery_date_c_date').css('border', '4px solid #ff0000');
@@ -2191,6 +2189,16 @@ function genExtraDaikinItemFunc(elem){
                 }
             } else {
                 $('#proposed_delivery_date_c_date').css('border', '1px solid #a5e8d6');
+            }
+            if($('#proposed_install_date_c').val() == '') {
+                $('#proposed_install_date_c_date').focus();
+                $('#proposed_install_date_c_date').css('border', '4px solid #ff0000');
+                var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
+                if (!question) {
+                    return false;
+                }
+            } else {
+                $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
             }
         }
         /**Save before*/
