@@ -4,7 +4,7 @@ array_push($job_strings, 'custom_EmailInstallerPaperworkFollowUp');
 function custom_EmailInstallerPaperworkFollowUp(){
 
     date_default_timezone_set('UTC');
-    $array_condition_status = ['STC_VEEC_Unpaid','STC_Unpaid','VEEC_Unpaid','Paid'];
+    $array_condition_status = ['STC_VEEC_Unpaid','STC_Unpaid','VEEC_Unpaid','Paid','Variation_Unpaid'];
     $string_condition_status = implode("','",$array_condition_status) ;
     $array_invoice_ID = [];
 
