@@ -185,7 +185,7 @@ function get_supplier_order_number(){
         }
          switch (cope) {
             case "cope_act":
-                email_address = "act@cope.com.au";
+                email_address = "actops@cope.com.au";
             break;
             case "cope_nsw":
                 email_address = "nsw@cope.com.au";
