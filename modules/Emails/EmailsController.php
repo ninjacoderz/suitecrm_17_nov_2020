@@ -528,15 +528,36 @@ class EmailsController extends SugarController
                     'EmailTemplates',
                     $emailTemplateID
                 );
-                $purchase_bean = new PO_purchase_order();
-                $purchase_bean->retrieve(trim($_REQUEST['record_id']));
-
-                $db = DBManagerFactory::getInstance();
-                $sql = "SELECT `connote` FROM `pe_warehouse_log` WHERE `name` LIKE '%$purchase_bean->supplier_order_number_c%'";
-                $ret = $db->query($sql);
-                while ($row = $db->fetchByAssoc($ret)) {
-                $connote = $row['connote'];
+                if ($_REQUEST['email_module'] == 'pe_warehouse_log') {
+                    $pe_whl_bean = new pe_warehouse_log();
+                    $pe_whl_bean->retrieve(trim($_REQUEST['record_id']));
+                    $connote = $pe_whl_bean->connote;
+                    $db = DBManagerFactory::getInstance();
+                    if ($pe_whl_bean->warehouse_order_number !='') { 
+                        $sql = "SELECT id_c
+                                FROM PO_purchase_order_cstm
+                                LEFT JOIN PO_purchase_order ON PO_purchase_order.id = PO_purchase_order_cstm.id_c
+                                WHERE  supplier_order_number_c = '$pe_whl_bean->warehouse_order_number' AND deleted != 1";
+                        $ret = $db->query($sql);
+                        while ($row = $db->fetchByAssoc($ret)) {
+                            $purchase_bean = new PO_purchase_order();
+                            $purchase_bean->retrieve(trim($row['id_c']));
+                        }
+                    } else {
+                        $pe_whl_bean->load_relationships('PO_purchase_order');                    
+                        $purchase_bean = $pe_whl_bean->get_linked_beans('po_purchase_order_pe_warehouse_log_1','PO_purchase_order')[0];
+                    }
+                } else {
+                    $purchase_bean = new PO_purchase_order();
+                    $purchase_bean->retrieve(trim($_REQUEST['record_id']));
+                    $db = DBManagerFactory::getInstance();
+                    $sql = "SELECT `connote` FROM `pe_warehouse_log` WHERE `name` LIKE '%$purchase_bean->supplier_order_number_c%'";
+                    $ret = $db->query($sql);
+                    while ($row = $db->fetchByAssoc($ret)) {
+                        $connote = $row['connote'];
+                    }
                 }
+
                 $name = $emailTemplate->subject;
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
@@ -583,24 +604,32 @@ class EmailsController extends SugarController
             switch ($purchase_bean->local_freight_company_c) {
                 case "cope_act":
                     $phone = "02 6295 1816";
+                    $email_address = "actops@cope.com.au";
                 break;
                 case "cope_nsw":
                     $phone = "02 8787 8888";
+                    $email_address = "nsw@cope.com.au";
                 break;
                 case "cope_qld":
                     $phone = "07 3441 4100";
+                    $email_address = "qldcust@cope.com.au";
                 break;
                 case "cope_sa":
                     $phone = "08 8249 2222";
+                    $email_address = "sa@cope.com.au";
                 break;
                 case "cope_vic":
                     $phone = "03 9235 0400";
+                    $email_address = "vic@cope.com.au";
                 break;
                 case "cope_wa":
                     $phone = "08 9251 5333";
+                    $email_address = "wa@cope.com.au";
                 break;
                 }
-
+                if ($_REQUEST['email_module'] == 'pe_warehouse_log') {
+                    $this->bean->to_addrs_names = "Cope ".$purchase_bean->shipping_address_state." <".$email_address.">";
+                }
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
