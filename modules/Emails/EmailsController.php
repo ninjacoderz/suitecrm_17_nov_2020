@@ -537,7 +537,7 @@ class EmailsController extends SugarController
                         $sql = "SELECT id_c
                                 FROM PO_purchase_order_cstm
                                 LEFT JOIN PO_purchase_order ON PO_purchase_order.id = PO_purchase_order_cstm.id_c
-                                WHERE  supplier_order_number_c = '$pe_whl_bean->warehouse_order_number' AND deleted != 1";
+                                WHERE  PO_purchase_order_cstm.supplier_order_number_c = '$pe_whl_bean->warehouse_order_number' AND deleted != 1";
                         $ret = $db->query($sql);
                         while ($row = $db->fetchByAssoc($ret)) {
                             $purchase_bean = new PO_purchase_order();
@@ -626,7 +626,7 @@ class EmailsController extends SugarController
                     $phone = "08 9251 5333";
                     $email_address = "wa@cope.com.au";
                 break;
-                }
+            }
                 if ($_REQUEST['email_module'] == 'pe_warehouse_log') {
                     $this->bean->to_addrs_names = "Cope ".$purchase_bean->shipping_address_state." <".$email_address.">";
                 }
