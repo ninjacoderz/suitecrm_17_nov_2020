@@ -68,14 +68,10 @@ $(function () {
                 type: 'POST',
                 data: datapost,
                 success: function(data){
-                    if(data !== 'unsuccess'){
-                        console.log(data);
-                        if(data == '' && typeof data == undefined)return;
-                        var jsonObject = $.parseJSON(data);
-                        parse_data_product_PESite(jsonObject)
-                    }else {
-                        alert(data);
-                    }
+                   
+                    if(data == '' && typeof data == undefined) return;
+                    var jsonObject = $.parseJSON(data);
+                    parse_data_product_PESite(jsonObject)
                     SUGAR.ajaxUI.hideLoadingPanel();
                 }
             })
@@ -84,6 +80,14 @@ $(function () {
         function parse_data_product_PESite(jsonObject){
             switch (jsonObject['method']) {
                 case 'GET':
+                    if(jsonObject['message'] == "not found"){
+                        $('#alert_modal').find('.modal-body').empty();
+                        $('#alert_modal').find('.modal-body').append('<h3  style="text-align:center;color:red;"> This product is not found in PE Site</h3>'); 
+                        $('#alert_modal').find('.modal-header').empty();
+                        $('#alert_modal').find('.modal-header').append('<h2 style="text-align:center;">Warning</h2>');
+                        $('#alert_modal').modal('show'); 
+                        return;
+                    }
                     $("#description").val(jsonObject['description']);
                     $("#price").val(jsonObject['price']);
                     $("#name").val(jsonObject['name']);
