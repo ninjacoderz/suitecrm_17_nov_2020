@@ -188,7 +188,7 @@ $(function () {
         var html_button_authority_to_leave = '&nbsp;<button style="background:green;" data-record-id="'+$('input[name="record"]').val()+'" data-email-type="authority_to_leave" data-module-name="pe_warehouse_log" type="button" id="authority_to_leave" class="button authority_to_leave" title="Authority To Leave"  onClick="$(document).openComposeViewModal(this);" ><span class="glyphicon glyphicon-envelope"></span> Authority To Leave </button>&nbsp;';
         $("#btn_view_change_log").before(html_button_authority_to_leave);
         //VUT - Create button Email Freight Company
-        $("#btn_view_change_log").after('&nbsp;<button type="button" class="button primary" id="email_freight_company" value="FREIGHT COMPANY" class="button primary" data-email-type="freight_company" onclick="$(document).openComposeViewModal_Freight_Company(this);" data-module="pe_warehouse_log" data-module-name="'+ $("#name").val() +'"  data-record-id="'+ $("input[name='record']").val()  +'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>EMAIL FREIGHT COMPANY</button>');
+        $("#btn_view_change_log").after('&nbsp;<button type="button" class="button primary" id="email_freight_company" value="GET DELIVERY UPDATE" class="button primary" data-email-type="freight_company" onclick="$(document).openComposeViewModal_Freight_Company(this);" data-module="pe_warehouse_log" data-module-name="'+ $("#name").val() +'"  data-record-id="'+ $("input[name='record']").val()  +'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DELIVERY UPDATE</button>');
         var existed = false;
         $('#SAVE').attr('onclick','return false;');
         $('#SAVE').click(function(e){
