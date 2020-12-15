@@ -4011,6 +4011,8 @@ $(document).ready(function(){
     $("#btn_view_change_log").before('<button style="margin: 10px 3px;background:#945596;" type="button" id="btn_pe_sanden_form_new" class="button btn_pe_sanden_form_new" title="PE Sanden Form">Sanden Quote Form</button>');
     $("#btn_view_change_log").before('<button style="margin: 10px 3px;background:#f48c21;" type="button" id="btn_pe_solar_form" class="button btn_pe_solar_form" title="PE Solar Form">Solar Quote Form</button>');
     $("#btn_view_change_log").before('<button style="margin: 10px 3px;background:#009acf;" type="button" id="btn_pe_daikin_new_form" class="button btn_pe_daikin_new_form" title="PE Daikin Form">Daikin Quote Form </button>');
+    //thienpb code
+    $("#btn_view_change_log").before('<button style="margin: 10px 3px;background:#945596;" type="button" id="btn_solar_design" class="button btn_solar_design" title="Solar Design">Solar Design</button>');
 
     $("#btn_pe_daikin_new_form").click(function(e) {
         window.open(
@@ -4119,7 +4121,20 @@ $(document).ready(function(){
                 }
             })
 
-        });
+    });
+    $("#btn_solar_design").on('click',function(e) {
+        
+        var address = [$("#primary_address_street").val(),$("#primary_address_city").val()+' '+$("#primary_address_state").val(),$("#primary_address_postalcode").val(),'Australia'];
+        address = address.join(', ');
+        var first_name = $("#first_name").val();
+        var family_name = $("#last_name").val();
+        var email = $("#Leads0emailAddress0").val();
+        var phone = $("#phone_mobile").val().replace(/ /g,'');
+        window.open(
+            'https://solardesign.pure-electric.com.au/#/projects/create?address='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    });
     //});
     //end
         

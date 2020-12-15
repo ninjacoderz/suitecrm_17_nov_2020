@@ -521,6 +521,8 @@ $(function () {
         $(".email-link").parent("li").after('<li><a style="background:#f48c21;" type="button" id="btn_pe_solar_form" class="button btn_pe_solar_form" title="PE Solar Form">Solar Quote Form</a></li>');
         $(".email-link").parent("li").after('<li><a style="background:#009acf;" type="button" id="btn_pe_daikin_new_form" class="button btn_pe_daikin_new_form" title="PE Daikin Form">Daikin Quote Form</a></li>');
         var lead_id = $("input[name=lead_id]").val();
+        //thienpb code
+        $('#tab-actions').after('<li><button style="background:#945596;" type="button" id="btn_solar_design" class="button btn_solar_design" title="Solar Design">Solar Design</button></li>');
         $("#btn_pe_daikin_form").click(function(e) {
             window.open(
                 'https://pure-electric.com.au/pedaikinform?lead-id='+lead_id,
@@ -542,6 +544,18 @@ $(function () {
         $("#btn_pe_solar_form").click(function(e) {
             window.open(
                 'https://pure-electric.com.au/pesolarform?lead-id='+lead_id,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        });
+        $("#btn_solar_design").on('click',function(e) {
+            var address = [$("#primary_address_street").val(),$("#primary_address_city").val()+' '+$("#primary_address_state").val(),$("#primary_address_postalcode").val(),'Australia'];
+            address = address.join(', ');
+            var first_name = $("#account_name").text().split(" ")[0];
+            var family_name = $("#account_name").text().split(" ").slice(1).join(" ");
+            var email = $("div[field='billing_account_email'] a").data("email-address");
+            var phone = $("#mobile_phone_c").text().replace(/ /g,'');
+            window.open(
+                'https://solardesign.pure-electric.com.au/#/projects/create?address='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
                 '_blank' // <- This is what makes it open in a new window.
             );
         });
