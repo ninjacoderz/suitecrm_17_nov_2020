@@ -4042,6 +4042,7 @@ function genExtraDaikinItemFunc(elem){
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background:#009acf;" type="button" id="btn_pe_daikin_new_form" class="button btn_pe_daikin_new_form" title="PE Daikin Form">Daikin Quote Form</button>');
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background-image: linear-gradient(to right, #0acffe 0%, #495aff 100%);" type="button" id="btn_pe_daikin_tool" class="button btn_pe_daikin_tool" title="PE Daikin Tool">Daikin Design Tool</button>');
      $("#btn_view_change_log").after('<button style="margin: 0px 3px;background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" type="button" id="btn_pe_sanden_tool" class="button btn_pe_sanden_tool" title="PE Sanden Tool">Sanden Design Tool</button>');
+     $("#btn_view_change_log").after('<button style="margin: 0px 3px;background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" type="button" id="btn_pe_solar_tool" class="button btn_pe_solar_tool" title="PE Solar Tool">Solar Design Tool</button>');
      $("#btn_pe_daikin_new_form").click(function(e) {
         if(lead_id_solar != '') {
             window.open(
@@ -4112,6 +4113,20 @@ function genExtraDaikinItemFunc(elem){
             //     '_blank' // <- This is what makes it open in a new window.
             // );
         }
+    });
+    $("#btn_pe_solar_tool").on('click',function(e) {
+        
+        var address = [$("#billing_address_street").val(),$("#billing_address_city").val()+' '+$("#billing_address_state").val(),$("#billing_address_postalcode").val(),'Australia'];
+        address = address.join(', ');
+        var first_name = $("#account_firstname_c").val();
+        var family_name = $("#account_lastname_c").val();
+        var email = $("#Leads0emailAddress0").val();
+        // var phone = $("#phone_mobile").val().replace(/ /g,'');
+        var phone = '';
+        window.open(
+            'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+            '_blank' // <- This is what makes it open in a new window.
+        );
     });
  });
 
