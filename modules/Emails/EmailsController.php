@@ -541,7 +541,7 @@ class EmailsController extends SugarController
                         $ret = $db->query($sql);
                         while ($row = $db->fetchByAssoc($ret)) {
                             $purchase_bean = new PO_purchase_order();
-                            $purchase_bean->retrieve(trim($row['id_c']));
+                            $purchase_bean->retrieve(trim($row['id']));
                             var_dump($row);
                         }
                         echo '<pre>';                        
