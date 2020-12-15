@@ -534,10 +534,10 @@ class EmailsController extends SugarController
                     $connote = $pe_whl_bean->connote;
                     $db = DBManagerFactory::getInstance();
                     if ($pe_whl_bean->warehouse_order_number !='') { 
-                        $sql = "SELECT id_c
-                                FROM PO_purchase_order_cstm
-                                LEFT JOIN PO_purchase_order ON PO_purchase_order.id = PO_purchase_order_cstm.id_c
-                                WHERE  PO_purchase_order_cstm.supplier_order_number_c = '$pe_whl_bean->warehouse_order_number' AND PO_purchase_order.deleted != 1";
+                        $sql = "SELECT PO_purchase_order.id
+                                FROM PO_purchase_order
+                                LEFT JOIN PO_purchase_order_cstm ON PO_purchase_order.id = PO_purchase_order_cstm.id_c
+                                WHERE  PO_purchase_order_cstm.supplier_order_number_c = '$pe_whl_bean->warehouse_order_number' AND PO_purchase_order.deleted = 0";
                         $ret = $db->query($sql);
                         while ($row = $db->fetchByAssoc($ret)) {
                             $purchase_bean = new PO_purchase_order();
