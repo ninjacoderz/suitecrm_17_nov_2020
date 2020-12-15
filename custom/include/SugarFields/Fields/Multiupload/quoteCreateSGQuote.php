@@ -1,6 +1,4 @@
 <?php
-echo json_encode(array("QuoteNumber"=>107387));
-return;
     date_default_timezone_set('Africa/Lagos');
     set_time_limit ( 0 );
     ini_set('memory_limit', '-1');
