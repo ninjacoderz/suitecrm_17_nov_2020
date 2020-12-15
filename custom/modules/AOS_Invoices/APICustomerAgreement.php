@@ -4,6 +4,13 @@ require_once('text/fpdf.php');
 require_once('text/src/autoload.php');
 require_once('include/SugarPHPMailer.php');
 
+//setup get user Paul Format Date 
+$paul_id = "61e04d4b-86ef-00f2-c669-579eb1bb58fa";
+$user = new User();
+$user->retrieve($paul_id);
+global $current_user;
+$current_user = $user;
+
 $method         = $_POST['method'];
 $invoiceID       = $_POST['invoiceID'];
 $Invoice = new AOS_Invoices();
@@ -69,9 +76,7 @@ function render_json_invoice($Invoice){
 
     if($Invoice->installation_date_c != ''){
         $dateInfos = explode(" ",$Invoice->installation_date_c);
-        $dateInfos = explode("/",$dateInfos[0]);
-        $inv_install_date_str = "$dateInfos[2]-$dateInfos[0]-$dateInfos[1]T00:00:00";
-        $installation_date_c = date("d/m/Y", strtotime($inv_install_date_str));
+        $installation_date_c = $dateInfos[0];
     }else{
         $installation_date_c = date("d/m/Y", time());
     }
@@ -115,7 +120,7 @@ function generatePDF($dataRequest,$foldeId){
     $pdf->SetTextColor(0, 0, 0);
     
     
-    $pdf->Write($pdf->SetXY(128, 214), $dataRequest['your_install_date']);
+    $pdf->Write($pdf->SetXY(128, 214), $dataRequest['your_date_signture']);
     $pdf->Write($pdf->SetXY(128, 227), html_entity_decode($dataRequest['your_company_name'],ENT_QUOTES));
     $pdf->Write($pdf->SetXY(35, 229), html_entity_decode($dataRequest['first_name'] .' '.$dataRequest['last_name'],ENT_QUOTES) );
     $pdf->Write($pdf->SetXY(35, 240), html_entity_decode($dataRequest['your_position'],ENT_QUOTES));
