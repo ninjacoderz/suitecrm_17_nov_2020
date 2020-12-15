@@ -4131,7 +4131,7 @@ $(document).ready(function(){
         var email = $("#Leads0emailAddress0").val();
         var phone = $("#phone_mobile").val().replace(/ /g,'');
         window.open(
-            'https://solardesign.pure-electric.com.au/#/projects/create?address='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+            'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
             '_blank' // <- This is what makes it open in a new window.
         );
     });

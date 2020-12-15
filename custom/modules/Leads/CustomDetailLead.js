@@ -555,7 +555,7 @@ $(function () {
             var email = $("div[field='billing_account_email'] a").data("email-address");
             var phone = $("#mobile_phone_c").text().replace(/ /g,'');
             window.open(
-                'https://solardesign.pure-electric.com.au/#/projects/create?address='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+                'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
                 '_blank' // <- This is what makes it open in a new window.
             );
         });
