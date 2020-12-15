@@ -537,12 +537,18 @@ class EmailsController extends SugarController
                         $sql = "SELECT id_c
                                 FROM PO_purchase_order_cstm
                                 LEFT JOIN PO_purchase_order ON PO_purchase_order.id = PO_purchase_order_cstm.id_c
-                                WHERE  PO_purchase_order_cstm.supplier_order_number_c = '$pe_whl_bean->warehouse_order_number' AND deleted != 1";
+                                WHERE  PO_purchase_order_cstm.supplier_order_number_c = '$pe_whl_bean->warehouse_order_number' AND PO_purchase_order.deleted != 1";
                         $ret = $db->query($sql);
                         while ($row = $db->fetchByAssoc($ret)) {
                             $purchase_bean = new PO_purchase_order();
                             $purchase_bean->retrieve(trim($row['id_c']));
+                            var_dump($row);
                         }
+                        echo '<pre>';                        
+                        var_dump($sql);
+                        var_dump($ret);
+                        var_dump($purchase_bean);
+                        echo '</pre>';
                     } else {
                         $pe_whl_bean->load_relationships('PO_purchase_order');                    
                         $purchase_bean = $pe_whl_bean->get_linked_beans('po_purchase_order_pe_warehouse_log_1','PO_purchase_order')[0];
