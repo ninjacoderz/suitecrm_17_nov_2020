@@ -552,9 +552,20 @@ if($bean_module_data->id){
                     if($MaximumPanels > $MaximumGroup ){
                         $MaximumPanels = $MaximumGroup;
                     }
+
+                    /** Thienpb update logic check max panel by VOC */
+                    $tempCov = $data_panel->TempCoV;
+                    $covPer = $data_panel->Voc;
+                    $COV = ($covPer * ((25 * $tempCov)+100)/100);
+                    $max = (int)(600/$COV);
+                    if($max < $MaximumPanels){
+                        $MaximumPanels = $max;
+                    }
+                     /** End */
+
                     $data_result = calc_panel((int)$_GET['option_total_panel_'.$i],$MinimumPanels,$MaximumPanels,array(count($quote_decode->Options[$i]->Configurations[0]->Trackers[0]->Strings),count($quote_decode->Options[$i]->Configurations[0]->Trackers[1]->Strings)),$MaximumGroup);
                     $sub_panels = $data_result['panelConfig'];
-                    if($data_option_string->Configurations[0]->Trackers[0]->MaximumPanels > $data_option_string->Configurations[0]->Trackers[1]->MaximumPanels){
+                    if(($data_option_string->Configurations[0]->Trackers[0]->MaximumPanels > $data_option_string->Configurations[0]->Trackers[1]->MaximumPanels) && (count($sub_panels[0]) != count($data_option_string->Configurations[0]->Trackers[0]->Strings))){
                         $sub_panels = array_reverse($sub_panels);
                     }
                     if($data_result['SuggestTotalPanel'] != (int)$_GET['option_total_panel_'.$i]){
