@@ -1607,8 +1607,26 @@ function update_solar_quote_c($SGquote_ID, $quoteSuite) {
                 $quote_decode->Options[$i]->Configurations[0]->Trackers[0]->Strings[0]->Shading = 0;
                 $quote_decode->Options[$i]->Configurations[0]->Trackers[0]->Strings[0]->Arrays = 1;
             }else{
+                if($MaximumPanels > $MaximumGroup ){
+                    $MaximumPanels = $MaximumGroup;
+                }
+        
+                /** Thienpb update logic check max panel by VOC */
+                $tempCov = $dataPanel->TempCoV;
+                $covPer = $dataPanel->Voc;
+                $COV = ($covPer * ((25 * $tempCov)+100)/100);
+                $max = (int)(600/$COV);
+                if($max < $MaximumPanels){
+                    $MaximumPanels = $max;
+                }
+                 /** End */
+
+                 
                 $data_result = calc_panel_c((int)$totalPanel,$MinimumPanels,$MaximumPanels,array(count($quote_decode->Options[$i]->Configurations[0]->Trackers[0]->Strings),count($quote_decode->Options[$i]->Configurations[0]->Trackers[1]->Strings)),$MaximumGroup);
                 $sub_panels = $data_result['panelConfig'];
+                if(($data_option_string->Configurations[0]->Trackers[0]->MaximumPanels > $data_option_string->Configurations[0]->Trackers[1]->MaximumPanels) && (count($sub_panels[0]) != count($data_option_string->Configurations[0]->Trackers[0]->Strings))){
+                    $sub_panels = array_reverse($sub_panels);
+                }
                 if($data_result['SuggestTotalPanel'] != (int)$totalPanel){
                     $specialMess .= "Can't Push Option ".($i+1)." with ".(int)$totalPanel." panels.(Suggestion : ".$data_result['SuggestTotalPanel']." panels.)\n";
                     if(($i+1) == count($quote_decode->Options)){
