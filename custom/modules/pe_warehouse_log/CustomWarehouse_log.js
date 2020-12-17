@@ -1050,6 +1050,7 @@ $(function () {
             url: $("#EditView").attr('action'),
             data: $("#EditView").serialize(),
             success: function (data) {
+                $(".reload_after_rename").trigger("click");
                 SUGAR.ajaxUI.hideLoadingPanel();
             }
         });

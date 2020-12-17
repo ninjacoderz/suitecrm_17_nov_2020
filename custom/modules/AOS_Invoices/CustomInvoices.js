@@ -1610,7 +1610,8 @@ $(function () {
                 url: $("#EditView").attr('action'),
                 data: $("#EditView").serialize(),
                 success: function (data) {
-                SUGAR.ajaxUI.hideLoadingPanel();
+                    $(".reload_after_rename").trigger("click");
+                    SUGAR.ajaxUI.hideLoadingPanel();
                 }
             });
             return false;
