@@ -184,7 +184,7 @@ $(document).ready(function() {
     }
     $('#sanden_gross_profit_c').parent().parent().append('<br><button type="button" class="button" id="calculation_profit_sanden">Calculation Profit Sanden</button>');
     $("#calculation_profit_sanden").on('click',function(){
-        calculation_gross_profit_sanden();
+        GP_manual();
     })
     var string_selector_calculation_sanden = '#sanden_stcs_c, #sanden_supply_bill_c,#sanden_shipping_bill_c,#plumbing_bill_c,#electrician_bill_c,#sanden_revenue_c,#STCRevenue, #sanden_total_costs_c, #veec_revenue_c, #solar_vic_revenue_c, #sa_reps_revenue_c';
     $(string_selector_calculation_sanden).css('width','35%');
@@ -206,27 +206,59 @@ $(document).ready(function() {
             $(fields_auto_fill).attr('disabled', 'disabled');
         }
     });
-    if ($("#gp_manual_c").is(":checked")) {
-        $(fields_auto_fill).removeAttr('disabled');
-        calculation_gross_profit_sanden();
-    } else {
-        setTimeout(function(){
-            //disable auto fill
-            $(fields_auto_fill).attr('disabled', 'disabled');
-            //VUT- get from PO
-            var po_plumb_id = $('#plumber_po_c').val();
-            var po_electrical_id = $('#electrical_po_c').val();
-            if (po_plumb_id != '' ) {
-                var plumb_total = parseFloat(getPO_Total(po_plumb_id));
-            } 
-            if (po_electrical_id != '') {
-                var electrical_total = parseFloat(getPO_Total(po_electrical_id));
-            }
-            //GP Calculation - Plumbing/Electrical Installation Cost
-            $('#plumbing_bill_c').val(plumb_total);
-            $('#electrician_bill_c').val(electrical_total);
-            calculateGP();
-        }, 500);
+    //load page
+    GP_manual();
+    // if ($("#gp_manual_c").is(":checked")) {
+    //     $(fields_auto_fill).removeAttr('disabled');
+    //     calculation_gross_profit_sanden();
+    // } else {
+    //     setTimeout(function(){
+    //         //disable auto fill
+    //         $(fields_auto_fill).attr('disabled', 'disabled');
+    //         //VUT- get from PO
+    //         var po_plumb_id = $('#plumber_po_c').val();
+    //         var po_electrical_id = $('#electrical_po_c').val();
+    //         if (po_plumb_id != '' ) {
+    //             var plumb_total = parseFloat(getPO_Total(po_plumb_id));
+    //         } 
+    //         if (po_electrical_id != '') {
+    //             var electrical_total = parseFloat(getPO_Total(po_electrical_id));
+    //         }
+    //         //GP Calculation - Plumbing/Electrical Installation Cost
+    //         $('#plumbing_bill_c').val(plumb_total);
+    //         $('#electrician_bill_c').val(electrical_total);
+    //         calculateGP();
+    //     }, 500);
+    // }
+
+    /**
+     * VUT - GP Manual/Auto
+     */
+    function GP_manual() {
+        if ($("#gp_manual_c").is(":checked")) {
+            $(fields_auto_fill).removeAttr('disabled');
+            calculation_gross_profit_sanden();
+        } else {
+            SUGAR.ajaxUI.showLoadingPanel();
+            setTimeout(function(){
+                //disable auto fill
+                $(fields_auto_fill).attr('disabled', 'disabled');
+                //VUT- get from PO
+                var po_plumb_id = $('#plumber_po_c').val();
+                var po_electrical_id = $('#electrical_po_c').val();
+                if (po_plumb_id != '' ) {
+                    var plumb_total = parseFloat(getPO_Total(po_plumb_id));
+                } 
+                if (po_electrical_id != '') {
+                    var electrical_total = parseFloat(getPO_Total(po_electrical_id));
+                }
+                //GP Calculation - Plumbing/Electrical Installation Cost
+                $('#plumbing_bill_c').val(plumb_total);
+                $('#electrician_bill_c').val(electrical_total);
+                calculateGP();
+                SUGAR.ajaxUI.hideLoadingPanel();
+            }, 500);
+        }
     }
 
     /**

@@ -5735,7 +5735,7 @@ $(function() {
     }
 
     /**
-     * VUT-get quantyti STCs/VEECs from line item for GP Calculation
+     * VUT-get quantity STCs/VEECs from line item for GP Calculation
      */
     function getSTCsLineItem() {
         let products = $('#line_items_span').find('.product_group').children('tbody');
@@ -5830,6 +5830,27 @@ $(function() {
         calculation_gross_profit_sanden_quote();
     }
     /**
+     * Check GP Manual 
+     */
+    function GP_manual() {
+        if ($("#gb_manual").is(":checked")) {
+            $(fields_auto_fill).removeAttr('disabled');
+            calculation_gross_profit_sanden_quote();
+        } else {
+            SUGAR.ajaxUI.showLoadingPanel();
+            setTimeout(function(){
+                $(fields_auto_fill).attr('disabled', 'disabled');
+                //get po plumb/elec total_amt
+                var po_total_amt = getPOforQuote($("input[name='record']").val());
+                $('#plumbing_bill').val(po_total_amt['plumb_po']);
+                $('#electrician_bill').val(po_total_amt['elec_po']);
+                calculateGP();
+                SUGAR.ajaxUI.hideLoadingPanel();
+            }, 100);
+        }
+    }
+
+    /**
      * GP Calculation in Quote
      */
     function calculation_gross_profit_sanden_quote(){
@@ -5873,7 +5894,7 @@ $(function() {
     }
     $('#sanden_gross_profit').parent().parent().append('<br><button type="button" class="button" id="calculation_profit_sanden_quote">Calculation Profit Sanden</button>');
     $("#calculation_profit_sanden_quote").on('click',function(){
-        calculation_gross_profit_sanden_quote();
+        GP_manual();
     })
     var string_selector_calculation_sanden = '#sanden_stcs, #sanden_supply_bill,#sanden_shipping_bill,#plumbing_bill,#electrician_bill,#sanden_revenue,#STCRevenue,#veec_revenue, #solar_vic_revenue, #sa_reps_revenue';
     var selector_sub_grofit_sanden = '#sanden_gprofit_percent,#sanden_total_revenue,#sanden_gross_profit,#sanden_total_costs,';
@@ -5909,20 +5930,22 @@ $(function() {
             $(fields_auto_fill).attr('disabled', 'disabled');
         }
     });
-    if ($("#gb_manual").is(":checked")) {
-        $(fields_auto_fill).removeAttr('disabled');
-        calculation_gross_profit_sanden_quote();
-    } else {
-        //Calulation first time
-        setTimeout(function(){
-            $(fields_auto_fill).attr('disabled', 'disabled');
-            //get po plumb/elec total_amt
-            var po_total_amt = getPOforQuote($("input[name='record']").val());
-            $('#plumbing_bill').val(po_total_amt['plumb_po']);
-            $('#electrician_bill').val(po_total_amt['elec_po']);
-            calculateGP();
-        }, 100);
-    }
+    //load page
+    GP_manual();
+    // if ($("#gb_manual").is(":checked")) {
+    //     $(fields_auto_fill).removeAttr('disabled');
+    //     calculation_gross_profit_sanden_quote();
+    // } else {
+    //     //Calulation first time
+    //     setTimeout(function(){
+    //         $(fields_auto_fill).attr('disabled', 'disabled');
+    //         //get po plumb/elec total_amt
+    //         var po_total_amt = getPOforQuote($("input[name='record']").val());
+    //         $('#plumbing_bill').val(po_total_amt['plumb_po']);
+    //         $('#electrician_bill').val(po_total_amt['elec_po']);
+    //         calculateGP();
+    //     }, 100);
+    // }
 
 
 });
