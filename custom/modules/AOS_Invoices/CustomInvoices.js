@@ -3076,6 +3076,7 @@ $(function () {
             build_url += '&is_testing=' + encodeURIComponent(is_testing);
             build_url += '&electric_phone_number='+ encodeURIComponent(electric_phone_number);
             build_url += '&po_record='+ encodeURIComponent($("#electrical_po_c").val());
+            build_url += '&id_ces_cert='+ encodeURIComponent($("#select_template_ces").val());
 
             //dung code - show popup sms/mms when click button electrical send sms/mms
             if(messagetype == 'sms/mms') {
@@ -3667,6 +3668,7 @@ $(function () {
             build_url += '&is_testing=' + encodeURIComponent(is_testing);
             build_url += '&plumber_phone_number=' + encodeURIComponent(plumber_phone_number);
             build_url += '&po_record='+ encodeURIComponent($("#plumber_po_c").val());
+            build_url += '&id_pcoc_cert='+ encodeURIComponent($("#select_template_pcoc").val());
             //plumber_phone_number
             //is_testing
             //build_url = encodeURIComponent(build_url);
