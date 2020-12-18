@@ -205,6 +205,10 @@
         $account->billing_address_postalcode = $primary_address_postalcode;
         $account->billing_address_street = $your_street;
         $account->email1 = $email_customer;
+        $account->system_owner_type_c = $rq_data['system_owner_entity_type'];
+        $account->abn_c = $rq_data['abn_number'];
+        $account->entity_name_c = $rq_data['entity_name'];
+        $account->entity_type_c = $rq_data['entity_type'];
         $account->assigned_user_id = $assigned_user;
 
 
@@ -324,6 +328,10 @@
             $account->billing_address_state = $lead->primary_address_state;
             $account->billing_address_postalcode = $lead->billing_address_postalcode;
             $account->email1 = $lead->email1;
+            $account->system_owner_type_c = $rq_data['system_owner_entity_type'];
+            $account->abn_c = $rq_data['abn_number'];
+            $account->entity_name_c = $rq_data['entity_name'];
+            $account->entity_type_c = $rq_data['entity_type'];
             $account->assigned_user_id = $assigned_user;
 
             $account->save();
