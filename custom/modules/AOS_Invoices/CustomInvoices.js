@@ -2523,7 +2523,7 @@ $(function () {
             var record_id = $("input[name='record']").val();
             var daikin_supplier = $("#account_id2_c").val();
             //VUT-S-Create subject PO
-            // var daikin_product = $("input[name='daikin_product_infomation_c']").val(); //no use
+            var daikin_product = $("input[name='daikin_product_infomation_c']").val(); //no use
             var delivery_contact_suburb = $("#delivery_contact_suburb_c").val();
             var delivery_contact_state = $("#delivery_contact_state_c").val();
             var delivery_date = $("#delivery_date_time_c").val();
