@@ -68,7 +68,7 @@ require_once('include/SugarPHPMailer.php');
 //     throw new Exception('Incorrect error reporting level');
 // }
 
-global $mod_strings, $sugar_config;
+global $mod_strings, $sugar_config, $current_user;
 
 $bean = BeanFactory::getBean($_REQUEST['module'], $_REQUEST['uid']);
 
