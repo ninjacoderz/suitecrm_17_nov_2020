@@ -4120,7 +4120,7 @@ function genExtraDaikinItemFunc(elem){
         address = address.join(', ');
         var first_name = $("#account_firstname_c").val();
         var family_name = $("#account_lastname_c").val();
-        var email = $("#Leads0emailAddress0").val();
+        var email = $("#detail_email").attr('data-email-address');
         // var phone = $("#phone_mobile").val().replace(/ /g,'');
         var phone = '';
         window.open(
