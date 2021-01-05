@@ -272,6 +272,7 @@
         $length = 0;
         $width = 0;
         $height = 0;
+        $picking_code = '';
         while($row = $db->fetchByAssoc($ret)){
             $product_line = new AOS_Products_Quotes();
             $product_line->currency_id = $row['currency_id'];
@@ -343,7 +344,7 @@
 
             $total_amt += $product_line->product_total_price;
             $tax_amount += $product_line->vat_amt;
-
+            $picking_code .= $row['picking_code_c'].', ';
             $index++;
         }
 
@@ -469,6 +470,7 @@
                 0 => 
                 array (
                     'contains_dangerous_goods' => false,
+                    'item_description' => '#'.$orderID.' '.trim($picking_code,', '),
                     'weight' => $weight,
                     'length' => $length,
                     'width' => $width,
