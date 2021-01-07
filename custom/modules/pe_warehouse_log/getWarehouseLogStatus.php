@@ -2,7 +2,7 @@
 require_once('custom/include/SugarFields/Fields/Multiupload/simple_html_dom.php');
 
 
-if(count($_POST) > 0){
+if(isset($_POST['list_id'])){
 
     $list_id = $_POST['list_id'];
     for($i=0; $i<count($list_id); $i++){
@@ -18,8 +18,8 @@ if(count($_POST) > 0){
 }
 
 
-$connoteNumber = str_replace(' ', '', $_GET['connot']);
-$carrier = $_GET['carrier'];
+$connoteNumber = str_replace(' ', '', $_POST['connot']);
+$carrier = $_POST['carrier'];
 get_status($connoteNumber,$carrier);
 
 function get_status($connoteNumber,$carrier,$whlog = ''){
