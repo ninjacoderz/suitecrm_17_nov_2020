@@ -1359,3 +1359,9 @@ $entry_point_registry['APIRenderListQuoteInputs'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIRenderListQuoteInputs.php',
     'auth' => true
 );
+
+//Thienpb code -- custom api create label auspost from devel
+$entry_point_registry['APICreateLabelAuspost'] = array( 
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APICreateLabelAuspost.php',
+    'auth' => false
+);
