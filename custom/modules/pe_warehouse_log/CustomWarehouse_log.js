@@ -314,8 +314,9 @@ $(function () {
         $('#status_c').parent().siblings('.label').append('<br> <button type="button" class="button primary" id="getWLStatus"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Get Status</button>');
         $("#getWLStatus").click(function(){   
             $.ajax({
-                url: 'index.php?entryPoint=getWarehouseLogStatus',
+                url: 'http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=getWarehouseLogStatus',
                 type: "POST", 
+                dataType: 'jsonp',
                 data: {
                     connot: $('#connote').val().trim(),
                     carrier: $('#carrier').val(),
