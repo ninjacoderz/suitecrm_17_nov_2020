@@ -314,13 +314,13 @@ $(function () {
         $('#status_c').parent().siblings('.label').append('<br> <button type="button" class="button primary" id="getWLStatus"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Get Status</button>');
         $("#getWLStatus").click(function(){   
             $.ajax({
-                url: 'http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=getWarehouseLogStatus',
+                url: 'index.php?entryPoint=getWarehouseLogStatus',
                 type: "POST", 
                 crossDomain: true,
                 data: {
                     connot: $('#connote').val().trim(),
                     carrier: $('#carrier').val(),
-
+                    action: 'get_status_from_button'
                 }, 
                 success: function(data){
     
