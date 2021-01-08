@@ -346,4 +346,5 @@ function curl_get_status_from_devel($connoteNumber,$carrier){
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $result = curl_exec($curl);
     echo $result;
+    die();
 }
