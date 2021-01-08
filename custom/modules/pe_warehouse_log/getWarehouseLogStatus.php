@@ -18,8 +18,8 @@ if(isset($_POST['list_id'])){
 }
 
 
-$connoteNumber = str_replace(' ', '', $_POST['connot']);
-$carrier = $_POST['carrier'];
+$connoteNumber = str_replace(' ', '', $_REQUEST['connot']);
+$carrier = $_REQUEST['carrier'];
 get_status($connoteNumber,$carrier);
 
 function get_status($connoteNumber,$carrier,$whlog = ''){
