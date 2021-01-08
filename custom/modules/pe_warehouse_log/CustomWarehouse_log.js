@@ -320,7 +320,7 @@ $(function () {
                 data: {
                     connot: $('#connote').val().trim(),
                     carrier: $('#carrier').val(),
-                    action: 'get_status_from_button'
+                    method_action: 'get_status_from_button'
                 }, 
                 success: function(data){
     

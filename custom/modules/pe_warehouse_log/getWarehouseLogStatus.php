@@ -21,8 +21,10 @@ if(isset($_POST['list_id'])){
 
 $connoteNumber = str_replace(' ', '', $_REQUEST['connot']);
 $carrier = $_REQUEST['carrier'];
-$action = $_REQUEST['action'];
-if($action == 'get_status_from_button') {
+$method_action = $_REQUEST['method_action'];
+
+if($method_action == 'get_status_from_button') {
+
     curl_get_status_from_devel($connoteNumber,$carrier);
 }
 get_status($connoteNumber,$carrier);
