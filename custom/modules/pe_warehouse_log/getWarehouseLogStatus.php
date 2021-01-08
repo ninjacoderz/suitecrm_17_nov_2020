@@ -26,6 +26,7 @@ $method_action = $_REQUEST['method_action'];
 if($method_action == 'get_status_from_button') {
 
     curl_get_status_from_devel($connoteNumber,$carrier);
+    die();
 }
 get_status($connoteNumber,$carrier);
 
@@ -323,30 +324,26 @@ function get_status($connoteNumber,$carrier,$whlog = ''){
     }
 }
 function curl_get_status_from_devel($connoteNumber,$carrier){
-
-    $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=getWarehouseLogStatus";
-    curl_setopt($curl, CURLOPT_URL, $source);
-    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
-    curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
-    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array("connot"=>$connoteNumber,"carrier"=>$carrier)));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
-    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
-    $headers = array();
-    $headers[] = 'Connection: keep-alive';
-    $headers[] = 'Pragma: no-cache';
-    $headers[] = 'Cache-Control: no-cache';
-    $headers[] = 'Accept: application/json, text/plain, */*';
-    $headers[] = 'Sec-Fetch-Site: same-site';
-    $headers[] = 'Sec-Fetch-Mode: cors';
-    $headers[] = 'Accept-Encoding: gzip, deflate, br';
-    $headers[] = 'Accept-Language: en-US,en;q=0.9';
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    $result = curl_exec($curl);
-    echo $result;
-    die();
+    $request_data = array (
+        'connot' => $connoteNumber,
+        'carrier' =>$carrier
+    );
+        $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=getWarehouseLogStatus";
+        $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+        $curl = curl_init();
+    
+        curl_setopt($curl, CURLOPT_URL, $source);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($request_data));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+        $result = curl_exec($curl);
+        curl_close($curl);
+        echo $result;
 }
