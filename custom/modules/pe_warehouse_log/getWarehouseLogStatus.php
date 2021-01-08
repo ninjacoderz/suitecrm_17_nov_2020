@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 require_once('custom/include/SugarFields/Fields/Multiupload/simple_html_dom.php');
 
 

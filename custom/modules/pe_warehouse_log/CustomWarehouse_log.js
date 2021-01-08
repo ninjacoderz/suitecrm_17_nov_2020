@@ -316,7 +316,7 @@ $(function () {
             $.ajax({
                 url: 'http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=getWarehouseLogStatus',
                 type: "POST", 
-                dataType: 'jsonp',
+                crossDomain: true,
                 data: {
                     connot: $('#connote').val().trim(),
                     carrier: $('#carrier').val(),
