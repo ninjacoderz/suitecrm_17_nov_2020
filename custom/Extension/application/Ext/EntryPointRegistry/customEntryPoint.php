@@ -210,7 +210,7 @@ $entry_point_registry['customGetDataForEmailTemplate'] = array(
 //dung code - create entrypoint get data ABN
 $entry_point_registry['getdata_ABN'] = array(
     'file' => 'custom/modules/AOS_Invoices/getDataABN.php',
-    'auth' => true
+    'auth' => false
 );
 
 $entry_point_registry['customGetLeadfromMessApp'] = array(
@@ -1129,7 +1129,7 @@ $entry_point_registry['getQuoteRelateAccount'] = array(
 //VUT -- CRUD quote note for PDF
 $entry_point_registry['CRUD_quote_note'] = array(
     'file' => 'custom/modules/AOS_Quotes/CRUD_quote_note_pdf.php',
-    'auth' => true
+    'auth' => false
 );
 
 //VUT-Get link realestate 
