@@ -3076,6 +3076,7 @@ $(function () {
             build_url += '&is_testing=' + encodeURIComponent(is_testing);
             build_url += '&electric_phone_number='+ encodeURIComponent(electric_phone_number);
             build_url += '&po_record='+ encodeURIComponent($("#electrical_po_c").val());
+            build_url += '&id_ces_cert='+ encodeURIComponent($("#select_template_ces").val());
 
             //dung code - show popup sms/mms when click button electrical send sms/mms
             if(messagetype == 'sms/mms') {
@@ -3667,6 +3668,7 @@ $(function () {
             build_url += '&is_testing=' + encodeURIComponent(is_testing);
             build_url += '&plumber_phone_number=' + encodeURIComponent(plumber_phone_number);
             build_url += '&po_record='+ encodeURIComponent($("#plumber_po_c").val());
+            build_url += '&id_pcoc_cert='+ encodeURIComponent($("#select_template_pcoc").val());
             //plumber_phone_number
             //is_testing
             //build_url = encodeURIComponent(build_url);
@@ -4010,7 +4012,10 @@ $(function () {
         // For text bellow STC Aggregator Serial
 
         function createSTCAggregatorSerial() {
-            if ($('#stc_aggregator_serial_c').val() == "") return;
+            if ($('#stc_aggregator_serial_c').val() == "") {
+                $('#stc_aggregator_serial_c').siblings().empty();
+                return;
+            }
             var href = "<div class='open-stc-rebate'>Open STC rebate application <a target='_blank' href='https://geocreation.com.au/assignments/" + $('#stc_aggregator_serial_c').val() +
                 "/edit'>https://geocreation.com.au/assignments/" + $('#stc_aggregator_serial_c').val() + "/edit</a></div>";
             $('#stc_aggregator_serial_c').siblings().empty();

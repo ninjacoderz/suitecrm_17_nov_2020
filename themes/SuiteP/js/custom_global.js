@@ -324,6 +324,8 @@ $(document).ready(function(){
         autosize($('textarea'));
         autosize.destroy($('.product_item_description'));
         autosize.destroy($('#solar_pv_pricing_input_c'));
+        autosize.destroy($('#own_solar_pv_pricing_c'));
+
         if (module_sugar_grp1 == 'Calls') {
             autosize.destroy($('#description'));
         }

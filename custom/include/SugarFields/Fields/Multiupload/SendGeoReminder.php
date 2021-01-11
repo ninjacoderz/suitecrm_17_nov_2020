@@ -52,7 +52,7 @@ global $current_user;
 // else {
 //     $from_address = "Paul Szuster - PureElectric &lt;paul.szuster@pure-electric.com.au&gt;";
 // }
-$from_address = "PureElectric Accounts - PureElectric &lt;accounts@pure-electric.com.au&gt;";
+$from_address = "Pure Electric Accounts - PureElectric &lt;accounts@pure-electric.com.au&gt;";
 $account = new Account();
 $account_id = $_GET['billing_account_id'];
 if($account_id == "") {

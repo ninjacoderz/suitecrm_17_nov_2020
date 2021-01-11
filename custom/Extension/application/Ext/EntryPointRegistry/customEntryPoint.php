@@ -236,7 +236,7 @@ $entry_point_registry['customGetMeter'] = array(
 
 $entry_point_registry['getWarehouseLogStatus'] = array(
     'file' => 'custom/modules/pe_warehouse_log/getWarehouseLogStatus.php',
-    'auth' => false,
+    'auth' => true,
 );
 //dung code - update field open_new_tag_c lead
 $entry_point_registry['customPostFieldOpenTag'] = array(
@@ -1363,5 +1363,11 @@ $entry_point_registry['APIRenderListQuoteInputs'] = array(
 //Thienpb code -- custom api create label auspost from devel
 $entry_point_registry['APICreateLabelAuspost'] = array( 
     'file' => 'custom/include/SugarFields/Fields/Multiupload/APICreateLabelAuspost.php',
+    'auth' => false
+);
+
+//VUT - get product own solar in Quote
+$entry_point_registry['getOwnSolarPricing'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/getOwnSolarPricing.php',
     'auth' => false
 );

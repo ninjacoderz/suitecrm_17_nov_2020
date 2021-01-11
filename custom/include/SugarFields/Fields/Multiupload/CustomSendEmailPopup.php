@@ -911,12 +911,18 @@ if(!empty($electrical_install_date)){
 }
 
 if ($mail_format == "plumber") {
+    $path_file_json_template = $_SERVER["DOCUMENT_ROOT"] . '/custom/modules/AOS_Invoices/json_pcoc_cert_template.json';
+    $json_data = json_decode(file_get_contents($path_file_json_template),true);
+    $pcoc_cert_wording = $json_data[$_REQUEST['id_pcoc_cert']]['content'];
     $subject = str_replace('$pl_elec_install_date',$plumber_install_date_with_dayname,$subject);
-    $cert_notes =  'PCOC Cert Note: '.$invoice->pcoc_cert_wording_c;
+    $cert_notes =  'PCOC Cert Note: '.$pcoc_cert_wording;
 }
 else if($mail_format == "electrical"){
+    $path_file_json_template = $_SERVER["DOCUMENT_ROOT"] . '/custom/modules/AOS_Invoices/json_ces_cert_template.json';
+    $json_data = json_decode(file_get_contents($path_file_json_template),true);
+    $ces_cert_wording = $json_data[$_REQUEST['id_ces_cert']]['content'];
     $subject = str_replace('$pl_elec_install_date',$electrical_install_date_with_dayname,$subject);
-    $cert_notes = 'CES Cert Note: '.$invoice->ces_cert_wording_c;
+    $cert_notes = 'CES Cert Note: '.$ces_cert_wording;
 }
 
 switch ( $_REQUEST['product_type']) {

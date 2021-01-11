@@ -122,7 +122,7 @@ class sendEmail
             if ($account->retrieve($account_id)) {
                 $email->parent_type = 'Accounts';
                 $email->parent_id = $account->id;
-                //$email->from_addr = 'PureElectric Accounts <accounts@pure-electric.com.au>';
+                //$email->from_addr = 'Pure Electric Accounts <accounts@pure-electric.com.au>';
                 if (!empty($account->email1)) {
                     //$email->to_addrs_emails = $account->email1 . ";";
                     //$email->to_addrs = $account->name . " <" . $account->email1 . ">";
@@ -274,14 +274,14 @@ class sendEmail
             $email->to_addrs_arr = array( array("email" => "info@pure-electric.com.au"), array("email" => "binhdigipro@gmail.com"));
             if($note) $email->saved_attachments[] = $note;
             $email->from_addr = "accounts@pure-electric.com.au";
-            $email->from_name = "PureElectric Accounts";
+            $email->from_name = "Pure Electric Accounts";
             $email->send();
             
             $email->to_addrs_arr = NULL;
             if(isset ($contact->email1 ) && $contact->email1 != ""){
                 $email->to_addrs_names = $contact->name . " <" . $contact->email1 . ">";
             }
-            $email->from_addr_name = "PureElectric Accounts &lt;accounts@pure-electric.com.au&gt;";
+            $email->from_addr_name = "Pure Electric Accounts &lt;accounts@pure-electric.com.au&gt;";
             // personal accounts
             // Hard code for mail inbox 
             //if(($module->module_dir == "PO_purchase_order" || $module->module_dir == "AOS_Invoices") && $current_user->id == "61e04d4b-86ef-00f2-c669-579eb1bb58fa"){

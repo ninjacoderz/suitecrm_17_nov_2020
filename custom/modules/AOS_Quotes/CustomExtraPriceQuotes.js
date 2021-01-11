@@ -247,6 +247,8 @@ $(function () {
         // }
        // total_kw();
         save_values();
+        getOwnSolarPricing($("#solar_pv_pricing_input_c").val(), 'solar_changed');
+
     })
 
     //trigger change caculate price when click Double Storey
@@ -285,6 +287,8 @@ $(function () {
         total_kw();
         calc_total_price();
         save_values();
+        getOwnSolarPricing($("#solar_pv_pricing_input_c").val(), 'solar_changed');
+
         setTimeout(function() {
             $('#calculatePrice span.glyphicon-refresh').addClass('hidden');
         },200);
@@ -1099,6 +1103,7 @@ $(function () {
                 calculation_for_option(index);
                 total_kw(index);
                 save_values();
+                getOwnSolarPricing($("#solar_pv_pricing_input_c").val(), 'solar_changed');
             }
             
         }
