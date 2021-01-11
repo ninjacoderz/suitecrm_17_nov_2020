@@ -3636,15 +3636,16 @@ function genExtraDaikinItemFunc(elem){
              var populateModuleRecord = $(source).attr('data-record-id');
  
              // change address email new
-             var solar_install_contact = {
-                 'VIC': 'sg.vic.installadmin@solargain.com.au', // update 12/3/2019 -change address email for state VIC
-                 'SA':  "sg.wa.installadmin@solargain.com.au",
-                 'ACT': "act.pv@solargain.com.au",
-                 'NSW': "act.pv@solargain.com.au",
-                 'WA':  "sg.wa.installadmin@solargain.com.au",
-                 'QLD': "Rebecca Rodgers <Rebecca.Rodgers@solargain.com.au>",
-             }
- 
+            //  var solar_install_contact = {
+            //      'VIC': 'sg.vic.installadmin@solargain.com.au', // update 12/3/2019 -change address email for state VIC
+            //      'SA':  "sg.wa.installadmin@solargain.com.au",
+            //      'ACT': "act.pv@solargain.com.au",
+            //      'NSW': "act.pv@solargain.com.au",
+            //      'WA':  "sg.wa.installadmin@solargain.com.au",
+            //      'QLD': "Rebecca Rodgers <Rebecca.Rodgers@solargain.com.au>",
+            //  }
+            // change Ensure all 3x addresses are included  (regardless of state)
+            var solar_install_contact = "sg.wa.installadmin@solargain.com.au" + ", " + "lauren.patmore@solargain.com.au" + ", " + "joel.walsh@solargain.com.au";
              var populateModuleName = $(source).attr('data-module-name');
              var populateEmailAddress = $(source).attr('data-email-address');
  
@@ -3673,7 +3674,7 @@ function genExtraDaikinItemFunc(elem){
                
              }
  
-             var populateEmailAddress = solar_install_contact[primary_address_state];
+             var populateEmailAddress = solar_install_contact; //solar_install_contact[primary_address_state];
              $(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
              $(self.emailComposeView).find('#parent_type').val(populateModule);
              $(self.emailComposeView).find('#parent_name').val(populateModuleName);
