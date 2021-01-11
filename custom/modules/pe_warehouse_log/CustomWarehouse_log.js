@@ -316,10 +316,11 @@ $(function () {
             $.ajax({
                 url: 'index.php?entryPoint=getWarehouseLogStatus',
                 type: "POST", 
+                crossDomain: true,
                 data: {
                     connot: $('#connote').val().trim(),
                     carrier: $('#carrier').val(),
-
+                    method_action: 'get_status_from_button'
                 }, 
                 success: function(data){
     

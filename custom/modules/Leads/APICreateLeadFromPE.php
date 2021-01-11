@@ -399,36 +399,6 @@
         $sent = $mail->Send();
 
         //auto create shipments auspost
-        $tmpfname = dirname(__FILE__).'/cookie.auspost.txt';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://digitalapi.auspost.com.au/cssoapi/v2/session');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"username":"accounts@pure-electric.com.au","password":"aPureandTrue2018*"}');
-        curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $tmpfname);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $tmpfname);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_COOKIESESSION, TRUE);
-        $headers = array();
-        $headers[] = 'Connection: keep-alive';
-        $headers[] = 'Pragma: no-cache';
-        $headers[] = 'Cache-Control: no-cache';
-        $headers[] = 'Accept: application/json, text/plain, */*';
-        $headers[] = 'Origin: https://auspost.com.au';
-        $headers[] = 'Ap_app_id: MYPOST';
-        $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36';
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Sec-Fetch-Site: same-site';
-        $headers[] = 'Sec-Fetch-Mode: cors';
-        $headers[] = 'Referer: https://auspost.com.au/mypost-business/auth/';
-        $headers[] = 'Accept-Encoding: gzip, deflate, br';
-        $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $result = curl_exec($ch);
-        curl_close($ch);
         $shipments = array (
             'shipments' => 
             array (
@@ -481,96 +451,33 @@
             ),
             ),
         );
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://digitalapi.auspost.com.au/accessone/v1/session');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $tmpfname);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $tmpfname);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_COOKIESESSION, TRUE);
+       
+        $curl = curl_init();
+        $source = "http://loc.suitecrm.com/index.php?entryPoint=APICreateLabelAuspost";
+        curl_setopt($curl, CURLOPT_URL, $source);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array("shipments"=>$shipments)));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
         $headers = array();
         $headers[] = 'Connection: keep-alive';
         $headers[] = 'Pragma: no-cache';
         $headers[] = 'Cache-Control: no-cache';
         $headers[] = 'Accept: application/json, text/plain, */*';
-        $headers[] = 'Origin: https://auspost.com.au';
-        $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36';
         $headers[] = 'Sec-Fetch-Site: same-site';
         $headers[] = 'Sec-Fetch-Mode: cors';
-        $headers[] = 'Referer: https://auspost.com.au/mypost-business/shipping-and-tracking/orders/add/retail';
         $headers[] = 'Accept-Encoding: gzip, deflate, br';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $result = curl_exec($curl);
+        curl_close($curl);
 
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://digitalapi.auspost.com.au/shipping/v1/shipments');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
-        curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $tmpfname);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $tmpfname);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_COOKIESESSION, TRUE);
-        $headers = array();
-        $headers[] = 'Connection: keep-alive';
-        $headers[] = 'Pragma: no-cache';
-        $headers[] = 'Cache-Control: no-cache';
-        $headers[] = 'Access-Control-Request-Method: POST';
-        $headers[] = 'Origin: https://auspost.com.au';
-        $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36';
-        $headers[] = 'Access-Control-Request-Headers: account-number,auspost-partner-id,content-type';
-        $headers[] = 'Accept: */*';
-        $headers[] = 'Sec-Fetch-Site: same-site';
-        $headers[] = 'Sec-Fetch-Mode: cors';
-        $headers[] = 'Referer: https://auspost.com.au/mypost-business/shipping-and-tracking/orders/add/retail';
-        $headers[] = 'Accept-Encoding: gzip, deflate, br';
-        $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://digitalapi.auspost.com.au/shipping/v1/shipments');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($shipments));
-        curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $tmpfname);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $tmpfname);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_COOKIESESSION, TRUE);
-
-        $headers = array();
-        $headers[] = 'Connection: keep-alive';
-        $headers[] = 'Pragma: no-cache';
-        $headers[] = 'Cache-Control: no-cache';
-        $headers[] = 'Accept: application/json, text/plain, */*';
-        $headers[] = 'Account-Number: 62ff9f94f4534eb3b93080c9a3edcd9c';
-        $headers[] = 'Origin: https://auspost.com.au';
-        $headers[] = 'Content-Type: application/json;charset=UTF-8';
-        $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36';
-        $headers[] = 'Auspost-Partner-Id: SENDAPARCEL-UI';
-        $headers[] = 'Sec-Fetch-Site: same-site';
-        $headers[] = 'Sec-Fetch-Mode: cors';
-        //$headers[] = 'Content-Length: ' .strlen(json_encode($shipments));
-        $headers[] = 'Referer: https://auspost.com.au/mypost-business/shipping-and-tracking/orders/add/retail';
-        $headers[] = 'Accept-Encoding: gzip, deflate, br';
-        $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $result = curl_exec($ch);
-        curl_close($ch);
         $json_result = json_decode($result);
         $aupost_shipping_id = $json_result->shipments[0]->shipment_id;
         $connote_id = $json_result->shipments[0]->items[0]->tracking_details->article_id;

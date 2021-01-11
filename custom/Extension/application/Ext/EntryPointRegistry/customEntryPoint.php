@@ -236,7 +236,7 @@ $entry_point_registry['customGetMeter'] = array(
 
 $entry_point_registry['getWarehouseLogStatus'] = array(
     'file' => 'custom/modules/pe_warehouse_log/getWarehouseLogStatus.php',
-    'auth' => true,
+    'auth' => false,
 );
 //dung code - update field open_new_tag_c lead
 $entry_point_registry['customPostFieldOpenTag'] = array(
