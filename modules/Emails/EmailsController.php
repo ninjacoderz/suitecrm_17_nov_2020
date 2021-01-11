@@ -389,6 +389,99 @@ class EmailsController extends SugarController
                 //end - code render sms_template
             }
 
+            //VUT-S-Invoice - Button Sanden Health Check
+            if($_REQUEST['email_type'] == 'sanden_health_check'){
+                $record_id = trim($_REQUEST['record_id']);
+                $macro_nv = array();
+                $focusName = "AOS_Invoices";
+                $focus = BeanFactory::getBean($focusName, $record_id);
+
+                if(!$focus->id) return;
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+
+                $emailTemplateID =  '76c97f88-ae32-36ad-6186-5ffbc3420c44'; //suitecrm server
+                // $emailTemplateID = '39acf291-0c24-1cac-41d3-5ffbf43749d3'; //test devel
+
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',
+                    $emailTemplateID
+                );
+                //get email from contact
+                $contact_bean = new Contact;
+                $contact_bean->retrieve($focus->billing_contact_id);
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                $description = str_replace("\$contact_first_name",$contact_bean->first_name , $description);
+                $description_html = str_replace("\$contact_first_name",$contact_bean->first_name , $description_html);
+                $name = str_replace("\$contact_name", $contact_bean->first_name.' '.$contact_bean->last_name , $name);
+                $name = str_replace("\$contact_primary_address_city", $contact_bean->primary_address_city , $name);
+                $name = str_replace("\$contact_primary_address_state", $contact_bean->primary_address_state , $name);
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+                //get email from contact
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+                //start - code render sms_template  
+                // global $current_user;
+                // $smsTemplateID = '4efab103-2d92-a39d-bcdd-5eb2030047bd'; //suitecrm server
+                // // $smsTemplateID = '92b32931-44c6-7dc4-3358-5eb2235ba028'; //test local VUT
+                // $smsTemplate = BeanFactory::getBean(
+                //     'pe_smstemplate',
+                //     $smsTemplateID 
+                // );
+                // $body =  $smsTemplate->body_c;
+                // $body = str_replace("\$first_name", $contact_bean->first_name, $body);
+                // if( isset($_REQUEST['email_plumber']) && $_REQUEST['email_plumber'] == "plumber"){
+                //     $body = str_replace("\$product_type", $product, $body);
+                // }
+                // $smsTemplate->body_c = $body;
+                // $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                // $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                // $this->bean->number_receive_sms = "matthew_paul_client";
+                // $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact_bean->phone_mobile));
+                // $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                // $this->bean->number_client =  $phone_number; 
+                // $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                //end - code render sms_template
+            }
+            //VUT-E-Invoice - BUtton Sanden Health Check
+
             //VUT-S-Invoice-Detailview- Button 'Delivery Coming'
                 if($_REQUEST['email_type'] == 'delivery_coming'){
                     if( isset($_REQUEST['email_plumber']) && $_REQUEST['email_plumber'] == "plumber"){

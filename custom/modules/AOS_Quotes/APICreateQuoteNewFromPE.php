@@ -1,261 +1,321 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'].'/custom/include/SugarFields/Fields/Multiupload/simple_html_dom.php');
 
-//data request
-$data_request = json_decode(trim($_REQUEST),true);
-$part_numbers = array();
+$part_numbers               = array();
+$total_amt                  = 0;
+$subtotal_amount            = 0;
+$discount_amount            = 0;
+$tax_amount                 = 0;
+$total_amount               = 0;
+$index                      = 1;
+$is_use_number_1            = false;
+$products_return            = [];
+$price_include_admin        = 0;
+$price_include_admin_20     = 0;
+$price_veec_stc             = 0;
+$price_state                = 0;
+$priceHotWater              = 0;
+$priceHWS                   = 0;
+$plumbingExtra              = 0;
+$ElecExtra                  = 0;
+$RCBExtra                   = 0;
+$SwitchExtra                = 0;
+$Tank_slab                  = 0;
+$Pavers                     = 0;
+$priceReticulated_gas       = 0;
+$id_special                 = '';
+//
+/// If Generate for Suite
+if($_REQUEST['quote_generate_type'] == "bySuite") {
 
-// check variable sanden
-if($_REQUEST['choice_product_sanden'] == 'Sanden 315FQS') {
-    $partNumber = 'GAUS-315FQS';
-} elseif($_REQUEST['choice_product_sanden'] == 'Sanden 300FQS') {
-    $partNumber = 'GAUS-300FQS';
-} elseif($_REQUEST['choice_product_sanden'] == 'Sanden 250FQS') {
-    $partNumber = 'GAUS-250FQS';
-} elseif($_REQUEST['choice_product_sanden'] == 'Sanden 315FQV') {
-    $partNumber = 'GAUS-315FQV';
-} else {
-    $partNumber = 'GAUS-160FQS';
-}
-array_push($part_numbers,$partNumber);
-$old_tank_fuel = '';
-if($_REQUEST['choice_type_install'] == 'New Build/Renovation') {
-    $old_tank_fuel = 'newBuilding';
-} else {
-    if($_REQUEST['choice_type_product'] == 'Gas') {
-        if($_REQUEST['product_choice_type_gas'] == 'Gas Instant') {
-            $old_tank_fuel = 'gas_instant';
-        } elseif($_REQUEST['product_choice_type_gas'] == 'Gas Storage') {
-            $old_tank_fuel = 'gas_storage';
-        }
-    } elseif($_REQUEST['choice_type_product'] == 'Electric') {
-        if($_REQUEST['product_choice_type_electric'] == 'Electric Storage') {
-            $old_tank_fuel = 'electric_storage';
-        } elseif($_REQUEST['product_choice_type_electric'] == 'Gravity Feed') {
-            $old_tank_fuel = 'gravity_feed_electric';
-        }
-    } elseif($_REQUEST['choice_type_product'] == 'Solar') {
-        $old_tank_fuel = 'solar';
-    } elseif($_REQUEST['choice_type_product'] == 'Heat Pump') {
-        $old_tank_fuel = 'heatpump';
-    } elseif($_REQUEST['choice_type_product'] == 'LPG') {
-        $old_tank_fuel = 'lpg';
-    } elseif($_REQUEST['choice_type_product'] == 'Wood') {
-        $old_tank_fuel = 'wood';
+    //Retrieve Data by Quote ID
+    $quote = new AOS_Quotes();
+    $quote->retrieve($_REQUEST['quote_id']);
+    unset($_REQUEST['entryPoint']);
+    unset($_REQUEST['module']);
+    unset($_REQUEST['action']);
+    $quote->quote_note_inputs_c = json_encode($_REQUEST);
+    
+    // var_dump($quote->quote_note_inputs_c); die;
+
+    //Check Type Sanden
+    if($_REQUEST['quote_tank_size'] == 'Sanden 315FQS') {
+        $partNumber = 'GAUS-315FQS';
+    } elseif($_REQUEST['quote_tank_size'] == 'Sanden 300FQS') {
+        $partNumber = 'GAUS-300FQS';
+    } elseif($_REQUEST['quote_tank_size'] == 'Sanden 250FQS') {
+        $partNumber = 'GAUS-250FQS';
+    } elseif($_REQUEST['quote_tank_size'] == 'Sanden 315FQV') {
+        $partNumber = 'GAUS-315FQV';
     } else {
-        $old_tank_fuel = 'other';
+        $partNumber = 'GAUS-160FQS';
     }
+    // Push Type Sanden To Array
+    array_push($part_numbers,$partNumber);
+    // Add  Old tank fuel
+    $old_tank_fuel = '';
+    if($_REQUEST['quote_choice_type_install'] == 'New Build/Renovation') {
+        $old_tank_fuel = 'newBuilding';
+    } else {
+        if($_REQUEST['quote_choice_type_product'] == 'Gas') {
+            if($_REQUEST['quote_product_choice_type_gas'] == 'Gas Instant') {
+                $old_tank_fuel = 'gas_instant';
+            } elseif($_REQUEST['quote_product_choice_type_gas'] == 'Gas Storage') {
+                $old_tank_fuel = 'gas_storage';
+            }
+        } elseif($_REQUEST['quote_choice_type_product'] == 'Electric') {
+            if($_REQUEST['quote_product_choice_type_electric'] == 'Electric Storage') {
+                $old_tank_fuel = 'electric_storage';
+            } elseif($_REQUEST['quote_product_choice_type_electric'] == 'Gravity Feed') {
+                $old_tank_fuel = 'gravity_feed_electric';
+            }
+        } elseif($_REQUEST['quote_choice_type_product'] == 'Solar') {
+            $old_tank_fuel = 'solar';
+        } elseif($_REQUEST['quote_choice_type_product'] == 'Heat Pump') {
+            $old_tank_fuel = 'heatpump';
+        } elseif($_REQUEST['quote_choice_type_product'] == 'LPG') {
+            $old_tank_fuel = 'lpg';
+        } elseif($_REQUEST['quote_choice_type_product'] == 'Wood') {
+            $old_tank_fuel = 'wood';
+        } else {
+            $old_tank_fuel = 'other';
+        }
+    }
+
+    // Check Add VEEC 
+    if($quote->billing_address_state == 'VIC' && $_REQUEST['quote_choice_type_product'] == 'Electric') {
+        if($_REQUEST['product_choice_type_electric'] == 'Electric Storage' || $_REQUEST['product_choice_type_electric'] == 'Gravity Feed') {
+            array_push($part_numbers,'STC Rebate Certificate', 'VEEC Rebate Certificate');
+        } else {
+            array_push($part_numbers,'STC Rebate Certificate');
+        }
+    } else {
+        if($_REQUEST['quote_provide_stcs'] != 'No' ) {
+            array_push($part_numbers,'STC Rebate Certificate');
+        }
+    }
+
+    $quantityPB = 0;
+    //create new items 
+    if($_REQUEST['quote_plumbing_installation_by_pure'] == 'Yes' || $_REQUEST['quote_electrical_installation_by_pure'] == 'Yes') {
+        array_push($part_numbers,'PB');
+    }
+    
+    if($_REQUEST['quote_choice_type_install'] == 'New Build') {
+        if($_REQUEST['quote_plumbing_installation_by_pure'] == 'Yes') {
+            array_push($part_numbers,'Sanden_Plb_Install_Std', 'PizzaBase');
+            $quantityPB += 1;
+            if($_REQUEST['quote_electrical_installation_by_pure'] == 'Yes') {
+                array_push($part_numbers,'Sanden_Elec_Install_Std', 'SSI');
+                $quantityPB += 1;
+            } else {
+                array_push($part_numbers,'SSPI');
+            }
+        } else {
+            array_push($part_numbers, 'SANDEN_SUPPLY_ONLY');
+        }
+    }else{
+        if($_REQUEST['quote_plumbing_installation_by_pure'] == 'Yes') {
+            array_push($part_numbers,'Sanden_Plb_Install_Std', 'PizzaBase');
+            $quantityPB += 1;
+            if($_REQUEST['quote_electrical_installation_by_pure'] == 'Yes') {
+                array_push($part_numbers,'Sanden_Elec_Install_Std', 'SSI');
+            } else {
+                array_push($part_numbers,'SSPI');
+            }
+        } else {
+            array_push($part_numbers, 'SANDEN_SUPPLY_ONLY');
+        }
+    }
+    if ($quote->billing_address_state == 'WA' || $quote->billing_address_state == 'TAS') {
+        $price_state = 360;
+    } elseif($quote->billing_address_state == 'SA' || $quote->billing_address_state == 'VIC' || $quote->billing_address_state == 'ACT' || $quote->billing_address_state == 'QLD') {
+        $price_state = 160;
+    } else {
+        $price_state = 50;
+    }
+    if($_REQUEST['quote_tank_size'] == 'Sanden 315FQV' || $_REQUEST['quote_tank_size'] == 'Sanden 315FQS' || $_REQUEST['quote_tank_size'] == 'Sanden 300FQS' || $_REQUEST['quote_tank_size'] == 'Sanden 250FQS' || $_REQUEST['quote_tank_size'] == 'Sanden 160FQS') {
+        if($_REQUEST['quote_quick_connection_kit'] == '15mm Quick Connection Kit (QIK15)') {
+            array_push($part_numbers,'QIK15−HPUMP');
+        }elseif($_REQUEST['quote_quick_connection_kit'] == '20mm Quick Connection Kit (QIK25)') {
+            array_push($part_numbers,'QIK20−HPUMP');
+        }
+    };
+    if($_REQUEST['quote_hot_water_rebate'] == 'Yes') {
+        array_push($part_numbers,'SV_SHWR');
+    };
+
+
+} else {
+    /// If Generate for Pure 
+    // check variable sanden
+    if($_REQUEST['choice_product_sanden'] == 'Sanden 315FQS') {
+        $partNumber = 'GAUS-315FQS';
+    } elseif($_REQUEST['choice_product_sanden'] == 'Sanden 300FQS') {
+        $partNumber = 'GAUS-300FQS';
+    } elseif($_REQUEST['choice_product_sanden'] == 'Sanden 250FQS') {
+        $partNumber = 'GAUS-250FQS';
+    } elseif($_REQUEST['choice_product_sanden'] == 'Sanden 315FQV') {
+        $partNumber = 'GAUS-315FQV';
+    } else {
+        $partNumber = 'GAUS-160FQS';
+    }
+    array_push($part_numbers,$partNumber);
+    $old_tank_fuel = '';
+    if($_REQUEST['choice_type_install'] == 'New Build/Renovation') {
+        $old_tank_fuel = 'newBuilding';
+    } else {
+        if($_REQUEST['choice_type_product'] == 'Gas') {
+            if($_REQUEST['product_choice_type_gas'] == 'Gas Instant') {
+                $old_tank_fuel = 'gas_instant';
+            } elseif($_REQUEST['product_choice_type_gas'] == 'Gas Storage') {
+                $old_tank_fuel = 'gas_storage';
+            }
+        } elseif($_REQUEST['choice_type_product'] == 'Electric') {
+            if($_REQUEST['product_choice_type_electric'] == 'Electric Storage') {
+                $old_tank_fuel = 'electric_storage';
+            } elseif($_REQUEST['product_choice_type_electric'] == 'Gravity Feed') {
+                $old_tank_fuel = 'gravity_feed_electric';
+            }
+        } elseif($_REQUEST['choice_type_product'] == 'Solar') {
+            $old_tank_fuel = 'solar';
+        } elseif($_REQUEST['choice_type_product'] == 'Heat Pump') {
+            $old_tank_fuel = 'heatpump';
+        } elseif($_REQUEST['choice_type_product'] == 'LPG') {
+            $old_tank_fuel = 'lpg';
+        } elseif($_REQUEST['choice_type_product'] == 'Wood') {
+            $old_tank_fuel = 'wood';
+        } else {
+            $old_tank_fuel = 'other';
+        }
+    }
+    // Get Sanden Data
+    $sandenData = addSandenData();
+
+
+    $quote = new AOS_Quotes();
+
+    //Update Quote Suburb, Postcode, State
+    $quote->name = 'GUEST ' .$_REQUEST['suburb_customer'] .' '.$_REQUEST['state_customer'].' '.$_REQUEST['choice_product_sanden'];
+    $quote->pre_install_photos_c = $_REQUEST['pre_install_photos_c'];
+    date_default_timezone_set("Australia/Melbourne");
+    $dateQuote = new DateTime();
+    $quote->quote_date_c = date('Y-m-d H:i:s', time());
+    $quote->quote_type_c = 'quote_type_sanden';
+    $quote->install_address_postalcode_c = $_REQUEST['postcode_customer'];
+    $quote->billing_address_postalcode = $_REQUEST['postcode_customer'];
+    $quote->billing_address_state = $_REQUEST['state_customer'];
+    $quote->install_address_state_c = $_REQUEST['state_customer'];
+    $quote->billing_address_city = $_REQUEST['suburb_customer'];
+    $quote->install_address_city_c = $_REQUEST['suburb_customer'];
+    $quote->old_tank_fuel_c = $old_tank_fuel;
+    $quote->stage = 'Guest';
+    $quote->quote_note_inputs_c = json_encode($sandenData);
+    $quote->save();
+    if($_REQUEST['state_customer'] == 'VIC' && $_REQUEST['choice_type_product'] == 'Electric') {
+        if($_REQUEST['product_choice_type_electric'] == 'Electric Storage' || $_REQUEST['product_choice_type_electric'] == 'Gravity Feed') {
+            array_push($part_numbers,'STC Rebate Certificate', 'VEEC Rebate Certificate');
+        } else {
+            array_push($part_numbers,'STC Rebate Certificate');
+        }
+    } else {
+        if($_REQUEST['provide_stcs'] != 'No' ) {
+            array_push($part_numbers,'STC Rebate Certificate');
+        }
+    }
+
+    ///
+    $quantityPB = 0;
+    //create new items 
+    if($_REQUEST['plumbing_installation'] == 'Yes' || $_REQUEST['electric_installation'] == 'Yes') {
+        array_push($part_numbers,'PB');
+    }
+    
+    if($_REQUEST['choice_type_install'] == 'New Build') {
+        if($_REQUEST['plumbing_installation'] == 'Yes') {
+            array_push($part_numbers,'Sanden_Plb_Install_Std', 'PizzaBase');
+            $quantityPB += 1;
+            if($_REQUEST['electric_installation'] == 'Yes') {
+                array_push($part_numbers,'Sanden_Elec_Install_Std', 'SSI');
+                $quantityPB += 1;
+            } else {
+                array_push($part_numbers,'SSPI');
+            }
+        } else {
+            array_push($part_numbers, 'SANDEN_SUPPLY_ONLY');
+        }
+    }else{
+        if($_REQUEST['plumbing_installation'] == 'Yes') {
+            array_push($part_numbers,'Sanden_Plb_Install_Std', 'PizzaBase');
+            $quantityPB += 1;
+            if($_REQUEST['electric_installation'] == 'Yes') {
+                array_push($part_numbers,'Sanden_Elec_Install_Std', 'SSI');
+            } else {
+                array_push($part_numbers,'SSPI');
+            }
+        } else {
+            array_push($part_numbers, 'SANDEN_SUPPLY_ONLY');
+        }
+    }
+
+    if($_REQUEST['choice_product_sanden'] == 'Sanden 315FQV' || $_REQUEST['choice_product_sanden'] == 'Sanden 315FQS' || $_REQUEST['choice_product_sanden'] == 'Sanden 300FQS' || $_REQUEST['choice_product_sanden'] == 'Sanden 250FQS' || $_REQUEST['choice_product_sanden'] == 'Sanden 160FQS') {
+        if($_REQUEST['connection_kit'] == '15mm Quick Connection Kit (QIK15)') {
+            array_push($part_numbers,'QIK15−HPUMP');
+        }elseif($_REQUEST['connection_kit'] == '20mm Quick Connection Kit (QIK25)') {
+            array_push($part_numbers,'QIK20−HPUMP');
+        }
+    };
+    if($_REQUEST['hot_water_rebate'] == 'Yes') {
+        array_push($part_numbers,'SV_SHWR');
+    };
+    
+    if($_REQUEST['extra_field']['plumbing_extra'] == 'Yes') {
+        array_push($part_numbers,'Sanden_Complex_Install');
+    }
+    if($_REQUEST['extra_field']['electrical_extra'] == 'Yes') {
+        array_push($part_numbers,'SANDEN_ELEC_EXTRA');
+    }
+    if($_REQUEST['extra_field']['rcd_upgrade'] == 'Yes') {
+        array_push($part_numbers,'RCBO');
+    }
+    if($_REQUEST['extra_field']['switchboard_upgrade'] == 'Yes') {
+        array_push($part_numbers,'SwitchUpgrade');
+    }
+    if($_REQUEST['extra_field']['hws_relocation'] == 'Yes') {
+        array_push($part_numbers,'HWS_R');
+    }
+    if($_REQUEST['extra_field']['sanden_tank_slab'] == 'Yes') {
+        array_push($part_numbers,'Sanden_Tank_Slab');
+    }
+    if($_REQUEST['extra_field']['sanden_pavers'] == 'Yes') {
+        array_push($part_numbers,'Sanden_HP_Pavers');
+    }
+    if($_REQUEST['extra_field']['site_delivery'] == 'Yes') {
+        array_push($part_numbers,'Site_Delivery');
+    }
+    if($_REQUEST['extra_field']['trade_price_discount'] == 'Yes') {
+        array_push($part_numbers,'Spec_Trade_Disc');
+    }
+    if($_REQUEST['extra_field']['san_wall_bracket'] == 'Yes') {
+        array_push($part_numbers,'san_wall_bracket');
+    }
+    if($_REQUEST['extra_field']['travel'] == 'Yes') {
+        array_push($part_numbers,'Travel');
+    }
+
+    if ($_REQUEST['state_customer'] == 'WA' || $_REQUEST['state_customer'] == 'TAS') {
+        $price_state = 360;
+    } elseif($_REQUEST['state_customer'] == 'SA' || $_REQUEST['state_customer'] == 'VIC' || $_REQUEST['state_customer'] == 'ACT' || $_REQUEST['state_customer'] == 'QLD') {
+        $price_state = 160;
+    } else {
+        $price_state = 50;
+    }
+
 }
 
-$map_quote_type = [
-    'quote_type_sanden' => 'Sanden', 
-    'quote_type_solar' => 'Solar', 
-    'quote_type_daikin' => 'Daikin', 
-    'quote_type_off_grid_system' => 'Off-grid System', 
-    'quote_type_nexura' => 'Nexura', 
-    'quote_type_methven' => 'Methven', 
-    'quote_type_battery' => 'Battery', 
-    'quote_type_tesla' => 'Tesla'
-];
 $part_numbers_display_first = ['e5bc1aa4-b965-8a76-debe-5e2681ba55f7'];
 $part_numbers_tax_0 = ['4efbea92-c52f-d147-3308-569776823b19'];
 $array_id_part_numbers_not_use = ['1455e1e9-38a6-22e2-f898-57e8966e5256', '4e6ea564-761a-7482-76d0-582c0ca119e0'];
-
-/////// Create new Object for Sanden Quote Input
-$sandenData = array();
-if($_REQUEST['on_water'] != '') {
-    $sandenData['quote_main_tank_water'] = $_REQUEST['on_water'];
-} else {
-    $sandenData['quote_main_tank_water'] = '';
-}
-if($_REQUEST['number_of_sanden'] != '') {
-    $sandenData['quote_number_sanden'] = $_REQUEST['number_of_sanden'];
-} else {
-    $sandenData['quote_number_sanden'] = '';
-}
-if($_REQUEST['choice_product_sanden'] != '') {
-    $sandenData['quote_tank_size'] = $_REQUEST['choice_product_sanden'];
-} else {
-    $sandenData['quote_tank_size'] = '';
-}
-if($_REQUEST['plumbing_installation'] != '') {
-    $sandenData['quote_plumbing_installation_by_pure'] = $_REQUEST['plumbing_installation'];
-} else {
-    $sandenData['quote_plumbing_installation_by_pure'] = '';
-}
-if($_REQUEST['connection_kit'] != '') {
-    $sandenData['quote_quick_connection_kit'] = $_REQUEST['connection_kit'];
-} else {
-    $sandenData['quote_quick_connection_kit'] = '';
-}
-if($_REQUEST['electric_installation'] != '') {
-    $sandenData['quote_electrical_installation_by_pure'] = $_REQUEST['electric_installation'];
-} else {
-    $sandenData['quote_electrical_installation_by_pure'] = '';
-}
-if($_REQUEST['provide_stcs'] != '') {
-    $sandenData['quote_provide_stcs'] = $_REQUEST['provide_stcs'];
-} else {
-    $sandenData['quote_provide_stcs'] = '';
-}
-
-if($_REQUEST['pickup_site_delivery'] != '') {
-    $sandenData['quote_pickup_site_delivery'] = $_REQUEST['pickup_site_delivery'];
-} else {
-    $sandenData['quote_pickup_site_delivery'] = '';
-}
-if($_REQUEST['choice_type_install'] != '') {
-    $sandenData['quote_choice_type_install'] = $_REQUEST['choice_type_install'];
-} else {
-    $sandenData['quote_choice_type_install'] = '';
-}
-if($_REQUEST['is_your_replacement_urgent'] != '') {
-    $sandenData['quote_replacement_urgent'] = $_REQUEST['is_your_replacement_urgent'];
-} else {
-    $sandenData['quote_replacement_urgent'] = '';
-}
-if($_REQUEST['choice_type_product'] != '') {
-    $sandenData['quote_choice_type_product'] = $_REQUEST['choice_type_product'];
-} else {
-    $sandenData['quote_choice_type_product'] = '';
-}
-if($_REQUEST['product_choice_type_gas'] != '') {
-    $sandenData['quote_product_choice_type_gas'] = $_REQUEST['product_choice_type_gas'];
-} else {
-    $sandenData['quote_product_choice_type_gas'] = '';
-}
-if($_REQUEST['gas_connection'] != '') {
-    $sandenData['quote_gas_connection'] = $_REQUEST['gas_connection'];
-} else {
-    $sandenData['quote_gas_connection'] = '';
-}
-if($_REQUEST['product_choice_type_electric'] != '') {
-    $sandenData['quote_product_choice_type_electric'] = $_REQUEST['product_choice_type_electric'];
-} else {
-    $sandenData['quote_product_choice_type_electric'] = '';
-}
-
-///
-if($_REQUEST['electric_storage_located'] != '') {
-    $sandenData['quote_electric_storage_located'] = $_REQUEST['electric_storage_located'];
-} else {
-    $sandenData['quote_electric_storage_located'] = '';
-}
-if($_REQUEST['about_outside'] != '') {
-    $sandenData['quote_about_outside'] = $_REQUEST['about_outside'];
-} else {
-    $sandenData['quote_about_outside'] = '';
-}
-if($_REQUEST['about_inside'] != '') {
-    $sandenData['quote_about_inside'] = $_REQUEST['about_inside'];
-} else {
-    $sandenData['quote_about_inside'] = '';
-}
-if($_REQUEST['product_choice_type_solar'] != '') {
-    $sandenData['quote_product_choice_type_solar'] = $_REQUEST['product_choice_type_solar'];
-} else {
-    $sandenData['quote_product_choice_type_solar'] = '';
-}
-if($_REQUEST['solar_boosted'] != '') {
-    $sandenData['quote_solar_boosted'] = $_REQUEST['solar_boosted'];
-} else {
-    $sandenData['quote_solar_boosted'] = '';
-}
-if($_REQUEST['product_choice_type_wood'] != '') {
-    $sandenData['quote_product_choice_type_wood'] = $_REQUEST['product_choice_type_wood'];
-} else {
-    $sandenData['quote_product_choice_type_wood'] = '';
-}
-if($_REQUEST['product_choice_type_lpg'] != '') {
-    $sandenData['quote_product_choice_type_lpg'] = $_REQUEST['product_choice_type_lpg'];
-} else {
-    $sandenData['quote_product_choice_type_lpg'] = '';
-}
-
-if($_REQUEST['set_new_place'] != '') {
-    $sandenData['quote_new_place_choice'] = $_REQUEST['set_new_place'];
-} else {
-    $sandenData['quote_new_place_choice'] = '';
-}
-if($_REQUEST['existing_install_location'] != '') {
-    $sandenData['quote_existing_install_location'] = $_REQUEST['existing_install_location'];
-} else {
-    $sandenData['quote_existing_install_location'] = '';
-}
-if($_REQUEST['is_your_replacement_urgent'] != '') {
-    $sandenData['quote_replacement_urgent'] = $_REQUEST['is_your_replacement_urgent'];
-} else {
-    $sandenData['quote_replacement_urgent'] = '';
-}
-if($_REQUEST['install_location_access'] != '') {
-    $sandenData['quote_install_location_access'] = $_REQUEST['install_location_access'];
-} else {
-    $sandenData['quote_install_location_access'] = '';
-}
-if($_REQUEST['stair_access'] != '') {
-    $sandenData['quote_stair_access'] = $_REQUEST['stair_access'];
-} else {
-    $sandenData['quote_stair_access'] = '';
-}
-if($_REQUEST['alectrical_already'] != '') {
-    $sandenData['quote_alectrical_already'] = $_REQUEST['alectrical_already'];
-} else {
-    $sandenData['quote_alectrical_already'] = '';
-}
-if($_REQUEST['hot_water_rebate'] != '') {
-    $sandenData['quote_hot_water_rebate'] = $_REQUEST['hot_water_rebate'];
-} else {
-    $sandenData['quote_hot_water_rebate'] = '';
-}
-//
-if($_REQUEST['located_within'] != '') {
-    $sandenData['quote_located_within'] = $_REQUEST['located_within'];
-} else {
-    $sandenData['quote_located_within'] = '';
-}
-if($_REQUEST['hot_cold_connections'] != '') {
-    $sandenData['quote_hot_cold_connections'] = $_REQUEST['hot_cold_connections'];
-} else {
-    $sandenData['quote_hot_cold_connections'] = '';
-}
-if($_REQUEST['additional_untempered'] != '') {
-    $sandenData['quote_additional_untempered'] = $_REQUEST['additional_untempered'];
-} else {
-    $sandenData['quote_additional_untempered'] = '';
-}
-if($_REQUEST['concrete_slab'] != '') {
-    $sandenData['quote_concrete_slab'] = $_REQUEST['concrete_slab'];
-} else {
-    $sandenData['quote_concrete_slab'] = '';
-}
-if($_REQUEST['concrete_pavers'] != '') {
-    $sandenData['quote_concrete_pavers'] = $_REQUEST['concrete_pavers'];
-} else {
-    $sandenData['quote_concrete_pavers'] = '';
-}
-
-// var_dump(json_encode($sandenData)); die;
-
-//get bean quote
-$quote = new AOS_Quotes();
-
-//Update Quote Suburb, Postcode, State
-$quote->name = 'GUEST ' .$_REQUEST['suburb_customer'] .' '.$_REQUEST['state_customer'].' '.$_REQUEST['choice_product_sanden'];
-$quote->pre_install_photos_c = $_REQUEST['pre_install_photos_c'];
-date_default_timezone_set("Australia/Melbourne");
-$dateQuote = new DateTime();
-$quote->quote_date_c = date('Y-m-d H:i:s', time());
-$quote->quote_type_c = 'quote_type_sanden';
-$quote->install_address_postalcode_c = $_REQUEST['postcode_customer'];
-$quote->billing_address_postalcode = $_REQUEST['postcode_customer'];
-$quote->billing_address_state = $_REQUEST['state_customer'];
-$quote->install_address_state_c = $_REQUEST['state_customer'];
-$quote->billing_address_city = $_REQUEST['suburb_customer'];
-$quote->install_address_city_c = $_REQUEST['suburb_customer'];
-$quote->old_tank_fuel_c = $old_tank_fuel;
-$quote->stage = 'Guest';
-$quote->quote_note_inputs_c = json_encode($sandenData);
-$quote->save();
 
 //delele all line items
 $db = DBManagerFactory::getInstance();
@@ -265,119 +325,9 @@ $sql_delele = "UPDATE aos_products_quotes pg
         WHERE pg.parent_type = 'AOS_Quotes' AND pg.parent_id = '" . $quote->id . "' AND pg.deleted = 0";
 $res = $db->query($sql_delele);
 
-
-// Check VEEC
-if($_REQUEST['state_customer'] == 'VIC' && $_REQUEST['choice_type_product'] == 'Electric') {
-    if($_REQUEST['product_choice_type_electric'] == 'Electric Storage' || $_REQUEST['product_choice_type_electric'] == 'Gravity Feed') {
-        array_push($part_numbers,'STC Rebate Certificate', 'VEEC Rebate Certificate');
-    } else {
-        array_push($part_numbers,'STC Rebate Certificate');
-    }
-} else {
-    if($_REQUEST['provide_stcs'] != 'No' ) {
-        array_push($part_numbers,'STC Rebate Certificate');
-    }
-}
-
-$quantityPB = 0;
-//create new items 
-if($_REQUEST['plumbing_installation'] == 'Yes' || $_REQUEST['electric_installation'] == 'Yes') {
-    array_push($part_numbers,'PB');
-}
-   
-if($_REQUEST['choice_type_install'] == 'New Build') {
-    if($_REQUEST['plumbing_installation'] == 'Yes') {
-        array_push($part_numbers,'Sanden_Plb_Install_Std', 'PizzaBase');
-        $quantityPB += 1;
-        if($_REQUEST['electric_installation'] == 'Yes') {
-            array_push($part_numbers,'Sanden_Elec_Install_Std', 'SSI');
-            $quantityPB += 1;
-        } else {
-            array_push($part_numbers,'SSPI');
-        }
-    } else {
-        array_push($part_numbers, 'SANDEN_SUPPLY_ONLY');
-    }
-}else{
-    if($_REQUEST['plumbing_installation'] == 'Yes') {
-        array_push($part_numbers,'Sanden_Plb_Install_Std', 'PizzaBase');
-        $quantityPB += 1;
-        if($_REQUEST['electric_installation'] == 'Yes') {
-            array_push($part_numbers,'Sanden_Elec_Install_Std', 'SSI');
-        } else {
-            array_push($part_numbers,'SSPI');
-        }
-    } else {
-        array_push($part_numbers, 'SANDEN_SUPPLY_ONLY');
-    }
-}
-if($_REQUEST['choice_product_sanden'] == 'Sanden 315FQV' || $_REQUEST['choice_product_sanden'] == 'Sanden 315FQS' || $_REQUEST['choice_product_sanden'] == 'Sanden 300FQS' || $_REQUEST['choice_product_sanden'] == 'Sanden 250FQS' || $_REQUEST['choice_product_sanden'] == 'Sanden 160FQS') {
-    if($_REQUEST['connection_kit'] == '15mm Quick Connection Kit (QIK15)') {
-        array_push($part_numbers,'QIK15−HPUMP');
-    }elseif($_REQUEST['connection_kit'] == '20mm Quick Connection Kit (QIK25)') {
-        array_push($part_numbers,'QIK20−HPUMP');
-    }
-};
-if($_REQUEST['hot_water_rebate'] == 'Yes') {
-    array_push($part_numbers,'SV_SHWR');
-};
-//
-// Need to Resolve
-// if($_REQUEST['connected_to_reticulated_gas'] == 'No') {
-//     if($_REQUEST['state_customer'] == 'SA') {
-//         array_push($part_numbers,'SA_REES');
-//     }
-// }
-
-// if($_REQUEST['alectrical_already'] == 'No') {
-//     array_push($part_numbers,'RCBO');
-// };
-
-// if($_REQUEST['concrete_slab'] == 'Yes') {
-//     array_push($part_numbers,'Sanden_Tank_Slab');
-// };
-
-// if($_REQUEST['concrete_pavers'] == 'Yes') {
-//     array_push($part_numbers,'Sanden_HP_Pavers');
-// };
-
-if($_REQUEST['extra_field']['plumbing_extra'] == 'Yes') {
-    array_push($part_numbers,'Sanden_Complex_Install');
-}
-if($_REQUEST['extra_field']['electrical_extra'] == 'Yes') {
-    array_push($part_numbers,'SANDEN_ELEC_EXTRA');
-}
-if($_REQUEST['extra_field']['rcd_upgrade'] == 'Yes') {
-    array_push($part_numbers,'RCBO');
-}
-if($_REQUEST['extra_field']['switchboard_upgrade'] == 'Yes') {
-    array_push($part_numbers,'SwitchUpgrade');
-}
-if($_REQUEST['extra_field']['hws_relocation'] == 'Yes') {
-    array_push($part_numbers,'HWS_R');
-}
-if($_REQUEST['extra_field']['sanden_tank_slab'] == 'Yes') {
-    array_push($part_numbers,'Sanden_Tank_Slab');
-}
-if($_REQUEST['extra_field']['sanden_pavers'] == 'Yes') {
-    array_push($part_numbers,'Sanden_HP_Pavers');
-}
-if($_REQUEST['extra_field']['site_delivery'] == 'Yes') {
-    array_push($part_numbers,'Site_Delivery');
-}
-if($_REQUEST['extra_field']['trade_price_discount'] == 'Yes') {
-    array_push($part_numbers,'Spec_Trade_Disc');
-}
-if($_REQUEST['extra_field']['san_wall_bracket'] == 'Yes') {
-    array_push($part_numbers,'san_wall_bracket');
-}
-if($_REQUEST['extra_field']['travel'] == 'Yes') {
-    array_push($part_numbers,'Travel');
-}
-
-    // $quote_post_new_code = $quote->install_address_postalcode_c;
+// $quote_post_new_code = $quote->install_address_postalcode_c;
 $array_stc_veec = get_value_stc_veec($quote->install_address_postalcode_c,$partNumber);
-// var_dump($array_stc_veec);
+
 // create new group product
 $product_quote_group = new AOS_Line_Item_Groups();
 $product_quote_group->name = 'Sanden';//$map_quote_type[$quote->quote_type_c];
@@ -395,36 +345,7 @@ $part_numbers_implode = implode("','", $part_numbers);
 $db = DBManagerFactory::getInstance();
 $sql = "SELECT * FROM aos_products WHERE part_number IN ('".$part_numbers_implode."') AND deleted = 0 ORDER BY price ASC";
 $ret = $db->query($sql);
-$total_amt = 0;
-$subtotal_amount= 0;
-$discount_amount =0;
-$tax_amount =0;
-$total_amount = 0;
-$index = 1;
-$is_use_number_1 = false;
-$products_return = [];
-$price_include_admin = 0;
-$price_include_admin_20 = 0;
-$price_veec_stc = 0;
-$price_state = 0;
-$priceHotWater = 0;
-$priceHWS = 0;
-$plumbingExtra = 0;
-$ElecExtra = 0;
-$RCBExtra = 0;
-$SwitchExtra = 0;
-$Tank_slab = 0;
-$Pavers = 0;
-$priceReticulated_gas = 0;
-if ($_REQUEST['state_customer'] == 'WA' || $_REQUEST['state_customer'] == 'TAS') {
-    $price_state = 360;
-} elseif($_REQUEST['state_customer'] == 'SA' || $_REQUEST['state_customer'] == 'VIC' || $_REQUEST['state_customer'] == 'ACT' || $_REQUEST['state_customer'] == 'QLD') {
-    $price_state = 160;
-} else {
-    $price_state = 50;
-}
 
-$id_special = '';
 while ($row = $db->fetchByAssoc($ret))
 {   
     if(!in_array($row['id'],$array_id_part_numbers_not_use)) {
@@ -439,11 +360,6 @@ while ($row = $db->fetchByAssoc($ret))
         $product_line->parent_id = $quote->id;
         $product_line->parent_type = 'AOS_Quotes';
         $product_line->discount = 'Percentage';
-        //display number index 
-        if(in_array($row['id'],$part_numbers_display_first)) {
-            $product_line->number = 1;
-            $is_use_number_1 = true;
-        }
 
         //logic product quantity ,price
         if($row['part_number'] == 'STC Rebate Certificate'){
@@ -476,94 +392,97 @@ while ($row = $db->fetchByAssoc($ret))
         }elseif($row['part_number'] == 'PB'){
             $product_line->product_qty = $quantityPB; 
             $product_line->product_list_price = $row['cost'];
-            //// Extra
-        } elseif($row['part_number'] == 'Sanden_Complex_Install'){
-            $product_line->product_qty =1; 
-            if($_REQUEST['extra_field']['price_plumbing_extra'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_plumbing_extra'];
-            }
-            
-        }elseif($row['part_number'] == 'SANDEN_ELEC_EXTRA'){
-            $product_line->product_qty =1; 
-            if($_REQUEST['extra_field']['price_electrical_extra'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_electrical_extra'];
-            }
-        }elseif($row['part_number'] == 'RCBO') {
-            $product_line->product_qty = 1;
-            if($_REQUEST['extra_field']['price_rcd_upgrade'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_rcd_upgrade'];
-            }
-        }elseif($row['part_number'] == 'SwitchUpgrade'){
-            $product_line->product_qty = 1; 
-            if($_REQUEST['extra_field']['price_switchboard_upgrade'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_switchboard_upgrade'];
-            }
-        }elseif($row['part_number'] == 'HWS_R'){
-            $product_line->product_qty =1; 
-            if($_REQUEST['extra_field']['price_hws_relocation'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_hws_relocation'];
-            }
-        }elseif($row['part_number'] == 'Sanden_Tank_Slab') {
-            $product_line->product_qty = 1;
-            if($_REQUEST['extra_field']['price_sanden_tank_slab'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_tank_slab'];
-            }
-        }elseif($row['part_number'] == 'Sanden_HP_Pavers'){
-            $product_line->product_qty = 1; 
-            if($_REQUEST['extra_field']['price_sanden_pavers'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_pavers'];
-            }
-            // End Extra
-        }elseif($row['part_number'] == 'Site_Delivery'){
-            $product_line->product_qty = 1; 
-            if($_REQUEST['extra_field']['price_site_delivery'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_site_delivery'];
-            }
-            // End Extra
-        }elseif($row['part_number'] == 'Spec_Trade_Disc'){
-            $product_line->product_qty = 1; 
-            if($_REQUEST['extra_field']['price_trade_price_discount'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_trade_price_discount'];
-            }
-            // End Extra
-        } elseif($row['part_number'] == 'san_wall_bracket'){
-            $product_line->product_qty = 1; 
-            if($_REQUEST['extra_field']['price_san_wall_bracket'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_san_wall_bracket'];
-            }
-            // End Extra
-        } elseif($row['part_number'] == 'Travel'){
-            $product_line->product_qty = 1; 
-            if($_REQUEST['extra_field']['price_travel'] == $row['cost']) {
-                $product_line->product_list_price = $row['cost'];
-            } else {
-                $product_line->product_list_price = $_REQUEST['extra_field']['price_travel'];
-            }
-            // End Extra
         } else{
             $product_line->product_qty = 1;
             $product_line->product_list_price = $row['cost'];
         }
+        if($_REQUEST['quote_generate_type'] == "byPure") {
+            if($row['part_number'] == 'Sanden_Complex_Install'){
+                $product_line->product_qty =1; 
+                if($_REQUEST['extra_field']['price_plumbing_extra'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_plumbing_extra'];
+                }
+                
+            }elseif($row['part_number'] == 'SANDEN_ELEC_EXTRA'){
+                $product_line->product_qty =1; 
+                if($_REQUEST['extra_field']['price_electrical_extra'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_electrical_extra'];
+                }
+            }elseif($row['part_number'] == 'RCBO') {
+                $product_line->product_qty = 1;
+                if($_REQUEST['extra_field']['price_rcd_upgrade'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_rcd_upgrade'];
+                }
+            }elseif($row['part_number'] == 'SwitchUpgrade'){
+                $product_line->product_qty = 1; 
+                if($_REQUEST['extra_field']['price_switchboard_upgrade'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_switchboard_upgrade'];
+                }
+            }elseif($row['part_number'] == 'HWS_R'){
+                $product_line->product_qty =1; 
+                if($_REQUEST['extra_field']['price_hws_relocation'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_hws_relocation'];
+                }
+            }elseif($row['part_number'] == 'Sanden_Tank_Slab') {
+                $product_line->product_qty = 1;
+                if($_REQUEST['extra_field']['price_sanden_tank_slab'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_tank_slab'];
+                }
+            }elseif($row['part_number'] == 'Sanden_HP_Pavers'){
+                $product_line->product_qty = 1; 
+                if($_REQUEST['extra_field']['price_sanden_pavers'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_pavers'];
+                }
+                // End Extra
+            }elseif($row['part_number'] == 'Site_Delivery'){
+                $product_line->product_qty = 1; 
+                if($_REQUEST['extra_field']['price_site_delivery'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_site_delivery'];
+                }
+                // End Extra
+            }elseif($row['part_number'] == 'Spec_Trade_Disc'){
+                $product_line->product_qty = 1; 
+                if($_REQUEST['extra_field']['price_trade_price_discount'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_trade_price_discount'];
+                }
+                // End Extra
+            } elseif($row['part_number'] == 'san_wall_bracket'){
+                $product_line->product_qty = 1; 
+                if($_REQUEST['extra_field']['price_san_wall_bracket'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_san_wall_bracket'];
+                }
+                // End Extra
+            } elseif($row['part_number'] == 'Travel'){
+                $product_line->product_qty = 1; 
+                if($_REQUEST['extra_field']['price_travel'] == $row['cost']) {
+                    $product_line->product_list_price = $row['cost'];
+                } else {
+                    $product_line->product_list_price = $_REQUEST['extra_field']['price_travel'];
+                }
+                // End Extra
+            }
+        }
+        //// Extra ////
 
         $product_line->product_total_price = $product_line->product_list_price*$product_line->product_qty; 
 
@@ -1320,4 +1239,179 @@ function dlPage($href, $fields) {
     $str = curl_exec($curl);
     curl_close($curl);
     return $str;
+}
+function addSandenData() {
+    /////// Create new Object for Sanden Quote Input
+    $sandenData = array();
+    if($_REQUEST['on_water'] != '') {
+        $sandenData['quote_main_tank_water'] = $_REQUEST['on_water'];
+    } else {
+        $sandenData['quote_main_tank_water'] = '';
+    }
+    if($_REQUEST['number_of_sanden'] != '') {
+        $sandenData['quote_number_sanden'] = $_REQUEST['number_of_sanden'];
+    } else {
+        $sandenData['quote_number_sanden'] = '';
+    }
+    if($_REQUEST['choice_product_sanden'] != '') {
+        $sandenData['quote_tank_size'] = $_REQUEST['choice_product_sanden'];
+    } else {
+        $sandenData['quote_tank_size'] = '';
+    }
+    if($_REQUEST['plumbing_installation'] != '') {
+        $sandenData['quote_plumbing_installation_by_pure'] = $_REQUEST['plumbing_installation'];
+    } else {
+        $sandenData['quote_plumbing_installation_by_pure'] = '';
+    }
+    if($_REQUEST['connection_kit'] != '') {
+        $sandenData['quote_quick_connection_kit'] = $_REQUEST['connection_kit'];
+    } else {
+        $sandenData['quote_quick_connection_kit'] = '';
+    }
+    if($_REQUEST['electric_installation'] != '') {
+        $sandenData['quote_electrical_installation_by_pure'] = $_REQUEST['electric_installation'];
+    } else {
+        $sandenData['quote_electrical_installation_by_pure'] = '';
+    }
+    if($_REQUEST['provide_stcs'] != '') {
+        $sandenData['quote_provide_stcs'] = $_REQUEST['provide_stcs'];
+    } else {
+        $sandenData['quote_provide_stcs'] = '';
+    }
+
+    if($_REQUEST['pickup_site_delivery'] != '') {
+        $sandenData['quote_pickup_site_delivery'] = $_REQUEST['pickup_site_delivery'];
+    } else {
+        $sandenData['quote_pickup_site_delivery'] = '';
+    }
+    if($_REQUEST['choice_type_install'] != '') {
+        $sandenData['quote_choice_type_install'] = $_REQUEST['choice_type_install'];
+    } else {
+        $sandenData['quote_choice_type_install'] = '';
+    }
+    if($_REQUEST['is_your_replacement_urgent'] != '') {
+        $sandenData['quote_replacement_urgent'] = $_REQUEST['is_your_replacement_urgent'];
+    } else {
+        $sandenData['quote_replacement_urgent'] = '';
+    }
+    if($_REQUEST['choice_type_product'] != '') {
+        $sandenData['quote_choice_type_product'] = $_REQUEST['choice_type_product'];
+    } else {
+        $sandenData['quote_choice_type_product'] = '';
+    }
+    if($_REQUEST['product_choice_type_gas'] != '') {
+        $sandenData['quote_product_choice_type_gas'] = $_REQUEST['product_choice_type_gas'];
+    } else {
+        $sandenData['quote_product_choice_type_gas'] = '';
+    }
+    if($_REQUEST['gas_connection'] != '') {
+        $sandenData['quote_gas_connection'] = $_REQUEST['gas_connection'];
+    } else {
+        $sandenData['quote_gas_connection'] = '';
+    }
+    if($_REQUEST['product_choice_type_electric'] != '') {
+        $sandenData['quote_product_choice_type_electric'] = $_REQUEST['product_choice_type_electric'];
+    } else {
+        $sandenData['quote_product_choice_type_electric'] = '';
+    }
+
+    ///
+    if($_REQUEST['electric_storage_located'] != '') {
+        $sandenData['quote_electric_storage_located'] = $_REQUEST['electric_storage_located'];
+    } else {
+        $sandenData['quote_electric_storage_located'] = '';
+    }
+    if($_REQUEST['about_outside'] != '') {
+        $sandenData['quote_about_outside'] = $_REQUEST['about_outside'];
+    } else {
+        $sandenData['quote_about_outside'] = '';
+    }
+    if($_REQUEST['about_inside'] != '') {
+        $sandenData['quote_about_inside'] = $_REQUEST['about_inside'];
+    } else {
+        $sandenData['quote_about_inside'] = '';
+    }
+    if($_REQUEST['product_choice_type_solar'] != '') {
+        $sandenData['quote_product_choice_type_solar'] = $_REQUEST['product_choice_type_solar'];
+    } else {
+        $sandenData['quote_product_choice_type_solar'] = '';
+    }
+    if($_REQUEST['solar_boosted'] != '') {
+        $sandenData['quote_solar_boosted'] = $_REQUEST['solar_boosted'];
+    } else {
+        $sandenData['quote_solar_boosted'] = '';
+    }
+    if($_REQUEST['product_choice_type_wood'] != '') {
+        $sandenData['quote_product_choice_type_wood'] = $_REQUEST['product_choice_type_wood'];
+    } else {
+        $sandenData['quote_product_choice_type_wood'] = '';
+    }
+    if($_REQUEST['product_choice_type_lpg'] != '') {
+        $sandenData['quote_product_choice_type_lpg'] = $_REQUEST['product_choice_type_lpg'];
+    } else {
+        $sandenData['quote_product_choice_type_lpg'] = '';
+    }
+
+    if($_REQUEST['set_new_place'] != '') {
+        $sandenData['quote_new_place_choice'] = $_REQUEST['set_new_place'];
+    } else {
+        $sandenData['quote_new_place_choice'] = '';
+    }
+    if($_REQUEST['existing_install_location'] != '') {
+        $sandenData['quote_existing_install_location'] = $_REQUEST['existing_install_location'];
+    } else {
+        $sandenData['quote_existing_install_location'] = '';
+    }
+    if($_REQUEST['is_your_replacement_urgent'] != '') {
+        $sandenData['quote_replacement_urgent'] = $_REQUEST['is_your_replacement_urgent'];
+    } else {
+        $sandenData['quote_replacement_urgent'] = '';
+    }
+    if($_REQUEST['install_location_access'] != '') {
+        $sandenData['quote_install_location_access'] = $_REQUEST['install_location_access'];
+    } else {
+        $sandenData['quote_install_location_access'] = '';
+    }
+    if($_REQUEST['stair_access'] != '') {
+        $sandenData['quote_stair_access'] = $_REQUEST['stair_access'];
+    } else {
+        $sandenData['quote_stair_access'] = '';
+    }
+    if($_REQUEST['alectrical_already'] != '') {
+        $sandenData['quote_alectrical_already'] = $_REQUEST['alectrical_already'];
+    } else {
+        $sandenData['quote_alectrical_already'] = '';
+    }
+    if($_REQUEST['hot_water_rebate'] != '') {
+        $sandenData['quote_hot_water_rebate'] = $_REQUEST['hot_water_rebate'];
+    } else {
+        $sandenData['quote_hot_water_rebate'] = '';
+    }
+    //
+    if($_REQUEST['located_within'] != '') {
+        $sandenData['quote_located_within'] = $_REQUEST['located_within'];
+    } else {
+        $sandenData['quote_located_within'] = '';
+    }
+    if($_REQUEST['hot_cold_connections'] != '') {
+        $sandenData['quote_hot_cold_connections'] = $_REQUEST['hot_cold_connections'];
+    } else {
+        $sandenData['quote_hot_cold_connections'] = '';
+    }
+    if($_REQUEST['additional_untempered'] != '') {
+        $sandenData['quote_additional_untempered'] = $_REQUEST['additional_untempered'];
+    } else {
+        $sandenData['quote_additional_untempered'] = '';
+    }
+    if($_REQUEST['concrete_slab'] != '') {
+        $sandenData['quote_concrete_slab'] = $_REQUEST['concrete_slab'];
+    } else {
+        $sandenData['quote_concrete_slab'] = '';
+    }
+    if($_REQUEST['concrete_pavers'] != '') {
+        $sandenData['quote_concrete_pavers'] = $_REQUEST['concrete_pavers'];
+    } else {
+        $sandenData['quote_concrete_pavers'] = '';
+    }
+    return $sandenData;
 }
