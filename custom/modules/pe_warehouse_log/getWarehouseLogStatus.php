@@ -1,8 +1,9 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 require_once('custom/include/SugarFields/Fields/Multiupload/simple_html_dom.php');
 
 
-if(count($_POST) > 0){
+if(isset($_POST['list_id'])){
 
     $list_id = $_POST['list_id'];
     for($i=0; $i<count($list_id); $i++){
@@ -18,8 +19,15 @@ if(count($_POST) > 0){
 }
 
 
-$connoteNumber = str_replace(' ', '', $_GET['connot']);
-$carrier = $_GET['carrier'];
+$connoteNumber = str_replace(' ', '', $_REQUEST['connot']);
+$carrier = $_REQUEST['carrier'];
+$method_action = $_REQUEST['method_action'];
+
+if($method_action == 'get_status_from_button') {
+
+    curl_get_status_from_devel($connoteNumber,$carrier);
+    die();
+}
 get_status($connoteNumber,$carrier);
 
 function get_status($connoteNumber,$carrier,$whlog = ''){
@@ -314,4 +322,28 @@ function get_status($connoteNumber,$carrier,$whlog = ''){
         }
 
     }
+}
+function curl_get_status_from_devel($connoteNumber,$carrier){
+    $request_data = array (
+        'connot' => $connoteNumber,
+        'carrier' =>$carrier
+    );
+        $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=getWarehouseLogStatus";
+        $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+        $curl = curl_init();
+    
+        curl_setopt($curl, CURLOPT_URL, $source);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($request_data));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+        $result = curl_exec($curl);
+        curl_close($curl);
+        echo $result;
 }

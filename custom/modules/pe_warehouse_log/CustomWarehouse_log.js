@@ -314,7 +314,14 @@ $(function () {
         $('#status_c').parent().siblings('.label').append('<br> <button type="button" class="button primary" id="getWLStatus"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Get Status</button>');
         $("#getWLStatus").click(function(){   
             $.ajax({
-                url: 'index.php?entryPoint=getWarehouseLogStatus&connot='+$('#connote').val() +"&carrier="+$('#carrier').val(),
+                url: 'index.php?entryPoint=getWarehouseLogStatus',
+                type: "POST", 
+                crossDomain: true,
+                data: {
+                    connot: $('#connote').val().trim(),
+                    carrier: $('#carrier').val(),
+                    method_action: 'get_status_from_button'
+                }, 
                 success: function(data){
     
                     if(data !== '') {

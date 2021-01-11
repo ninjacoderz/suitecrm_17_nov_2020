@@ -17,12 +17,11 @@ function custom_autosendSandenSTCSurvey(){
     $db  = DBManagerFactory::getInstance();
     $query = "SELECT aos_invoices.name ,aos_invoices.id ,aos_invoices.number,aos_invoices_cstm.picked_up_date_c as picked_up_date_c
     FROM aos_invoices INNER JOIN aos_invoices_cstm ON aos_invoices.id = aos_invoices_cstm.id_c
-    WHERE  (aos_invoices_cstm.stc_aggregator_serial_c = '' OR  aos_invoices_cstm.stc_aggregator_serial_c IS NULL)
-    AND (aos_invoices_cstm.stc_aggregator_serial_2_c = '' OR  aos_invoices_cstm.stc_aggregator_serial_2_c IS NULL)
-    AND (aos_invoices_cstm.stc_aggregator_c  = '' OR  aos_invoices_cstm.stc_aggregator_c IS NULL)
-    AND (aos_invoices_cstm.picked_up_date_c != '' AND  aos_invoices_cstm.picked_up_date_c IS NOT NULL)
-    AND aos_invoices.status = 'STC_Unpaid'
-    AND  aos_invoices.deleted = 0";
+    WHERE  (aos_invoices_cstm.picked_up_date_c != '' AND  aos_invoices_cstm.picked_up_date_c IS NOT NULL)
+    AND  aos_invoices.deleted = 0
+    AND (aos_invoices_cstm.stc_aggregator_serial_c = '' OR  aos_invoices_cstm.stc_aggregator_serial_c IS NULL)	
+    AND (aos_invoices_cstm.stc_aggregator_serial_2_c = '' OR  aos_invoices_cstm.stc_aggregator_serial_2_c IS NULL)	
+    AND (aos_invoices_cstm.stc_aggregator_c  = '' OR  aos_invoices_cstm.stc_aggregator_c IS NULL)";
     $ret = $db->query($query);
     if($ret->num_rows >0 ){
         while($row = $db->fetchByAssoc($ret)){
@@ -52,7 +51,7 @@ function custom_autosendSandenSTCSurvey(){
                 } 
 
                 //check title invoice include 'supply'
-                $word = "supply";
+                $word = "supply only";
                 $nameInvoice = $row["name"];
                 (strpos($nameInvoice, $word) !== false)?$condition_check_invoice_name = true : $condition_check_invoice_name = false;
                 
