@@ -338,7 +338,7 @@ function config_sendGeoEmail($invoice_id,$email_type){
     }
 
 
-    $from_address = "PureElectric Accounts - PureElectric &lt;accounts@pure-electric.com.au&gt;";
+    $from_address = "Pure Electric Accounts - &lt;accounts@pure-electric.com.au&gt;";
 
     $account = new Account();
     if($account_id == "") {
@@ -472,7 +472,7 @@ function config_sendGeoEmail($invoice_id,$email_type){
     if ( $emailToSend->send()) {
         $emailBean->status = 'sent';
         $emailBean->description_html = preg_replace("/<a href=[^>]+Edit Email Link</a><br/>", "", $emailBean->description_html);
-         // $emailBean->description_html = preg_replace("/&lt;div dir="ltr">PureElectric Accounts class="CToWUd"></a></div></div></div>/", "", $emailBean->description_html);
+         // $emailBean->description_html = preg_replace("/&lt;div dir="ltr">Pure Electric Accounts class="CToWUd"></a></div></div></div>/", "", $emailBean->description_html);
         $emailBean->to_addrs = $account->name . "  <".$primary.">";
         $emailBean->description_html =$description_html_save;
         $emailBean->save();
@@ -501,7 +501,7 @@ function config_sendGeoEmail_type_is_installer($invoice_id,$email_type){
     }
 
 
-    $from_address = "PureElectric Accounts - PureElectric &lt;accounts@pure-electric.com.au&gt;";
+    $from_address = "Pure Electric Accounts - PureElectric &lt;accounts@pure-electric.com.au&gt;";
 
     $account = new Account();
     if($account_id == "") {

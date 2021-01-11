@@ -98,7 +98,7 @@ function create_EmailInstallerPaperworkFollowUp($record_id,$type){
     }
 
     $email->from_addr = "accounts@pure-electric.com.au";
-    $email->from_name = "PureElectric Accounts";
+    $email->from_name = "Pure Electric Accounts";
     $email->to_addrs_names = $account_bean->name . " <" . $account_bean->email1 . ">";
     $email->save();
     return $email->id;

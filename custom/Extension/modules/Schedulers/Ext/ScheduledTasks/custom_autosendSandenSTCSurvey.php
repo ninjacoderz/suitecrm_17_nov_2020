@@ -229,7 +229,7 @@ function send_email_template_Sanden_STC_Form($record_id){
     //end - code render sms_template
 
     $email->from_addr = "accounts@pure-electric.com.au";
-    $email->from_name = "PureElectric Accounts";
+    $email->from_name = "Pure Electric Accounts";
     $emailToSend = clone $email;
     $emailToSend->to_addrs_arr = array(array("email"=>"info@pure-electric.com.au"));
     $email_edit_link = "<a href='https://suitecrm.pure-electric.com.au/index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=AOS_Invoices&return_action=DetailView&return_action=DetailView&record=".$email_id."&email_template_id=".$emailTemplateID."&sms_template_id=".$smsTemplate->id."'>Edit Email Link</a><br/>";

@@ -275,7 +275,7 @@ function custom_readxero()
                     //$from_address = rand (1, 100) < 70 ? "Matthew Wright - PureElectric &lt;matthew.wright@pure-electric.com.au&gt;"
                     //                   : "Paul Szuster - PureElectric &lt;paul.szuster@pure-electric.com.au&gt;";
 
-                    $from_address = "PureElectric Accounts &lt;accounts@pure-electric.com.au&gt;";
+                    $from_address = "Pure Electric Accounts &lt;accounts@pure-electric.com.au&gt;";
 
                     $request = array(
                         "module" => "Emails",
@@ -689,7 +689,7 @@ function custom_readxero()
            // $from_address = rand (1, 100) < 70 ? "Matthew Wright - PureElectric &lt;matthew.wright@pure-electric.com.au&gt;"
            //                     : "Paul Szuster - PureElectric &lt;paul.szuster@pure-electric.com.au&gt;";
 
-           $from_address = "PureElectric Accounts &lt;accounts@pure-electric.com.au&gt;";
+           $from_address = "Pure Electric Accounts &lt;accounts@pure-electric.com.au&gt;";
             
             $request = array(
                 "module" => "Emails",

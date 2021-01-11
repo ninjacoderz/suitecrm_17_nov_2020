@@ -10,7 +10,7 @@ function autosendmail_geosubmission($assignment){
     $mail = new SugarPHPMailer();
     $mail->setMailerForSystem();
     $mail->From = "accounts@pure-electric.com.au";
-    $mail->FromName = "PureElectric Accounts";
+    $mail->FromName = "Pure Electric Accounts";
     $mail->IsHTML(true);
     $mail->ClearAllRecipients();
     $mail->ClearReplyTos();
