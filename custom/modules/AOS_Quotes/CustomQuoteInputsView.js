@@ -4,6 +4,11 @@ $(document).ready(function() {
     var html_group_custom_quote_inputs = 
     '<div id="group_custom_quote_inputs_checklist" class="row detail-view-row"></div>';
     $("#quote_note_inputs_c").closest('.tab-content').append(html_group_custom_quote_inputs);
+    var btn_generate_quote = '<button type="button" id="generate_quote" class="button primary">Generate Quote</button>';
+    $("#quote_note_inputs_c").closest('.tab-content').append(btn_generate_quote);
+    $('#generate_quote').on('click', function() {
+        generate_quote_by_input();
+    });
     function render_json_data_quoteInputs(){
         var data = new Object();
         data.quote_main_tank_water = $('#quote_main_tank_water').val();
@@ -46,7 +51,6 @@ $(document).ready(function() {
             url: '/index.php?entryPoint=APIRenderListQuoteInputs&action=render',
             success: function (result) {
                 try {
-                   var data_string = $("#quote_note_inputs_c").val();
                    var json_data = $.parseJSON(result);
                    $("#group_custom_quote_inputs_checklist").append(json_data['template_html']);
                    
@@ -81,8 +85,38 @@ $(document).ready(function() {
         }
     }
 
+    function generate_quote_by_input(){
+        SUGAR.ajaxUI.showLoadingPanel();
+        if(dataType == "Sanden") {
+            var data = new Object();
+            var checkList = jQuery('#group_custom_quote_inputs_checklist .edit-view-field select');
+            data['quote_generate_type'] = 'bySuite';
+            data['quote_id'] = $('input[name=record]').val();
+            checkList.each(function() {
+                data[$(this).attr('id')] = $(this).val();
+            });
+            if(data != '') {
+                $.ajax({
+                    type: "POST",
+                    url: '/index.php?entryPoint=APICreateQuoteNewFromSandenPE',
+                    data: data,
+                    success: function (result) {
+                        try {
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                            // location.reload();
+                            window.location.href = window.location.href + "#detailpanel_3";
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    }
+                });
+            }
+        }
+    }
 });
-function selectElement(id, valueToSelect) {    
-    var element = document.getElementById(id);
-    element.value = valueToSelect;
+function selectElement(id, valueToSelect) {
+    if(id != 'module' && id != 'action' && id != 'entryPoint' && id != 'quote_generate_type' && id != 'quote_id') {
+        var element = document.getElementById(id);
+        element.value = valueToSelect;
+    }
 }
