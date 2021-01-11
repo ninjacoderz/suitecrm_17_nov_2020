@@ -92,6 +92,11 @@ array (
           'newTab' => false,
           'panelDefault' => 'expanded',
         ),
+        'LBL_EDITVIEW_PANEL16' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
         'LBL_EDITVIEW_PANEL12' => 
         array (
           'newTab' => false,
@@ -128,6 +133,10 @@ array (
         5 => 
         array (
           'file' => 'custom/modules/AOS_Quotes/CustomQuoteInputsView.js',
+        ),
+        6 => 
+        array (
+          'file' => 'custom/modules/AOS_Quotes/CustomOwnSolarPricing.js',
         ),
       ),
     ),
@@ -1136,6 +1145,20 @@ array (
             'studio' => 'visible',
             'label' => 'LBL_SOLAR_PV_PRICING_INPUT',
           ),
+          1 => 
+          array (
+            'name' => 'own_solar_pv_pricing_c',
+            'studio' => 'visible',
+            'label' => 'LBL_OWN_SOLAR_PV_PRICING',
+          ),
+        ),
+      ),
+      'lbl_editview_panel16' => 
+      array (
+        0 => 
+        array (
+          0 => '',
+          1 => '',
         ),
       ),
       'lbl_editview_panel12' => 
