@@ -15,6 +15,8 @@ $(function () {
    $('#tab-actions').after('<li><input type="button" id="" value="EMAIL GET ROT Agreement" class="button primary" data-email-type="EMAIL_GET_ROT_Agreement" onclick="$(document).openComposeViewModal(this);" data-module="AOS_Invoices" data-module-name="'+ $('#billing_contact_id').text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
 
     $('#tab-actions').parent().append('<li><button style="background:#009acf;" type="button" id="CRUD_Xero_Invoice" class="button CRUD_Xero_Invoice" title="Create And Update Xero Invoice" onClick="SUGAR.CRUD_Xero_Invoice(this);" >Create & Update Xero <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
+    $('#tab-actions').parent().append('<li><button style="background:#945596;" type="button" id="sanden_health_check" class="button sanden_health_check" value="Sanden health check" data-email-type="sanden_health_check" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-contact-name="'+$('#billing_contact_id').text()+'"  data-record-id="'+ $("input[name='record']").val() +'" title="Sanden Health Check" onClick="$(document).openComposeViewModal(this);" >Sanden Health Check <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
+
     SUGAR.CRUD_Xero_Invoice= function(elemt){
         var html_alert = '';
         if($('#due_date').text() == ''){
