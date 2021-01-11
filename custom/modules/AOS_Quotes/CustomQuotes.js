@@ -3645,7 +3645,7 @@ function genExtraDaikinItemFunc(elem){
             //      'QLD': "Rebecca Rodgers <Rebecca.Rodgers@solargain.com.au>",
             //  }
             // change Ensure all 3x addresses are included  (regardless of state)
-            var solar_install_contact = "sg.wa.installadmin@solargain.com.au" + ", " + "lauren.patmore@solargain.com.au" + ", " + "joel.walsh@solargain.com.au";
+            var solar_install_contact = "<sg.wa.installadmin@solargain.com.au>" + ", " + "<lauren.patmore@solargain.com.au>" + ", " + "<joel.walsh@solargain.com.au>";
              var populateModuleName = $(source).attr('data-module-name');
              var populateEmailAddress = $(source).attr('data-email-address');
  
