@@ -103,8 +103,8 @@ $(document).ready(function() {
                     success: function (result) {
                         try {
                             SUGAR.ajaxUI.hideLoadingPanel();
-                            // location.reload();
-                            location.href = window.location.href + "#detailpanel_3";
+                            location.reload();
+                            // location.href = window.location.href + "#detailpanel_3";
                         } catch (error) {
                             console.log(error)
                         }
