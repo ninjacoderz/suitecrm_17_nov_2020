@@ -496,7 +496,7 @@ class DashletGeneric extends Dashlet
                     $field_OrderBy = $val;
                 }
             }
-            if(strpos($field_OrderBy,"date_") !== false){
+            if(strpos($field_OrderBy,"date") !== false){
                 if(!empty($_REQUEST["custom_filter"]) ){ 
                     switch ($_REQUEST["custom_filter"]) {
                         case 'today':
