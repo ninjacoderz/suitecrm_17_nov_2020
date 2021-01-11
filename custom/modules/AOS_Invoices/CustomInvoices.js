@@ -4012,7 +4012,10 @@ $(function () {
         // For text bellow STC Aggregator Serial
 
         function createSTCAggregatorSerial() {
-            if ($('#stc_aggregator_serial_c').val() == "") return;
+            if ($('#stc_aggregator_serial_c').val() == "") {
+                $('#stc_aggregator_serial_c').siblings().empty();
+                return;
+            }
             var href = "<div class='open-stc-rebate'>Open STC rebate application <a target='_blank' href='https://geocreation.com.au/assignments/" + $('#stc_aggregator_serial_c').val() +
                 "/edit'>https://geocreation.com.au/assignments/" + $('#stc_aggregator_serial_c').val() + "/edit</a></div>";
             $('#stc_aggregator_serial_c').siblings().empty();
