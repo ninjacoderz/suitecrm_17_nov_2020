@@ -37,6 +37,7 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
     $quote->quote_note_inputs_c = json_encode($_REQUEST);
     
     // var_dump($quote->quote_note_inputs_c); die;
+    $quote->name = str_replace(['Sanden 160FQS', 'Sanden 250FQS', 'Sanden 300FQS', 'Sanden 315FQS', 'Sanden 315FQV'], $_REQUEST['quote_tank_size'], $quote->name);
 
     //Check Type Sanden
     if($_REQUEST['quote_tank_size'] == 'Sanden 315FQS') {
