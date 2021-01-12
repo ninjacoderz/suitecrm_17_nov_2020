@@ -5835,12 +5835,12 @@ $(function() {
      */
     function GP_manual() {
         if ($("#gb_manual").is(":checked")) {
-            $(fields_auto_fill).removeAttr('disabled');
+            $(fields_auto_fill).removeAttr('readonly').css('background', '#d8f5ee');
             calculation_gross_profit_sanden_quote();
         } else {
             SUGAR.ajaxUI.showLoadingPanel();
             setTimeout(function(){
-                $(fields_auto_fill).attr('disabled', 'disabled');
+                $(fields_auto_fill).attr('readonly', 'readonly').css('background', '#ffffff');
                 //get po plumb/elec total_amt
                 var po_total_amt = getPOforQuote($("input[name='record']").val());
                 $('#plumbing_bill').val(po_total_amt['plumb_po']);
@@ -5926,28 +5926,13 @@ $(function() {
     var fields_auto_fill = '#sanden_supply_bill, #plumbing_bill, #electrician_bill, #sanden_total_costs, #sanden_gross_profit, #sanden_revenue, #sanden_stcs, #veec_revenue, #sanden_total_revenue, #sanden_gprofit_percent';
     $(document).on('change', '#gb_manual', function(){
         if ($("#gb_manual").is(":checked")) {
-            $(fields_auto_fill).removeAttr('disabled');
+            $(fields_auto_fill).removeAttr('readonly').css('background', '#d8f5ee');
         } else {
-            $(fields_auto_fill).attr('disabled', 'disabled');
+            $(fields_auto_fill).attr('readonly', 'readonly').css('background', '#ffffff');
         }
     });
     //load page
     GP_manual();
-    // if ($("#gb_manual").is(":checked")) {
-    //     $(fields_auto_fill).removeAttr('disabled');
-    //     calculation_gross_profit_sanden_quote();
-    // } else {
-    //     //Calulation first time
-    //     setTimeout(function(){
-    //         $(fields_auto_fill).attr('disabled', 'disabled');
-    //         //get po plumb/elec total_amt
-    //         var po_total_amt = getPOforQuote($("input[name='record']").val());
-    //         $('#plumbing_bill').val(po_total_amt['plumb_po']);
-    //         $('#electrician_bill').val(po_total_amt['elec_po']);
-    //         calculateGP();
-    //     }, 100);
-    // }
-
 
 });
 

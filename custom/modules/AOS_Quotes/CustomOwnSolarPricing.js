@@ -1,7 +1,7 @@
 $(function () {
     'use strict';
     //INIT
-    $(document).find('#own_solar_pv_pricing_c').attr('disabled', 'disabled');
+    $(document).find('#own_solar_pv_pricing_c').attr('readonly', 'readonly');
     init_table_own_solar();
     getDataProductSolar();
 
