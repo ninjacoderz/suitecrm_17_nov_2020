@@ -390,4 +390,13 @@ $(document).ready(function(){
             }
         }, 500);
     //VUT-E-Format phone number
+
+    //thienpb code change STCs vat
+    $("#lineItems").on("blur",".product_name",function(){
+        if($(this).val() == 'STCs'){
+            $(this).closest("tr").find(".product_vat_amt_select").val('0.0').trigger('change');
+        }
+    });
+
+    
 })
