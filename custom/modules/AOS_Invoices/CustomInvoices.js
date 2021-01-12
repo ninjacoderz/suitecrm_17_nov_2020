@@ -1618,7 +1618,7 @@ $(function () {
         }
 
         $("#save_and_edit").after(
-            ' <button type="button" id="create_assignment" class="button createAssignment" title="Create Assignment" onClick="SUGAR.createAssignment(this);" > Create Assignment <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+            ' <button type="button" style="background: #00b2e2;" id="create_assignment" class="button createAssignment" title="Create Assignment" onClick="SUGAR.createAssignment(this);" > Create Get Assignment <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
         )
 
 
@@ -1628,6 +1628,14 @@ $(function () {
                 alert("Function disabled for Daikin.");
                 return false;
             }
+            if (!hasFileAndPhoto('pcoc')) {
+                // alert('Noooo');
+                var question = confirm("No PCOC attached. Are you sure you want to create the GET Assignment?");
+                if (!question) {
+                    return false;
+                }
+            }
+            // return false;
             //dung code - alert confirm
             var dialog = $('<p>CONFIRM with PE Contact if this Customer is GST Registered? If UNSURE, click CANCEL</p>').dialog({
                 buttons: {
@@ -7483,4 +7491,20 @@ function promo_code_methven(e) {
             return false;
         }
     }
+}
+
+/**
+ * VUT - check File/Photo name include {string}
+ * @param {string} str
+ * @returns {boolean} true is has
+ */
+function hasFileAndPhoto(str) {
+    let res = false;
+    $("#fileupload tr p.name a").each(function() {
+        if ($(this).attr("href").toLowerCase().indexOf(str) != -1) {
+            res= true;
+            return false;
+        }
+    });
+    return res;
 }

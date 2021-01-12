@@ -370,34 +370,6 @@
         $lead_new->create_methven_quote_num_c =  $new_quote->id;
         $lead_new->save();
 
-        require_once('include/SugarPHPMailer.php');
-        $emailObj = new Email();
-        $defaults = $emailObj->getSystemDefaultEmail();
-        $mail = new SugarPHPMailer();
-        $mail->setMailerForSystem();
-        $mail->From = $defaults['email'];
-        $mail->FromName = $defaults['name'];
-        $mail->IsHTML(true);
-        
-        $mail->Subject = 'Generate Lead and Quote from PE Orders';
-        $mail->Body = ' <div>Hi Team,</div><br/>
-                        <div"><strong>Order #'.$orderID.' from PE</strong></div><br/>
-                        <div>'.$bean->account_name.'<br/>
-                            '.$bean->primary_address_street.'<br/>
-                            '.$bean->primary_address_city.'<br/>
-                            '.$bean->primary_address_state.'<br/>
-                            '.$bean->primary_address_postalcode.'<br/>
-                            '.$bean->primary_address_country.'<br/><br/>
-                        </div>
-                        <div>Please check crm link below:</div>
-                        <div><a target="_blank" href="https://suitecrm.pure-electric.com.au/index.php?action=EditView&module=Leads&record='. $bean->id .'">CRM Edit Lead</a></div>
-                        <div><a target="_blank" href="https://suitecrm.pure-electric.com.au/index.php?action=EditView&module=AOS_Quotes&record='.$new_quote->id.'">CRM Edit Quote</a></div>';
-
-        $mail->prepForOutbound();
-        // $mail->AddAddress('ngoanhtuan2510@gmail.com');
-        $mail->AddAddress('accounts@pure-electric.com.au');
-        $sent = $mail->Send();
-
         //auto create shipments auspost
         $shipments = array (
             'shipments' => 
@@ -453,7 +425,7 @@
         );
        
         $curl = curl_init();
-        $source = "http://loc.suitecrm.com/index.php?entryPoint=APICreateLabelAuspost";
+        $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
         curl_setopt($curl, CURLOPT_URL, $source);
         curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
         curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
@@ -482,6 +454,36 @@
         $aupost_shipping_id = $json_result->shipments[0]->shipment_id;
         $connote_id = $json_result->shipments[0]->items[0]->tracking_details->article_id;
         $connote_id ='';
+
+        //send mail
+        require_once('include/SugarPHPMailer.php');
+        $emailObj = new Email();
+        $defaults = $emailObj->getSystemDefaultEmail();
+        $mail = new SugarPHPMailer();
+        $mail->setMailerForSystem();
+        $mail->From = $defaults['email'];
+        $mail->FromName = $defaults['name'];
+        $mail->IsHTML(true);
+        
+        $mail->Subject = 'Generate Lead and Quote from PE Orders';
+        $mail->Body = ' <div>Hi Team,</div><br/>
+                        <div"><strong>Order #'.$orderID.' from PE</strong></div><br/>
+                        <div>'.$bean->account_name.'<br/>
+                            '.$bean->primary_address_street.'<br/>
+                            '.$bean->primary_address_city.'<br/>
+                            '.$bean->primary_address_state.'<br/>
+                            '.$bean->primary_address_postalcode.'<br/>
+                            '.$bean->primary_address_country.'<br/><br/>
+                        </div>
+                        <div>Please check crm link below:</div>
+                        <div><a target="_blank" href="https://suitecrm.pure-electric.com.au/index.php?action=EditView&module=Leads&record='. $bean->id .'">CRM Edit Lead</a></div>
+                        <div><a target="_blank" href="https://suitecrm.pure-electric.com.au/index.php?action=EditView&module=AOS_Quotes&record='.$new_quote->id.'">CRM Edit Quote</a></div>';
+
+        $mail->prepForOutbound();
+        // $mail->AddAddress('ngoanhtuan2510@gmail.com');
+        $mail->AddAddress('accounts@pure-electric.com.au');
+        $sent = $mail->Send();
+
         Create_Invoice_WarehouseLog($new_quote,$orderID,$aupost_shipping_id,$connote_id);
     }
 
