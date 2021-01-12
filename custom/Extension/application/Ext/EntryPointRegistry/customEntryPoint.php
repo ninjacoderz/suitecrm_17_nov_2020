@@ -1159,7 +1159,7 @@ $entry_point_registry['seekInstallationDate_Quote'] = array(
 //VUT-Service Case- Read Google Sheet (CSV)
 $entry_point_registry['readGoogleSheet'] = array(
     'file' => 'custom/modules/pe_service_case/readGoogleSheet.php',
-    'auth' => true,
+    'auth' => false,
 );
 
 //dung code -- CURL special notes
@@ -1369,5 +1369,11 @@ $entry_point_registry['APICreateLabelAuspost'] = array(
 //VUT - get product own solar in Quote
 $entry_point_registry['getOwnSolarPricing'] = array( 
     'file' => 'custom/modules/AOS_Quotes/getOwnSolarPricing.php',
+    'auth' => false
+);
+
+//VUT - get totalValue / status Assignment
+$entry_point_registry['getTotalValueAssignment'] = array( 
+    'file' => 'custom/modules/AOS_Invoices/getTotalValueAssignment.php',
     'auth' => false
 );

@@ -185,7 +185,7 @@ $(document).ready(function() {
     $('#sanden_gross_profit_c').parent().parent().append('<br><button type="button" class="button" id="calculation_profit_sanden">Calculation Profit Sanden</button>');
     $("#calculation_profit_sanden").on('click',function(){
         GP_manual();
-    })
+    });
     var string_selector_calculation_sanden = '#sanden_stcs_c, #sanden_supply_bill_c,#sanden_shipping_bill_c,#plumbing_bill_c,#electrician_bill_c,#sanden_revenue_c,#STCRevenue, #sanden_total_costs_c, #veec_revenue_c, #solar_vic_revenue_c, #sa_reps_revenue_c';
     $(string_selector_calculation_sanden).css('width','35%');
     $(string_selector_calculation_sanden).on("change", calculation_gross_profit_sanden);
@@ -207,6 +207,7 @@ $(document).ready(function() {
         }
     });
     //load page
+    $('#sanden_stcs_c').append('<span id="noteAssignment"></span>');
     GP_manual();
 
     //START - DECLARE FUNCTION FOR GP Calculation
@@ -248,12 +249,32 @@ $(document).ready(function() {
         var qty = getSTCsLineItem();
         var sanden_STCs_revenue = parseFloat(qty.STCs*36.55);
         var sanden_VEECs_revenue = parseFloat(qty.VEECs*30);
-        $('#sanden_stcs_c').val(sanden_STCs_revenue);
+        $('#noteAssignment').remove();
+        $('#sanden_stcs_c').val(sanden_STCs_revenue).after('<span id="noteAssignment">calc from line items</span>');
         $('#veec_revenue_c').val(sanden_VEECs_revenue);
-        //field "sanden_supply_bill_c" Sanden Equipment Costsy
+        //field "sanden_supply_bill_c" Sanden Equipment Costs
         if ($('#quote_type_c').val() == 'quote_type_sanden') {
             var sanden_equipment_cost = calculate_sanden_equipment_cost_gp();
             $('#sanden_supply_bill_c').val(sanden_equipment_cost);
+            //S - check has geo Assignment
+            let geoSTCs = [];
+            if ($('#stc_aggregator_serial_c').val() != '') {
+                geoSTCs.push($('#stc_aggregator_serial_c').val());
+            }
+            if ($('#stc_aggregator_serial_2_c').val() != '') {
+                geoSTCs.push($('#stc_aggregator_serial_2_c').val());
+            }
+            if ($('#stc_aggregator_c').val() != '') {
+                geoSTCs.push($('#stc_aggregator_c').val());
+            }
+            if (geoSTCs.length > 0) {
+                let totalValueAssignment = getGeoTotalValueAssinnment(geoSTCs);
+                $('#noteAssignment').remove();
+                $('#sanden_stcs_c').val(totalValueAssignment).after('<span id="noteAssignment">calc from GEO Assignment</span>');
+                
+            }
+            //E - check has geo Assignment
+ 
         }
         $('#sanden_revenue_c').val($('#total_amt').val()).trigger('change');
         calculation_gross_profit_sanden();
@@ -274,7 +295,6 @@ $(document).ready(function() {
             }
             if ($(`#product_name${i}`).val() == 'VEECs') {
                 qty['VEECs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g,""));
-                // qty['VEECs'] = parseFloat($(`#product_product_qty${i}`).val().replace(',',''));
             }
         }
         return qty;
@@ -350,5 +370,34 @@ $(document).ready(function() {
         SUGAR.ajaxUI.hideLoadingPanel();
         return total_equipment_cost;
     }
+
+    /**
+     * VUT - get geo Total Value Assignment
+     * @param {'array'} geoAssignments
+     * @returns {} total Value Assignment 
+     */
+    function getGeoTotalValueAssinnment(geoAssignments) {
+        let result = 0;
+        $.ajax({
+            url: "?entryPoint=getTotalValueAssignment",
+            type : 'POST',
+            async: false,
+            data: {
+                type: 'gp_cal',
+                geoAssignments: geoAssignments,
+            },
+            }).done(function (data) {
+                if (data!='[]') {
+                    let jsonAssignment = JSON.parse(data);
+                    $.each(jsonAssignment,function(k,v){
+                        // if (v.status=='complete') {
+                        result += parseFloat(v.totalValue);
+                        // }
+                    });
+                }        
+            });
+            return result;
+    }
+    //END - DECLARE FUNCTION FOR GP Calculation
 
 });
