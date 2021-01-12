@@ -5,9 +5,6 @@ $(function () {
     var state = convert_state();
     var installYear = 0;
     
-    //INIT
-    init();
-    loadOptionPricing();
     //INIT BASE PRICE JSON BY STATE
     if(state != ''){
         loadJSON(state);
@@ -30,9 +27,12 @@ $(function () {
         $("#installYear").html(installYear);
         $("#table_pricing_state").val(convert_state($(this).val()));
     });
+
+    //INIT
+    init(state,installYear);
+    loadOptionPricing();
     
     //SET EVENTLISTIONER
-
     $('body').on("change","select[id*='panel_type_'], select[id*='inverter_type_'], input[id*='total_panels_'], input[id*='pm_']",function(){
         var index  = $(this).attr("id").split('_');
         if($(this).attr("id").indexOf('pm_') >= 0){
@@ -44,7 +44,7 @@ $(function () {
         action_changed(index);
     });
 
-    //change extra pricing
+    //CHANGE EXTRA PRICING
     $('body').on("change","select[id*='inverter_type_']",function(){
         var index  = $(this).attr("id").split('_');
         if($(this).attr("id").indexOf('extra_2_') >= 0){
@@ -54,7 +54,7 @@ $(function () {
         }
         action_changed_extra(index);
 
-        //new logic
+        //NEW LOGIC
         if($("#inverter_type_"+index).val().indexOf("3P") >= 0){
             var choose = confirm("Change site to 3P");
             if(choose){
@@ -76,7 +76,7 @@ $(function () {
         
     });
 
-    //change travel km
+    //CHANGE TRAVEL KM
     $("input[id*='travel_km_").change(function(){
         if($(this).val()){
             var val = $(this).val();
@@ -84,31 +84,7 @@ $(function () {
         }
     });
 
-    //add button
-    
-    //Double Storey Checkbox
-    var html_checkbox_Convert_Solar_Opportunity = 
-    '<div class="col-xs-12  col-sm-12 label" >Install Year = <span id="installYear">'+installYear+'</span></div>'
-    + '<div class="col-xs-6 col-sm-6 edit-view-row-item">'
-    + '<div class="col-xs-12 col-sm-2 label" data-label="">'
-    + 'Double Storey:</div>'
-    + '<div class="" type="bool" field="send_sms" colspan="3">'
-    + '<input type="checkbox" class="solar_pv_pricing_input" id="Double_Storey" name="Double_Storey" value="1" title="" tabindex="0">'                  
-    +'</div>'
-    +'</div>';
-
-    //add Text state  
-    html_checkbox_Convert_Solar_Opportunity += 
-     '<div class="col-xs-6 col-sm-6 edit-view-row-item">'
-    + '<div class="col-xs-12 col-sm-2 label" data-label="">'
-    + 'State:</div>'
-    + '<div class="" type="bool" field="send_sms" colspan="3">'
-    + '<input disabled type="text" class=" solar_pv_pricing_input table_pricing_state" id="table_pricing_state" name="table_pricing_state" value="'+state+'" title="" tabindex="0">'                  
-    +'</div>'
-    +'</div>';
-    
-    $('#solar_pv_pricing_table').parent().before(html_checkbox_Convert_Solar_Opportunity); 
-
+    //Double_Storey CLICK    
     $('#Double_Storey').on('click',function(){
         if($(this).prop('checked') == true){
             $('#double_storey_c').prop('checked',true);
@@ -119,6 +95,19 @@ $(function () {
             }
         }else {
             $('#double_storey_c').prop('checked',false);
+        }
+    })
+
+    //Double_Storey CLICK    
+    $('#Rough_in_Stage').on('click',function(){
+        if($(this).prop('checked') == true){
+            var id_file_and_photo = '#' + $("#special_notes_c").parents('div[class^="panel-body"]').eq(0).attr('id');
+            $(id_file_and_photo).addClass('in');
+            $(id_file_and_photo).siblings().find('a[data-toggle="collapse-edit"]').removeClass('collapsed');
+            $("#special_notes_c").val("Rough in stage site visit if required +$350").focus();
+
+        }else {
+            $("#special_notes_c").val("").focus();
         }
     })
 
@@ -379,7 +368,7 @@ $(function () {
         return input;
     }
 
-    function init(){
+    function init(state,installYear){
 
         var panel_type = ['','Jinko 370W Cheetah Plus JKM370M-66H','Q CELLS Q.MAXX-G2 350W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W',*/'Sunpower P3 325 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
         var inverter_type = ['','Primo 3','Primo 4','Primo 5','Primo 6','Primo 8.2','Symo 5','Symo 6','Symo 8.2','Symo 10','Symo 15','SYMO 20','S Edge 3','S Edge 5','S Edge 6','S Edge 8','S Edge 8 3P','S Edge 10','IQ7 plus',/*'IQ7',*/'IQ7X',/*'Growatt 3','Growatt 5','Growatt 6','Growatt8','Growatt 8.2',*/'Sungrow 3','Sungrow 5','Sungrow 8','Sungrow 10 3P','Sungrow 15 3P'];
@@ -470,6 +459,33 @@ $(function () {
             $('#solar_pv_pricing_table').parent().before(html_checkbox_Vic_Rebate); 
             $('#solar_pv_pricing_table').parent().before(html_checkbox_Loan_Rebate); 
         }
+        //Double Storey Checkbox
+        var html_checkbox_Convert_Solar_Opportunity = 
+        '<div class="col-xs-12  col-sm-12 label" >Install Year = <span id="installYear">'+installYear+'</span></div>'
+        + '<div class="col-xs-6 col-sm-6 edit-view-row-item">'
+        + '<div class="col-xs-12 col-sm-2 label" data-label="">'
+        + 'Double Storey:</div>'
+        + '<div class="" type="bool" field="send_sms" colspan="3">'
+        + '<input type="checkbox" class="solar_pv_pricing_input" id="Double_Storey" name="Double_Storey" value="1" title="" tabindex="0">'
+        +'</div>'
+        + '<div class="col-xs-12 col-sm-2 label" data-label="">Rough in Stage:</div>'
+        + '<div class="" type="bool" field="send_sms" colspan="3">'
+        + '<input type="checkbox" class="solar_pv_pricing_input" id="Rough_in_Stage" name="Rough_in_Stage"  title="" tabindex="0">'               
+        +'</div>'
+        +'</div>';
+
+        //add Text state  
+        html_checkbox_Convert_Solar_Opportunity += 
+        '<div class="col-xs-6 col-sm-6 edit-view-row-item">'
+        + '<div class="col-xs-12 col-sm-2 label" data-label="">'
+        + 'State:</div>'
+        + '<div class="" type="bool" field="send_sms" colspan="3">'
+        + '<input disabled type="text" class=" solar_pv_pricing_input table_pricing_state" id="table_pricing_state" name="table_pricing_state" value="'+state+'" title="" tabindex="0">'                  
+        +'</div>'
+        +'</div>';
+
+        $('#solar_pv_pricing_table').parent().before(html_checkbox_Convert_Solar_Opportunity); 
+
     }
     ///////////// END MAKE A TABLE //////////////////
 
@@ -773,6 +789,7 @@ $(function () {
             }
         });
         values['Double_Storey']  = ($("#Double_Storey").is(":checked") == true) ? 1 : 0;
+        values['Rough_in_Stage']  = ($("#Rough_in_Stage").is(":checked") == true) ? 1 : 0;
         values['Terracotta_checkbox']  = ($("#Terracotta_checkbox").is(":checked") == true) ? 1 : 0;
         values['Vic_Rebate']  = ($("#Vic_Rebate").is(":checked") == true) ? 1 : 0;
         values['Loan_Rebate']  = ($("#Loan_Rebate").is(":checked") == true) ? 1 : 0;
