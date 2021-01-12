@@ -291,8 +291,8 @@ $(document).ready(function(){
     }
 
     //thienpb code -- show hide description
-    $('.product_item_description').attr('data-click-state', 1);
-    $(".product_item_description").hover(function(){
+    $('.product_item_description, #quote_note_c').attr('data-click-state', 1);
+    $(".product_item_description, #quote_note_c").hover(function(){
         if($(this).attr('data-click-state') == 1) {
             $(this).height( $(this)[0].scrollHeight).change();
             $(this).attr('data-click-state', 0)
@@ -325,6 +325,7 @@ $(document).ready(function(){
         autosize.destroy($('.product_item_description'));
         autosize.destroy($('#solar_pv_pricing_input_c'));
         autosize.destroy($('#own_solar_pv_pricing_c'));
+        autosize.destroy($('#quote_note_c'));
 
         if (module_sugar_grp1 == 'Calls') {
             autosize.destroy($('#description'));
