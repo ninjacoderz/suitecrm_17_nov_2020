@@ -407,6 +407,7 @@
                 'phone' => $bean->phone_mobile,
                 ),
                 'email_tracking_enabled' => true,
+                'customer_reference_1' => '#'.$orderID.' '.trim($picking_code,', '),
                 'items' => 
                 array (
                 0 => 
