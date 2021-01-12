@@ -651,11 +651,10 @@ $(function () {
 /**VUT-Check quote date vs today*/
 function compareToday() {
     var today = new Date().toLocaleString('default',{day: '2-digit', month: '2-digit',year: 'numeric'}); //mm/dd/yyyy
-    today = new Date(today);
     var date = $('div[field="quote_date_c"]').text().trim().split(' ')[0].split('/'); //dd/mm/yyyy
     var new_date = date[1]+'/'+date[0]+'/'+date[2];
-    new_date = new Date(new_date); 
-    if (today.getTime()!==new_date.getTime()) {
+    new_date = new Date(new_date).toLocaleString('default',{day: '2-digit', month: '2-digit',year: 'numeric'});
+    if (today !== new_date) {
         if (!confirm('Quote Date is not today, still want to send out?')) {
             return false;
         } else return true;
