@@ -201,13 +201,14 @@ $(document).ready(function() {
     var fields_auto_fill = '#sanden_supply_bill_c, #plumbing_bill_c, #electrician_bill_c, #sanden_total_costs_c, #sanden_gross_profit_c, #sanden_revenue_c, #sanden_stcs_c, #veec_revenue_c, #sanden_total_revenue_c, #sanden_gprofit_percent_c';
     $(document).on('change', '#gp_manual_c', function(){
         if ($("#gp_manual_c").is(":checked")) {
+            // $('#noteAssignment').text('');
             $(fields_auto_fill).removeAttr('readonly').css('background', '#d8f5ee');
         } else {
             $(fields_auto_fill).attr('readonly', 'readonly').css('background', '#ffffff');
         }
     });
     //load page
-    $('#sanden_stcs_c').append('<span id="noteAssignment"></span>');
+    // $('#sanden_stcs_c').after('<span id="noteAssignment"></span>');
     GP_manual();
 
     //START - DECLARE FUNCTION FOR GP Calculation
@@ -217,6 +218,7 @@ $(document).ready(function() {
     function GP_manual() {
         if ($("#gp_manual_c").is(":checked")) {
             $(fields_auto_fill).removeAttr('readonly').css('background', '#d8f5ee');
+            // $('#noteAssignment').text('');
             calculation_gross_profit_sanden();
         } else {
             SUGAR.ajaxUI.showLoadingPanel();
@@ -249,8 +251,8 @@ $(document).ready(function() {
         var qty = getSTCsLineItem();
         var sanden_STCs_revenue = parseFloat(qty.STCs*36.55);
         var sanden_VEECs_revenue = parseFloat(qty.VEECs*30);
-        $('#noteAssignment').remove();
-        $('#sanden_stcs_c').val(sanden_STCs_revenue).after('<span id="noteAssignment">calc from line items</span>');
+        // $('#noteAssignment').text('calc from line items');
+        $('#sanden_stcs_c').val(sanden_STCs_revenue);
         $('#veec_revenue_c').val(sanden_VEECs_revenue);
         //field "sanden_supply_bill_c" Sanden Equipment Costs
         if ($('#quote_type_c').val() == 'quote_type_sanden') {
@@ -269,8 +271,8 @@ $(document).ready(function() {
             }
             if (geoSTCs.length > 0) {
                 let totalValueAssignment = getGeoTotalValueAssinnment(geoSTCs);
-                $('#noteAssignment').remove();
-                $('#sanden_stcs_c').val(totalValueAssignment).after('<span id="noteAssignment">calc from GEO Assignment</span>');
+                // $('#noteAssignment').text('calc from GEO Assignment');
+                $('#sanden_stcs_c').val(totalValueAssignment);
                 
             }
             //E - check has geo Assignment
