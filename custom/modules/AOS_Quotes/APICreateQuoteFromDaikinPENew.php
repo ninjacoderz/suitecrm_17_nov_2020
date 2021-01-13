@@ -89,7 +89,8 @@ $extraSubFloorInstallation	= [];
 $extraWallPlasterCut		= [];
 $extraExtra			        = [];
 $extraDICondensatePump		= [];
-$quantity_daikin    = 0;		
+$extraTravel		        = [];
+$quantity_daikin            = 0;		
 
 foreach($products as $product) {
     $quantity_daikin += $product['quantity'];
@@ -485,6 +486,18 @@ foreach($products as $product) {
                     array_push($extraDICondensatePump,$tmp);
                 }
             }
+            if($key == "itemise_Travel_all") {
+                if($value == true) {
+                    $tmp = 1;
+                } else {
+                    $tmp = 0;
+                }
+                if(count($extraTravel) > 0) {
+                    $extraTravel[1] = $tmp;
+                } else {
+                    array_push($extraTravel,$tmp);
+                }
+            }
         }
     }
     // if($product['wifiInstall'] == 'Yes') {
@@ -534,6 +547,9 @@ if(count($extraExtra) > 0) {
 }
 if(count($extraDICondensatePump) > 0) {
     array_push($part_numbers,'DI_CondensatePump');
+}
+if(count($extraTravel) > 0) {
+    array_push($part_numbers,'Travel');
 }
 ///////
 
@@ -767,6 +783,9 @@ while ($row = $db->fetchByAssoc($ret))
         } else if($row['part_number'] == 'DI_CondensatePump') {
             $product_line->product_qty = 1;
             $product_line->product_list_price = $extraDICondensatePump[0];
+        } else if($row['part_number'] == 'Travel') {
+            $product_line->product_qty = 1;
+            $product_line->product_list_price = $extraTravel[0];
         } else {
             $product_line->product_qty = 1;
             $product_line->product_list_price = $row['cost'];
@@ -808,6 +827,7 @@ while ($row = $db->fetchByAssoc($ret))
                     || ($row['part_number'] == 'DAIKIN_INSTALL_WALL_CUT' && $extraWallPlasterCut[0] >= 0 && $extraWallPlasterCut[1] == 1)
                     || ($row['part_number'] == 'DIFFICUL_INSTALL' && $extraExtra[0] >= 0 && $extraExtra[1] == 1)
                     || ($row['part_number'] == 'DI_CondensatePump' && $extraDICondensatePump[0] >= 0 && $extraDICondensatePump[1] == 1)
+                    || ($row['part_number'] == 'Travel' && $extraTravel[0] >= 0 && $extraTravel[1] == 1)
                     ) {
                     $products_return[$row['part_number']] = array (
                         'Quantity' =>$product_line->product_qty,
@@ -867,6 +887,7 @@ while ($row = $db->fetchByAssoc($ret))
                     || ($row['part_number'] == 'DAIKIN_INSTALL_WALL_CUT' && $extraWallPlasterCut[0] >= 0 && $extraWallPlasterCut[1] == 1)
                     || ($row['part_number'] == 'DIFFICUL_INSTALL' && $extraExtra[0] >= 0 && $extraExtra[1] == 1)
                     || ($row['part_number'] == 'DI_CondensatePump' && $extraDICondensatePump[0] >= 0 && $extraDICondensatePump[1] == 1)
+                    || ($row['part_number'] == 'Travel' && $extraTravel[0] >= 0 && $extraTravel[1] == 1)
                 ) {
                     $product_line->save();
                 }
