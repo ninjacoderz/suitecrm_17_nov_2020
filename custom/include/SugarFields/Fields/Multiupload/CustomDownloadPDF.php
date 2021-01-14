@@ -210,11 +210,11 @@ if (!isset($_REQUEST['preview'])) {
     $folderID = $_REQUEST['folder_id'];
     //thienpb
     $result =  getIstoreExisted($folderID);
-    if($result['index'] == 0)die;
+    if(count($result['list_index']) == 0)die;
     $pdf = new Fpdi();
     $pageCount = $pdf->setSourceFile($result['url']);
     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-        if($pageNo == $result['index'])continue;
+        if(in_array($pageNo,$result['list_index']))continue;
         $pdf->AddPage();
         $templateId = $pdf->importPage($pageNo);
         $size = $pdf->getTemplateSize($templateId);
@@ -253,7 +253,7 @@ function getIstoreExisted($folderID){
 
         $pdf = new Fpdi();
         $pageCount = $pdf->setSourceFile($filePDF);
-
+        $list_index = [];
         foreach($fileArray as $file){
             if(strpos(mime_content_type($htmlPath.'/'.$file),"image/") !== false){
 
@@ -261,14 +261,22 @@ function getIstoreExisted($folderID){
                 $index = (int)substr($fileNames[count($fileNames)-1],-2,strlen($fileNames[count($fileNames)-1]));
                 if($index < ((int)($pageCount/2)-2)) continue;
 
+                list($width, $height) = getimagesize($htmlPath.'/'.$file);
+                $newwidth = round($width * 0.7);
+                resize($newwidth,$htmlPath.'/'.$file);
+
                 $check = uploadToApi($htmlPath.'/'.$file);
-                if($check == 'ok'){ 
+                if(!empty($check)){ 
+                    array_push($list_index,$index);
+                }
+
+                if(count($list_index) > 1){
                     break;
                 }
             }
         }
         rrmdir($htmlPath);
-        return array("index"=>$index,"url"=>$filePDF);
+        return array("list_index"=>$list_index,"url"=>$filePDF);
     }catch (Exception $ex) {
         // print_r($ex);
     }
@@ -307,9 +315,11 @@ function uploadToApi($target_file){
         ], ['file' => $fileData]);
         $response =  json_decode($r->getBody(),true);
         if($response['ErrorMessage'] == "") {
-            foreach($response['ParsedResults'] as $pareValue) {
-                if(strpos(strtolower($pareValue['ParsedText']),"istore") !== false){
-                    return 'ok';
+            foreach($response['ParsedResults'] as $pareValue) {                
+                if(strpos(strtolower($pareValue['ParsedText']),"plenti") !== false){
+                    return 'plenti';
+                }else if(strpos(strtolower($pareValue['ParsedText']),"istore") !== false){
+                    return 'istore';
                 }
             }
         }
@@ -317,4 +327,44 @@ function uploadToApi($target_file){
         // header('HTTP/1.0 403 Forbidden');
         // echo $err->getMessage();
     }
+}
+
+function resize($newWidth, $targetFile) {
+
+    $info = getimagesize($targetFile);
+    $mime = $info['mime'];
+    switch ($mime) {
+            case 'image/jpeg':
+                    $image_create_func = 'imagecreatefromjpeg';
+                    $image_save_func = 'imagejpeg';
+                    $new_image_ext = 'jpg';
+                    break;
+
+            case 'image/png':
+                    $image_create_func = 'imagecreatefrompng';
+                    $image_save_func = 'imagepng';
+                    $new_image_ext = 'png';
+                    break;
+
+            case 'image/gif':
+                    $image_create_func = 'imagecreatefromgif';
+                    $image_save_func = 'imagegif';
+                    $new_image_ext = 'gif';
+                    break;
+
+            default: 
+                    throw new Exception('Unknown image type.');
+    }
+
+    $img = $image_create_func($targetFile);
+    list($width, $height) = getimagesize($targetFile);
+
+    $newHeight = ($height / $width) * $newWidth;
+    $tmp = imagecreatetruecolor($newWidth, $newHeight);
+    imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+    if (file_exists($targetFile)) {
+            unlink($targetFile);
+    }
+    $image_save_func($tmp, "$targetFile");
 }
