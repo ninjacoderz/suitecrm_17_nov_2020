@@ -31,6 +31,7 @@
             self.emailComposeView = composeBox.controls.modal.body.find('.compose-view').EmailsComposeView();
   
             var email_address_to = '';
+            var email_address_cc = '';
             var name_address_to = 'COPE Sensitive Freight';
             if(email_type == 'authority_to_leave') {
                 var state_Destination_Address =($("#destination_address_state").val().trim() != '' )? $("#destination_address_state").val().trim().toLowerCase() : '';
@@ -45,7 +46,9 @@
                         email_address_to = "qldcust@cope.com.au";
                     break;
                     case "sa":
-                        email_address_to = "sa@cope.com.au";
+                        // email_address_to = "sa@cope.com.au";
+                        email_address_to = "mellbourn@cope.com.au";
+                        email_address_cc = ", Cope SA <sa@cope.com.au>";
                     break;
                     case "vic":
                     case "victory":
@@ -58,7 +61,7 @@
             }
 
             $(self.emailComposeView).find('input[name="to_addrs_names"]').val(name_address_to+'<'+email_address_to + '>');    
-            $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
+            $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>"+email_address_cc);
             $(self.emailComposeView).find('input[name="return_id"]').val(record_id);
             $(self.emailComposeView).find('input[name="return_module"]').val(module_name);
             $(self.emailComposeView).on('sentEmail', function (event, composeView) {
