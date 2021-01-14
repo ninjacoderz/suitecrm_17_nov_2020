@@ -363,6 +363,7 @@ $(function () {
                 console.log(json_data);
                 //Account 
                 $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.account_name),json_data);
+                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.contact_name),json_data);
                 $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.mobile_phone_c),json_data);
                 $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.billing_account_email),json_data);
                 $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.address),json_data);
