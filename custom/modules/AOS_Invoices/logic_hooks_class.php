@@ -305,6 +305,18 @@
                     $bean->save();
                 }
             }
+
+            //change logic Paid for Invoice "Daikin", "Solor"
+            $total_balance_owing_c = floatval($bean->total_balance_owing_c);
+
+            if(($total_balance_owing_c < 0 || $total_balance_owing_c == 0) &&  $bean->status != 'Paid' &&  $bean->status != 'Cancelled' &&  $bean->status != 'Test'){
+                $inv_type = $bean->quote_type_c;
+                $array_product_type_change_status = ['quote_type_solar','quote_type_daikin','quote_type_nexura'];
+                if(in_array($inv_type,$array_product_type_change_status)){
+                    $bean->status = 'Paid';
+                     $bean->save();
+                }
+            }
         }
     }
 
