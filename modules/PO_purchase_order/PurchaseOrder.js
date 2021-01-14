@@ -728,9 +728,74 @@ $(function () {
         $("#btn_view_change_log").after(
             '&nbsp;<button style="margin: 1px;" type="button" id="save_and_edit" class="button saveAndEdit" title="Save and Edit" onClick="SUGAR.saveAndEdit(this);">Save and Edit</button>'
         )
-        //VUT - clone button Email Freight Company
+        //VUT - clone button Email Freight Company + Save & Email pdf
         $('#save_and_edit').after('<button type="button" class="button primary" id="email_freight_company" value="FREIGHT COMPANY" class="button primary" data-email-type="freight_company" onclick="$(document).openComposeViewModal_Freight_Company(this);" data-module="PO_purchase_order" data-module-name="'+ $("#name").val() +'" data-contact-name="COPE '+$('#shipping_address_state').val()+'"  data-record-id="'+ $("input[name='record']").val()  +'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>EMAIL FREIGHT COMPANY</button>');
-        // $('#save_and_edit').after($('#email_freight_company').clone()); 
+        $('#save_and_edit').after('<button type="button" class="button primary" id="save_and_email_pdf" class="button save_and_email_pdf"><span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Save and email pdf</button>&nbsp;');
+
+        //Start - function for button Save and email pdf
+        $("#save_and_email_pdf").click(function () {
+            let po_id = '';
+            let return_module = $("#EditView input[name='return_module']").val();
+            $('#save_and_email_pdf span.glyphicon-refresh').removeClass('hidden');
+            $("#EditView input[name='action']").val('Save');
+            $("#EditView").append('<input type="hidden" value="save_and_sendpdf" name="save_and_sendpdf"/>');
+            let return_id = $("#EditView input[name='return_id']").val();
+            $("#EditView input[name='return_module']").val('PO_purchase_order');
+            $("#EditView input[name='return_action']").val('DetailView');
+            $("#EditView input[name='return_id']").val('');
+
+            $.ajax({
+                type: $("#EditView").attr('method'),
+                url: $("#EditView").attr('action'),
+                data: $("#EditView").serialize(),
+                async: false,
+                success: function (data) {
+                    window.onbeforeunload = null;
+                    var form = $('<form></form>');
+                    form.attr("method", "post");
+                    form.attr("target", "_blank");
+                    // if ($("#quote_type_c").val() == 'quote_type_solar' || $("#quote_type_c").val() == 'quote_type_tesla') {
+                    //     form.attr("action", 'index.php?entryPoint=CustomQuoteSolarEmailPDF&quote_type_c=' + $("#quote_type_c").val());
+                    // } else {
+                    //     form.attr("action", 'index.php?entryPoint=generatePdf');
+                    // }
+                    form.attr("action", 'index.php?entryPoint=generatePdf');
+
+                    var quote_id_patt = /"record" value="(.*)"/g;
+                    po_id = quote_id_patt.exec(data);
+                    if (po_id !== null && typeof po_id === 'object') {
+                        if (po_id[1] != '') {
+                            po_id = po_id[1]
+                        }
+                    }
+                    var html_field = '';
+                    
+                    if ($("#po_type_c").val() == 'installer') {
+                        html_field += '<input type="hidden" name="templateID" value="3bd2f6d5-46f9-d804-9d5b-5a407d37d4c5">' +
+                            '<input type="hidden" name="task" value="emailpdf">' +
+                            '<input type="hidden" name="module" value="PO_purchase_order">' +
+                            '<input type="hidden" name="uid" value="' + po_id + '">';
+                    } else {
+                        html_field += '<input type="hidden" name="templateID" value="1876bff3-5e6b-e49c-e8a1-5e2530fba9ca">' +
+                            '<input type="hidden" name="task" value="emailpdf">' +
+                            '<input type="hidden" name="module" value="PO_purchase_order">' +
+                            '<input type="hidden" name="uid" value="' + po_id + '">';
+                    }
+                    form.append(html_field);
+                    $(document.body).append(form);
+                    form.submit();
+                }
+            });
+            setTimeout(function () {
+                if (return_id != '' && return_module == 'Opportunities') {
+                    window.location.href = 'index.php?action=DetailView&module=Opportunities&record=' + return_id;
+                } else {
+                    window.location.href = 'index.php?action=DetailView&module=PO_purchase_order&record=' + po_id;
+                }
+            }, 1000);
+
+        });
+        //End - function for button Save and email pdf
 
         SUGAR.saveAndEdit = function (elem) {
             let condition = checkDistanceTravel();
