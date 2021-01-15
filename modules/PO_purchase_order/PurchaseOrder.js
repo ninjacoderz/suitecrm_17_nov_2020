@@ -360,6 +360,63 @@ $(function () {
                 '</ul>'+
             '</div>'
         )
+        if( $('#po_type_c').val() =="sanden_supply"){
+            $('#create_solar_quote_fqs_c').hide();
+            $('#create_solar_quote_fqs_c').after('<button type="button" class="button" id="supply_add_to_line_items">Add To Line Items</button>');
+            $('#create_solar_quote_fqs_c').after('<span>QIK20</span> <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+            $('#create_solar_quote_fqs_c').after('<span>QIK15</span> <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+            $('#create_solar_quote_fqs_c').after('<span>250FQS</span> <select name="GAUS-250FQS" id="sanden_fqs_250" data-id="67605168-6b72-5504-282c-5cc8e1492ec9" ><option value="0"></option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+            $('#create_solar_quote_fqs_c').after('<span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+            $('#create_solar_quote_fqs_c').after('<span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');    
+        }
+        $('#po_type_c').change(function(){
+            if( $('#po_type_c').val() =="sanden_supply"){
+                $('#create_solar_quote_fqs_c').parent().find('select,span,button').remove();
+                $('#create_solar_quote_fqs_c').parent().parent().show();
+                $('#create_solar_quote_fqs_c').after('<button type="button" class="button" id="supply_add_to_line_items">Add To Line Items</button>');
+                $('#create_solar_quote_fqs_c').after('<span>QIK20</span> <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+                $('#create_solar_quote_fqs_c').after('<span>QIK15</span> <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+                $('#create_solar_quote_fqs_c').after('<span>250FQS</span> <select name="GAUS-250FQS" id="sanden_fqs_250" data-id="67605168-6b72-5504-282c-5cc8e1492ec9" ><option value="0"></option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+                $('#create_solar_quote_fqs_c').after('<span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
+                $('#create_solar_quote_fqs_c').after('<span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');    
+                }else{
+                $('#create_solar_quote_fqs_c').parent().parent().hide();
+            }
+            $("#supply_add_to_line_items").click(function(){
+                if( parseInt($("#sanden_fqs_315").val()) > 0){
+                    autoCreateLineItem($("#sanden_fqs_315").attr('data-id'),$("#sanden_fqs_315").attr('id'));
+                }
+                if( parseInt($("#sanden_fqs_300").val()) > 0){
+                    autoCreateLineItem($("#sanden_fqs_300").attr('data-id'),$("#sanden_fqs_300").attr('id'));
+                }
+                if( parseInt($("#sanden_fqs_250").val()) > 0){
+                    autoCreateLineItem($("#sanden_fqs_250").attr('data-id'),$("#sanden_fqs_250").attr('id'));
+                }
+                if( parseInt($("#QIK15_HPUMP").val()) > 0){
+                    autoCreateLineItem($("#QIK15_HPUMP").attr('data-id'),$("#QIK15_HPUMP").attr('id'));
+                }
+                if( parseInt($("#QIK20_HPUMP").val()) > 0){
+                    autoCreateLineItem($("#QIK20_HPUMP").attr('data-id'),$("#QIK20_HPUMP").attr('id'));
+                }
+            })
+        })
+        $("#supply_add_to_line_items").click(function(){
+            if( parseInt($("#sanden_fqs_315").val()) > 0){
+                autoCreateLineItem($("#sanden_fqs_315").attr('data-id'),$("#sanden_fqs_315").attr('id'));
+            }
+            if( parseInt($("#sanden_fqs_300").val()) > 0){
+                autoCreateLineItem($("#sanden_fqs_300").attr('data-id'),$("#sanden_fqs_300").attr('id'));
+            }
+            if( parseInt($("#sanden_fqs_250").val()) > 0){
+                autoCreateLineItem($("#sanden_fqs_250").attr('data-id'),$("#sanden_fqs_250").attr('id'));
+            }
+            if( parseInt($("#QIK15_HPUMP").val()) > 0){
+                autoCreateLineItem($("#QIK15_HPUMP").attr('data-id'),$("#QIK15_HPUMP").attr('id'));
+            }
+            if( parseInt($("#QIK20_HPUMP").val()) > 0){
+                autoCreateLineItem($("#QIK20_HPUMP").attr('data-id'),$("#QIK20_HPUMP").attr('id'));
+            }
+        })
         $("#link_realestate_shipping").click(function(){
             // address = address.toLowerCase().replace(/ /g, '-');
             SUGAR.ajaxUI.showLoadingPanel();
@@ -1040,6 +1097,35 @@ function generatePOname() {
             break;
     }
     return namePO;
+}
+function autoCreateLineItem(id,product){
+    $.ajax({
+        url: "/index.php?entryPoint=getInfoProduct&product_id="+id,
+        type: 'GET',
+        success: function(data)
+        {   
+            var info_pro = $.parseJSON(data)
+            insertProductLine('product_group0', '0');
+            var line_num = prodln-1; 
+            var popupReplyData = {}; //
+            popupReplyData.form_name = "EditView";
+            var name_to_value_array = {};
+            name_to_value_array["product_currency"+line_num] = info_pro["line_items"][""][0]['product_currency'];
+            name_to_value_array["product_item_description"+line_num] = info_pro["line_items"][""][0]['product_item_description'];
+            name_to_value_array["product_name"+line_num] = info_pro["line_items"][""][0]['product_name'];
+            name_to_value_array["product_part_number"+line_num] =  info_pro["line_items"][""][0]['product_part_number'];
+            name_to_value_array["product_product_cost_price"+line_num] = info_pro["line_items"][""][0]['product_product_cost_price'];
+
+            name_to_value_array["product_product_id"+line_num] = info_pro["line_items"][""][0]['product_product_id'];
+            name_to_value_array["product_product_list_price"+line_num] = info_pro["line_items"][""][0]['product_product_list_price'];
+            name_to_value_array["product_product_qty"+line_num] = "" + parseInt($("#"+product).val());
+            popupReplyData["name_to_value_array"] = name_to_value_array;            
+            $('#product_product_list_price'+line_num).focus();
+            setProductReturn(popupReplyData);
+            
+        },
+        error: function(response){console.log("Fail");},
+    });
 }
 //VUT- Get info Product Sanden to create PO's name
 function getInfoProductSanden() {

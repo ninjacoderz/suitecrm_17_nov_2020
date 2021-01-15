@@ -725,6 +725,10 @@ $entry_point_registry['APICreateFacebookPost'] = array(
 $entry_point_registry['CRUD_Cert_Template'] = array(
     'file' => 'custom/modules/AOS_Invoices/CRUD_Cert_Template.php',
     'auth' => false
+);// info product sanden
+$entry_point_registry['getInfoProduct'] = array(
+    'file' => 'modules/PO_purchase_order/GetInfoProduct.php',
+    'auth' => false
 );
 //tu code -  custom button SANDEN  EMAIL DAILY in Home Page
 $entry_point_registry['button_Sanden_Dealers'] = array(
