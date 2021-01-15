@@ -100,12 +100,12 @@ $(function () {
         //dung fix - console error js -Report module
         if(typeof module_sugar_grp1  !== 'undefined' &&  module_sugar_grp1 !== 'AOR_Reports') populatePaymentAmout();
     });
-    $("#line_items_span").on("change", ".service_list_price", function() {
-        updatePaymentInfo();
-        //
-        populatePaymentAmout();
-    });
-
+    // moved to  $('#line_items_span').find('.product_group').on('change', 'input',function()
+    // $("#line_items_span").on("change", ".service_list_price", function() {
+    //     updatePaymentInfo();
+    //     //
+    //     populatePaymentAmout();
+    // });
     //$("#total_balance_owing_c").attr('disabled', 'disabled');
     YAHOO.util.Event.addListener('total_amount', "change", populatePaymentAmout_change_total);
     // Next payment amount
@@ -192,6 +192,8 @@ $(document).ready(function() {
     //VUT- GP Calculation - update Equipment Cost  && Sanden Customer/STCs/VEEC Revenue when lineItem change
     $('#line_items_span').find('.product_group').on('change', 'input',function() {
         setTimeout(function(){
+            updatePaymentInfo();
+            populatePaymentAmout();
             calculateGP();
         }, 100);
     });
