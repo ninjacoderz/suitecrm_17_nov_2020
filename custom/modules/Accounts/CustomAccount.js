@@ -427,11 +427,31 @@ $(function () {
         });
     });
     // tuan copy ABN from Invoice
+    $('#business_name_c').hide();
+    $('#business_name_c').parent().append('<div id="text_business_name"></div>');
+    if($('#business_name_c').val() !== '' && typeof($('#business_name_c').val()) !== 'undefined'){
+        var render_data_business = JSON.parse($('#business_name_c').val());
+        var html_business_name = '';
+        if(typeof(render_data_business) !== 'undefined' ){
+            $.each(render_data_business,function(key,value){
+                if(key !== '' || value[0] !== '' ){
+                    if(value[1]){
+                        var string_plus = '<input type="radio" checked name="Business_name" class="Business_name" value="'+key+'">' + key + ' ---From: ' + value[0]+'<br>'; 
+                    }else {
+                        var string_plus = '<input type="radio" name="Business_name" class="Business_name" value="'+key+'">' + key + ' ---From: ' + value[0]+'<br>'; 
+                    }
+                   
+                    html_business_name += string_plus;
+                }
+            });
+        }
+        $('#text_business_name').html('');
+        $('#text_business_name').append(html_business_name);
+    }
     $("#getData_ABN").click(function(){   
         $.ajax({
             url: 'index.php?entryPoint=getdata_ABN&number_ABN='+$('#abn_c').val(),
             success: function(data){
-
                 if(data !== '[]') {
                     var data_result =  $.parseJSON(data);
                     $('#entity_name_c').val(data_result['Entiny_name']);

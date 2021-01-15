@@ -52,11 +52,12 @@ foreach ($html->find('div.container-content table') as $value) {
     $result = trim($value->find('caption')[0]->innertext);
     preg_match('#</span>(.*)<span#', $result, $matches);
     if( trim($matches[1]) == 'Business name(s)'){
-        foreach($value->find('tbody tr') as $item){
+        // foreach($value->find('tbody tr') as $item){
+        foreach($value->find('tr') as $item){
             $business_name = html_entity_decode(trim($item->find('td a')[0]->innertext));           
             $business_name = trim(strip_tags($business_name,'</img>'));
-            if(isset($business_name)) {
-                $json_result['Business_name'][$business_name][0] = html_entity_decode(trim($item->find('td[2]')[0]->innertext));
+            if(isset($business_name) && $business_name != "") {
+                $json_result['Business_name'][$business_name][0] = html_entity_decode(trim($item->find('td')[1]->innertext)); // get from
                 $json_result['Business_name'][$business_name][1] = false;
             }
         }
