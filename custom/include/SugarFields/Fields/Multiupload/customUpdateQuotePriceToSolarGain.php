@@ -284,33 +284,7 @@ if($bean_module_data->id){
                     ),
                     ),
                 );
-                if(isset($_REQUEST['vicRebate'])){
-                    if($_REQUEST['vicRebate'] == 'yes' && $_REQUEST['loanRebate'] == 'yes'){
-                        $new_option['Finance']['Type'] = array (
-                            'ID' => 43,
-                            'Code' => 'SOLARVIF18',
-                            'Name' => 'Solar VIC $1,888 Rebate & Interest free loan',
-                            'EXOSystemCode' => 'P-PV SYSTEM',
-                            'InterestRates' => array (),
-                            'Deposits' => array (),
-                            'Terms' => array (),
-                            'FileCategories' => array (),
-                        );
-                    }
-                    if($_REQUEST['vicRebate'] == 'yes' && $_REQUEST['loanRebate'] == 'no'){
-                        $new_option['Finance']['Type'] = array (
-                            'ID' => 41,
-                            'Code' => 'SOLARVRB18',
-                            'Name' => 'Solar VIC $1,888 Rebate',
-                            'EXOSystemCode' => 'P-PV SYSTEM',
-                            'InterestRates' => array (),
-                            'Deposits' => array (),
-                            'Terms' => array (),
-                            'FileCategories' => array (),
-                        );
-                    }
-                }
-                  
+                
                 $quote_decode->Options[count($quote_decode->Options)] =  (object)$new_option;
             
                 $data_option_string = json_encode($quote_decode);
@@ -407,8 +381,33 @@ if($bean_module_data->id){
             $quote_decode ->Options[$i]->TiltedPanels =  $tilted;
             $quote_decode ->Options[$i]->AdditionalCableRun =  $Additional;
             $quote_decode ->Options[$i]->ExcessHeightPanels =  $double_storey_panels;
-            $quote_decode->Options[$i]->Finance->PPrice =  ($_GET["price_option_".($i)] != "")?$_GET["price_option_".($i)]:$sgPrices[$st]['option'.($i)];
+            $quote_decode ->Options[$i]->Finance->PPrice =  ($_GET["price_option_".($i)] != "")?$_GET["price_option_".($i)]:$sgPrices[$st]['option'.($i)];
             
+            if(isset($_REQUEST['vicRebate'])){
+                if($_REQUEST['vicRebate'] == 'yes' && $_REQUEST['loanRebate'] == 'yes'){
+                    $quote_decode ->Options[$i]->Finance->Rebate = array(
+                        "ID" => 8,
+                        "Code" => "SOLARVIF50",
+                        "Name" => "Solar VIC $1,850 Rebate & Interest free loan",
+                        "EXOSystemCode" => "P-PV SYSTEM",
+                        "Active" => true,
+                        "FileCategories" => array()
+                    );
+                    $quote_decode ->Options[$i]->Finance->RebateAmount = 1850.0;
+                }
+                if($_REQUEST['vicRebate'] == 'yes' && $_REQUEST['loanRebate'] == 'no'){
+                    $quote_decode ->Options[$i]->Finance->Rebate = array(
+                        "ID" => 7,
+                        "Code" => "SOLARVRB50",
+                        "Name" => "Solar VIC $1,850 Rebate",
+                        "EXOSystemCode" => "P-PV SYSTEM",
+                        "Active" => true,
+                        "FileCategories" => array()
+                    );
+                    $quote_decode ->Options[$i]->Finance->RebateAmount = 1850.0;
+                }
+            }
+
             if($_GET['option_inverter_'.$i] != $quote_decode->Options[$i]->Configurations[0]->Inverter->ID 
             || $_GET['option_model_'.$i] != $quote_decode->Options[$i]->Configurations[0]->Panel->ID 
             || (int)$_GET['option_total_panel_'.$i] != $quote_decode->Options[$i]->Configurations[0]->NumberOfPanels){
