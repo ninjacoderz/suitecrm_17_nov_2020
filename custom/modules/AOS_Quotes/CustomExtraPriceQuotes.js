@@ -345,6 +345,7 @@ $(function () {
     //////// MAKE A TABLE //////////
     function makeTable(container, data, tclass, tid) {
         var table = $("<table/>").addClass(tclass).attr("id",tid);
+        table.append("<tbody></tbody");
         $.each(data, function(rowIndex, r) {
             var row = $("<tr/>");
             $.each(r, function(colIndex, c) { 
