@@ -4117,17 +4117,31 @@ function genExtraDaikinItemFunc(elem){
     });
     $("#btn_pe_solar_tool").on('click',function(e) {
         
-        var address = [$("#billing_address_street").val(),$("#billing_address_city").val()+' '+$("#billing_address_state").val(),$("#billing_address_postalcode").val(),'Australia'];
+        var address = [$("#install_address_c").val(),$("#install_address_city_c").val()+' '+$("#install_address_state_c").val(),$("#install_address_postalcode_c").val(),'Australia'];
         address = address.join(', ');
         var first_name = $("#account_firstname_c").val();
         var family_name = $("#account_lastname_c").val();
         var email = $(".phone-number").children("a").attr('data-email-address');
-        // var phone = $("#phone_mobile").val().replace(/ /g,'');
-        var phone = '';
-        window.open(
-            'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
-            '_blank' // <- This is what makes it open in a new window.
-        );
+        var phone = $(".phone-number").children(".account_phone_number").text().replace(/ /g,'');
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' 
+            +address
+            + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
+            type: 'GET',
+            success: function(result) {
+                if (result.status == "OK"){
+                    var location = result.results[0].geometry.location;
+                    $.ajax({
+                        type: "GET",
+                        url: 'index.php?entryPoint=customCreateProjectAPISolarDesignTool',
+                        data : {"mapAPI":result,"first_name":first_name,"family_name":family_name,"email":email,"phone":phone},
+                        success : function(data){
+                          
+                        }
+                    });
+                }
+            }
+        });
     });
  });
 
