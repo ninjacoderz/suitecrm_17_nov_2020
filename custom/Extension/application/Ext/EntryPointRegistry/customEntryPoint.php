@@ -1381,3 +1381,9 @@ $entry_point_registry['getTotalValueAssignment'] = array(
     'file' => 'custom/modules/AOS_Invoices/getTotalValueAssignment.php',
     'auth' => false
 );
+
+//thienpb - create project solar design tool
+$entry_point_registry['customCreateProjectAPISolarDesignTool'] = array( 
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomCreateProjectAPISolarDesignTool.php',
+    'auth' => false
+);
