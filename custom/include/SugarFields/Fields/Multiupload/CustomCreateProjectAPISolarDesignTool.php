@@ -55,7 +55,7 @@
     );
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'http://loc.api.solardesign.com/api/orgs/1388/projects/?skip_response=true');
+    curl_setopt($ch, CURLOPT_URL, 'https://api.pure-electric.com.au/api/orgs/1/projects/?skip_response=true');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($default));
@@ -78,4 +78,16 @@
     $result = curl_exec($ch);
     curl_close($ch);
 
+    if(!empty($result)){
+        $quote_id = $_REQUEST['quote_id'];
+        if(!empty($quote_id)){
+            $quote = new AOS_Quotes();
+            $quote->retrieve($quote_id);
+            $quote->solar_design_tool_id_c = $result["id"];
+            $quote->save();
+        }
+        echo  $result;
+    }else{
+        echo '';
+    }
 ?>
