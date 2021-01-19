@@ -363,6 +363,44 @@ if (!file_exists($folderName)) {
             }
         };
     }
+    /**Tank Serial */
+    if(count($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i] != ""){
+                $info = exif_read_data($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name'][$i]);
+                if( $info['GPS_IFD_Pointer'] == ""){
+                    $checkgeo = "( without GEOTAGGED )";
+                }else {
+                    $checkgeo = "( GEOTAGGED )";
+                }
+                $file_type = basename($number_module.'_Tank_Serial_CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'CES');
+                $file_type = $number_module.'_Tank_Serial_CES'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i]), PATHINFO_EXTENSION);
+                copy($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Tank Serial (CES) '.$i.' '.$checkgeo.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+            }
+        };
+    }
+    /**HP Serial */
+    if(count($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i] != ""){
+                $info = exif_read_data($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name'][$i]);
+                if( $info['GPS_IFD_Pointer'] == ""){
+                    $checkgeo = "( without GEOTAGGED )";
+                }else {
+                    $checkgeo = "( GEOTAGGED )";
+                }
+                $file_type = basename($number_module.'_HP_Serial_CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'CES');
+                $file_type = $number_module.'_HP_Serial_CES'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i]), PATHINFO_EXTENSION);
+                copy($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">HP Serial (CES) '.$i.' '.$checkgeo.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+            }
+        };
+    }
     // Daikin suppler
     if(count($_POST['files']['data-pe-files-switchboard-daikin']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-switchboard-daikin']['tmp_name']); $i++) {
@@ -798,6 +836,45 @@ if (!file_exists($folderName)) {
             }
         };
     }
+    /**Tank Serial */
+    if(count($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i] != ""){
+                $info = exif_read_data($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name'][$i]);
+                if( $info['GPS_IFD_Pointer'] == ""){
+                    $checkgeo = "( without GEOTAGGED )";
+                }else {
+                    $checkgeo = "( GEOTAGGED )";
+                }
+                $file_type = basename($number_module.'_Tank_Serial_CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'CES');
+                $file_type = $number_module.'_Tank_Serial_CES'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i]), PATHINFO_EXTENSION);
+                copy($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Tank Serial (CES) '.$i.' '.$checkgeo.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+            }
+        };
+    }
+    /**HP Serial */
+    if(count($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i] != ""){
+                $info = exif_read_data($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name'][$i]);
+                if( $info['GPS_IFD_Pointer'] == ""){
+                    $checkgeo = "( without GEOTAGGED )";
+                }else {
+                    $checkgeo = "( GEOTAGGED )";
+                }
+                $file_type = basename($number_module.'_HP_Serial_CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'CES');
+                $file_type = $number_module.'_HP_Serial_CES'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i]), PATHINFO_EXTENSION);
+                copy($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">HP Serial (CES) '.$i.' '.$checkgeo.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+            }
+        };
+    }
+    
     // Daikin suppler
     if(count($_POST['files']['data-pe-files-switchboard-daikin']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-switchboard-daikin']['tmp_name']); $i++) {
