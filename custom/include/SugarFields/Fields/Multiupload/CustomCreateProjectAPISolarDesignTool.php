@@ -78,15 +78,16 @@
     $result = curl_exec($ch);
     curl_close($ch);
 
+    $result = json_decode($result);
     if(!empty($result)){
         $quote_id = $_REQUEST['quote_id'];
         if(!empty($quote_id)){
             $quote = new AOS_Quotes();
             $quote->retrieve($quote_id);
-            $quote->solar_design_tool_id_c = $result["id"];
+            $quote->solar_design_tool_id_c = $result->id;
             $quote->save();
         }
-        echo  $result;
+        echo  $result->id;
     }else{
         echo '';
     }
