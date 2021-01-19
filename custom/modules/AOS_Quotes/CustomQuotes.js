@@ -4117,6 +4117,7 @@ function genExtraDaikinItemFunc(elem){
     });
     $("#btn_pe_solar_tool").on('click',function(e) {
         if( $("#solar_design_tool_id_c").val() == ''){
+            SUGAR.ajaxUI.showLoadingPanel();
             var address = [$("#install_address_c").val(),$("#install_address_city_c").val()+' '+$("#install_address_state_c").val(),$("#install_address_postalcode_c").val(),'Australia'];
             address = address.join(', ');
             var first_name = $("#account_firstname_c").val();
@@ -4138,6 +4139,7 @@ function genExtraDaikinItemFunc(elem){
                             data : {"quote_id": quote_id,"mapAPI":result,"first_name":first_name,"family_name":family_name,"email":email,"phone":phone},
                             success : function(data){
                                 if(data != ''){
+                                    SUGAR.ajaxUI.hideLoadingPanel();
                                     $("#solar_design_tool_id_c").val(data);
                                     window.open(
                                         'https://solardesign.pure-electric.com.au/#/studio/'+data,
@@ -4145,9 +4147,12 @@ function genExtraDaikinItemFunc(elem){
                                     );
                                 }else{
                                     alert("Can't create solar design project");
+                                    SUGAR.ajaxUI.hideLoadingPanel();
                                 }
                             }
                         });
+                    }else{
+                        SUGAR.ajaxUI.hideLoadingPanel();
                     }
                 }
             });
