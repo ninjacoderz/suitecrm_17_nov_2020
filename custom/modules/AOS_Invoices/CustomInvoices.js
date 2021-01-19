@@ -7381,8 +7381,11 @@ $(document).ready(function(){
                                 if(data_parse.status.trim("") == 'Ok'){
                                     alert('Push PO to XERO Successfully.');
                                     window.open('https://go.xero.com/AccountsReceivable/View.aspx?InvoiceID='+data_parse.xeroID);
-                                    if($("#xero_stc_rebate_invoice_c").val() != ''){
+                                    if($("#xero_stc_rebate_invoice_c").val() != '' && xeroType == "STC"){
                                         window.open('https://go.xero.com/AccountsReceivable/View.aspx?InvoiceID='+$("#xero_stc_rebate_invoice_c").val());
+                                    }
+                                    if($("#xero_veec_rebate_invoice_c").val() != '' && xeroType == "VEEC"){
+                                        window.open('https://go.xero.com/AccountsReceivable/View.aspx?InvoiceID='+$("#xero_veec_rebate_invoice_c").val());
                                     }
                                 }else{
                                     if(data_parse.status.trim("") == 'Fail'){
