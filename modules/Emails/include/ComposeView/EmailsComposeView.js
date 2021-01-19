@@ -2174,7 +2174,13 @@ function get_lead_source_company(module_get,record){
         async: true,
         success: function(result) {                   
             render_select_sms_signture(result);
-        }
+            //Select PE Account sms'signture  for Send Geo Reminder in Invoice
+            setTimeout(function(){
+                if ($('#emails_pe_smstemplate_idb').val() == '5fcde64f-63ac-dc94-21fb-5e5ef5cf4c70') {
+                    $('#select_sms_signture').val('_1588918966').change();
+                }    
+              },100);
+            }
       });
       function render_select_sms_signture(result){
           var data_result = $.parseJSON(result);
