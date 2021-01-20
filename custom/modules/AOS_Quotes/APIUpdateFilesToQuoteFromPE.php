@@ -744,7 +744,7 @@ if($_POST['to_module'] == "aos_invoice"){
     // $mail->AddCC('matthew.wright@pure-electric.com.au');
     // $mail->AddCC('john.hooper@pure-electric.com.au');
     // $mail->AddCC('quochuybkdn@gmail.com');
-    $mail->AddAddress('ngoanhtuan2510@gmail.com');
+    $mail->AddAddress('anhtuadn2510@gmail.com');
     $mail->prepForOutbound();
     $mail->setMailerForSystem();  
     $mail->Send();
