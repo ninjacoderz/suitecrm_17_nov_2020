@@ -64,6 +64,7 @@ if( $lead_id != ""){
     }
 }
     $list_photos = "<br><h4>List Photos:</h4>";
+    $file_to_attach = array();
     if (!file_exists($folderName)) {
         mkdir($path . $dirName, 0777, true);
         $folderName = $path . $dirName.'/';
@@ -78,6 +79,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-hws']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                $file_to_attach[] = array('folderName' => $folderName.$file_type, 'fileName' => $file_type);
             };
         }
     };
@@ -734,12 +736,15 @@ if($_POST['to_module'] == "aos_invoice"){
 
 }
     $mail->IsHTML(true);
-    $mail->AddAddress('info@pure-electric.com.au');
+    foreach($file_to_attach as $file_attach) {
+        $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
+    }
+    // $mail->AddAddress('info@pure-electric.com.au');
     // $mail->AddCC('paul.szuster@pure-electric.com.au');
     // $mail->AddCC('matthew.wright@pure-electric.com.au');
     // $mail->AddCC('john.hooper@pure-electric.com.au');
     // $mail->AddCC('quochuybkdn@gmail.com');
-    // $mail->AddAddress('ngoanhtuan2510@gmail.com');
+    $mail->AddAddress('ngoanhtuan2510@gmail.com');
     $mail->prepForOutbound();
     $mail->setMailerForSystem();  
     $mail->Send();
