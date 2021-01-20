@@ -736,9 +736,9 @@ if($_POST['to_module'] == "aos_invoice"){
 
 }
     $mail->IsHTML(true);
-    // foreach($file_to_attach as $file_attach) {
-    //     $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
-    // }
+    foreach($file_to_attach as $file_attach) {
+        $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
+    }
     // $mail->AddAddress('info@pure-electric.com.au');
     // $mail->AddCC('paul.szuster@pure-electric.com.au');
     // $mail->AddCC('matthew.wright@pure-electric.com.au');
