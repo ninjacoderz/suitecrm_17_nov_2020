@@ -79,7 +79,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-hws']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $folderName.$file_type, 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
             };
         }
     };
