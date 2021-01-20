@@ -42,6 +42,9 @@ class AOS_InvoicesViewEdit extends ViewEdit
 
         $template_ces = new Sugar_Smarty();
         echo $template_ces->fetch('modules/AOS_Invoices/templates/popupTemplateCESNotes.tpl');
+
+        $template_electrical = new Sugar_Smarty();
+        echo $template_electrical->fetch('modules/AOS_Invoices/templates/popupTemplateCustomerInvNotes.tpl');
         
         // dung code -- render subpanel internal notes
         require_once ('include/SubPanel/SubPanelTiles.php');

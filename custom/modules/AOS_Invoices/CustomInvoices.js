@@ -7407,6 +7407,195 @@ $(document).ready(function(){
 });
 //VUT-E-Seek install date in Quote
 
+////VUT <<< Invoice - Customer Invoice Note Look up  field invoice_note_c
+$(document).ready(function() {
+    if (module_sugar_grp1 == 'AOS_Invoices') {
+        $( "#dialog_customer_inv_note_pdf" ).dialog({
+            autoOpen: false,
+            width: 712,
+            height:478,
+            buttons: {
+                Save: function(){
+                    SUGAR.ajaxUI.showLoadingPanel();
+                    $("#ajaxloading_mask").css("position",'fixed');
+                    //create new
+                    if($("#id_customer_inv_template").val() == '') {
+                        if($("#title_custome_inv_template").val() == ''){
+                            alert('Could you insert title please?');
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                            return false;
+                        };
+                        $.ajax({
+                            url: 'index.php?entryPoint=CRUD_Customer_Invoice_Notes' ,
+                            type: 'POST',
+                            data: 
+                            {
+                                id: $("#id_customer_inv_template").val(),
+                                action: 'create',
+                                content: encodeURIComponent($("#content_customer_inv_template").val()),
+                                title: encodeURIComponent($("#title_custome_inv_template").val())
+                            },
+                            success: function(result) {              
+                                render_select_customer_inv_template(result);
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                            }
+                        }); 
+                    }   
+                    //update
+                    else{
+                        $.ajax({
+                            url: 'index.php?entryPoint=CRUD_Customer_Invoice_Notes' ,
+                            type: 'POST',
+                            data: 
+                            {
+                                id: $("#id_customer_inv_template").val(),
+                                action: 'update',
+                                content: encodeURIComponent($("#content_customer_inv_template").val()),
+                                title: encodeURIComponent($("#title_custome_inv_template").val())
+                            },
+                            success: function(result) {                         
+                                render_select_customer_inv_template(result);
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                            }
+                        }); 
+                    }
+                    $("#invoice_note_c").val( $("#content_customer_inv_template").val());
+                    autosize.update($("#invoice_note_c"));  
+                    $(this).dialog('close');
+                },
+                Create: function(){
+                    $("#id_customer_inv_template").val('');
+                    $("#title_custome_inv_template").val('');
+                    $("#content_customer_inv_template").val('');
+                },
+                Insert: function(){
+                    $("#invoice_note_c").val( $("#content_customer_inv_template").val());
+                    autosize.update($("#invoice_note_c"));       
+                    $(this).dialog('close');
+                },
+                Delete: function(){
+                    var ok = confirm('Do you want delete Template !');
+                    if (ok){
+                        SUGAR.ajaxUI.showLoadingPanel();
+                        $("#ajaxloading_mask").css("position",'fixed');
+                        $.ajax({
+                            url: 'index.php?entryPoint=CRUD_Customer_Invoice_Notes' ,
+                            type: 'POST',
+                            data: 
+                            {
+                                id: $("#id_customer_inv_template").val(),
+                                action: 'delete',
+                                content: encodeURIComponent($("#content_customer_inv_template").val()),
+                                title: encodeURIComponent($("#title_custome_inv_template").val())
+                            },
+                            success: function(result) {                         
+                                render_select_customer_inv_template(result);
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                                $("#content_customer_inv_template").val('');
+                                $("#title_custome_inv_template").val('');
+                                $("#id_customer_inv_template").val('');
+                            }
+                        }); 
+                    }
+                },
+                Cancel: function(){
+                    $(this).dialog('close');
+                },
+            }
+        });
+        $('#invoice_note_c').parent().siblings('.label').append("<br> <select style='width:68%;' name='select_template_customer_inv' id='select_template_customer_inv' style='width:100%;'><option>Select Template Customer</option></select>");
+        $('#invoice_note_c').parent().siblings('.label').append('<br> <button class="button primary" id="dialog_customer_inv_note_pdf_button"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Edit Templates</button>');
+
+        $("#dialog_customer_inv_note_pdf_button").click(function(e){
+            SUGAR.ajaxUI.showLoadingPanel();
+            $("#ajaxloading_mask").css("position",'fixed');
+            $.ajax({
+                url: 'index.php?entryPoint=CRUD_Customer_Invoice_Notes' ,
+                type: 'POST',
+                data: 
+                {
+                    action: 'read',
+                },
+                async: true,
+                success: function(result) {                         
+                    render_select_customer_inv_template(result);
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                    $("#dialog_customer_inv_note_pdf" ).dialog("open");
+                }
+            }); 
+            return false;
+        })
+
+        $('#select_title_template_customer_inv_notes').change(function(){
+            var id = $('#select_title_template_customer_inv_notes').val();
+            if(id == '') return false;
+            var title = $('#select_title_template_customer_inv_notes option:selected').text();
+            $("#title_custome_inv_template").val(title);
+            $("#id_customer_inv_template").val(id);
+            $("#content_customer_inv_template").val(window.data_custome_inv_notes[id].content);
+        });
+
+        function render_select_customer_inv_template(result){
+            if(result == '' && typeof result == undefined)return;
+            var data_result = $.parseJSON(result);
+            window.data_custome_inv_notes = data_result;
+            $('#select_title_template_customer_inv_notes').empty();
+            $("#select_template_customer_inv").empty();
+            $('#select_title_template_customer_inv_notes').append($('<option>', {
+                value: '',
+                text: ''
+            }));
+            $('#select_template_customer_inv').append($('<option>', {
+                value: '',
+                text: 'Select Template Customer'
+            }));
+            $.each(data_result,function(k,v){
+                $('#select_title_template_customer_inv_notes').append($('<option>', {
+                    value: k,
+                    text: v.title
+                }));
+                $('#select_template_customer_inv').append($('<option>', {
+                    value: k,
+                    text: v.title
+                }));
+            });
+            autosize.update($("#invoice_note_c")); 
+        }
+
+        // run first time
+        $.ajax({
+            url: 'index.php?entryPoint=CRUD_Customer_Invoice_Notes' ,
+            type: 'POST',
+            data: 
+            {
+                action: 'read',
+            },
+            async: true,
+            success: function(result) {                         
+                render_select_customer_inv_template(result);
+            }
+        }); 
+
+        $(document).find('#select_template_customer_inv').change(function(){
+            var id = $('#select_template_customer_inv').val();
+            if(id == '') return false;
+            $("#invoice_note_c").val(window.data_custome_inv_notes[id].content);
+            // if($("#invoice_note_c").val() == ''){
+            //     $("#invoice_note_c").val(window.data_custome_inv_notes[id].content);
+            //     autosize.update($("#invoice_note_c")); 
+            // }else{
+            //     var $txt = $("#invoice_note_c");
+            //     var caretPos = $txt[0].selectionStart;
+            //     var textAreaTxt = $txt.val();
+            //     var txtToAdd = window.data_custome_inv_notes[id].content;
+            //     $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
+            // }
+            autosize.update($("#invoice_note_c")); 
+        });
+    }
+});
+//VUT >>> Invoice - Customer Invoice Note Look up  field invoice_note_c
+
 //VUT-S-Create popup when click Sandan Tip
 function popupSandenProduct(e) {
     var popupList = $('<div id="popupSanden" title="Sanden Product">'

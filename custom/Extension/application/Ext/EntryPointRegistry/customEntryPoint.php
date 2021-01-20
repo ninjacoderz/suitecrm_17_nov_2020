@@ -1387,3 +1387,9 @@ $entry_point_registry['customCreateProjectAPISolarDesignTool'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomCreateProjectAPISolarDesignTool.php',
     'auth' => false
 );
+
+//dung code -- CURL electrical notes
+$entry_point_registry['CRUD_Customer_Invoice_Notes'] = array(
+    'file' => 'custom/modules/AOS_Invoices/CRUD_Customer_Invoice_Notes.php',
+    'auth' => false
+);
