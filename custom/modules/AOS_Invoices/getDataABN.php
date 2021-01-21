@@ -17,10 +17,11 @@ $headers[] = "Cache-Control: no-cache";
 $headers[] = "Upgrade-Insecure-Requests: 1";
 $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.75 Safari/537.36";
 $headers[] = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
-$headers[] = "Referer: https://abr.business.gov.au/ABN/View?abn=215185561789";
+// $headers[] = "Referer: https://abr.business.gov.au/ABN/View?abn=215185561789";
+$headers[] = "Referer: https://abr.business.gov.au/ABN/";
 $headers[] = "Accept-Encoding: gzip, deflate, br";
 $headers[] = "Accept-Language: en-US,en;q=0.9";
-$headers[] = "Cookie: _ga=GA1.3.306808548.1532588411; _gid=GA1.3.1877047624.1532588411";
+// $headers[] = "Cookie: _ga=GA1.3.306808548.1532588411; _gid=GA1.3.1877047624.1532588411";
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 $result = curl_exec($ch);
@@ -52,25 +53,44 @@ foreach ($html->find('div.container-content table') as $value) {
     $result = trim($value->find('caption')[0]->innertext);
     preg_match('#</span>(.*)<span#', $result, $matches);
     if( trim($matches[1]) == 'Business name(s)'){
-        // foreach($value->find('tbody tr') as $item){
-        foreach($value->find('tr') as $item){
-            $business_name = html_entity_decode(trim($item->find('td a')[0]->innertext));           
-            $business_name = trim(strip_tags($business_name,'</img>'));
-            if(isset($business_name) && $business_name != "") {
-                $json_result['Business_name'][$business_name][0] = html_entity_decode(trim($item->find('td')[1]->innertext)); // get from
-                $json_result['Business_name'][$business_name][1] = false;
+        if (count($value->find('tbody tr')) > 0) {
+            foreach($value->find('tbody tr') as $item){
+                $business_name = html_entity_decode(trim($item->find('td a')[0]->innertext));           
+                $business_name = trim(strip_tags($business_name,'</img>'));
+                if(isset($business_name)) {
+                    $json_result['Business_name'][$business_name][0] = html_entity_decode(trim($item->find('td[2]')[0]->innertext));
+                    $json_result['Business_name'][$business_name][1] = false;
+                }
+            }
+        } else {
+            foreach($value->find('tr') as $item){
+                $business_name = html_entity_decode(trim($item->find('td a')[0]->innertext));           
+                $business_name = trim(strip_tags($business_name,'</img>'));
+                if(isset($business_name) && $business_name != "") {
+                    $json_result['Business_name'][$business_name][0] = html_entity_decode(trim($item->find('td')[1]->innertext)); // get from
+                    $json_result['Business_name'][$business_name][1] = false;
+                }
             }
         }
     }
 
     if( trim($matches[1]) == 'Trading name(s)'){
-        foreach($value->find('tbody tr') as $item){
-            //if(isset($business_name)) {
+        if (count($value->find('tbody tr')) > 0) {
+            foreach($value->find('tbody tr') as $item){
+                //if(isset($business_name)) {
+                    if(html_entity_decode(trim($item->find('td[2]')[0]->innertext)) == "") continue;
+                    $trading_name = html_entity_decode(trim($item->find('td')[0]->innertext));
+                    $json_result['trading_name'][$trading_name][0] = html_entity_decode(trim($item->find('td[2]')[0]->innertext));
+                    $json_result['trading_name'][$trading_name][1] = false;
+                //}
+            }
+        } else {
+            foreach ($value->find('tr') as $item) {
                 if(html_entity_decode(trim($item->find('td[2]')[0]->innertext)) == "") continue;
                 $trading_name = html_entity_decode(trim($item->find('td')[0]->innertext));
                 $json_result['trading_name'][$trading_name][0] = html_entity_decode(trim($item->find('td[2]')[0]->innertext));
                 $json_result['trading_name'][$trading_name][1] = false;
-            //}
+            }
         }
     }
 }
