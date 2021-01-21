@@ -1,5 +1,5 @@
 <?php
-
+global $current_user;
 $filename = "";
 function readHeader($ch, $header)
 {
