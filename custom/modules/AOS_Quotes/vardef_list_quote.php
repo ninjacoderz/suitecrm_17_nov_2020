@@ -2,105 +2,126 @@
 global $current_user;
  date_default_timezone_set('Australia/Melbourne');
 $vardefs_array = array(
-    "quote_main_tank_water" => [
-        "On Mains Water or Tank Water",
-        "quote_main_tank_water",
-        "list_array" => [
+    "quote_main_tank_water" => array(
+        "name" => "quote_main_tank_water",
+        "display_label" => "On Mains Water or Tank Water",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Mains Water",
             "Tank Water",
             "Mains / Tank"
-        ],
-    ],
-    "quote_number_sanden" => [
-        "Number Sanden's",
-        "quote_number_sanden",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_number_sanden" => array(
+        "name" => "quote_number_sanden",
+        "display_label" => "Number Sanden's",
+        "type" => "select",
+        "list_array" => array(
             "",
             "1",
             "2"
-        ],
-    ],
-    "quote_tank_size" => [
-        "Tank Size",
-        "quote_tank_size",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_tank_size" => array(
+        "name" => "quote_tank_size",
+        "display_label" => "Tank Size",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Sanden 315FQS",
             "Sanden 300FQS",
             "Sanden 250FQS",
             "Sanden 160FQS",
             "Sanden 315FQV",
-        ],
-    ],
-    "quote_plumbing_installation_by_pure" => [
-        "Plumbing Installation by PureElectric team",
-        "quote_plumbing_installation_by_pure",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_plumbing_installation_by_pure" => array(
+        "name" => "quote_plumbing_installation_by_pure",
+        "display_label" => "Plumbing Installation by PureElectric team",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_electrical_installation_by_pure" => [
-        "Electrical Installation by PureElectric team",
-        "quote_electrical_installation_by_pure",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_electrical_installation_by_pure" => array(
+        "name" => "quote_electrical_installation_by_pure",
+        "display_label" => "Electrical Installation by PureElectric team",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_quick_connection_kit" => [
-        "Plumbing Quick Connection Kit",
-        "quote_quick_connection_kit",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_quick_connection_kit" => array(
+        "name" => "quote_quick_connection_kit",
+        "display_label" => "Plumbing Quick Connection Kit",
+        "type" => "select",
+        "list_array" => array(
             "",
             "15mm Quick Connection Kit (QIK15)",
             "20mm Quick Connection Kit (QIK25)",
             "No Quick Connection Kit"
-        ],
-    ],
-    "quote_provide_stcs" => [
-        "Would you like us to provide STCs as an upfront discount on your quote",
-        "quote_provide_stcs",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_provide_stcs" => array(
+        "name" => "quote_provide_stcs",
+        "display_label" => "Would you like us to provide STCs as an upfront discount on your quote",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_pickup_site_delivery" => [
-        "Pick up or Site Delivery",
-        "quote_pickup_site_delivery",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_pickup_site_delivery" => array(
+        "name" => "quote_pickup_site_delivery",
+        "display_label" => "Pick up or Site Delivery",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Pick Up",
             "Site Delivery",
-        ],
-    ],
-    "quote_choice_type_install" => [
-        "Replace an existing Hot Water System (HWS) or do you have no HWS (e.g. new build, renovation)",
-        "quote_choice_type_install",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_choice_type_install" => array(
+        "name" => "quote_choice_type_install",
+        "display_label" => "Replace an existing Hot Water System (HWS) or do you have no HWS (e.g. new build, renovation)",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Replace Hot Water System",
             "New Build/Renovation",
-        ],
-    ],
-    "quote_replacement_urgent" => [
-        "Is Your Replacement Urgent",
-        "quote_replacement_urgent",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_replacement_urgent" => array(
+        "name" => "quote_replacement_urgent",
+        "display_label" => "Is Your Replacement Urgent",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_choice_type_product" => [
-        "Which one are you replacing",
-        "quote_choice_type_product",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_choice_type_product" => array(
+        "name" => "quote_choice_type_product",
+        "display_label" => "Which one are you replacing",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Gas",
             "Electric",
@@ -108,119 +129,143 @@ $vardefs_array = array(
             "Wood",
             "LPG",
             "Heatpump",
-        ],
-    ],
-    "quote_product_choice_type_gas" => [
-        "Gas type",
-        "quote_product_choice_type_gas",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_product_choice_type_gas" => array(
+        "name" => "quote_product_choice_type_gas",
+        "display_label" => "Gas type",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Gas Instant",
             "Gas Storage",
-        ],
-    ],
-    "quote_gas_connection" => [
-        "Gas instant electrical connection",
-        "quote_gas_connection",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_gas_connection" => array(
+        "name" => "quote_gas_connection",
+        "display_label" => "Gas instant electrical connection",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Plug in to powerpoint",
             "No electrical connection",
-        ],
-    ],
-    "quote_product_choice_type_electric" => [
-        "Electric type",
-        "quote_product_choice_type_electric",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_product_choice_type_electric" => array(
+        "name" => "quote_product_choice_type_electric",
+        "display_label" => "Electric type",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Electric Storage",
             "Gravity Feed",
-        ],
-    ],
-    "quote_electric_storage_located" => [
-        "Where is your electric storage located",
-        "quote_electric_storage_located",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_electric_storage_located" => array(
+        "name" => "quote_electric_storage_located",
+        "display_label" => "Where is your electric storage located",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Outside",
             "Inside",
-        ],
-    ],
-    "quote_about_outside" => [
-        "About outside",
-        "quote_about_outside",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_about_outside" => array(
+        "name" => "quote_about_outside",
+        "display_label" => "About outside",
+        "type" => "select",
+        "list_array" => array(
             "",
             "On ground adjacent external wall",
             "Under the house",
             "Balcony",
             "Rooftop",
             "On wall bracket",
-        ],
-    ],
-    "quote_about_inside" => [
-        "About inside",
-        "quote_about_inside",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_about_inside" => array(
+        "name" => "quote_about_inside",
+        "display_label" => "About inside",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Inside Adjacent Perimeter Wall",
             "Inside Laundry",
             "Inside Cupboard",
-        ],
-    ],
-    "quote_product_choice_type_solar" => [
-        "Solar type",
-        "quote_product_choice_type_solar",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_product_choice_type_solar" => array(
+        "name" => "quote_product_choice_type_solar",
+        "display_label" => "Solar type",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Electric Storage",
             "Ground Tank",
-        ],
-    ],
-    "quote_solar_boosted" => [
-        "How is it boosted",
-        "quote_solar_boosted",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_solar_boosted" => array(
+        "name" => "quote_solar_boosted",
+        "display_label" => "How is it boosted",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Electric Boost",
             "Gas Boost",
             "Ground Instant Gas Boost",
             "Wood Boost",
-        ],
-    ],
-    "quote_product_choice_type_wood" => [
-        "Wood type",
-        "quote_product_choice_type_wood",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_product_choice_type_wood" => array(
+        "name" => "quote_product_choice_type_wood",
+        "display_label" => "Wood type",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Wetback Stove",
             "Mains Pressure System",
             "Low Pressure System",
-        ],
-    ],
-    "quote_product_choice_type_lpg" => [
-        "LPG type",
-        "quote_product_choice_type_lpg",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_product_choice_type_lpg" => array(
+        "name" => "quote_product_choice_type_lpg",
+        "display_label" => "LPG type",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Wetback Stove",
             "Mains Pressure System",
             "Low Pressure System",
-        ],
-    ],
-    "quote_new_place_choice" => [
-        "New Sanden HWS Install Location",
-        "quote_new_place_choice",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_new_place_choice" => array(
+        "name" => "quote_new_place_choice",
+        "display_label" => "New Sanden HWS Install Location",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Same as existing HWS",
             "New HWS relocation",
-        ],
-    ],
-    "quote_existing_install_location" => [
-        "Existing system install location",
-        "quote_existing_install_location",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_existing_install_location" => array(
+        "name" => "quote_existing_install_location",
+        "display_label" => "Existing system install location",
+        "type" => "select",
+        "list_array" => array(
             "",
             "External wall house",
             "Inside perimeter wall",
@@ -234,23 +279,27 @@ $vardefs_array = array(
             "Basement enclosed",
             "Utilities Room",
             "Rooftop"
-        ],
-    ],
-    "quote_install_location_access" => [
-        "Install Location Access",
-        "quote_install_location_access",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_install_location_access" => array(
+        "name" => "quote_install_location_access",
+        "display_label" => "Install Location Access",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Easy Access",
             "Unpaved Path",
             "Across grassed are",
             "Through Building",
-        ],
-    ],
-    "quote_stair_access" => [
-        "Stairs",
-        "quote_stair_access",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_stair_access" => array(
+        "name" => "quote_stair_access",
+        "display_label" => "Stairs",
+        "type" => "select",
+        "list_array" => array(
             "",
             "No Stairs",
             "Few Steps - Trolley Ok",
@@ -258,69 +307,84 @@ $vardefs_array = array(
             "Stairs No Trolley Access",
             "Few Steps No Trolley Access",
             "Internal Stairs -No Trolley",
-        ],
-    ],
-    "quote_alectrical_already" => [
-        "Electrical Already RCD Protected",
-        "quote_alectrical_already",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_alectrical_already" => array(
+        "name" => "quote_alectrical_already",
+        "display_label" => "Electrical Already RCD Protected",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_hot_cold_connections" => [
-        "Hot and Cold Connections presented, externally located, single storey, paved area",
-        "quote_hot_cold_connections",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_hot_cold_connections" => array(
+        "name" => "quote_hot_cold_connections",
+        "display_label" => "Hot and Cold Connections presented, externally located, single storey, paved area",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_located_within" => [
-        "New Sanden tank to be located within 2m of hot and cold connections",
-        "quote_located_within",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_located_within" => array(
+        "name" => "quote_located_within",
+        "display_label" => "New Sanden tank to be located within 2m of hot and cold connections",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_additional_untempered" => [
-        "Confirm you don't have an untempered hot water line (> 50 deg) - majority of houses answer YES to this question",
-        "quote_additional_untempered",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_additional_untempered" => array(
+        "name" => "quote_additional_untempered",
+        "display_label" => "Confirm you don't have an untempered hot water line (> 50 deg) - majority of houses answer YES to this question",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_concrete_slab" => [
-        "Would you like us to bring a 600x600 concrete slab for the tank",
-        "quote_concrete_slab",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_concrete_slab" => array(
+        "name" => "quote_concrete_slab",
+        "display_label" => "Would you like us to bring a 600x600 concrete slab for the tank",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_concrete_pavers" => [
-        "Would you like us to bring 2x 450x450 concrete pavers for the Heat Pump",
-        "quote_concrete_pavers",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_concrete_pavers" => array(
+        "name" => "quote_concrete_pavers",
+        "display_label" => "Would you like us to bring 2x 450x450 concrete pavers for the Heat Pump",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ],
-    "quote_hot_water_rebate" => [
-        "Solar Vic Solar Hot Water Rebate - Do you qualify?",
-        "quote_hot_water_rebate",
-        "list_array" => [
+        ) ,
+        "parent" => "",
+    ),
+    "quote_hot_water_rebate" => array(
+        "name" => "quote_hot_water_rebate",
+        "display_label" => "Solar Vic Solar Hot Water Rebate - Do you qualify?",
+        "type" => "select",
+        "list_array" => array(
             "",
             "Yes",
             "No",
-        ],
-    ]
+        ) ,
+        "parent" => "",
+    )
 );

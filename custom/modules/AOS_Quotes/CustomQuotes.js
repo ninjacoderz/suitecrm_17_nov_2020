@@ -5118,104 +5118,104 @@ function genExtraDaikinItemFunc(elem){
      });
  
      //thienpb code -- API Generate to quote design
-     $("#btn_view_change_log").before('<button style="margin: 10px 0;background:#945596;" type="button" id="btn_quote_design_tool" class="button btn_quote_design_tool" title="Quote Design Tool">Quote Design Tool</button>');
-     $("#btn_quote_design_tool").click(function(e) {
-         if($("#quote_type_c").val() != "quote_type_solar"){
-             alert("Quote type isn't a solar!");
-             return false;
-         }
-         var dsg_lat,dsg_lng;
-         $.ajax({
-             url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' 
-             + encodeURIComponent($('#install_address_c').val()) +", " 
-             + encodeURIComponent($('#install_address_city_c').val())  + ", " 
-             + encodeURIComponent($('#install_address_state_c').val())  
-             + ", " +  encodeURIComponent($('#install_address_postalcode_c').val()) 
-             + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
-             type: 'GET',
-             success: function(result) {
-                 var location = result.results[0].geometry.location;
-                 if (result.status == "OK"){
-                     dsg_lat = location.lat;
-                     dsg_lng = location.lng;
-                 }else{
-                     alert("Address invalid! Please check Quote address.")
-                 }
-             }
-         });
-         if($("#billing_account_id").val() == ''){
-             alert("Account is invalid for create quote design tool.");
-             return;
-         }
-         $.ajax({
-             type: "GET",
-             cache: false,
-             url: "?entryPoint=getLeadFromAccount&account_id="+$("#billing_account_id").val()+'&lead_id='+$("#leads_aos_quotes_1leads_ida").val(),
-         }).done(function (data) {
-            if(data == '' && typeof data == undefined)return;
-             var json = $.parseJSON(data);
-             if(json.id == ''){
-                 alert("Please check acount field or lead source field!");
-                 return false;
-             }
-             var roof_type_arr ={"Tin"       :2,
-                             "Tile"          :3,
-                             "klip_loc"      :4,
-                             "Concrete"      :5,    
-                             "Trim_Deck"     :6,
-                             "Insulated"     :7,
-                             "Asbestos"      :8,
-                             "Ground_Mount"  :9,
-                             "Terracotta"    :10,
-                             "Other"         :1};
-             var data_quote = {
-                 "LeadID"        : parseInt(json.number),
-                 "ID"            : parseInt($("div[field='number']").text().trim('')),
-                 "Name"          : html_entity_decode((json.first_name +' '+json.last_name)),
-                 "FirstName"     : html_entity_decode(json.first_name),
-                 "LastName"      : html_entity_decode(json.last_name),
-                 "Mobile"        : html_entity_decode(json.phone_number),
-                 "Email"         : html_entity_decode(json.email),
-                 "Address"       :{
-                     "ID"                    :1,
-                     "Street1"               :html_entity_decode($("#install_address_c").val()),
-                     "Locality"              :html_entity_decode($("#install_address_city_c").val()),
-                     "State"                 :html_entity_decode($("#install_address_state_c").val()),
-                     "PostCode"              :parseInt(html_entity_decode($("#install_address_postalcode_c").val())),
-                     "Street1NotProvided"    :false,
-                     "LocalityNotProvided"   :false,
-                     "Latitude"              :dsg_lat,
-                     "Longitude"             :dsg_lng,
-                     "Value"                 :$("#install_address_c").val()+', '+$("#install_address_city_c").val()+' '+$("#install_address_state_c").val()+' '+$("#install_address_postalcode_c").val(),
-                 },
-                 "RoofType"     : encodeURIComponent(roof_type_arr[$("#roof_type_c").val()]),
-                 "CustomerTypeID": parseInt($("#customer_type_c").val()),
-                 "BuildHeight"   : $("#gutter_height_c").val(),
-                 "EnergyRetailer": $("#energy_retailer_c").val(),
-                 "NetworkOperator"   : $("#distributor_c").val(),
-                 "ConnectionType": $("#connection_type_c").val(),
-                 "Photo"         : {
-                     "Name"      : "Image_Site_Detail.jpg",
-                     "Data"      : $("#Map_Template_Image").attr("src"),
-                 }
-             }
-             $.ajax({
-                 type: "GET",
-                 cache: false,
-                 url: "http://loc.designtools.com/APIv2/SAM_API.php?query=quotes/"+$("div[field='number']").text().trim('')+'&data_quote='+JSON.stringify(data_quote),
-                 //url: "https://designtool.pure-electric.com.au/APIv2/SAM_API.php?query=quotes/"+$("div[field='number']").text().trim('')+'&data_quote='+JSON.stringify(data_quote),
-                 success: function(result) {
-                     if(result == 'done'){
-                         $("#link_quote_design").remove();
-                         window.open("http://loc.designtools.com/quote.php?quoteID="+$("div[field='number']").text().trim(''));
-                         //window.open("https://designtool.pure-electric.com.au/quote.php?quoteID="+$("div[field='number']").text().trim(''));
-                     }
-                 }
-             })
+//      $("#btn_view_change_log").before('<button style="margin: 10px 0;background:#945596;" type="button" id="btn_quote_design_tool" class="button btn_quote_design_tool" title="Quote Design Tool">Quote Design Tool</button>');
+//      $("#btn_quote_design_tool").click(function(e) {
+//          if($("#quote_type_c").val() != "quote_type_solar"){
+//              alert("Quote type isn't a solar!");
+//              return false;
+//          }
+//          var dsg_lat,dsg_lng;
+//          $.ajax({
+//              url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' 
+//              + encodeURIComponent($('#install_address_c').val()) +", " 
+//              + encodeURIComponent($('#install_address_city_c').val())  + ", " 
+//              + encodeURIComponent($('#install_address_state_c').val())  
+//              + ", " +  encodeURIComponent($('#install_address_postalcode_c').val()) 
+//              + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
+//              type: 'GET',
+//              success: function(result) {
+//                  var location = result.results[0].geometry.location;
+//                  if (result.status == "OK"){
+//                      dsg_lat = location.lat;
+//                      dsg_lng = location.lng;
+//                  }else{
+//                      alert("Address invalid! Please check Quote address.")
+//                  }
+//              }
+//          });
+//          if($("#billing_account_id").val() == ''){
+//              alert("Account is invalid for create quote design tool.");
+//              return;
+//          }
+//          $.ajax({
+//              type: "GET",
+//              cache: false,
+//              url: "?entryPoint=getLeadFromAccount&account_id="+$("#billing_account_id").val()+'&lead_id='+$("#leads_aos_quotes_1leads_ida").val(),
+//          }).done(function (data) {
+//             if(data == '' && typeof data == undefined)return;
+//              var json = $.parseJSON(data);
+//              if(json.id == ''){
+//                  alert("Please check acount field or lead source field!");
+//                  return false;
+//              }
+//              var roof_type_arr ={"Tin"       :2,
+//                              "Tile"          :3,
+//                              "klip_loc"      :4,
+//                              "Concrete"      :5,    
+//                              "Trim_Deck"     :6,
+//                              "Insulated"     :7,
+//                              "Asbestos"      :8,
+//                              "Ground_Mount"  :9,
+//                              "Terracotta"    :10,
+//                              "Other"         :1};
+//              var data_quote = {
+//                  "LeadID"        : parseInt(json.number),
+//                  "ID"            : parseInt($("div[field='number']").text().trim('')),
+//                  "Name"          : html_entity_decode((json.first_name +' '+json.last_name)),
+//                  "FirstName"     : html_entity_decode(json.first_name),
+//                  "LastName"      : html_entity_decode(json.last_name),
+//                  "Mobile"        : html_entity_decode(json.phone_number),
+//                  "Email"         : html_entity_decode(json.email),
+//                  "Address"       :{
+//                      "ID"                    :1,
+//                      "Street1"               :html_entity_decode($("#install_address_c").val()),
+//                      "Locality"              :html_entity_decode($("#install_address_city_c").val()),
+//                      "State"                 :html_entity_decode($("#install_address_state_c").val()),
+//                      "PostCode"              :parseInt(html_entity_decode($("#install_address_postalcode_c").val())),
+//                      "Street1NotProvided"    :false,
+//                      "LocalityNotProvided"   :false,
+//                      "Latitude"              :dsg_lat,
+//                      "Longitude"             :dsg_lng,
+//                      "Value"                 :$("#install_address_c").val()+', '+$("#install_address_city_c").val()+' '+$("#install_address_state_c").val()+' '+$("#install_address_postalcode_c").val(),
+//                  },
+//                  "RoofType"     : encodeURIComponent(roof_type_arr[$("#roof_type_c").val()]),
+//                  "CustomerTypeID": parseInt($("#customer_type_c").val()),
+//                  "BuildHeight"   : $("#gutter_height_c").val(),
+//                  "EnergyRetailer": $("#energy_retailer_c").val(),
+//                  "NetworkOperator"   : $("#distributor_c").val(),
+//                  "ConnectionType": $("#connection_type_c").val(),
+//                  "Photo"         : {
+//                      "Name"      : "Image_Site_Detail.jpg",
+//                      "Data"      : $("#Map_Template_Image").attr("src"),
+//                  }
+//              }
+//              $.ajax({
+//                  type: "GET",
+//                  cache: false,
+//                  url: "http://loc.designtools.com/APIv2/SAM_API.php?query=quotes/"+$("div[field='number']").text().trim('')+'&data_quote='+JSON.stringify(data_quote),
+//                  //url: "https://designtool.pure-electric.com.au/APIv2/SAM_API.php?query=quotes/"+$("div[field='number']").text().trim('')+'&data_quote='+JSON.stringify(data_quote),
+//                  success: function(result) {
+//                      if(result == 'done'){
+//                          $("#link_quote_design").remove();
+//                          window.open("http://loc.designtools.com/quote.php?quoteID="+$("div[field='number']").text().trim(''));
+//                          //window.open("https://designtool.pure-electric.com.au/quote.php?quoteID="+$("div[field='number']").text().trim(''));
+//                      }
+//                  }
+//              })
  
-         });
-     });
-     //end
+//          });
+//      });
+//      //end
  
  });
  $( window ).load(function() {
