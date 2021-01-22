@@ -1,5 +1,4 @@
 <?php 
-var_dump($argv);
 
 $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
 $curl = curl_init();

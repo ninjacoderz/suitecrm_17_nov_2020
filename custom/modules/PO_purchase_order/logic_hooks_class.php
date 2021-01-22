@@ -15,7 +15,7 @@
             }else{
                 $method = 'update';
             }
-            exec("php curlForXero.php ". $method. " " . $bean->id );
+            exec("cd /var/www/suitecrm/custom/modules/PO_purchase_order/; php curlForXero.php ". $method. " " . $bean->id ." > /dev/null &");
             return ;
             $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
             $curl = curl_init();
