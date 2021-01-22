@@ -350,9 +350,14 @@ if( $lead_id != ""){
     if(count($_POST['files']['data-pe-files-upload-invoice']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-upload-invoice']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-upload-invoice']['name'][$i] != ""){
-                $file_type = basename($number_module.'_Invoice(Plumber)'.$i.'.'.pathinfo($_POST['files']['data-pe-files-upload-invoice']['name'][$i], PATHINFO_EXTENSION));
-                $count = checkCountExistPhoto($file_type,$folderName,'Invoice(Plumber)');
-                $file_type = $number_module.'_Invoice(Plumber)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-upload-invoice']['name'][$i]), PATHINFO_EXTENSION);
+                if( strpos($_POST['files']['data-pe-files-upload-invoice']['name'][$i], '.pdf') == true  ){
+                    $new_name = '_invoice_PDF';
+                }else {
+                    $new_name = '_Invoice(Plumber)';
+                }
+                $file_type = basename($number_module.$new_name.$i.'.'.pathinfo($_POST['files']['data-pe-files-upload-invoice']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,$new_name);
+                $file_type = $number_module.$new_name.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-upload-invoice']['name'][$i]), PATHINFO_EXTENSION);
                 copy($_POST['files']['data-pe-files-upload-invoice']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Invoice(Plumber) '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
