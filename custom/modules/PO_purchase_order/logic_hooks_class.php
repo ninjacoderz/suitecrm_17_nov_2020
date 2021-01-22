@@ -40,7 +40,7 @@
 
             curl_setopt($curl, CURLOPT_URL, 'https://suitecrm.pure-electric.com.au/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method='.$method.'&record='.$bean->id);
             //curl_setopt($curl, CURLOPT_URL, 'http://loc.suitecrm.com/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method='.$method.'&record='.$bean->id);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 0);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
             curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
             curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
