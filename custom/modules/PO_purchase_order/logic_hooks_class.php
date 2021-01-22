@@ -15,6 +15,8 @@
             }else{
                 $method = 'update';
             }
+            exec("php curlForXero.php ". $method. " " . $bean->id );
+            return ;
             $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
             $curl = curl_init();
             
