@@ -53,7 +53,7 @@
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
-            //curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1);
+            curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1);
             curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
             $result = curl_exec($curl);
             curl_close($curl);
