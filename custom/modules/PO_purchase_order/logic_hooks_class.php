@@ -16,6 +16,8 @@
                 $method = 'update';
             }
             $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+            $curl = curl_init();
+            
             if (file_exists($tmpfsuitename)) {
             } else {
                 $fields = array();
@@ -25,7 +27,7 @@
                 $fields['action'] = 'Authenticate';
                 $url = 'https://suitecrm.pure-electric.com.au/index.php';
                 //$url = 'http://loc.suitecrm.com/index.php';
-                $curl = curl_init();
+                
                 curl_setopt($curl, CURLOPT_URL, $url);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
                 curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
