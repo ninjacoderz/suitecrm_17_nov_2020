@@ -29,7 +29,7 @@
             curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
 
             curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 0);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
