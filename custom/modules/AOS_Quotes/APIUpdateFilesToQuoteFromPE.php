@@ -92,7 +92,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-switchboard']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Switchboard '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-switchboard']['tmp_name'][$i], 'fileName' => $file_type);
             };
         };
     };
@@ -105,7 +105,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-newsanden']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">New Sanden '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-newsanden']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -118,7 +118,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-existing-HWS-serial-number']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">New Sanden '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-existing-HWS-serial-number']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -131,7 +131,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-access']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Photo Access '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-access']['tmp_name'][$i], 'fileName' => $file_type);
             };
         };
     }
@@ -144,7 +144,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-upclose']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Photo Upclose '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-upclose']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -157,7 +157,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-meterbox']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Photo Meterbox '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-meterbox']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -170,7 +170,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-electricity-bill']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Electricity bill '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-electricity-bill']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -191,7 +191,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Measure Water Pressure Into Property '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -210,7 +210,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-existing-hws']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Old Existing HWS '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-existing-hws']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -229,7 +229,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-existing-hws-brand-model']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Old Existing HWS Brand/Model/Serial Number '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-existing-hws-brand-model']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -248,7 +248,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-decommission-hws']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Drill Hole OR Remove Element of Elec Storage HWS '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-decommission-hws']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -267,7 +267,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-tank-serial']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Sanden Tank Serial Number '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-tank-serial']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -286,7 +286,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-hp-serial']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Sanden HP Serial Number '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hp-serial']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -305,7 +305,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-water-pressure-nriprv']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Measure Water Pressure NRIPRV '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-water-pressure-nriprv']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -324,7 +324,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-install-photo']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">New Install Photos '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-install-photo']['tmp_name'][$i], 'fileName' => $file_type);
             }    
         };
     }
@@ -343,7 +343,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-plumbing-pcoc']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Attach Plumbing Certificate of Compliance (PCOC) '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-plumbing-pcoc']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -361,7 +361,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-upload-invoice']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Invoice(Plumber) '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-upload-invoice']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -381,7 +381,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-switchboard-sanden']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Switchboard Sanden '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-switchboard-sanden']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -400,7 +400,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-electrical-ces']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Attach Electrical Certificate of Safety (CES) '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-electrical-ces']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -420,7 +420,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Tank Serial (CES) '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -440,7 +440,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">HP Serial (CES) '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name'][$i], 'fileName' => $file_type);
             }
         };
     }
@@ -455,7 +455,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-switchboard-daikin']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Switchboard DAIKIN '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-switchboard-daikin']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -468,7 +468,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-indoor-unit']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Indoor Unit Proposed Location DAIKIN '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-indoor-unit']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -481,7 +481,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-outdoor-unit']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Outdoor Unit Proposed Location DAIKIN  '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-outdoor-unit']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -494,7 +494,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-outdoor-serial']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Outdoor Serial DAIKIN '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-outdoor-serial']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -507,7 +507,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-indoor-serial']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Indoor Serial DAIKIN '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-indoor-serial']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -521,7 +521,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-indoor-unit-client']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">(Client)Indoor Unit Proposed Location DAIKIN '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-indoor-unit-client']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -534,7 +534,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-outdoor-unit-client']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">(Client)Outdoor Unit Proposed Location DAIKIN  '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-outdoor-unit-client']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -547,7 +547,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-switchboard-daikin-client']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">(Client)Switchboard '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-switchboard-daikin-client']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -560,7 +560,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-floorplan']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">(Client)Floorplan '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-floorplan']['tmp_name'][$i], 'fileName' => $file_type);
             }        
         };
     }
@@ -572,7 +572,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-client-files-remittance-advice']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Remittance Advice '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-client-files-remittance-advice']['tmp_name'][$i], 'fileName' => $file_type);
             };
         }
     };
@@ -584,7 +584,7 @@ if( $lead_id != ""){
                 copy($_POST['files']['data-pe-files-delivery-has-arrived']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Delivery Has Arrived '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws']['tmp_name'][$i], 'fileName' => $file_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-delivery-has-arrived']['tmp_name'][$i], 'fileName' => $file_type);
             };
         }
     };
