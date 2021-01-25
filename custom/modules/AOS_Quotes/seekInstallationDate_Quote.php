@@ -144,7 +144,7 @@ if($current_user->id == "8d159972-b7ea-8cf9-c9d2-56958d05485e"){ // Matthew
 $signature = $user->getSignature($emailSignatureId);
 if ($emailBean->save(false)) {
     //echo 'index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=' . $emailBean->module_dir . '&return_action=DetailView&return_id=' . $emailBean->id . '&return_action=DetailView&record=' . $emailBean->id;
-    echo 'index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=AOS_Quotes&return_action=DetailView&return_id=' . $quote->id . '&return_action=DetailView&record=' . $emailBean->id;
+    echo 'index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=AOS_Quotes&return_action=DetailView&return_id=' . $quote->id . '&return_action=DetailView&record=' . $emailBean->id.'&email_template_id='.$temp_request['emails_email_templates_idb'];
 
 } else {
     if ($emailBean->status !== 'draft') {

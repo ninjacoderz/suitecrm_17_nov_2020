@@ -572,12 +572,12 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $group_invoice->populateFromRow($row);
         $group_invoice->save();
         // Logic for get only item that have "Daikin US7" in title
-
+        $part_number_wifi = [];  //VUT << part_number wifi https://trello.com/c/XI0CzmPo/2888-daikin-alira-wifi-add-this-to-the-supply-po-requirement-when-ordering >>
         //Setting Group Line Items
         $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoice->id."' AND deleted = 0";
         $result = $db->query($sql);
         while ($row = $db->fetchByAssoc($result)) {
-            if(strpos($row['name'], "Nexura") !== false || strpos($row['name'], "Daikin US7") !== false || strpos($row['name'], "Daikin WiFi Controller") !== false ){
+            if(strpos($row['name'], "Nexura") !== false || strpos($row['name'], "Daikin US7") !== false || strpos($row['name'], "Daikin Alira") !== false /**|| strpos($row['name'], "Daikin WiFi Controller") !== false*/ ){
                 $row['id'] = '';
                 $row['parent_id'] = $purchaseOrder->id;
                 $row['parent_type'] = 'PO_purchase_order';
@@ -615,8 +615,41 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
                 $prod_invoice->populateFromRow($row);
                 $prod_invoice->save();
             }
+            //VUT - Add wifi for daikin PO supply <<< https://trello.com/c/XI0CzmPo/2888-daikin-alira-wifi-add-this-to-the-supply-po-requirement-when-ordering
+            if (strpos($row['name'], "Daikin US7") !== false) {
+                array_push($part_number_wifi, "BRP072C42");
+            } else if (strpos($row['name'], "Daikin Alira") !== false) {
+                preg_match('/(\d+)/', $row['part_number'], $numberKW);
+                if (intval($numberKW[0]) < 47) { //Daikin Alira 2-4.6kW	
+                    array_push($part_number_wifi, "BRP072C42", "BRP067A42");
+                } else { //Daikin Alira 5-7.1kW
+                    array_push($part_number_wifi, "BRP072C42", "BRP980B42");
+                }
+            }
+            //VUT - Add wifi for daikin PO supply >>> https://trello.com/c/XI0CzmPo/2888-daikin-alira-wifi-add-this-to-the-supply-po-requirement-when-ordering
+        }
+
+        //VUT - Add wifi for daikin PO supply <<< https://trello.com/c/XI0CzmPo/2888-daikin-alira-wifi-add-this-to-the-supply-po-requirement-when-ordering
+        if (count($part_number_wifi) > 0) {
+            $sql_partNumber = implode("','", $part_number_wifi);
+            $sql_wifi = "SELECT * FROM aos_products WHERE part_number IN ('".$sql_partNumber."') AND deleted = 0";
+            $res_wifi = $db->query($sql_wifi);
+            $products_wifi = [];
+            while ($row = $db->fetchByAssoc($res_wifi)) {
+                $product_wifi = [];
+                $product_wifi = array();
+                $product_wifi['product_currency'] = $row['currency_id'];
+                $product_wifi['product_item_description'] = $row['description'];
+                $product_wifi['product_name'] = $row['name'];
+                $product_wifi['product_part_number'] = $row['part_number'];
+                $product_wifi['product_product_cost_price'] = $row['cost'];
+                $product_wifi['product_product_id'] = $row['id'];
+                $product_wifi['product_product_list_price'] = $row['price'];
+                $products_wifi[$product_wifi['product_part_number']] = $product_wifi;
+            }
 
         }
+        //VUT - Add wifi for daikin PO supply >>> https://trello.com/c/XI0CzmPo/2888-daikin-alira-wifi-add-this-to-the-supply-po-requirement-when-ordering
         //////////////////////
 
         $part_numners = array(
@@ -644,6 +677,14 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $products[$product['product_part_number']] = $product;
 
         }
+
+        //VUT <<< merge product wifi
+        if (count($products_wifi) > 0) {
+            $products = array_merge($products,$products_wifi);
+            $part_numners = array_merge($part_numners,$part_number_wifi);                ;
+        }
+        //VUT >>> merge product wifi
+
         $ordered_products = array();
         foreach($part_numners as $part_number){
             $ordered_products[$part_number] = $products[$part_number];
@@ -712,7 +753,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $product_name = trim(str_replace("Daikin", "",$product_name));
             array_push($daikin_products,$product_name);
           }
-          if (strpos($partnumber,'BRP072') !== false) {
+          if (strpos($partnumber,'BRP') !== false) {
             array_push($daikin_products, 'Wifi');
           }
         }

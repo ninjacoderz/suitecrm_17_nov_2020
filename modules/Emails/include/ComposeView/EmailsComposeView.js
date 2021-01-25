@@ -2141,6 +2141,12 @@ function get_lead_source_company(module_get,record){
         $('#emails_pe_smstemplate_idb').parent().append('<a class="link_open_sms_template" target="_blank" href="/index.php?module=pe_smstemplate&return_module=pe_smstemplate&action=EditView&record='+ $('#emails_pe_smstemplate_idb').val()+'">Link SMS Template</a>');
       } 
     }
+    //show pdf template email
+    var pdf_id = $("input[name='pdf_id']").val();
+    if (pdf_id!='') {
+      $('.link_open_PDftemplate').remove();
+      $('#emails_email_templates_idb').parent().append('<a class="link_open_PDftemplate" target="_blank" href="/index.php?module=AOS_PDF_Templates&return_module=AOS_PDF_Templates&action=EditView&record='+ pdf_id +'">Open Link PDF Template</a>');
+    }
     SUGAR.ajaxUI.showLoadingPanel();
     $.ajax({
       url: "/index.php?entryPoint=customGetEmailTemplates&action=get_name_template&emails_email_templates_idb="+ $('#emails_email_templates_idb').val() +"&emails_pe_smstemplate_idb="+$('#emails_pe_smstemplate_idb').val(),
@@ -2174,7 +2180,13 @@ function get_lead_source_company(module_get,record){
         async: true,
         success: function(result) {                   
             render_select_sms_signture(result);
-        }
+            //Select PE Account sms'signture  for Send Geo Reminder in Invoice
+            setTimeout(function(){
+                if ($('#emails_pe_smstemplate_idb').val() == '5fcde64f-63ac-dc94-21fb-5e5ef5cf4c70') {
+                    $('#select_sms_signture').val('_1588918966').change();
+                }    
+              },100);
+            }
       });
       function render_select_sms_signture(result){
           var data_result = $.parseJSON(result);

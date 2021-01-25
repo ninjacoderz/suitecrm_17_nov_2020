@@ -725,6 +725,10 @@ $entry_point_registry['APICreateFacebookPost'] = array(
 $entry_point_registry['CRUD_Cert_Template'] = array(
     'file' => 'custom/modules/AOS_Invoices/CRUD_Cert_Template.php',
     'auth' => false
+);// info product sanden
+$entry_point_registry['getInfoProduct'] = array(
+    'file' => 'modules/PO_purchase_order/GetInfoProduct.php',
+    'auth' => false
 );
 //tu code -  custom button SANDEN  EMAIL DAILY in Home Page
 $entry_point_registry['button_Sanden_Dealers'] = array(
@@ -1375,5 +1379,17 @@ $entry_point_registry['getOwnSolarPricing'] = array(
 //VUT - get totalValue / status Assignment
 $entry_point_registry['getTotalValueAssignment'] = array( 
     'file' => 'custom/modules/AOS_Invoices/getTotalValueAssignment.php',
+    'auth' => false
+);
+
+//thienpb - create project solar design tool
+$entry_point_registry['customCreateProjectAPISolarDesignTool'] = array( 
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomCreateProjectAPISolarDesignTool.php',
+    'auth' => false
+);
+
+//dung code -- CURL electrical notes
+$entry_point_registry['CRUD_Customer_Invoice_Notes'] = array(
+    'file' => 'custom/modules/AOS_Invoices/CRUD_Customer_Invoice_Notes.php',
     'auth' => false
 );

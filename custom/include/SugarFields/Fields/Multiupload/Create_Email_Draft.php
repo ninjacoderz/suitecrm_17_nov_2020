@@ -70,12 +70,14 @@ function create_EmailInstallerPaperworkFollowUp($record_id,$type){
     $email->name = $name;
     $email->type = "draft";
     $email->status = "draft";
-    $email->parent_type = 'Contacts';
-    $email->parent_id = $contact_bean->id;
-    $email->parent_name = $contact_bean->name;
+    $email->parent_type = 'Accounts';
+    $email->parent_id = $account_bean->id;
+    $email->parent_name = $account_bean->name;
     $email->mailbox_id = 'b4fc56e6-6985-f126-af5f-5aa8c594e7fd';
     $email->description_html = $description_html;
     $email->description = $description;
+    $email->sms_message = strip_tags(trim(html_entity_decode($description_html,ENT_QUOTES)));
+    $email->number_client =  $account_bean->mobile_phone_c;
     $email->save(false);
     $email_id = $email->id;
 

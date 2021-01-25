@@ -75,10 +75,15 @@ $(document).ready(function(){
         }
         $('body').find('div[class="panel-content"] div[class="panel panel-default"]').each(function(){
             var name_panel = $(this).find('.panel-heading').text().trim();
-            var id_panel = $(this).find('.panel-body').attr('id').trim();
-            var elem_object = { 'id_panel' : id_panel , 'name_panel' : name_panel};
-            json_menu_nav.push(elem_object);
-            html_menu_nav += "<li><a class='link_into_panel' data-id='#"+id_panel +"' >" + name_panel +"</a></li>";
+            if (module_sugar_grp1 == 'AOS_Invoices' && $('#quote_type_c').val() != 'quote_type_sanden' && name_panel == 'OLD HWS INFORMATION') {
+                $(this).hide();
+                return;
+            } else {
+                var id_panel = $(this).find('.panel-body').attr('id').trim();
+                var elem_object = { 'id_panel' : id_panel , 'name_panel' : name_panel};
+                json_menu_nav.push(elem_object);
+                html_menu_nav += "<li><a class='link_into_panel' data-id='#"+id_panel +"' >" + name_panel +"</a></li>";
+            }
         })
         //VUT-S-Internal Note (Shortcut)
         if (module_sugar_grp1 != 'pe_service_case') {
@@ -104,10 +109,15 @@ $(document).ready(function(){
         }
         $('body').find('div[class="panel-content"] div[class="panel panel-default"]').each(function(){
             var name_panel = $(this).find('.panel-heading').text().trim();
-            var id_panel = $(this).find('.panel-body').attr('id').trim();
-            var elem_object = { 'id_panel' : id_panel , 'name_panel' : name_panel};
-            json_menu_nav.push(elem_object);
-            html_menu_nav += "<li><a class='link_into_panel_left' data-id='#"+id_panel +"' >" + name_panel +"</a></li>";
+            if (module_sugar_grp1 == 'AOS_Invoices' && $('#quote_type_c').val() != 'quote_type_sanden' && name_panel == 'OLD HWS INFORMATION') {
+                $(this).hide();
+                return;
+            } else {
+                var id_panel = $(this).find('.panel-body').attr('id').trim();
+                var elem_object = { 'id_panel' : id_panel , 'name_panel' : name_panel};
+                json_menu_nav.push(elem_object);
+                html_menu_nav += "<li><a class='link_into_panel_left' data-id='#"+id_panel +"' >" + name_panel +"</a></li>";
+            }
         })
         //VUT-S-Internal Note (Shortcut)
         if (module_sugar_grp1 != 'pe_service_case') {

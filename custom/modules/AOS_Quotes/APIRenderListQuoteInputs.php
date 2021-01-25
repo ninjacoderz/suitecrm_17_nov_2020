@@ -1,30 +1,49 @@
 <?php
-include dirname(__FILE__) . '/vardef_list_quote.php';
-// var_dump($vardefs_array); die;
-$html_group_check_list = render_html_list_quote_inputs($vardefs_array);
+if($_REQUEST['type'] == 'quote_type_solar'){
+    include dirname(__FILE__) . '/vardef_list_quote_solar.php';
+}else{
+    include dirname(__FILE__) . '/vardef_list_quote.php';
+}
+
+$html = renderQuoteFieldHTML($vardefs_array);
 $result = array (
     'data' => json_encode($vardefs_array),
-    'template_html' => $html_group_check_list,
+    'template_html' => $html,
 );
 echo json_encode($result);
+die();
 
-function render_html_list_quote_inputs($vardefs_array){
-    $html_group_check_list = '';
+function renderQuoteFieldHTML($vardefs_array){
+    $display_label = '';
+    $field_content = '';
+    $fieldHTML = '<div class="col-md-12 col-xs-12 col-sm-12 edit-view-row">';
     foreach ($vardefs_array as $k => $v) {
-        $html_group_check_list .= '<div class="col-md-6 col-xs-12 col-sm-12 edit-view-row-item">'
-            .'<div class="col-md-6 col-xs-12 col-sm-12 label">'
-            .  $v[0]
-            . '</div>'
-            .'<div class="col-md-6 col-xs-12 col-sm-5 edit-view-field " type="varchar">'
-                .'<select name="'.$v[1].'" id="'.$v[1].'" title="">'
-                    .render_option_quote_input($v['list_array'])
-                .'</select>'
-            . '</div>'
-            .'</div>' ;
+        $display_label  = $v['display_label'];
+        switch ($v['type']) {
+            case 'select':
+                $field_content = '<select class="custom_fields" name="'.$k.'" id="'.$k.'" style="width:200px;" title="">'.renderOption($v['list_array']).'</select>';
+                break;
+            case 'input':
+                $field_content = '<input class="custom_fields" type="text" value="" name="'.$k.'" id="'.$k.'" style="width:200px;" />';
+                break;
+            case 'number':
+                $field_content = '<input class="custom_fields" type="number" value="" name="'.$k.'" id="'.$k.'" step="'.$v['step'].'" style="width:70px;" />';
+                break;
+        }
+        $tempHTML = '<div class="col-md-6 col-xs-12 col-sm-12 edit-view-row-item">
+                        <div class="col-md-6 col-xs-12 col-sm-12 label">$display_label</div>
+                        <div class="col-md-6 col-xs-12 col-sm-5 edit-view-field " type="varchar">
+                            $field_content
+                        </div>
+                    </div>';
+        $fieldHTML .= str_replace(['$display_label','$field_content'],[$display_label,$field_content],$tempHTML);
     }
-    return $html_group_check_list;
+    $fieldHTML .= '</div>';
+
+    return $fieldHTML;
 }
-function render_option_quote_input($option_array) {
+
+function renderOption($option_array) {
     $option_group = '';
     foreach($option_array as $option) {
         $option_group .= '<option label="'.$option.'" value="'.$option.'">'.$option.'</option>';

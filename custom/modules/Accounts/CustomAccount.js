@@ -427,11 +427,122 @@ $(function () {
         });
     });
     // tuan copy ABN from Invoice
+    $('#business_name_c').hide();
+    $('#business_name_c').parent().append('<div id="text_business_name"></div>');
+    if($('#business_name_c').val() !== '' && typeof($('#business_name_c').val()) !== 'undefined'){
+        var render_data_business = JSON.parse($('#business_name_c').val());
+        var html_business_name = '';
+        if(typeof(render_data_business) !== 'undefined' ){
+            $.each(render_data_business,function(key,value){
+                if(key !== '' || value[0] !== '' ){
+                    if(value[1]){
+                        var string_plus = '<input type="radio" checked name="Business_name" class="Business_name" value="'+key+'">' + key + ' ---From: ' + value[0]+'<br>'; 
+                    }else {
+                        var string_plus = '<input type="radio" name="Business_name" class="Business_name" value="'+key+'">' + key + ' ---From: ' + value[0]+'<br>'; 
+                    }
+                   
+                    html_business_name += string_plus;
+                }
+            });
+        }
+        $('#text_business_name').html('');
+        $('#text_business_name').append(html_business_name);
+    }
+    $(document).on('click','.Business_name',function(){
+        var key_change = $(this).val();
+        if(key_change != '' && $("input[name='trading_name']").is(':checked') != true){
+            var entry_value = $("#entity_name_c").val().split(" T/A ");
+            if(entry_value.length > 1){
+                $("#entity_name_c").val(entry_value[0] + " T/A " + key_change);
+            }else{
+                $("#entity_name_c").val($("#entity_name_c").val() + " T/A " + key_change);
+            }
+        }
+        
+        if($('#business_name_c').val() !== ''){
+            var render_data_business = JSON.parse($('#business_name_c').val());
+            if(typeof(render_data_business) !== 'undefined' ){             
+                $.each(render_data_business,function(key,value){
+                    if(key !== '' || value[0] !== '' ){
+                        if(key ==  key_change){
+                            value[1] = true;
+                            //thienpb code - lookup abn
+                            $("#abn_lookup_c").text(''); 
+                            var url_lookupABN = '/index.php?entryPoint=lookupABN&text_search='+key;
+                            $.ajax({
+                                url:url_lookupABN,
+                                type: 'GET',
+                                success: function (data) {
+                                    data = data.slice(0, -1).split(',').join('\n');
+                                    $("#abn_lookup_c").text(data);
+                                }
+                            });
+                        }else {
+                            value[1] = false;
+                        }
+                    }
+                });      
+            }
+
+            $('#business_name_c').val(JSON.stringify(render_data_business));
+        }
+    });
+
+    // For trading name 
+    $('#trading_name_c').hide();
+    $('#trading_name_c').parent().append('<div id="text_trading_name"></div>');
+    if($('#trading_name_c').val() !== '' && typeof($('#trading_name_c').val()) !== 'undefined'){
+        var render_data_trading = JSON.parse($('#trading_name_c').val());
+        var html_trading_name = '';
+        if(typeof(render_data_trading) !== 'undefined' ){
+            $.each(render_data_trading,function(key,value){
+                if(key !== '' || value[0] !== '' ){
+                    if(value[1]){
+                        var string_plus = '<input type="radio" checked name="trading_name" class="trading_name" value="'+key+'">' + key + ' ---From: ' + value[0]+'<br>'; 
+                    }else {
+                        var string_plus = '<input type="radio" name="trading_name" class="trading_name" value="'+key+'">' + key + ' ---From: ' + value[0]+'<br>'; 
+                    }
+                   
+                    html_trading_name += string_plus;
+                }
+            });
+        }
+        $('#text_trading_name').html('');
+        $('#text_trading_name').append(html_trading_name);
+    }
+    $(document).on('click','.trading_name',function(){
+        var key_change = $(this).val();
+        if(key_change != ''){
+            var entry_value = $("#entity_name_c").val().split(" T/A ");
+            if(entry_value.length > 1){
+                $("#entity_name_c").val(entry_value[0] + " T/A " + key_change);
+            }else{
+                $("#entity_name_c").val($("#entity_name_c").val() + " T/A " + key_change);
+            }
+        }
+        if($('#trading_name_c').val() !== ''){
+            var render_data_trading = JSON.parse($('#trading_name_c').val());
+            if(typeof(render_data_trading) !== 'undefined' ){             
+                $.each(render_data_trading,function(key,value){
+                    if(key !== '' || value[0] !== '' ){
+                        if(key ==  key_change){
+                            value[1] = true;
+                        }else {
+                            value[1] = false;
+                        }
+                    }
+                });      
+            }
+            $('#trading_name_c').val(JSON.stringify(render_data_trading));
+        }
+    });
+
+
     $("#getData_ABN").click(function(){   
         $.ajax({
             url: 'index.php?entryPoint=getdata_ABN&number_ABN='+$('#abn_c').val(),
             success: function(data){
-
+                debugger
                 if(data !== '[]') {
                     var data_result =  $.parseJSON(data);
                     $('#entity_name_c').val(data_result['Entiny_name']);

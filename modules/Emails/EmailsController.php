@@ -5054,6 +5054,18 @@ class EmailsController extends SugarController
                 }
                 //VUT - E - Change status PO 
 
+                //VUT - S - Invoice Methven - change status to Paid and delete Next Action Date
+                if ($_REQUEST["return_module"] == "AOS_Invoices" && isset($_REQUEST["pdf_id"]) && $_REQUEST["pdf_id"] != '') {
+                    $invoice = new AOS_Invoices();
+                    $invoice->retrieve($_REQUEST["return_id"]);
+                    if ($invoice->quote_type_c == 'quote_type_methven') {
+                        $invoice->status = 'Paid';
+                        $invoice->next_action_date_c = '';
+                        $invoice->save();
+                    }
+                }
+                //VUT - E - Invoice Methven - change status to Paid and delete Next Action Date
+                
                 //thienpb code - Update status sent_pricing_option
                 if($_REQUEST['emails_email_templates_idb'] == '9d9f03ae-fe75-68d0-72ad-5d5b95cda15b'){
                     $quote = new AOS_Quotes();
