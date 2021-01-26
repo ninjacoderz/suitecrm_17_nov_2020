@@ -62,8 +62,8 @@ switch ($action) {
                 $note = new Note();
                 $note->retrieve($a['id']);
                 $result[] = array(
-                    'link_image' => '',
-                    'link_thub' => '',
+                    'link_image' => '/upload/'. $note->id,
+                    'link_thub' => '/upload/'. $note->id,
                     'file_name' => $note->filename,
                     'id_folder' => '',
                     'note_id' => $note->id,

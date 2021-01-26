@@ -472,7 +472,8 @@
                             <td><span class="preview"><a target="_blank" \
                                 href="'+v['link_image']+'"><img \
                                 onerror="this.onerror=null;this.src=\'themes/SuiteP/images/Documents.png\'; \
-                                this.style.background=\'black\'; "\
+                                this.style.background=\'black\'; " \
+                                style="width:50px;height50px;" \
                                 src="'+v['link_thub']+'"></a></span>\
                             </td>\
                             <td>\
