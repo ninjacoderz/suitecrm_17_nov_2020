@@ -1393,3 +1393,9 @@ $entry_point_registry['CRUD_Customer_Invoice_Notes'] = array(
     'file' => 'custom/modules/AOS_Invoices/CRUD_Customer_Invoice_Notes.php',
     'auth' => false
 );
+
+//Create Invoice OSTI
+$entry_point_registry['CreateInvoiceOSTI'] = array(
+    'file' => 'custom/modules/AOS_Invoices/CreateInvoiceOSTI.php',
+    'auth' => false
+);
