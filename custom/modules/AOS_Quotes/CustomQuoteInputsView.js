@@ -80,6 +80,7 @@
     }
 
     function parseJSONValueToFields(){
+        if ($("#quote_note_inputs_c").val() == '')  return;
         var dataJSON = JSON.parse($("#quote_note_inputs_c").val());
         for (let key in dataJSON) {  
             $("#"+key).val(dataJSON[key]);

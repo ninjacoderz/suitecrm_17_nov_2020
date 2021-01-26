@@ -4709,7 +4709,7 @@ function genExtraDaikinItemFunc(elem){
              var image_html_site_details = '<div id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;margin-bottom:5px;text-align:center;" >Map Template Image</div>';
             
              var img_html ='<div id="block_image_site_detail"><div class="clear"></div><div class="clear"></div><div class="col-xs-12 edit-view-row-item image_site_detail"><div class="col-md-6 col-sm-6 col-xs-6"> \
-                             <div class="col-md-12 col-sm-12 col-xs-12" id="maptemplate-img">' 
+                             <div class="col-md-6 col-sm-6 col-xs-6" id="maptemplate-img">' 
                              + image_html_site_details + 
                              '</div> \
                              <div class="col-md-12 col-sm-12 col-xs-12"> \
@@ -4746,6 +4746,7 @@ function genExtraDaikinItemFunc(elem){
                  success: function(response){ 
                      if(response != 0){ 
                          var folder_id  = $('body').find('input[name="pre_install_photos_c"]').val();
+                         debugger
                          $('body').find("#Map_Template_Image").remove();
                          var image_html = '<img id="Map_Template_Image" onclick="showPopup()" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:220px;height:auto;margin-top: 5em;margin-bottom:5px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+folder_id+'/Image_Site_Detail.jpg?'+ new Date().getTime()+'">';
                          $('body').find("#maptemplate-img").append(image_html);
@@ -4830,6 +4831,11 @@ function genExtraDaikinItemFunc(elem){
                  success: function(result) {
                      if (result.status == "OK"){
                          var location = result.results[0].geometry.location;
+                        //VUT - S - add street view
+                        $('#div_street_view').remove();
+                        var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
+                        $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
+                        //VUT - E - add street view
                          $.ajax({
                              url: "index.php?entryPoint=Image_Site_Details_Get_From_Google&lat="
                              +  location.lat
@@ -4840,7 +4846,7 @@ function genExtraDaikinItemFunc(elem){
                                  $("#map").hide();
                                  $("#Map_Template_Image").after(result);
                                  $("#download").remove();
-                                 $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");                            
+                                 $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");  
                                  SUGAR.ajaxUI.hideLoadingPanel();
                              }
                          });
@@ -5236,6 +5242,9 @@ function genExtraDaikinItemFunc(elem){
              success: function(result) {
                  if (result.status == "OK"){
                      var location = result.results[0].geometry.location;
+                     $('#div_street_view').remove();
+                     var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
+                     $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
                      $.ajax({
                          url: "index.php?entryPoint=Image_Site_Details_Get_From_Google&lat="
                          +  location.lat
@@ -5259,6 +5268,27 @@ function genExtraDaikinItemFunc(elem){
                  }
              }
          });
+     } else {
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' 
+            + encodeURIComponent($('#install_address_c').val()) +", " 
+            + encodeURIComponent($('#install_address_city_c').val())  + ", " 
+            + encodeURIComponent($('#install_address_state_c').val())  
+            + ", " +  encodeURIComponent($('#install_address_postalcode_c').val()) 
+            + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
+            type: 'GET',
+            success: function(result) {
+                if (result.status == "OK"){
+                    var location = result.results[0].geometry.location;
+                    $('#div_street_view').remove();
+                    var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
+                    $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
+                }else{
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                }
+            }
+        });
+
      }
      // $('#import_map').trigger('click'); 
      // $('#open_map_google').trigger('click');
@@ -5504,6 +5534,7 @@ function getDistances(from_address){
                      data: { img: image_data, id: generateUUID}      
                      }).done(function(data){
                          var folder_id  = $('body').find('input[name="pre_install_photos_c"]').val();
+                         debugger
                          $('body').find("#Map_Template_Image").remove();
                          $('body').find("#nearmap").remove();
                          var image_html = '<img id="Map_Template_Image" onclick="showPopup()" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:220px;height:auto;margin-top: 5em;margin-bottom:5px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+folder_id+'/Image_Site_Detail.jpg?'+ new Date().getTime()+'">';
