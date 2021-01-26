@@ -27,6 +27,7 @@ if($json_open_new_tag == '') {
         'create_daikin_quote_num_c' => '0',
         'create_methven_quote_num_c' => '0',
         'create_solar_quote_num_c' => '0',
+        'create_tesla_quote_c' => '0'
     );
 }else {
     $json_open_new_tag = json_decode ($json_open_new_tag);
