@@ -2870,6 +2870,45 @@
       "Time" => "9:15 AM"
     );
     
+    //check VIC
+    if (urldecode($_GET['billing_address_state']) == 'VIC') {
+      for($i=0;$i<count($quote_decode->Options);$i++){
+        $quote_decode->Options[$i]['Finance'] = array (
+          'Type' => NULL,
+          'Price' => 0,
+          'PPrice' => 0,
+          'APrice' => 0,
+          'CampaignDiscount' => 0,
+          'CostOfFinance' => 0,
+          'PCostOfFinance' => 0,
+          'HCostOfFinance' => 0,
+          'FreedomPackage' => false,
+          'PSecondStoreyInstallation' => false,
+          'HSecondStoreyInstallation' => false,
+          'BaseDepositRate' => 0,
+          'InterestRate' => 0,
+          'Months' => 0,
+          'TotalFinancedAmount' => 0,
+          'AdditionalDeposit' => 0,
+          'MinimumDeposit' => 0,
+          'FortnightlyRepayment' => 0,
+          'TotalPriceLessTotalDeposit' => 0,
+          'TotalDeposit' => 0,
+          'ClassicDeposit' => 0,
+          'ClassicRepayment' => 0,
+        );
+
+        $quote_decode->Options[$i]['Finance']['Rebate'] = array(
+          "ID" => 9,
+          "Code" => "SOLARVB41",
+          "Name" => "Solar VIC Battery $4174 Rebate",
+          "EXOSystemCode" => "P-PV SYSTEM",
+          "Active" => true,
+          "FileCategories" => array()
+        );        
+        $quote_decode->Options[$i]['Finance']['RebateAmount'] = 4174.0;
+      }
+    }
     
     // update next action date +12 months
     $today = mktime(0, 0, 0, date('n'), date('d'), date('Y'));

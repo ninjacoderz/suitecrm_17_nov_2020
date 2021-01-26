@@ -2758,11 +2758,19 @@ function genExtraDaikinItemFunc(elem){
          $("#save_and_email_pdf").after(
          '&nbsp;<button type="button" id="createsolargainLead" class="button createsolargainLead" title="" onClick="SUGAR.addAllEventPushSGButton(this);" > Push To SG <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
          )
-     }else{
-         $("#save_and_email_pdf").after(
-         '&nbsp;<button type="button" id="updateQuoteToSolargain" class="button updateQuoteToSolargain" title="Update SG Quote Info" onClick="SUGAR.addAllEventUpdateSGButton(this);" > Update SG Quote Info<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
-         )
-         
+     }else{ 
+        if($("#quote_type_c").val() == 'quote_type_solar'){
+            $("#save_and_email_pdf").after(
+                '&nbsp;<button type="button" id="updateQuoteToSolargain" class="button updateQuoteToSolargain" title="Update SG Quote Info" onClick="SUGAR.addAllEventUpdateSGButton(this);" > Update SG Quote Info<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+                )
+        }else if($("#quote_type_c").val() == 'quote_type_tesla'){ 
+            $("#save_and_email_pdf").after(
+                '&nbsp;<button type="button" id="updateQuoteToSolargain" class="button updateQuoteToSolargain" title="Update Tesla Quote Info" onClick="SUGAR.addAllEventUpdateSGButton(this);" > Update Tesla Quote Info<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+                )
+        }        
+        //  $("#save_and_email_pdf").after(
+        //  '&nbsp;<button type="button" id="updateQuoteToSolargain" class="button updateQuoteToSolargain" title="Update SG Quote Info" onClick="SUGAR.addAllEventUpdateSGButton(this);" > Update SG Quote Info<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+        //  )
      }
      //TriTruong Add Button Get Today, Get 7 Days
      $('div[field="expiration"]').append('<button type="button" id="get_today_valid_until" class="button button-get-day" title="Get Today" data-type="today" >ToDay</button>');
@@ -3403,7 +3411,6 @@ function genExtraDaikinItemFunc(elem){
              SUGAR.quoteCreateSGTeslaQuote(element);
              return;
          }
- 
          var build_url=  "?entryPoint=quoteCreateSGQuote";
          build_url += '&process=lead';
          build_url += '&notes='+ encodeURIComponent($("#description").val()) ;
@@ -4834,7 +4841,7 @@ function genExtraDaikinItemFunc(elem){
                         //VUT - S - add street view
                         $('#div_street_view').remove();
                         var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
-                        $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
+                        $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 5em;" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
                         //VUT - E - add street view
                          $.ajax({
                              url: "index.php?entryPoint=Image_Site_Details_Get_From_Google&lat="
@@ -5244,7 +5251,7 @@ function genExtraDaikinItemFunc(elem){
                      var location = result.results[0].geometry.location;
                      $('#div_street_view').remove();
                      var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
-                     $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
+                     $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 5em;" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
                      $.ajax({
                          url: "index.php?entryPoint=Image_Site_Details_Get_From_Google&lat="
                          +  location.lat
@@ -5282,9 +5289,7 @@ function genExtraDaikinItemFunc(elem){
                     var location = result.results[0].geometry.location;
                     $('#div_street_view').remove();
                     var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
-                    $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
-                }else{
-                    SUGAR.ajaxUI.hideLoadingPanel();
+                    $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 5em;" id="div_street_view"><iframe id="street-view" src="'+urlStreetView+'" height="223"  title="Street View"></iframe></div>');
                 }
             }
         });
