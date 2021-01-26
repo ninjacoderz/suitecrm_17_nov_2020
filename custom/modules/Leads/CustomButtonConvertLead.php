@@ -1,4 +1,7 @@
 <?php
+global $main_url;
+// $main_url = "http://locsuitecrm.com/";
+$main_url = "https://suitecrm.pure-electric.com.au/";
 $record_lead_id = trim($_REQUEST['record_id']);
 $type_button = trim($_REQUEST['type_convert']);
 $product_type = str_replace("^","",trim($_REQUEST['product_type']));
@@ -466,6 +469,30 @@ $account->save();
         $json_open_new_tag['create_solar_quote_num_c'] ='1';
     }
 
+//VUT - S - create tesla quote
+    //create solar Quote
+    if($type_button == 'convert_solar_button' && $product_type == "quote_type_tesla"){
+        $quote = new AOS_Quotes();
+        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Tesla';
+        $quote->name = str_replace("&rsquo;","'",$quote->name);
+        $quote->quote_type_c = 'quote_type_tesla';
+        $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
+        $quote->save();
+        convert_lead_to_quote($bean,$quote);
+        create_relationship_aos_quotes_leads_2($quote->id,$bean->id);
+        $bean->create_tesla_quote_num_c =  $quote->id;
+        $bean->create_tesla_quote_c = 1;
+        //VUT-S-Auto push SG from Lead's solar
+        $quote->solargain_lead_number_c = create_tesla_lead($quote,$bean);
+        // $quote->solargain_lead_number_c = '220325'; //Acc Matt
+        if ($quote->solargain_lead_number_c != "") {
+            $quote->solargain_tesla_quote_number_c = create_tesla_quote($quote->solargain_lead_number_c,$quote);
+        }
+        $quote->save();
+        //VUT-E-Auto push SG from Lead's solar
+        $json_open_new_tag['create_tesla_quote_num_c'] ='1';
+    }
+//VUT - E - create tesla quote
     //Create Convert Off Grid Quote
     if($type_button == 'convert_off_grid_button'){
         $quote = new AOS_Quotes();
@@ -2128,3 +2155,141 @@ function getBasePrice($panel_type,$inverter_type,$total_panel,$dataJSON){
 
     return  (int)$list_suggest;
 }
+
+
+//VUT
+
+function login_suitecrm($url, $tmpfsuitename) {
+    // $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+    $fields = array();
+    $fields['user_name'] = 'admin';
+    $fields['username_password'] = 'pureandtrue2020*';
+    $fields['module'] = 'Users';
+    $fields['action'] = 'Authenticate';
+
+    // $url = $main_url;
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+    curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
+    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+    $result = curl_exec($curl);
+}
+
+/**Use entrypoint */
+function  create_tesla_lead($quote, $lead) {
+    global $main_url;
+    // Step 1: Log in suitecrm
+    $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+    login_suitecrm($main_url, $tmpfsuitename);
+    // Step 2: Create SG LEAD
+    $fields = array (
+        "process" => "lead",
+        "record" => $quote->id,
+        "notes" => rawurlencode(html_entity_decode($quote->description, ENT_QUOTES)),
+        "system_size" => $quote->system_size_c,
+        "unit_per_day" => $quote->units_per_day_c,
+        "dolar_month" => $quote->dolar_month_c,
+        "number_of_people" => $quote->number_of_people_c,
+
+        "customer_type" => $quote->customer_type_c,
+        "billing_address_street" => $quote->install_address_c,
+        "billing_address_city" => $quote->install_address_city_c,
+        "state" => $quote->install_address_state_c,
+        "postalcode" => $quote->install_address_postalcode_c,
+        "build_height" => $quote->gutter_height_c,
+
+        "main_type" => $quote->main_type_c,
+        "meter_number" => $quote->meter_number_c,
+        "nmi_number" => $quote->nmi_c,
+
+        "account_number" => $quote->account_number_c,
+        "billing_name" => $quote->name_on_billing_account_c,
+        "distributor" => $quote->distributor_c,
+        "energy_retailer" => $quote->energy_retailer_c,
+    );
+    /**Check field "connection_type_c"*/
+    $connection_type = $quote->connection_type_c;
+    if ($connection_type == "Semi_Rural_Remote_Meter") {
+        $connection_type = "Semi Rural/Remote Meter";
+    }
+    $fields['connection_type'] = $connection_type;
+    /**Check field "roof_type_c" */
+    $roof_type = $quote->roof_type_c;
+    $roof_type_arr = array (
+                            "Tin"           => 2,
+                            "Tile"          => 3,
+                            "klip_loc"      => 4,
+                            "Concrete"      => 5,    
+                            "Trim_Deck"     => 6,
+                            "Insulated"     => 7,
+                            "Asbestos"      => 8,
+                            "Ground_Mount"  => 9,
+                            "Terracotta"    => 10,
+                            "Other"         => 1,
+                            );
+    $fields['roof_type'] = $roof_type_arr[$roof_type];
+                        
+    $data = http_build_query($fields);
+    $url =$main_url."index.php?entryPoint=quoteCreateSGQuote";
+
+    $url .= "&$data"; 
+    
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_HTTPGET, TRUE);
+    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+    
+    $result = curl_exec($curl);
+    curl_close ($curl);
+    // Solargain lead number
+    return $result;
+}
+
+function create_tesla_quote($SGleadID, $quote) {
+    global $main_url;
+    // Step 1: Log in suitecrm
+    $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+    login_suitecrm($main_url, $tmpfsuitename);
+    // Step 2: Create SG QUOTE
+    $fields = array (
+        "leadID" => $SGleadID,
+        "record" => $quote->id,
+        "billing_address_street" => $quote->install_address_c,
+        "billing_address_city" => $quote->install_address_city_c,
+        "billing_address_state" => $quote->install_address_state_c,
+        "billing_address_postalcode" => $quote->install_address_postalcode_c,
+        "meter_phase_c" => $quote->meter_phase_c,
+        "solargain_inverter_model" => $quote->solargain_inverter_model_c,
+    );
+
+    $data = http_build_query($fields);
+    
+    $url =$main_url."index.php?entryPoint=quoteCreateSGTeslaQuote";
+    $url .="&$data";
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_HTTPGET, TRUE);
+    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+    
+    $data_result = curl_exec($curl);
+    curl_close ($curl);
+    $result = json_decode($data_result);
+    return $result->QuoteNumber;
+}
+
+//VUT
