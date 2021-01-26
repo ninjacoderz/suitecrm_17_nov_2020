@@ -595,7 +595,8 @@ $quote = new AOS_Quotes();
 $quote->name = 'GUEST '.(($quantityDAIKINUS7 > 0) ? 'DAIKIN US7 ('.$quantityDAIKINUS7.'X) ' : '').(($quantityDAIKINNEXURA > 0) ? ' DAIKIN NEXURA ('.$quantityDAIKINNEXURA.'X) ' : '').(($quantityDAIKINALIRA > 0) ? ' DAIKIN ALIRA ('.$quantityDAIKINALIRA.'X)' : '');
 $quote->pre_install_photos_c = $_REQUEST['pre_install_photos_c'];
 
-date_default_timezone_set("Australia/Melbourne");
+// date_default_timezone_set("Australia/Melbourne");
+date_default_timezone_set('UTC');
 $dateQuote = new DateTime();
 $quote->quote_date_c = date('Y-m-d H:i:s', time());
 

@@ -199,7 +199,8 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
     //Update Quote Suburb, Postcode, State
     $quote->name = 'GUEST ' .$_REQUEST['suburb_customer'] .' '.$_REQUEST['state_customer'].' '.$_REQUEST['choice_product_sanden'];
     $quote->pre_install_photos_c = $_REQUEST['pre_install_photos_c'];
-    date_default_timezone_set("Australia/Melbourne");
+    // date_default_timezone_set("Australia/Melbourne");
+    date_default_timezone_set('UTC');
     $dateQuote = new DateTime();
     $quote->quote_date_c = date('Y-m-d H:i:s', time());
     $quote->quote_type_c = 'quote_type_sanden';
@@ -713,7 +714,7 @@ while ($row = $db->fetchByAssoc($ret))
         }
 
         if($row['part_number'] != 'PizzaBase' && $row['part_number'] != 'PB') {
-            if($row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers') {
+            if($row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Travel' || $row['part_number'] == 'Site_Delivery') {
                 if($row['part_number'] == 'Sanden_Complex_Install' && $_REQUEST['extra_field']['itemise_plumbing'] == 'Yes') {
                     $product_line->save();
                 } else if($row['part_number'] == 'HWS_R' && $_REQUEST['extra_field']['itemise_relocation'] == 'Yes') {
@@ -727,6 +728,10 @@ while ($row = $db->fetchByAssoc($ret))
                 } else if($row['part_number'] == 'Sanden_Tank_Slab' && $_REQUEST['extra_field']['itemise_slab'] == 'Yes') {
                     $product_line->save();
                 } else if($row['part_number'] == 'Sanden_HP_Pavers' && $_REQUEST['extra_field']['itemise_pavers'] == 'Yes') {
+                    $product_line->save();
+                } else if($row['part_number'] == 'Travel' && $_REQUEST['extra_field']['itemise_travel'] == 'Yes') {
+                    $product_line->save();
+                } else if($row['part_number'] == 'Site_Delivery' && $_REQUEST['extra_field']['itemise_site_delivery'] == 'Yes') {
                     $product_line->save();
                 }
             } else {
