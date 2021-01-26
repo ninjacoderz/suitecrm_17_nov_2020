@@ -11,17 +11,17 @@
         
         if($("#quote_type_c").val() == "quote_type_solar"){
             renderQuoteInputHTML('quote_type_solar');
-        }else{
+        }else if($("#quote_type_c").val() == "quote_type_sanden"){
             renderQuoteInputHTML('quote_type_sanden');
         }
 
-        // $("#quote_type_c").on("change", function(){
-        //     if($(this).val() == "quote_type_solar"){
-        //         renderQuoteInputHTML('quote_type_solar');
-        //     }else{
-        //         renderQuoteInputHTML('quote_type_sanden');
-        //     }
-        // });
+        $("#quote_type_c").on("change", function(){
+            if($(this).val() == "quote_type_solar"){
+                renderQuoteInputHTML('quote_type_solar');
+            }else if($(this).val() == "quote_type_sanden"){
+                renderQuoteInputHTML('quote_type_sanden');
+            }
+        });
 
         $("#generate_quote").on('click',function(){
             if($("#quote_type_c").val() == "quote_type_solar"){
