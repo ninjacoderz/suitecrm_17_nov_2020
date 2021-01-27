@@ -814,6 +814,7 @@ class EmailsController extends SugarController
                     $description = str_replace("\$aos_invoices_contact_id3_c",$customer_phone , $description);
                     $description_html = str_replace("\$aos_invoices_contact_id3_c", $customer_phone , $description_html);
                     //VUT - E - customer infomation
+                    $smsTemplateID = 'ca646f5f-399a-d408-7536-601102429ed6'; 
                     if( $_REQUEST['email_type'] == 'plumber_calendar' ){
                         $description = str_replace("\$aos_invoices_plumbing_notes_c",$invoice->plumbing_notes_c , $description);
                         $description_html = str_replace("\$aos_invoices_plumbing_notes_c", $invoice->plumbing_notes_c , $description_html);
@@ -824,7 +825,6 @@ class EmailsController extends SugarController
                         $description_html = str_replace("\$aos_invoices_electrical_notes_c", $invoice->electrical_notes_c , $description_html);
                         $description = str_replace("\$distance_to_suite_c",$invoice->distance_to_suitecrm_c , $description);
                         $description_html = str_replace("\$distance_to_suite_c", $invoice->distance_to_suitecrm_c , $description_html);
-                        $smsTemplateID = '303a9b3e-d0be-344a-1ddb-5fb2264b8860'; 
                     }
                 }
                 $description = str_replace("\$installation_calendar_url", $link_calendar, $description);
@@ -841,26 +841,26 @@ class EmailsController extends SugarController
                     $focus,
                     $macro_nv
                 );
-            $this->bean->emails_email_templates_idb = $emailTemplateID ;
-            $attachmentBeans = $emailTemplate->getAttachments();
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
 
-            if($attachmentBeans) {
-                $this->bean->status = "draft";
-                $this->bean->save();
-                foreach($attachmentBeans as $attachmentBean) {
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
 
-                    $noteTemplate = clone $attachmentBean;
-                    $noteTemplate->id = create_guid();
-                    $noteTemplate->new_with_id = true; 
-                    $noteTemplate->parent_id = $this->bean->id;
-                    $noteTemplate->parent_type = 'Emails';
-                    $noteFile = new UploadFile();
-                    $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
 
-                    $noteTemplate->save();
-                    $this->bean->attachNote($noteTemplate);
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
                 }
-            }
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
@@ -873,6 +873,7 @@ class EmailsController extends SugarController
                     );
                     $body =  $smsTemplate->body_c;
                     $body = str_replace("\$first_name", $contact->first_name, $body);
+                    $body = str_replace("\$aos_invoices_billing_contact",  $contact_customer->name, $body);
                     $smsTemplate->body_c = $body;
                     $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
                     $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
@@ -885,6 +886,7 @@ class EmailsController extends SugarController
                 // //end - code render sms_template
                 
             }
+
             /**VUT-E-Quote-Button 'Send Inspection Request' (send for installer Sanden/Daikin) */
             if($_REQUEST['email_type'] == 'send_site_inspection_request'){
                 $record_id = trim($_REQUEST['record_id']);
