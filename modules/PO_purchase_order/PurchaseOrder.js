@@ -383,39 +383,92 @@ $(function () {
                 $('#create_solar_quote_fqs_c').parent().parent().hide();
             }
             $("#supply_add_to_line_items").click(function(){
+                for (var i = 0; i < prodln; i++){
+                    $('#product_delete_line'+i).trigger('click');
+                    var item_old = prodln;
+                }
+                var total_item = parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) +parseInt($("#sanden_fqs_250").val()) ;
                 if( parseInt($("#sanden_fqs_315").val()) > 0){
-                    autoCreateLineItem($("#sanden_fqs_315").attr('data-id'),$("#sanden_fqs_315").attr('id'));
+                    autoCreateLineItem($("#sanden_fqs_315").attr('data-id'),$("#sanden_fqs_315").val());
+                    setTimeout(function (){
+                        autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',$("#sanden_fqs_315").val());//SAN-315SAQA
+                    },100)
                 }
                 if( parseInt($("#sanden_fqs_300").val()) > 0){
-                    autoCreateLineItem($("#sanden_fqs_300").attr('data-id'),$("#sanden_fqs_300").attr('id'));
+                    autoCreateLineItem($("#sanden_fqs_300").attr('data-id'),$("#sanden_fqs_300").val());
+                    setTimeout(function (){
+                        autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',$("#sanden_fqs_300").val());//SAN-300SAQA
+                    },100)
+    
                 }
                 if( parseInt($("#sanden_fqs_250").val()) > 0){
-                    autoCreateLineItem($("#sanden_fqs_250").attr('data-id'),$("#sanden_fqs_250").attr('id'));
+                    autoCreateLineItem($("#sanden_fqs_250").attr('data-id'),$("#sanden_fqs_250").val());
+                    setTimeout(function (){
+                        autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',$("#sanden_fqs_250").val());//SAN-250SAQA
+                    },100)
                 }
                 if( parseInt($("#QIK15_HPUMP").val()) > 0){
-                    autoCreateLineItem($("#QIK15_HPUMP").attr('data-id'),$("#QIK15_HPUMP").attr('id'));
+                    setTimeout(function (){
+                    autoCreateLineItem($("#QIK15_HPUMP").attr('data-id'),$("#QIK15_HPUMP").val());
+                    },100)
+    
                 }
                 if( parseInt($("#QIK20_HPUMP").val()) > 0){
-                    autoCreateLineItem($("#QIK20_HPUMP").attr('data-id'),$("#QIK20_HPUMP").attr('id'));
+                    autoCreateLineItem($("#QIK20_HPUMP").attr('data-id'),$("#QIK20_HPUMP").val());
                 }
+                setTimeout(function (){
+                autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
+                autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+                },200)
+    
+                setTimeout(function (){
+                    total_price_item(item_old);
+                },15000)
             })
         })
         $("#supply_add_to_line_items").click(function(){
+            for (var i = 0; i < prodln; i++){
+                $('#product_delete_line'+i).trigger('click');
+                var item_old = prodln;
+            }
+            var total_item = parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) +parseInt($("#sanden_fqs_250").val()) ;
             if( parseInt($("#sanden_fqs_315").val()) > 0){
-                autoCreateLineItem($("#sanden_fqs_315").attr('data-id'),$("#sanden_fqs_315").attr('id'));
+                autoCreateLineItem($("#sanden_fqs_315").attr('data-id'),$("#sanden_fqs_315").val());
+                setTimeout(function (){
+                    autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',$("#sanden_fqs_315").val());//SAN-315SAQA
+                },100)
             }
             if( parseInt($("#sanden_fqs_300").val()) > 0){
-                autoCreateLineItem($("#sanden_fqs_300").attr('data-id'),$("#sanden_fqs_300").attr('id'));
+                autoCreateLineItem($("#sanden_fqs_300").attr('data-id'),$("#sanden_fqs_300").val());
+                setTimeout(function (){
+                    autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',$("#sanden_fqs_300").val());//SAN-300SAQA
+                },100)
+
             }
             if( parseInt($("#sanden_fqs_250").val()) > 0){
-                autoCreateLineItem($("#sanden_fqs_250").attr('data-id'),$("#sanden_fqs_250").attr('id'));
+                autoCreateLineItem($("#sanden_fqs_250").attr('data-id'),$("#sanden_fqs_250").val());
+                setTimeout(function (){
+                    autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',$("#sanden_fqs_250").val());//SAN-250SAQA
+                },100)
             }
             if( parseInt($("#QIK15_HPUMP").val()) > 0){
-                autoCreateLineItem($("#QIK15_HPUMP").attr('data-id'),$("#QIK15_HPUMP").attr('id'));
+                setTimeout(function (){
+                autoCreateLineItem($("#QIK15_HPUMP").attr('data-id'),$("#QIK15_HPUMP").val());
+                },100)
+
             }
             if( parseInt($("#QIK20_HPUMP").val()) > 0){
-                autoCreateLineItem($("#QIK20_HPUMP").attr('data-id'),$("#QIK20_HPUMP").attr('id'));
+                autoCreateLineItem($("#QIK20_HPUMP").attr('data-id'),$("#QIK20_HPUMP").val());
             }
+            setTimeout(function (){
+            autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
+            autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+            },200)
+
+            setTimeout(function (){
+                total_price_item(item_old);
+            },15000)
+
         })
         $("#link_realestate_shipping").click(function(){
             // address = address.toLowerCase().replace(/ /g, '-');
@@ -1098,7 +1151,24 @@ function generatePOname() {
     }
     return namePO;
 }
-function autoCreateLineItem(id,product){
+function total_price_item (item_old){
+    var pr;
+    var total_pr = 0;
+    var len_line_items = $('#lineItems #product_group0 tbody').length;
+    for( var j = item_old  ; j < len_line_items ; j++ ){
+        if( $('#product_product_list_price'+j).val().indexOf(',') >= 0 ){
+            pr = (parseFloat( $('#product_product_list_price'+j).val().replace(",", ""))) * (parseInt( $('#product_product_qty'+j).val() ));
+        }else {
+            pr = (parseFloat( $('#product_product_list_price'+j).val() )) * (parseInt( $('#product_product_qty'+j).val() ));
+        }
+        total_pr += pr;
+        $('#product_product_list_price'+j).val('0.00').trigger('blur');
+    };
+    $('#product_product_cost_price'+item_old).val(total_pr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+    $('#product_product_list_price'+item_old).val(total_pr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).trigger('blur');
+}
+function autoCreateLineItem(id,total_item){
     $.ajax({
         url: "/index.php?entryPoint=getInfoProduct&product_id="+id,
         type: 'GET',
@@ -1117,12 +1187,12 @@ function autoCreateLineItem(id,product){
             name_to_value_array["product_product_cost_price"+line_num] = info_pro["line_items"][""][0]['product_product_cost_price'];
 
             name_to_value_array["product_product_id"+line_num] = info_pro["line_items"][""][0]['product_product_id'];
-            name_to_value_array["product_product_list_price"+line_num] = info_pro["line_items"][""][0]['product_product_list_price'];
-            name_to_value_array["product_product_qty"+line_num] = "" + parseInt($("#"+product).val());
+            name_to_value_array["product_product_list_price"+line_num] = info_pro["line_items"][""][0]['product_product_cost_price'];
+            name_to_value_array["product_product_qty"+line_num] = "" + parseInt(total_item);
             popupReplyData["name_to_value_array"] = name_to_value_array;            
             $('#product_product_list_price'+line_num).focus();
+            $('#product_product_id'+line_num).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ info_pro["line_items"][""][0]['product_product_id'] +'">Link</a></div>');
             setProductReturn(popupReplyData);
-            
         },
         error: function(response){console.log("Fail");},
     });
