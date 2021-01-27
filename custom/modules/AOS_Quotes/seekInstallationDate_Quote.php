@@ -29,7 +29,10 @@ function customReplaceEmailVariables(Email $email, $request)
     $email->description_html = str_replace("Notes:", "",  $email->description_html);
 
     $email->description = strip_tags($email->description_html);
-
+    //add contact phone number installer_phone_number
+    $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $request['installer_phone_number']));
+    $phone_number = preg_replace("/^61/", "+61", $phone_number);
+    $email->number_client =  $phone_number; 
     return $email;
 }
 
@@ -75,6 +78,14 @@ if($contact->phone_work != ""){
 $account = new Account();
 $account_id = $_GET['account_id'];
 $account = $account->retrieve($account_id);
+/**S- Get contact Installer */
+if ($account->load_relationship('contacts')) {  
+    $relatedContacts = $account->contacts->getBeans();  
+    if (!empty($relatedContacts)) {  
+        $contact_installer = $relatedContacts[$account->primary_contact_c];
+    }  
+}
+/**E- Get contact Installer */
 
 $sea = new SugarEmailAddress; 
 // Grab the primary address for the given record represented by the $bean object
@@ -108,6 +119,7 @@ $temp_request = array(
     "aos_invoices_contact_id3_c" => $phone_info,
     // "aos_invoices_plumbing""
     "distance_to_suite_c" => "",
+    "installer_phone_number" => $contact_installer->phone_mobile,
 );
 /**Check button */
 if ($button == 'sanden_installer') {
