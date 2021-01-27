@@ -79,11 +79,16 @@ $account = new Account();
 $account_id = $_GET['account_id'];
 $account = $account->retrieve($account_id);
 /**S- Get contact Installer */
-if ($account->load_relationship('contacts')) {  
-    $relatedContacts = $account->contacts->getBeans();  
-    if (!empty($relatedContacts)) {  
-        $contact_installer = $relatedContacts[$account->primary_contact_c];
-    }  
+$installer_contact = $account->get_linked_beans('contacts','Contact');
+if(count($installer_contact)> 0){
+    for($i=0;$i < count($installer_contact);$i++){
+        if($installer_contact[$i]->id == $account->primary_contact_c){
+            $installer_contact = $installer_contact[$i];
+            break;
+        }elseif($i == count($installer_contact) -1){
+            $installer_contact = $installer_contact[count($installer_contact) -1];
+        }
+    }
 }
 /**E- Get contact Installer */
 
@@ -119,7 +124,7 @@ $temp_request = array(
     "aos_invoices_contact_id3_c" => $phone_info,
     // "aos_invoices_plumbing""
     "distance_to_suite_c" => "",
-    "installer_phone_number" => $contact_installer->phone_mobile,
+    "installer_phone_number" => $installer_contact->phone_mobile,
 );
 /**Check button */
 if ($button == 'sanden_installer') {
