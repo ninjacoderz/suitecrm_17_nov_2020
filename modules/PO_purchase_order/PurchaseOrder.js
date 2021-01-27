@@ -360,8 +360,8 @@ $(function () {
                 '</ul>'+
             '</div>'
         )
+        $('#create_solar_quote_fqs_c').hide();
         if( $('#po_type_c').val() =="sanden_supply"){
-            $('#create_solar_quote_fqs_c').hide();
             $('#create_solar_quote_fqs_c').after('<button type="button" class="button" id="supply_add_to_line_items">Generate PO Line Items</button>');
             $('#create_solar_quote_fqs_c').after('<span>QIK20</span> <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
             $('#create_solar_quote_fqs_c').after('<span>QIK15</span> <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option><option  value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>');
@@ -423,7 +423,7 @@ $(function () {
     
                 setTimeout(function (){
                     total_price_item(item_old);
-                },15000)
+                },10000)
             })
         })
         $("#supply_add_to_line_items").click(function(){
@@ -467,7 +467,7 @@ $(function () {
 
             setTimeout(function (){
                 total_price_item(item_old);
-            },15000)
+            },10000)
 
         })
         $("#link_realestate_shipping").click(function(){
