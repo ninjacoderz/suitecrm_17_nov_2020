@@ -16,7 +16,7 @@ $(function () {
 
     $('#tab-actions').parent().append('<li><button style="background:#009acf;" type="button" id="CRUD_Xero_Invoice" class="button CRUD_Xero_Invoice" title="Create And Update Xero Invoice" onClick="SUGAR.CRUD_Xero_Invoice(this);" >Create & Update Xero <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
     $('#tab-actions').parent().append('<li><button style="background:#945596;" type="button" id="sanden_health_check" class="button sanden_health_check" value="Sanden health check" data-email-type="sanden_health_check" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-contact-name="'+$('#billing_contact_id').text()+'"  data-record-id="'+ $("input[name='record']").val() +'" title="Sanden Health Check" onClick="$(document).openComposeViewModal(this);" >Sanden Health Check <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
-
+    $('#tab-actions').parent().append('<li><button style="background:#009acf;" type="button" id="CreateInvoiceOSTI" class="button CreateInvoiceOSTI" title="Create Invoice OSTI" onClick="SUGAR.CreateInvoiceOSTI(this);" > Create Invoice OSTI <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
     SUGAR.CRUD_Xero_Invoice= function(elemt){
         var html_alert = '';
         if($('#due_date').text() == ''){
@@ -63,6 +63,50 @@ $(function () {
         }
 
     }
+
+    SUGAR.CreateInvoiceOSTI = function(e){
+        var html_alert = '';
+        if($('#stc_aggregator_serial_c').text() == ""){
+            html_alert += '<h4 class="text-danger">STC Aggregator Serial is empty. Do you want to continue ?</h4>';
+        }
+
+        if( html_alert != ''){
+            $('#alert_modal').find('.modal-body').empty();
+            $('#alert_modal').find('.modal-body').append(html_alert); 
+            $('#alert_modal').modal('show'); 
+            return false;
+        }
+
+        SUGAR.ajaxUI.showLoadingPanel();
+     
+        // create and update invoice xero
+        var url_xero_invoice = "/index.php?entryPoint=CreateInvoiceOSTI&recordID="+ encodeURIComponent($('input[name="record"]').val());
+        $.ajax({
+            url:url_xero_invoice,
+            success:function(data){   
+                SUGAR.ajaxUI.hideLoadingPanel();                             
+                    try {
+                        var json = $.parseJSON(data);
+                        $('#alert_modal').find('.modal-body').empty();
+                        $('#alert_modal').find('.modal-body').append(json.msg); 
+                        $('#alert_modal').modal('show'); 
+                        if(json.IdInvoiceOSTI != ''){
+                            window.open('/index.php?module=AOS_Invoices&action=EditView&record='+json.IdInvoiceOSTI.trim(),'_blank');
+                        }
+                        return false;
+
+                    } catch (e) {
+
+                        $('#alert_modal').find('.modal-body').empty();
+                        $('#alert_modal').find('.modal-body').append('<h3 class="text-danger text-center">Unsuccess !</h3>'); 
+                        $('#alert_modal').modal('show'); 
+                        return false;
+                    }                   
+            }
+        });
+
+    }
+
     $('#tab-actions').after('<li><button style="background:#46a049;" type="button"  data-module-quote-id="'+ $("input[name='record']").val()+'" name="Create_Call" value="Create Call" id="Create_Call" class="button primary" onclick="$(document).create_call_Immediate_Post_Install(this);"><i class="glyphicon glyphicon-phone-alt"></i> Create Call</button></li>');
     $.fn.create_call_Immediate_Post_Install = function (ele){
         var parent_id = $(ele).attr('data-module-quote-id');

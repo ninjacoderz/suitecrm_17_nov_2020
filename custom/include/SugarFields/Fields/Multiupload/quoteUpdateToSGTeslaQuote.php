@@ -459,6 +459,22 @@ if($quote->id){
     }
 
     $quote_decode->Options = $options;
+
+    //check VIC
+    if ($st == 'VIC') {
+        for($i=0;$i<count($quote_decode->Options);$i++){
+            $quote_decode->Options[$i]->Finance->Rebate = array(
+                "ID" => 9,
+                "Code" => "SOLARVB41",
+                "Name" => "Solar VIC Battery $4174 Rebate",
+                "EXOSystemCode" => "P-PV SYSTEM",
+                "Active" => true,
+                "FileCategories" => array()
+            );        
+            $quote_decode->Options[$i]->Finance->RebateAmount = 4174.0;
+        }
+    }
+
     $data_option_string = json_encode($quote_decode);
 
     $url = 'https://crm.solargain.com.au/APIv2/quotes/';
