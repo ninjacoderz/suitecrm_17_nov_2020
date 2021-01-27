@@ -467,7 +467,7 @@ $(function () {
 
             setTimeout(function (){
                 total_price_item(item_old);
-            },15000)
+            },10000)
 
         })
         $("#link_realestate_shipping").click(function(){
