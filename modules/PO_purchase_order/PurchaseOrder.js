@@ -423,7 +423,7 @@ $(function () {
     
                 setTimeout(function (){
                     total_price_item(item_old);
-                },15000)
+                },10000)
             })
         })
         $("#supply_add_to_line_items").click(function(){
