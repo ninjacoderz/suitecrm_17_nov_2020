@@ -82,7 +82,11 @@ $account = $account->retrieve($account_id);
 if ($account->load_relationship('contacts')) {  
     $relatedContacts = $account->contacts->getBeans();  
     if (!empty($relatedContacts)) {  
-        $contact_installer = $relatedContacts[$account->primary_contact_c];
+        if (count($relatedContacts) == 1) {
+            $contact_installer = $relatedContacts[key($relatedContacts)];
+        } else {
+            $contact_installer = $relatedContacts[$account->primary_contact_c];
+        }
     }  
 }
 /**E- Get contact Installer */
