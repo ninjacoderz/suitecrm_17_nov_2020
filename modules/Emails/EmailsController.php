@@ -3134,6 +3134,20 @@ class EmailsController extends SugarController
                 $this->bean->description_html = $description_html;
                 $this->bean->description = $description;
 
+                //VUT - S - replace Quote Inputs  
+                if ($quote->quote_note_inputs_c !='') {
+                    $solar_quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c), true);
+                    if (count(array_filter($solar_quote_input)) == 0) {
+                        $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                        // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                    } else {
+                        $this->bean->description_html = $this->renderTableQuoteInputSolarPricing($solar_quote_input, $this->bean->description_html);
+                    }
+                } else {
+                    $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                    // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                } 
+                //VUT - E - replace Quote Inputs 
                 //replace data for subject - VUT - 2020/03/04
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
@@ -3147,7 +3161,7 @@ class EmailsController extends SugarController
                 $this->bean->description_html = str_replace("\$aos_quotes_preferred_c", "No" , $this->bean->description_html);
 
                 if(   strpos($_REQUEST['address'],"VIC") == TRUE){
-                    $html_vic = '<table style="margin-bottom:20px;text-align:left;border-collapse:collapse;width:735px;">
+                    $html_vic = '<table style="text-align:left;border-collapse:collapse;width:735px;">
                                 <tbody>
                                 <tr>
                                     <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
@@ -7180,6 +7194,53 @@ class EmailsController extends SugarController
             return false;
         }
         return true;
+    }
+
+    /**
+     * VUT - render Quote Input for Email Solar Pricing
+     * @param JSON $quotes_input realpath(dirname(__FILE__) . '/../../').'/custom/include
+     * @param STRING $text email_description_html
+     * @return STRING $text
+     */ 
+    protected function renderTableQuoteInputSolarPricing($quotes_input, $text) {
+        include realpath(dirname(__FILE__) . '/../../').'/custom/modules/AOS_Quotes/vardef_list_quote_solar.php';
+        $text = preg_replace('/(?si)<div id="sugar_text_change_table_solar_input"+?>(.*)<=?\/div>/U', '', html_entity_decode($text));
+        // $data = json_decode(html_entity_decode($quotes_input));
+        $html = '<div id="change_table_solar_input"><table  style="text-align:left;border-collapse:collapse;width:735px;"><tbody>';
+        $html .='<tr><th style="text-align: left; background: #f48c21; color: #ffffff; padding: 10px 5px; border-right: 1px solid #f48c21;" colspan="2">Pricing assumptions:</th></tr>';
+        //field missing when preg_replace
+        $begin_pos = '  <tr>
+                            <td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">Installation Address:</td> 
+                            <td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">$aos_quotes_installation address_c</td>
+                        </tr>';
+        $miss_fields = array(
+            'Gutter Height:' => '$aos_quotes_gutter_height_c',
+            'Select your preferred/inverter combination!' => '$aos_quotes_preferred_c',
+            'Notes' => '$aos_quotes_special_notes_c',
+        );    
+        $end_pos = '';
+        foreach ($miss_fields as $k => $v) {
+            $end_pos .= '<tr>';
+            $end_pos .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">'.$k.'</td>';
+            $end_pos .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">'.$v.'</td>';                
+            $end_pos .= '</tr>';            
+        }                   
+        //field missing when preg_replace
+        $solar_input ='';
+        foreach ($quotes_input as $key => $value) {
+            $solar_input .= '<tr>';
+            $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">'.$vardefs_array[$key]['display_label'].'</td>';
+            $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">'.$value.'</td>';                
+            $solar_input .= '</tr>';            
+        }
+        //concat string
+        $html .= $begin_pos;
+        $html .= $solar_input;
+        $html .= $end_pos;
+        $html .='</tbody></table></div>';
+        $text = str_replace("\$table_solar_quote_inputs", $html , $text);
+
+        return htmlspecialchars($text);
     }
 
 }
