@@ -80,12 +80,12 @@ if($stc_aggregator_serial_c != ''){
                 $row['discount'] = "Percentage";
                 $row['product_unit_price'] = format_number($data_Items_GEO['price']);
                 $row['product_amt'] = 'vat_amt';
-                $row['vat_amt'] = format_number(0);
-                $row['product_total_price'] = format_number($data_Items_GEO['price']*$data_Items_GEO['quantity']);
-                $row['vat'] = "0.0";
+                $row['vat_amt'] = format_number($product['product_product_cost_price']/10);
+                $row['product_total_price'] = format_number($data_Items_GEO['price'])*format_number($data_Items_GEO['quantity']);
+                $row['vat'] = "10.0";
                 $row['group_id'] = $group_invoice->id;
                 $row['product_id'] = $row_product['id'];
-                $total_price += $data_Items_GEO['price'];
+                $total_price +=  $row['product_total_price'];
                 $prod_invoice = new AOS_Products_Quotes();
                 $prod_invoice->populateFromRow($row);
                 $prod_invoice->save();
@@ -95,8 +95,8 @@ if($stc_aggregator_serial_c != ''){
 
             $InvoiceOSTI->total_amt = format_number($total_price);
             $InvoiceOSTI->subtotal_amount = format_number($total_price);
-            $InvoiceOSTI->tax_amount = format_number(0);
-            $InvoiceOSTI->total_amount = format_number($total_price );
+            $InvoiceOSTI->tax_amount = format_number($total_price/10);
+            $InvoiceOSTI->total_amount = format_number($total_price + $total_price/10);
             $InvoiceOSTI->save();
 
     
