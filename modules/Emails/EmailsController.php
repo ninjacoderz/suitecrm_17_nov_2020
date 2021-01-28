@@ -3446,7 +3446,7 @@ class EmailsController extends SugarController
                 $this->bean->description_html = str_replace("\$aos_quotes_roof_pitch_c",   $roof_pitch_c[$focus->roof_pitch_c] , $this->bean->description_html);
                 $this->bean->description_html = str_replace("\$aos_quotes_roof_type_c",  $roof_type_c[$focus->roof_type_c] , $this->bean->description_html);
                 $this->bean->description_html = str_replace("\$aos_quotes_main_switch_c",$focus->main_switch_c , $this->bean->description_html);
-                $this->bean->description_html = str_replace("\$aos_quotes_external_internal_c", $focus->external_or_internal_c .' Switchboard', $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_external_internal_c", $focus->external_or_internal_c, $this->bean->description_html);
 
                 $templateData = $emailTemplate->parse_email_template(
                     array(
