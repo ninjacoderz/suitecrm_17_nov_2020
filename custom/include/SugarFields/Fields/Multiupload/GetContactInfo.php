@@ -184,7 +184,7 @@ if($module_name == "Accounts") {
         $mess_phone_number = preg_replace("/^0/", "#61", preg_replace('/\D/', '', $phone_number));
         $mess_phone_number = preg_replace("/^61/", "#61", $mess_phone_number);
         $mess_phone_number = str_replace(" ", "", $mess_phone_number);
-        $hmtl .= '<p>M:<input type="text" disabled class="sugar_field phone" id="mobile_phone_c" value="'.$phone_number.'"> <img class="sms_icon" data-source="account"  src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a target="_blank" href="http://message.pure-electric.com.au/'.$mess_phone_number.'" title="Message Portal" ><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="14" width="14"></a></p>';
+        $hmtl .= '<p>M:<input type="text" disabled class="sugar_field phone" style="font-size: x-large;" id="mobile_phone_c" value="'.$phone_number.'"> <img class="sms_icon" data-source="account"  src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a target="_blank" href="http://message.pure-electric.com.au/'.$mess_phone_number.'" title="Message Portal" ><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="14" width="14"></a></p>';
     }
 
     if($bean->email1 != '') {
