@@ -911,19 +911,24 @@ if(!empty($electrical_install_date)){
 }
 
 if ($mail_format == "plumber") {
-    $path_file_json_template = $_SERVER["DOCUMENT_ROOT"] . '/custom/modules/AOS_Invoices/json_pcoc_cert_template.json';
-    $json_data = json_decode(file_get_contents($path_file_json_template),true);
-    $pcoc_cert_wording = $json_data[$_REQUEST['id_pcoc_cert']]['content'];
+    // $path_file_json_template = $_SERVER["DOCUMENT_ROOT"] . '/custom/modules/AOS_Invoices/json_pcoc_cert_template.json';
+    // $json_data = json_decode(file_get_contents($path_file_json_template),true);
+    // $pcoc_cert_wording = $json_data[$_REQUEST['id_pcoc_cert']]['content'];
+    $pcoc_cert_wording = urldecode($_REQUEST['note_pcoc_cert']);
     $subject = str_replace('$pl_elec_install_date',$plumber_install_date_with_dayname,$subject);
     $cert_notes =  'PCOC Cert Note: '.$pcoc_cert_wording;
 }
 else if($mail_format == "electrical"){
-    $path_file_json_template = $_SERVER["DOCUMENT_ROOT"] . '/custom/modules/AOS_Invoices/json_ces_cert_template.json';
-    $json_data = json_decode(file_get_contents($path_file_json_template),true);
-    $ces_cert_wording = $json_data[$_REQUEST['id_ces_cert']]['content'];
+    // $path_file_json_template = $_SERVER["DOCUMENT_ROOT"] . '/custom/modules/AOS_Invoices/json_ces_cert_template.json';
+    // $json_data = json_decode(file_get_contents($path_file_json_template),true);
+    // $ces_cert_wording = $json_data[$_REQUEST['id_ces_cert']]['content'];
+    $ces_cert_wording = urldecode($_REQUEST['note_ces_cert']);
     $subject = str_replace('$pl_elec_install_date',$electrical_install_date_with_dayname,$subject);
     $cert_notes = 'CES Cert Note: '.$ces_cert_wording;
 }
+
+//Add exist/old hws 
+$old_hws = urldecode($_REQUEST['old_hws'] ? $_REQUEST['old_hws'] : '' );
 
 switch ( $_REQUEST['product_type']) {
     case "quote_type_sanden":
@@ -970,6 +975,7 @@ $body = str_replace('$backup_contact',$pe_backup_contact.' '.$pe_backup_contact_
 $body = str_replace('$attachments',$html_photo,$body);
 $body = str_replace('$link_upload_files',$link_upload_file,$body);
 $body = str_replace('$cert_note',$cert_notes,$body);
+$body = str_replace('$old_hws',$old_hws,$body);
 
 
 // fill body html template
@@ -995,6 +1001,7 @@ $body_html = str_replace('$backup_contact',$pe_backup_contact.' '.$pe_backup_con
 $body_html = str_replace('$attachments',$html_photo,$body_html);
 $body_html = str_replace('$link_upload_files',$link_upload_file,$body_html);
 $body_html = str_replace('$cert_note',$cert_notes,$body_html);
+$body_html = str_replace('$old_hws',$old_hws,$body_html);
 
 
 $email->name = $subject;
