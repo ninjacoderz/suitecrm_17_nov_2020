@@ -2930,10 +2930,20 @@ $(function () {
         $('#electrical_notes_c').parent().append('<label>Send electric test message: &nbsp;</label><input type="checkbox" id="send-electric-test" style="color:#f08377"/>');
         $('#customer_notes_c').parent().append('<label>Send customer test message: &nbsp;</label><input type="checkbox" id="send-customer-test" style="color:#f08377"/>');
         //VUT - create string old_hws for send email Plumber/Electrician POs
-        var old_hws_date = $('#old_tank_date_c').val().trim().split(' ')[0].split('/'); //dd/mm/yyyy
-        var old_hws_new_date = old_hws_date[1]+'/'+old_hws_date[0]+'/'+old_hws_date[2];
-        old_hws_new_date = new Date(old_hws_new_date).toLocaleString('en-AU',{day: '2-digit', month: 'short',year: 'numeric'});
-        var old_hws = $('#old_tank_fuel_c').find(":selected").text() + ' ' + $('#old_tank_make_c').val() + ' ' + $('#old_tank_model_c').val() + ' ' + $('#old_tank_serial_c').val() + ' ' + old_hws_new_date;
+        function createOldHWSString() {
+            let old_hws_string = '', old_hws_new_date = '';
+            let old_hws_fuel = $('#old_tank_fuel_c').find(":selected").text() != '' ? $('#old_tank_fuel_c').find(":selected").text() : '';
+            let old_hws_make = $('#old_tank_make_c').val() != '' ? $('#old_tank_make_c').val() : '';
+            let old_hws_model = $('#old_tank_model_c').val() != '' ? $('#old_tank_model_c').val() : '';
+            let old_hws_serial = $('#old_tank_serial_c').val() != '' ? $('#old_tank_serial_c').val() : '';
+            if ($('#old_tank_date_c').val() != '') {
+                let old_hws_date = $('#old_tank_date_c').val().trim().split(' ')[0].split('/'); //dd/mm/yyyy
+                old_hws_new_date = old_hws_date[1]+'/'+old_hws_date[0]+'/'+old_hws_date[2];
+                old_hws_new_date = new Date(old_hws_new_date).toLocaleString('en-AU',{day: '2-digit', month: 'short',year: 'numeric'});
+            }
+            old_hws_string = old_hws_fuel + ' ' + old_hws_make + ' ' + old_hws_model + ' ' + old_hws_serial + ' ' + old_hws_new_date;
+            return old_hws_string;
+        }
 
         function sendElectricalMessage(messagetype,is_testing){
             if(messagetype == "sms/mms"){
@@ -3051,6 +3061,8 @@ $(function () {
             var electricial_contact_id = $("#contact_id_c").val();
             var product_c = $('#quote_type_c').val();
             var invoice_id = $('input[name="record"]').val(); 
+            var old_hws = createOldHWSString();
+
             if(messagetype != "sms/mms"){
                 var build_url = "?entryPoint=customCreateEmailPopupContent&mail_format=electrical&plumber_contact_name=" + encodeURIComponent(plumber_contact_name) + "&electricial_contact_id="+electricial_contact_id+"&product_type="+product_c;
             } else {
@@ -3093,7 +3105,7 @@ $(function () {
             build_url += '&electric_phone_number='+ encodeURIComponent(electric_phone_number);
             build_url += '&po_record='+ encodeURIComponent($("#electrical_po_c").val());
             build_url += '&note_ces_cert='+ encodeURIComponent($("#ces_cert_wording_c").val());
-            build_url += '&old_hws=' + encodeURIComponent(old_hws);
+            build_url += '&old_hws=' + encodeURIComponent(old_hws.trim());
 
 
             //dung code - show popup sms/mms when click button electrical send sms/mms
@@ -3649,6 +3661,7 @@ $(function () {
             var plumber_contact_id = $("#contact_id4_c").val();
             var product_e = $('#quote_type_c').val();
             var invoice_id = $('input[name="record"]').val(); 
+            var old_hws = createOldHWSString();
             if(messagetype != "sms/mms"){
                 var build_url = "?entryPoint=customCreateEmailPopupContent&mail_format=plumber&plumber_contact_name=" + encodeURIComponent(plumber_contact_name) + "&plumber_contact_id="+plumber_contact_id+"&product_type="+product_e;
             } else {
@@ -3687,7 +3700,7 @@ $(function () {
             build_url += '&plumber_phone_number=' + encodeURIComponent(plumber_phone_number);
             build_url += '&po_record='+ encodeURIComponent($("#plumber_po_c").val());
             build_url += '&note_pcoc_cert='+ encodeURIComponent($("#pcoc_cert_wording_c").val());
-            build_url += '&old_hws=' + encodeURIComponent(old_hws);
+            build_url += '&old_hws=' + encodeURIComponent(old_hws.trim());
             //plumber_phone_number
             //is_testing
             //build_url = encodeURIComponent(build_url);
