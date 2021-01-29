@@ -927,8 +927,8 @@ else if($mail_format == "electrical"){
     $cert_notes = 'CES Cert Note: '.$ces_cert_wording;
 }
 
-//Add exist/old hws
-$old_hws = urldecode($_REQUEST['old_hws']);
+//Add exist/old hws 
+$old_hws = urldecode($_REQUEST['old_hws'] ? $_REQUEST['old_hws'] : '' );
 
 switch ( $_REQUEST['product_type']) {
     case "quote_type_sanden":
