@@ -3,7 +3,10 @@ $(function () {
     'use strict';
     // Generate uinique id
     $( document ).ready(function() {
-
+    // default value
+    if($("#invoice_note_c").val() == '') {
+        $("#invoice_note_c").val('Thank you for choosing Pure Electric!');
+    }
     //thienpb code -- add logic for show link edit product
     if(module_sugar_grp1 == 'AOS_Invoices' && typeof(module_sugar_grp1) == 'string' ){
         createLinkProduct();
