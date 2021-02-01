@@ -127,7 +127,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
                 
     if($is_sanden && $po_type == "plumber"){
-        $purchaseOrder->po_type_c = 'installer';
+        // $purchaseOrder->po_type_c = 'installer';
+        $purchaseOrder->po_type_c = 'sanden_plumber';
         $row['id'] = "";
         $row['name'] = 'Sanden Install';
         $row['currency_id'] = '-99';
@@ -317,7 +318,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
     // Electrical 
     if($is_sanden && $po_type == "electrical"){
-        $purchaseOrder->po_type_c = 'installer';
+        // $purchaseOrder->po_type_c = 'installer';
+        $purchaseOrder->po_type_c = 'sanden_electrician';
         $row['id'] = "";
         $row['name'] = 'Sanden Install';
         $row['currency_id'] = '-99';
