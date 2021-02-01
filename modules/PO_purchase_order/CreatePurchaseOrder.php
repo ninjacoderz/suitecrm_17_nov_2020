@@ -850,7 +850,7 @@ function get_all_file_invoice_to_po($path,$invoice_installation,$installation_pd
     { 
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, 'http://locsuitecrm.com//custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$invoice_installation.'/'.$value);
+    curl_setopt($ch, CURLOPT_URL, 'https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$invoice_installation.'/'.$value);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
