@@ -211,6 +211,8 @@ if($_REQUEST['task'] == 'emailpdf' && $_REQUEST['module'] == 'AOS_Invoices' && $
         
         Acknowledge your previous payment receipt thank you, please find your \$product_type invoice attached with your final payment now due as your install was successfully completed on date \$aos_invoices_due_date.
         
+        Customer Notes: \$aos_invoices_invoice_note_c
+
         Any questions please don't hesitate to email us (accounts@pure-electric.com.au) or give us a call 1300 86 78 73. 
         
         Please make the final payment of \$next_payment_amount_c to the Beyond The Grid Pty Ltd main account which was due on the day of install \$aos_invoices_due_date which has now past.
