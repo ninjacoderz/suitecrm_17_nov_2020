@@ -17,8 +17,10 @@ function customReplaceEmailVariables(Email $email, $request)
     $email->description = $emailTemplate->body;
 
     $email->name = str_replace("\$lead_name", $request['lead_name'] , $email->name);// $templateData['subject'];
-    //lead_primary_address_city
+    //lead_primary_address_city 
     $email->name = str_replace("\$lead_primary_address_city", $request['lead_primary_address_city'] , $email->name);// $templateData['subject'];
+    $email->name = str_replace("\$aos_quotes_site_detail_addr__city_c", $request['aos_quotes_site_detail_addr__city_c'], $email->name);
+    $email->name = str_replace("\$aos_quotes_site_detail_addr__state_c", $request['aos_quotes_site_detail_addr__state_c'], $email->name);
     
     $email->description_html = str_replace("\$aos_invoices_contact_id4_c", $request['aos_invoices_contact_id4_c'] , $email->description_html);
     $email->description_html = str_replace("\$aos_invoices_billing_contact", $request['aos_invoices_billing_contact'] , $email->description_html);
@@ -125,6 +127,8 @@ $temp_request = array(
     // "aos_invoices_plumbing""
     "distance_to_suite_c" => "",
     "installer_phone_number" => $installer_contact->phone_mobile,
+    "aos_quotes_site_detail_addr__city_c" => $quote->install_address_city_c,
+    "aos_quotes_site_detail_addr__state_c" => $quote->install_address_state_c,
 );
 /**Check button */
 if ($button == 'sanden_installer') {
