@@ -127,7 +127,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
                 
     if($is_sanden && $po_type == "plumber"){
-        $purchaseOrder->po_type_c = 'installer';
+        // $purchaseOrder->po_type_c = 'installer';
+        $purchaseOrder->po_type_c = 'sanden_plumber';
         $row['id'] = "";
         $row['name'] = 'Sanden Install';
         $row['currency_id'] = '-99';
@@ -317,7 +318,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
     // Electrical 
     if($is_sanden && $po_type == "electrical"){
-        $purchaseOrder->po_type_c = 'installer';
+        // $purchaseOrder->po_type_c = 'installer';
+        $purchaseOrder->po_type_c = 'sanden_electrician';
         $row['id'] = "";
         $row['name'] = 'Sanden Install';
         $row['currency_id'] = '-99';
@@ -848,7 +850,7 @@ function get_all_file_invoice_to_po($path,$invoice_installation,$installation_pd
     { 
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, 'https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$invoice_installation.'/'.$value);
+    curl_setopt($ch, CURLOPT_URL, 'http://locsuitecrm.com//custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$invoice_installation.'/'.$value);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
