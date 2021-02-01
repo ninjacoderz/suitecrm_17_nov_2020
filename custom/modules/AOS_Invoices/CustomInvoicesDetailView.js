@@ -17,6 +17,12 @@ $(function () {
     $('#tab-actions').parent().append('<li><button style="background:#009acf;" type="button" id="CRUD_Xero_Invoice" class="button CRUD_Xero_Invoice" title="Create And Update Xero Invoice" onClick="SUGAR.CRUD_Xero_Invoice(this);" >Create & Update Xero <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
     $('#tab-actions').parent().append('<li><button style="background:#945596;" type="button" id="sanden_health_check" class="button sanden_health_check" value="Sanden health check" data-email-type="sanden_health_check" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-contact-name="'+$('#billing_contact_id').text()+'"  data-record-id="'+ $("input[name='record']").val() +'" title="Sanden Health Check" onClick="$(document).openComposeViewModal(this);" >Sanden Health Check <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
     $('#tab-actions').parent().append('<li><button style="background:#009acf;" type="button" id="CreateInvoiceOSTI" class="button CreateInvoiceOSTI" title="Create Invoice OSTI" onClick="SUGAR.CreateInvoiceOSTI(this);" > Create Invoice OSTI <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button></li>');
+    
+    //fix task Luyen
+    if( $("#quote_type_c").val() == 'quote_type_solar' || $("#quote_type_c").val() == 'quote_type_tesla'){
+        $('#tab-actions').after('<input type="button" name="Email Invoice Solar" value="Email Invoice Solar" class="button primary" onclick="document.getElementById(\'popupDivBack_ara\').style.display=\'none\';document.getElementById(\'popupDiv_ara\').style.display=\'none\';var form=document.getElementById(\'popupForm\');if(form!=null){$(form).attr(\'target\', \'_blank\');form.task.value=\'emailpdf\'; form.templateID.value=\'13e05dc5-5d61-9898-6a07-5918de5ff9e4\';form.submit();}else{alert(\'Error!\');}" />');
+    }
+   
     SUGAR.CRUD_Xero_Invoice= function(elemt){
         var html_alert = '';
         if($('#due_date').text() == ''){

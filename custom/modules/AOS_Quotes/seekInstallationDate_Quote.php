@@ -17,8 +17,10 @@ function customReplaceEmailVariables(Email $email, $request)
     $email->description = $emailTemplate->body;
 
     $email->name = str_replace("\$lead_name", $request['lead_name'] , $email->name);// $templateData['subject'];
-    //lead_primary_address_city
+    //lead_primary_address_city 
     $email->name = str_replace("\$lead_primary_address_city", $request['lead_primary_address_city'] , $email->name);// $templateData['subject'];
+    $email->name = str_replace("\$aos_quotes_site_detail_addr__city_c", $request['aos_quotes_site_detail_addr__city_c'], $email->name);
+    $email->name = str_replace("\$aos_quotes_site_detail_addr__state_c", $request['aos_quotes_site_detail_addr__state_c'], $email->name);
     
     $email->description_html = str_replace("\$aos_invoices_contact_id4_c", $request['aos_invoices_contact_id4_c'] , $email->description_html);
     $email->description_html = str_replace("\$aos_invoices_billing_contact", $request['aos_invoices_billing_contact'] , $email->description_html);
@@ -29,7 +31,10 @@ function customReplaceEmailVariables(Email $email, $request)
     $email->description_html = str_replace("Notes:", "",  $email->description_html);
 
     $email->description = strip_tags($email->description_html);
-
+    //add contact phone number installer_phone_number
+    $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $request['installer_phone_number']));
+    $phone_number = preg_replace("/^61/", "+61", $phone_number);
+    $email->number_client =  $phone_number; 
     return $email;
 }
 
@@ -75,6 +80,19 @@ if($contact->phone_work != ""){
 $account = new Account();
 $account_id = $_GET['account_id'];
 $account = $account->retrieve($account_id);
+/**S- Get contact Installer */
+$installer_contact = $account->get_linked_beans('contacts','Contact');
+if(count($installer_contact)> 0){
+    for($i=0;$i < count($installer_contact);$i++){
+        if($installer_contact[$i]->id == $account->primary_contact_c){
+            $installer_contact = $installer_contact[$i];
+            break;
+        }elseif($i == count($installer_contact) -1){
+            $installer_contact = $installer_contact[count($installer_contact) -1];
+        }
+    }
+}
+/**E- Get contact Installer */
 
 $sea = new SugarEmailAddress; 
 // Grab the primary address for the given record represented by the $bean object
@@ -108,6 +126,9 @@ $temp_request = array(
     "aos_invoices_contact_id3_c" => $phone_info,
     // "aos_invoices_plumbing""
     "distance_to_suite_c" => "",
+    "installer_phone_number" => $installer_contact->phone_mobile,
+    "aos_quotes_site_detail_addr__city_c" => $quote->install_address_city_c,
+    "aos_quotes_site_detail_addr__state_c" => $quote->install_address_state_c,
 );
 /**Check button */
 if ($button == 'sanden_installer') {

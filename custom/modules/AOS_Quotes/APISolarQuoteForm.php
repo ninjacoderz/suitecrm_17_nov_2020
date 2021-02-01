@@ -35,6 +35,20 @@
     $vic_loan = $_POST['solar_vic_loan'];
     $decription_internal_notes = $_POST['notes'];
     
+    //VUT - S - Add data quote_note_inputs_c
+    $data_solar_input = array(
+        'electricity_distributor' => $distributor,
+        'first_solar_pv_system' => $first_solar,
+        'roof_type' => strtoupper($roof_type),
+        'roof_pitch' => $roof_pitch,
+        'storeys' => $storeys,
+        'phases' => $phanes,
+        'meter_type' => $meter_type,
+        'main_switch' => $main_switch,
+        'distance_from_inverter_to_main_switchboard' => $distancetoswitch,
+        'external_or_internal_switchboard' => $external_or_internal,
+    );
+    //VUT - E - Add data quote_note_inputs_c
     /// Assign User
     // $assigned_user = $_POST['assigned_user'];
     // $lead_source = "PE_website_quote_form";
@@ -163,6 +177,7 @@
         }else {
             $quote->first_solar_c = "bool_false";
         }
+        $quote->quote_note_inputs_c = json_encode($data_solar_input); 
         // if( $strorey == "Double Storey"){
         //     $quote->Double_Storey = 1;
         // }else {
@@ -288,7 +303,7 @@
         }else {
             $quote->first_solar_c = "bool_false";
         }
-
+        $quote->quote_note_inputs_c = json_encode($data_solar_input);
         // if( $strorey == "Double Storey"){
         //     $quote->Double_Storey = 1;
         // }else {

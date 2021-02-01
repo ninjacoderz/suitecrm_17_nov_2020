@@ -814,6 +814,7 @@ class EmailsController extends SugarController
                     $description = str_replace("\$aos_invoices_contact_id3_c",$customer_phone , $description);
                     $description_html = str_replace("\$aos_invoices_contact_id3_c", $customer_phone , $description_html);
                     //VUT - E - customer infomation
+                    $smsTemplateID = 'ca646f5f-399a-d408-7536-601102429ed6'; 
                     if( $_REQUEST['email_type'] == 'plumber_calendar' ){
                         $description = str_replace("\$aos_invoices_plumbing_notes_c",$invoice->plumbing_notes_c , $description);
                         $description_html = str_replace("\$aos_invoices_plumbing_notes_c", $invoice->plumbing_notes_c , $description_html);
@@ -824,7 +825,6 @@ class EmailsController extends SugarController
                         $description_html = str_replace("\$aos_invoices_electrical_notes_c", $invoice->electrical_notes_c , $description_html);
                         $description = str_replace("\$distance_to_suite_c",$invoice->distance_to_suitecrm_c , $description);
                         $description_html = str_replace("\$distance_to_suite_c", $invoice->distance_to_suitecrm_c , $description_html);
-                        $smsTemplateID = '303a9b3e-d0be-344a-1ddb-5fb2264b8860'; 
                     }
                 }
                 $description = str_replace("\$installation_calendar_url", $link_calendar, $description);
@@ -841,26 +841,26 @@ class EmailsController extends SugarController
                     $focus,
                     $macro_nv
                 );
-            $this->bean->emails_email_templates_idb = $emailTemplateID ;
-            $attachmentBeans = $emailTemplate->getAttachments();
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
 
-            if($attachmentBeans) {
-                $this->bean->status = "draft";
-                $this->bean->save();
-                foreach($attachmentBeans as $attachmentBean) {
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
 
-                    $noteTemplate = clone $attachmentBean;
-                    $noteTemplate->id = create_guid();
-                    $noteTemplate->new_with_id = true; 
-                    $noteTemplate->parent_id = $this->bean->id;
-                    $noteTemplate->parent_type = 'Emails';
-                    $noteFile = new UploadFile();
-                    $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
 
-                    $noteTemplate->save();
-                    $this->bean->attachNote($noteTemplate);
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
                 }
-            }
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
@@ -873,6 +873,7 @@ class EmailsController extends SugarController
                     );
                     $body =  $smsTemplate->body_c;
                     $body = str_replace("\$first_name", $contact->first_name, $body);
+                    $body = str_replace("\$aos_invoices_billing_contact",  $contact_customer->name, $body);
                     $smsTemplate->body_c = $body;
                     $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
                     $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
@@ -885,6 +886,7 @@ class EmailsController extends SugarController
                 // //end - code render sms_template
                 
             }
+
             /**VUT-E-Quote-Button 'Send Inspection Request' (send for installer Sanden/Daikin) */
             if($_REQUEST['email_type'] == 'send_site_inspection_request'){
                 $record_id = trim($_REQUEST['record_id']);
@@ -3134,6 +3136,20 @@ class EmailsController extends SugarController
                 $this->bean->description_html = $description_html;
                 $this->bean->description = $description;
 
+                //VUT - S - replace Quote Inputs  
+                if ($quote->quote_note_inputs_c !='') {
+                    $solar_quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c), true);
+                    if (count(array_filter($solar_quote_input)) == 0) {
+                        $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                        // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                    } else {
+                        $this->bean->description_html = $this->renderTableQuoteInputSolarPricing($solar_quote_input, $this->bean->description_html);
+                    }
+                } else {
+                    $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                    // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                } 
+                //VUT - E - replace Quote Inputs 
                 //replace data for subject - VUT - 2020/03/04
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
@@ -3147,7 +3163,7 @@ class EmailsController extends SugarController
                 $this->bean->description_html = str_replace("\$aos_quotes_preferred_c", "No" , $this->bean->description_html);
 
                 if(   strpos($_REQUEST['address'],"VIC") == TRUE){
-                    $html_vic = '<table style="margin-bottom:20px;text-align:left;border-collapse:collapse;width:735px;">
+                    $html_vic = '<table style="text-align:left;border-collapse:collapse;width:735px;">
                                 <tbody>
                                 <tr>
                                     <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
@@ -3430,7 +3446,7 @@ class EmailsController extends SugarController
                 $this->bean->description_html = str_replace("\$aos_quotes_roof_pitch_c",   $roof_pitch_c[$focus->roof_pitch_c] , $this->bean->description_html);
                 $this->bean->description_html = str_replace("\$aos_quotes_roof_type_c",  $roof_type_c[$focus->roof_type_c] , $this->bean->description_html);
                 $this->bean->description_html = str_replace("\$aos_quotes_main_switch_c",$focus->main_switch_c , $this->bean->description_html);
-                $this->bean->description_html = str_replace("\$aos_quotes_external_internal_c", $focus->external_or_internal_c .' Switchboard', $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_external_internal_c", $focus->external_or_internal_c, $this->bean->description_html);
 
                 $templateData = $emailTemplate->parse_email_template(
                     array(
@@ -7180,6 +7196,53 @@ class EmailsController extends SugarController
             return false;
         }
         return true;
+    }
+
+    /**
+     * VUT - render Quote Input for Email Solar Pricing
+     * @param JSON $quotes_input realpath(dirname(__FILE__) . '/../../').'/custom/include
+     * @param STRING $text email_description_html
+     * @return STRING $text
+     */ 
+    protected function renderTableQuoteInputSolarPricing($quotes_input, $text) {
+        include realpath(dirname(__FILE__) . '/../../').'/custom/modules/AOS_Quotes/vardef_list_quote_solar.php';
+        $text = preg_replace('/(?si)<div id="sugar_text_change_table_solar_input"+?>(.*)<=?\/div>/U', '', html_entity_decode($text));
+        // $data = json_decode(html_entity_decode($quotes_input));
+        $html = '<div id="change_table_solar_input"><table  style="text-align:left;border-collapse:collapse;width:735px;"><tbody>';
+        $html .='<tr><th style="text-align: left; background: #f48c21; color: #ffffff; padding: 10px 5px; border-right: 1px solid #f48c21;" colspan="2">Pricing assumptions:</th></tr>';
+        //field missing when preg_replace
+        $begin_pos = '  <tr>
+                            <td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">Installation Address:</td> 
+                            <td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">$aos_quotes_installation address_c</td>
+                        </tr>';
+        $miss_fields = array(
+            'Gutter Height:' => '$aos_quotes_gutter_height_c',
+            'Select your preferred/inverter combination!' => '$aos_quotes_preferred_c',
+            'Notes' => '$aos_quotes_special_notes_c',
+        );    
+        $end_pos = '';
+        foreach ($miss_fields as $k => $v) {
+            $end_pos .= '<tr>';
+            $end_pos .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">'.$k.'</td>';
+            $end_pos .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">'.$v.'</td>';                
+            $end_pos .= '</tr>';            
+        }                   
+        //field missing when preg_replace
+        $solar_input ='';
+        foreach ($quotes_input as $key => $value) {
+            $solar_input .= '<tr>';
+            $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">'.$vardefs_array[$key]['display_label'].'</td>';
+            $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">'.$value.'</td>';                
+            $solar_input .= '</tr>';            
+        }
+        //concat string
+        $html .= $begin_pos;
+        $html .= $solar_input;
+        $html .= $end_pos;
+        $html .='</tbody></table></div>';
+        $text = str_replace("\$table_solar_quote_inputs", $html , $text);
+
+        return htmlspecialchars($text);
     }
 
 }

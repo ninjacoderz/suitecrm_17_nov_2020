@@ -179,8 +179,8 @@ if($_REQUEST['module'] == 'AOS_Invoices') {
 if($custom_due_amount == 0 && $custom_total_payment != 0){
     $name = explode(" ",$bean->billing_contact);
     $short_description_c = "Dear ".$name[0].",
-
-    Acknowledge payment receipt thank you, please find your \$product_type invoice attached".(($bean->invoice_type_c!=="Methven")?" and certificates of compliance attached":"").". Congratulations for choosing the \$product_type, the most efficient in Australia and thank you for choosing PureElectric.";
+Customer Notes: \$aos_invoices_invoice_note_c
+Acknowledge payment receipt thank you, please find your \$product_type invoice attached".(($bean->invoice_type_c!=="Methven")?" and certificates of compliance attached":"").". Congratulations for choosing the \$product_type, the most efficient in Australia and thank you for choosing PureElectric.";
     
     //If you would like to, we would most grateful if you took a brief moment to leave a review, it's one way we can continue to improve and continue to bring more renewables for everyone. Here is the link if you would like to leave a Google review -> https://bit.ly/2FG751o";
 }
@@ -211,6 +211,8 @@ if($_REQUEST['task'] == 'emailpdf' && $_REQUEST['module'] == 'AOS_Invoices' && $
         
         Acknowledge your previous payment receipt thank you, please find your \$product_type invoice attached with your final payment now due as your install was successfully completed on date \$aos_invoices_due_date.
         
+        Customer Notes: \$aos_invoices_invoice_note_c
+
         Any questions please don't hesitate to email us (accounts@pure-electric.com.au) or give us a call 1300 86 78 73. 
         
         Please make the final payment of \$next_payment_amount_c to the Beyond The Grid Pty Ltd main account which was due on the day of install \$aos_invoices_due_date which has now past.
