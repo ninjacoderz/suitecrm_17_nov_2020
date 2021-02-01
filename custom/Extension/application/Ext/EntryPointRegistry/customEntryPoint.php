@@ -1394,8 +1394,8 @@ $entry_point_registry['CRUD_Customer_Invoice_Notes'] = array(
     'auth' => false
 );
 
-//Create Invoice OSTI
-$entry_point_registry['CreateInvoiceOSTI'] = array(
-    'file' => 'custom/modules/AOS_Invoices/CreateInvoiceOSTI.php',
+//thien code -- save json design
+$entry_point_registry['APIDesignTool'] = array(
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APIDesignTool.php',
     'auth' => false
 );
