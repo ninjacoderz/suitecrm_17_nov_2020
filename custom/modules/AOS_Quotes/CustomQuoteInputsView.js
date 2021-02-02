@@ -20,6 +20,8 @@
                 renderQuoteInputHTML('quote_type_solar');
             }else if($(this).val() == "quote_type_sanden"){
                 renderQuoteInputHTML('quote_type_sanden');
+            } else {
+                $('#group_custom_quote_inputs_checklist .edit-view-row').empty();
             }
         });
 

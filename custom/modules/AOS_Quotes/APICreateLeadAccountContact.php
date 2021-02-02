@@ -209,7 +209,7 @@
             $new_lead->phone_mobile = $phone_number;
             $new_lead->email1 = $email_customer;
             $new_lead->description = $decription_internal_notes;
-            $new_lead->lead_source = $lead_source;
+            $new_lead->lead_source = $rq_data['hear_about'];
             $new_lead->lead_source_co_c = 'PureElectric';
             // $new_lead->status = 'Converted'; //VUT - Create status NEW with new Lead
             
@@ -318,7 +318,7 @@
             $quote->install_address_c = $your_street;
             $quote->description = $decription_internal_notes;
             $quote->quote_note_c = $notes;
-            $quote->lead_source_c = $lead_source;
+            $quote->lead_source_c = $rq_data['hear_about'];
             $quote->lead_source_co_c = 'PureElectric';
             $quote->assigned_user_id = $assigned_user;
             $quote->stage = 'New';
@@ -391,6 +391,7 @@
             $islead->account_id = $account->id;
             $islead->account_name = $account->name;
             $islead->contact_id = $contact->id;
+            $islead->lead_source = $rq_data['hear_about'];
     
             $islead->status = 'Converted';
             // $islead->the_quote_prepared_c = "daikin_quote_form";
@@ -426,7 +427,7 @@
                 $quote->billing_address_state = $primary_address_state;
                 $quote->billing_address_city = $primary_address_city;
                 $quote->name = str_replace('GUEST', $_REQUEST['firstname'].' '.$_REQUEST['lastname'].' '.$primary_address_city.' '.$primary_address_state, $quote->name);
-                $quote->lead_source_c = $lead_source;
+                $quote->lead_source_c = $rq_data['hear_about'];
                 $quote->lead_source_co_c = 'PureElectric';
                 $quote->assigned_user_id = $assigned_user;
                 $quote->quote_upload_url_c = "https://pure-electric.com.au/pedaikinform-new/confirm?quote-id=".$quote->id;
