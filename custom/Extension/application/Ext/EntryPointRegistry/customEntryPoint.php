@@ -1400,6 +1400,7 @@ $entry_point_registry['APIDesignTool'] = array(
     'auth' => false
 );
 
+
 //VUT - Copy file from quote and lead to Invoice
 $entry_point_registry['copyImageQuoteLead2Inv'] = array(
     'file' => 'custom/modules/AOS_Invoices/copyImageQuoteLead2Inv.php',
@@ -1410,3 +1411,4 @@ $entry_point_registry['CreateInvoiceOSTI'] = array(
     'file' => 'custom/modules/AOS_Invoices/CreateInvoiceOSTI.php',
     'auth' => false
 );
+
