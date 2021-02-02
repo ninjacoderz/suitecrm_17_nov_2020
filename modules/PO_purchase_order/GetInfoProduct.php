@@ -12,7 +12,7 @@
         $item['product_name'] = $row['name'];
         $item['product_part_number'] = $row['part_number'];
         $item['product_product_cost_price'] = $row['cost'];
-        $item['product_product_id'] = $row['aos_product_category_id'];
+        $item['product_product_id'] = $product_id;
         $item['product_product_list_price'] = $row['price'];
         // $item['product_qty'] = $row['product_qty'];
         $line_items[$invoiceGroupIds[$row['group_id']]][] = $item;
