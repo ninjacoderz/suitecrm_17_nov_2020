@@ -5189,8 +5189,9 @@ $(document).ready(function(){
         });
          // get case study
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_case_study_photos" class="button primary" title="get case study photos">GET SG PV CASE STUDY PHOTOS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
-         $("#get_files_from_s3_invoice").after('<button type="button" id="send_photo_to_installer" class="button primary" title="send photo to installer">SEND MAIL PHOTOS TO INSTALLER<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
-         
+         $("#get_files_from_s3_invoice").after('<button type="button" id="send_photo_to_electrician" class="button primary send_photo_to_installer" data-installer="electrician" title="send photo to installer">SEND MAIL PHOTOS TO ELECTRICIAN<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
+         $("#get_files_from_s3_invoice").after('<button type="button" id="send_photo_to_plumber" class="button primary send_photo_to_installer" data-installer="plumber" title="send photo to installer">SEND MAIL PHOTOS TO PLUMBER<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
+
          $("#get_case_study_photos").click(function(){
              $('#get_case_study_photos span.glyphicon-refresh').removeClass('hidden');
              var ordernumber =  $('#solargain_invoices_number_c').val();
@@ -5226,23 +5227,37 @@ $(document).ready(function(){
             })      
          });
 
-         $("#send_photo_to_installer").click(function(){
-            $('#send_photo_to_installer span.glyphicon-refresh').removeClass('hidden');
-             var plumber_id =  $('#account_id1_c').val();
+         $(".send_photo_to_installer").click(function(){
+             var installer =  $(this).attr('data-installer')
+             var installer_id;
+             var id = $(this).attr('id');
+            $('#'+ id +' span.glyphicon-refresh').removeClass('hidden');
+            if( installer == "plumber"){
+                installer_id =  $('#account_id1_c').val();
+                if(installer_id == ''){
+                    alert('Not have Plumber.');
+                    $('input[name="plumber_c"]').focus();
+                    $('#'+id+' span.glyphicon-refresh').addClass('hidden');
+                    return;
+                }
+            }else {
+                installer_id =  $('#account_id_c').val();
+                if(installer_id == ''){
+                    alert('Not have Plumber.');
+                    $('input[name="plumber_c"]').focus();
+                    $('#'+ id+' span.glyphicon-refresh').addClass('hidden');
+                    return;
+                }
+            }
              var record = $("input[name='record']").val();
              var billing_account_id = $('#billing_account_id').val();
-             if(plumber_id == ''){
-                 alert('Not have Plumber.');
-                 $('input[name="plumber_c"]').focus();
-                 $('#send_photo_to_installer span.glyphicon-refresh').addClass('hidden');
-                 return;
-             }
+
              var generateUUID = $('input[name="installation_pictures_c"]').val();
             $.ajax({
-                url:  "/index.php?entryPoint=APISendPhotoInstallToInstaller&invoice_id="+record+"&billing_account_id="+billing_account_id+"&plumber_id="+plumber_id+"&generateUUID="+ generateUUID,
+                url:  "/index.php?entryPoint=APISendPhotoInstallToInstaller&invoice_id="+record+"&billing_account_id="+billing_account_id+"&installer_id="+installer_id+"&generateUUID="+ generateUUID,
                 success: function (data) {
                     alert (data);
-                    $('#send_photo_to_installer span.glyphicon-refresh').addClass('hidden');
+                    $('#'+ id +' span.glyphicon-refresh').addClass('hidden');
                 }
             })      
          })

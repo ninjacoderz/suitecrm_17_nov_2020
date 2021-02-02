@@ -1,7 +1,7 @@
 <?php
 require_once('include/SugarPHPMailer.php');
 
-    $plumber_id = $_REQUEST['plumber_id'];
+    $installer_id = $_REQUEST['installer_id'];
     $generateUUID = $_REQUEST['generateUUID'];
     $invoice_id = $_REQUEST['invoice_id'];
     $billing_account_id = $_REQUEST['billing_account_id'];
@@ -31,7 +31,7 @@ require_once('include/SugarPHPMailer.php');
     $account_customer->retrieve($billing_account_id);
 
     $installer=  new Account();
-    $installer->retrieve($plumber_id);
+    $installer->retrieve($installer_id);
 
     $mail = new SugarPHPMailer();  
     $mail->setMailerForSystem();  
