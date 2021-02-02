@@ -92,8 +92,8 @@ class MyOpportunitiesDashlet extends DashletGeneric
 //     		$this->displayColumns[array_search('amount', $this->displayColumns)] = 'amount_usdollar';
 //     	}
 //     	}
-
-        if(!empty($this->displayColumns)) {
+        // BinhNT temporary comment
+        if(false /*!empty($this->displayColumns)*/) {
             if(array_search('email_address', $this->displayColumns)) {
                 $lvsParams['custom_select'] = empty($lvsParams['custom_select']) ? ', ea.email_address AS email_address' : 
                                             $lvsParams['custom_select'] . ', ea.email_address AS email_address';
