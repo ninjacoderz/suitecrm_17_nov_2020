@@ -5482,6 +5482,54 @@ $(document).ready(function(){
         });
     })
 
+    // button calculation with SG Commission  
+    $('#sg_commissions_c').after('<br><button type="button" class="button primary" id="recalculation_sg"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Calculation Again</button></span>');
+    $('#recalculation_sg').click(function(){
+        $('#auto_fill_new_invoice span.glyphicon-refresh').removeClass('hidden');
+        $.ajax({
+            url: "?entryPoint=CustomAutoFillDataFromSAM&sg_order_number="+ $('#solargain_invoices_number_c').val(),
+            success: function(data)
+            {
+                $('#auto_fill_new_invoice span.glyphicon-refresh').addClass('hidden');
+                if(data != ''){
+                    var result = JSON.parse(data);
+                    
+                    //logic add group price
+                    var total_price_SAM = result['total_sam'];
+                    var sg_commissions_per =  parseFloat($("#sg_commissions_c").val())/100;
+                    var list_price = (total_price_SAM*sg_commissions_per*1.1)/1.1;
+                    var tax = list_price*0.1;
+                    total_price_SAM = parseFloat(total_price_SAM).formatMoney(2,',','.');
+                    if($("#group_body0").length == 0){
+                        insertGroup(0);
+                    } 
+                    if($("#product_body0").length == 0){
+                        insertProductLine("product_group0","0");
+                    } 
+                    
+                    $("#product_product_qty0").val('1');
+                    $("#product_name0").val('Solar sales commission');
+                    $("#product_product_id0").val('78b8b420-5003-8249-3dd3-5918dd4d0d06');
+                    $("#product_part_number0").val('SolarSales');
+                    $("#product_product_list_price0").val(list_price);
+                    $("#product_product_discount0").val('0.00');
+                    $("#product_discount0").val('Percentage');
+                    $("#product_product_unit_price0").val(list_price);
+                    $("#product_vat_amt0").val(tax);
+                    $("#product_vat0").val('10.0');
+                    $('#product_product_total_price0').val(list_price);
+                    $("#product_item_description0").val($('#name').val() + '            Discounted \n Total Price: $' +total_price_SAM);
+                    $("#product_description0").val('Total Price: $' +total_price_SAM);
+                    $("#group0name").val("Solar PV Sales");
+                    $("#sanden_model_c").val('SolarSales');
+                    $("#product_product_list_price0").trigger("blur");
+
+                }
+            }
+        });
+    });
+    
+
     //dung code --  create link open quote by number quote
     function add_link_quote(){
         if (module_sugar_grp1 != 'AOS_Invoices') return;

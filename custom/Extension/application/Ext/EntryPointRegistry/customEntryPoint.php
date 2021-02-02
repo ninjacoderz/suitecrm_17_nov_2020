@@ -1399,3 +1399,8 @@ $entry_point_registry['APIDesignTool'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/APIDesignTool.php',
     'auth' => false
 );
+
+$entry_point_registry['CreateInvoiceOSTI'] = array(
+    'file' => 'custom/modules/AOS_Invoices/CreateInvoiceOSTI.php',
+    'auth' => false
+);
