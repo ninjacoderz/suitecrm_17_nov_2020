@@ -1405,3 +1405,8 @@ $entry_point_registry['copyImageQuoteLead2Inv'] = array(
     'file' => 'custom/modules/AOS_Invoices/copyImageQuoteLead2Inv.php',
     'auth' => false
 );
+
+$entry_point_registry['CreateInvoiceOSTI'] = array(
+    'file' => 'custom/modules/AOS_Invoices/CreateInvoiceOSTI.php',
+    'auth' => false
+);
