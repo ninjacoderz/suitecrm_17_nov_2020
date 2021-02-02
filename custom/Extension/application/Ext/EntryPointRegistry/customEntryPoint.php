@@ -1399,3 +1399,9 @@ $entry_point_registry['APIDesignTool'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/APIDesignTool.php',
     'auth' => false
 );
+
+//VUT - Copy file from quote and lead to Invoice
+$entry_point_registry['copyImageQuoteLead2Inv'] = array(
+    'file' => 'custom/modules/AOS_Invoices/copyImageQuoteLead2Inv.php',
+    'auth' => false
+);

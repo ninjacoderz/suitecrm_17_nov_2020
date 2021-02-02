@@ -1619,6 +1619,23 @@ $(function () {
             });
             return false;
         }
+        //VUT - S - add button copy Image from Lead/Quote to Invoice
+        if (module_sugar_grp1 == 'AOS_Invoices') {
+            $("#get_files_from_s3_invoice").after('<button type="button" style="background: #008000;" id="copy_img_from_quotelead" class="button primary" title="Copy image from Lead and Quote">Get files from Quote & Lead<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
+            $("body").on('click','#copy_img_from_quotelead', function() {
+                SUGAR.ajaxUI.showLoadingPanel();
+                var record_id = $("input[name='record']").val();
+                $.ajax({
+                    url: "?entryPoint=copyImageQuoteLead2Inv&record_id=" + record_id,
+                    async: false
+                }).done(function (data) {
+                    console.log(data);
+                    $(".reload_after_rename").trigger("click");
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                });
+            });
+        }
+        //VUT - E - add button copy Image from Lead/Quote to Invoice
 
         $("#save_and_edit").after(
             ' <button type="button" style="background: #00b2e2;" id="create_assignment" class="button createAssignment" title="Create Assignment" onClick="SUGAR.createAssignment(this);" > Create Get Assignment <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
