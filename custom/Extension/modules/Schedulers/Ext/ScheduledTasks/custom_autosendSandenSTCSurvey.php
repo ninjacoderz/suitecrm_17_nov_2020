@@ -52,7 +52,7 @@ function custom_autosendSandenSTCSurvey(){
 
                 //check title invoice include 'supply'
                 $word = "supply only";
-                $nameInvoice = $row["name"];
+                $nameInvoice = strtolower($row["name"]);
                 (strpos($nameInvoice, $word) !== false)?$condition_check_invoice_name = true : $condition_check_invoice_name = false;
                 
                 //productID = '4b99f564-8dee-43e4-a8fc-5e3baafbbe32' is Sanden Supply Only 
