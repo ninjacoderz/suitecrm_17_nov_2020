@@ -640,10 +640,16 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Body .= "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
         $mail->Body .= "<p>Email Client: <a href='https://mail.google.com/#search/".$client->email1."'>".$client->email1." GSearch</a></p>";
     }else {
-        $mail->Subject = $worker_type." ".$installer->name." uploaded photo to Invoice#".$invoice->number." ".$invoice->name;
+        if ( $worker_type == "Customer" ){
+            $mail->Subject = $worker_type." ".$installer->name." Upload Install Photos - Sanden international (Australia) Pty Customer Warranty registration - Invoice#".$invoice->number." ".$invoice->name;
+        }else {
+            $mail->Subject = $worker_type." ".$installer->name." uploaded photo to Invoice#".$invoice->number." ".$invoice->name;
+        }
         $mail->Body = $shortcuts;
         $mail->Body .= "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
-        $mail->Body .= "<p>Email ".$worker_type.": <a href='https://mail.google.com/#search/".$installer->email1."'>".$installer->email1." GSearch</a></p>";
+        if ( $worker_type != "Customer" ){
+            $mail->Body .= "<p>Email ".$worker_type.": <a href='https://mail.google.com/#search/".$installer->email1."'>".$installer->email1." GSearch</a></p>";
+        }
         $mail->Body .= "<p>Email Client: <a href='https://mail.google.com/#search/".$client->email1."'>".$client->email1." GSearch</a></p>";    
     }
     $mail->Body .= $list_photos;
