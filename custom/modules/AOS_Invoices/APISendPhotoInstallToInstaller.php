@@ -3,6 +3,7 @@ require_once('include/SugarPHPMailer.php');
 
     $installer_id = $_REQUEST['installer_id'];
     $generateUUID = $_REQUEST['generateUUID'];
+    $installer_name = $_REQUEST['installer_name'];
     $invoice_id = $_REQUEST['invoice_id'];
     $billing_account_id = $_REQUEST['billing_account_id'];
 
@@ -38,7 +39,7 @@ require_once('include/SugarPHPMailer.php');
     $mail->From = 'info@pure-electric.com.au';  
     $mail->FromName = 'Pure Electric';  
     // $mail->Subject = "All photo installs ".$installer->name." have sent to Pure Electric";
-    $mail->Subject = "Uploaded Files/Photos - ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c;
+    $mail->Subject = "All photo installs - ".$installer_name." ".$installer->name." had uploaded to Pure Electric - Invoice#".$invoice->number ." - ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c;
     $mail->Body = "<p>Address install: ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c."</p>";
     $mail->Body .= "<p>Client Name: ".$account_customer->name."</p>";
     $mail->Body .= "<p>Client Phone number: ".$account_customer->mobile_phone_c."</p>";

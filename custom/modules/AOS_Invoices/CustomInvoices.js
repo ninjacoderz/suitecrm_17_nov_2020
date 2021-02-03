@@ -5251,7 +5251,7 @@ $(document).ready(function(){
              var id = $(this).attr('id');
             $('#'+ id +' span.glyphicon-refresh').removeClass('hidden');
             if( installer == "plumber"){
-                installer_id =  $('#account_id1_c').val();
+                installer_id =  $('#account_id1_c').val()+"&installer_name=Plumber";
                 if(installer_id == ''){
                     alert('Not have Plumber.');
                     $('input[name="plumber_c"]').focus();
@@ -5259,10 +5259,10 @@ $(document).ready(function(){
                     return;
                 }
             }else {
-                installer_id =  $('#account_id_c').val();
+                installer_id =  $('#account_id_c').val()+"&installer_name=Electrician";
                 if(installer_id == ''){
-                    alert('Not have Plumber.');
-                    $('input[name="plumber_c"]').focus();
+                    alert('Not have Electrician.');
+                    $('input[name="electrician_c"]').focus();
                     $('#'+ id+' span.glyphicon-refresh').addClass('hidden');
                     return;
                 }
