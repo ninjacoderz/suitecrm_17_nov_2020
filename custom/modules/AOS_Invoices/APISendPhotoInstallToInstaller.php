@@ -42,6 +42,8 @@ require_once('include/SugarPHPMailer.php');
     $mail->Body = "<p>Address install: ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c."</p>";
     $mail->Body .= "<p>Client Name: ".$account_customer->name."</p>";
     $mail->Body .= "<p>Client Phone number: ".$account_customer->mobile_phone_c."</p>";
+    $mail->Body .= "<p>Plumber installer: ".$installer->name."</p>";
+    $mail->Body .= "<p>Plumber phone: ".$installer->mobile_phone_c."</p>";
 
     $mail->Body .= $list_photos;
     // $mail->Body = "<a href='http://new.suitecrm-pure.com/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote->id."' target='_blank'>Link Quote: ".$quote->name."</a>";
