@@ -1166,7 +1166,7 @@ class EmailsController extends SugarController
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
                 
-                $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/for-customer?invoice_id==' . $invoice->id;
+                $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/for-customer?invoice_id=' . $invoice->id;
                 $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
                 $description = str_replace("\$aos_invoices_customer",$contact->first_name , $description);
                 $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
