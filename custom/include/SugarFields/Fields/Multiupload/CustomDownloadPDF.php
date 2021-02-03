@@ -101,6 +101,113 @@ if(!isset($decode_result['ID'])){
 }
 //END
 
+//VUT - S - check field to build pdf
+$data = json_decode($result,true);
+$install =  $data['Install'];
+$state_arr = [
+                "ACT"   => false,
+                "NSW"   => false,
+                "NT"    => false,
+                "SA"    => false,
+                "TAS"   => false,
+                "QLD"   => false,
+                "VIC"   => false,
+                "WA"    => false   
+            ];
+
+if (empty($install['EnergyRetailer'])) {
+    $install['EnergyRetailer'] = array_merge(array (
+        "ID"    => 36,
+        "Name"  => "Powershop"),
+        $state_arr
+    );
+}
+
+if (empty($install['EnergyPlan'])) {
+    $install['EnergyPlan'] = array_merge(array(
+        "ID"    => 51,
+        "Name"  => "Powershop",
+        "IsDefault"         => false,
+        "DailySupplyCharge" => 0,
+        "FlatRateTariff"    => 0,
+        "FeedInTariff"      => 0,
+        "IsActive"          => false,
+        "EnergyRetailerID"  => 0), 
+        $state_arr
+    );
+}
+
+if (empty($install['NetworkOperator'])) {
+    $install['NetworkOperator'] = array_merge(array(
+        "ID"    => 4,
+        "Name"  => "Citipower"), 
+        $state_arr
+    );
+}
+if (empty($install['UsageUnitID'])) {
+    $install['UsageUnitID'] = 2;
+}
+if (empty($install['SummerDailyUsage'])) {
+    $install['SummerDailyUsage'] = 20;
+}
+if (empty($install['WinterDailyUsage'])) {
+    $install['WinterDailyUsage'] = 20;
+}
+if (empty($install['DayConsumption'])) {
+    $install['DayConsumption'] = 20;
+}
+
+$data_change = json_encode($install);
+
+$url = 'https://crm.solargain.com.au/APIv2/installs';
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data_change);
+curl_setopt($curl, CURLOPT_POST, 1);
+curl_setopt($curl, CURLOPT_ENCODING, 'gzip, deflate');
+curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        "Host: crm.solargain.com.au",
+        "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+        "Content-Type: application/json",
+        "Accept: application/json, text/plain, */*",
+        "Accept-Language: en-US,en;q=0.5",
+        "Accept-Encoding: 	gzip, deflate, br",
+        "Connection: keep-alive",
+        "Content-Length: " .strlen($data_change),
+        "Origin: https://crm.solargain.com.au",
+        "Authorization: Basic ".base64_encode($username . ":" . $password),
+        "Referer: https://crm.solargain.com.au/quote/edit/".$quote_solorgain,
+    )
+);
+$result = curl_exec($curl);
+curl_close($curl);
+
+$url = 'https://crm.solargain.com.au/APIv2/quotes/'.$quote_solorgain;
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+curl_setopt($curl,CURLOPT_ENCODING , "gzip");
+curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        "Host: crm.solargain.com.au",
+        "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+        "Content-Type: application/json",
+        "Accept: application/json, text/plain, */*",
+        "Accept-Language: en-US,en;q=0.5",
+        "Accept-Encoding: 	gzip, deflate, br",
+        "Connection: keep-alive",
+        "Authorization: Basic ".base64_encode($username . ":" . $password),
+        "Referer: https://crm.solargain.com.au/quote/edit/".$quote_solorgain,
+        "Cache-Control: max-age=0"
+    )
+);
+
+$result = curl_exec($curl);
+curl_close($curl);
+
+//END
+
 $curl = curl_init();
 $url = "https://crm.solargain.com.au/APIv2/quotes/";
 curl_setopt($curl, CURLOPT_URL, $url);
