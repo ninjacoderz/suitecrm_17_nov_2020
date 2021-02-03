@@ -5,10 +5,12 @@
 
     set_time_limit ( 0 );
     ini_set('memory_limit', '-1');
+    date_default_timezone_set('Australia/Melbourne');
 
     $quote_id = $_REQUEST['quote_id'];
     $design_json = html_entity_decode($_REQUEST['design_json']);
     $type = $_REQUEST['type'];
+    $status = $_REQUEST['status'];
     $dataURL = $_REQUEST['dataURL'];
     $quote  = new AOS_Quotes();
     $quote->retrieve($quote_id);
@@ -23,8 +25,30 @@
         $img = str_replace(' ', '+', $img);
         $data = base64_decode($img);
         $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
-        $filename = 'Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location';
-        $source = $path.'/Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location.jpeg';
+        $files = scandir($path,SCANDIR_SORT_DESCENDING);
+        $filename = '';
+        if($status == 'override'){
+            foreach($files as $file){
+                if(is_file($path.'/'.$file) && strpos($file,"Sanden_Design_Proposed_Install_Location") !== false){
+                    $filename = explode(".",$file)[0];
+                    $source = $path.'/'.$file;
+                    break;
+                }
+            }
+        }else{
+            $time_string = strftime("%d%b%Y_%H%M",time());
+            $filename = 'Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string;
+            $source = $path.'/Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string.'.jpeg';
+        }
+
+        if($filename == ''){
+            $time_string = strftime("%d%b%Y_%H%M",time());
+            $filename = 'Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string;
+            $source = $path.'/Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string.'.jpeg';
+        }
+
+
+        
         $success = file_put_contents($source, $data);
         if($success !== false){
             if (exif_imagetype($source) == 2) {
