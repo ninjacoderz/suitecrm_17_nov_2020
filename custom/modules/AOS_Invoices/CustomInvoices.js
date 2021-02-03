@@ -1606,6 +1606,24 @@ $(function () {
             ' <button type="button" id="save_and_edit" class="button saveAndEdit" title="Save and Edit" onClick="SUGAR.saveAndEdit(this);">Save and Edit</button>'
         )
         SUGAR.saveAndEdit = function (elem) {
+            if($("input[name='record']").val() == ''){
+                var record_id_patt = /"record" value="(.*)"/g;
+                var records = record_id_patt.exec(data);
+                if(records !== null && typeof records === 'object'){
+                    if(records[1] !='')  {
+                        window.onbeforeunload = null;
+                        window.onunload = null;
+                        window.addEventListener('beforeunload', function(e) {
+                            window.onbeforeunload = null;
+                            window.onunload = null;
+                        });
+                        var url = 'https://suitecrm.pure-electric.com.au';
+                        // var url = 'http://loc.suitecrm.com/';
+                        window.location.href = url+"index.php?module=AOS_Quotes&action=EditView&record="+records[1];
+                    }
+                }
+                return false;
+            }
             SUGAR.ajaxUI.showLoadingPanel();
             $("#EditView input[name='action']").val('Save');
             $.ajax({

@@ -16,12 +16,15 @@
         }
 
         $("#quote_type_c").on("change", function(){
+            SUGAR.ajaxUI.showLoadingPanel();
+            $("#quote_note_inputs_c").val("");
             if($(this).val() == "quote_type_solar"){
                 renderQuoteInputHTML('quote_type_solar');
             }else if($(this).val() == "quote_type_sanden"){
                 renderQuoteInputHTML('quote_type_sanden');
             } else {
                 $('#group_custom_quote_inputs_checklist .edit-view-row').empty();
+                SUGAR.ajaxUI.hideLoadingPanel();
             }
         });
 
@@ -30,8 +33,13 @@
                 // generate_quote_by_input('quote_type_solar');
                 generateJSONForInput();
             }else{
+                generateJSONForInput();
                 generate_quote_by_input('quote_type_sanden');
             }
+        });
+
+        $(document).on("change","#group_custom_quote_inputs_checklist .custom_fields",function(){
+            generateJSONForInput();
         });
     });
 
@@ -48,6 +56,7 @@
             }
         }).done(function (data) {
             parseJSONValueToFields();
+            SUGAR.ajaxUI.hideLoadingPanel();
         });
     }
 
