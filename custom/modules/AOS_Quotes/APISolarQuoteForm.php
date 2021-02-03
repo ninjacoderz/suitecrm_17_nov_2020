@@ -476,6 +476,8 @@
         
         //replace data for body
         $body_html = str_replace("\$contact_first_name",  $contact->first_name , $body_html);
+        $body_html = str_replace("\$table_solar_quote_inputs",  '' , $body_html);
+        $body_html = str_replace("\$aos_solar_vic_loan_c",  '' , $body_html);
 
         $body_html = str_replace("\$aos_quotes_installation address_c",  $your_street.' '.$primary_address_city.' '.$primary_address_state.' '.$primary_address_postalcode , $body_html);
         $body_html = str_replace("\$aos_quotes_distributor_c",  $distributor , $body_html);
