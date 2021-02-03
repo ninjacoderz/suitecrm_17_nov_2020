@@ -1148,7 +1148,89 @@ class EmailsController extends SugarController
                 $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
                 //end - code render sms_template
             }
+            // tuan reupload customer 
+            if($_REQUEST['email_type'] == 'client_reuploads_photo'){ 
+                $emailTemplateID = '95cb7a0c-5386-b18d-5fd9-601a676c3e7b';// 'e69a39b1-f128-16c0-3693-601a5c0f52ea'; 
 
+                $emailTemplate = BeanFactory::getBean(
+                        'EmailTemplates',
+                        $emailTemplateID
+                    );
+
+                $invoice = new AOS_Invoices();
+                $invoice->retrieve($_REQUEST['record_id']);
+                $contact =  new Contact();
+                $contact->retrieve($invoice->billing_contact_id);
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+                
+                $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/for-customer?invoice_id==' . $invoice->id;
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $description = str_replace("\$aos_invoices_customer",$contact->first_name , $description);
+                $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
+
+                $description_html = str_replace("\$aos_invoices_customer",$contact->first_name , $description_html);
+                $description_html = str_replace("\$aos_invoices_link_upload",$string_link_upload_files, $description_html);
+
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+                //get email from contact
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+                //start - code render sms_template  
+                global $current_user;
+                $smsTemplateID = '1d415167-da0b-628f-9e36-601a68d8a93c';
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    $smsTemplateID 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$aos_invoices_customer", $contact->first_name, $body);
+                $body = str_replace("\$aos_invoices_link_upload", $string_link_upload_files, $body);
+
+                $smsTemplate->body_c = $body;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->number_receive_sms = "matthew_paul_client";
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client =  $phone_number; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                //end - code render sms_template
+            }
             //dung code --- button Advise_Install_Date
             if($_REQUEST['email_type'] == 'Advise_Install_Date'){
                 $seek_install_date_c = trim(Urldecode($_GET['seek_install_date_c']));
