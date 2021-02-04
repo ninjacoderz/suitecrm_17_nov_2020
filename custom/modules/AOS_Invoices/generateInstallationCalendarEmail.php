@@ -56,7 +56,7 @@
 
                 $electric_installation_calendar_url = 'https://calendar.pure-electric.com.au/#/installation-booking/'.$_REQUEST['installation_id'].'/electrician/'.$account->id;
                 $id = createEmailByRole('electrician',$temp_request,explode(" ", $account->name,2)[0],$electric_installation_calendar_url,$invoice);
-                $URL_arr['electrician_url'] = $sugar_config['site_url'].'/index.php?action=ComposeView&module=Emails&return_module=AOS_Invoices&return_action=DetailView&return_id='.$invoice->id.'&return_action=DetailView&record=' . $id .'&changedSubject=false&email_template_id=dc0416cd-6867-5508-3d20-5df843ba69dc&role=electrician&installation_id='.$_REQUEST['installation_id'];
+                $URL_arr['electrician_url'] = $sugar_config['site_url'].'/index.php?action=ComposeView&module=Emails&return_module=AOS_Invoices&return_action=DetailView&return_id='.$invoice->id.'&return_action=DetailView&record=' . $id .'&changedSubject=false&email_template_id=dc0416cd-6867-5508-3d20-5df843ba69dc&role=electrician&installation_id='.$_REQUEST['installation_id'].'&sms_template_id=ca646f5f-399a-d408-7536-601102429ed6';
             }else{
                 $URL_arr['electrician_url'] = '';
             }
@@ -74,7 +74,7 @@
 
                 $plumber_installation_calendar_url = 'https://calendar.pure-electric.com.au/#/installation-booking/'.$_REQUEST['installation_id'].'/plumber/'.$account->id;
                 $id = createEmailByRole('plumber',$temp_request,explode(" ", $account->name,2)[0],$plumber_installation_calendar_url,$invoice);
-                $URL_arr['plumber_url'] = $sugar_config['site_url'].'/index.php?action=ComposeView&module=Emails&return_module=AOS_Invoices&return_action=DetailView&return_id='.$invoice->id.'&return_action=DetailView&record=' . $id .'&changedSubject=false&email_template_id=3722ae7c-d8b7-e03f-559c-5df843678e41&role=plumber&installation_id='.$_REQUEST['installation_id'];
+                $URL_arr['plumber_url'] = $sugar_config['site_url'].'/index.php?action=ComposeView&module=Emails&return_module=AOS_Invoices&return_action=DetailView&return_id='.$invoice->id.'&return_action=DetailView&record=' . $id .'&changedSubject=false&email_template_id=3722ae7c-d8b7-e03f-559c-5df843678e41&role=plumber&installation_id='.$_REQUEST['installation_id'].'&sms_template_id=ca646f5f-399a-d408-7536-601102429ed6';
             }else{
                 $URL_arr['plumber_url'] = '';
             }
@@ -94,6 +94,10 @@
         $smsTemplate = [];
         $body = '';
         global $current_user;
+        $email->id = create_guid();
+        $email->new_with_id = true;
+        $email->type = "draft";
+        $email->status = "draft";
 
         $quote_type = '';
         switch ($invoice->quote_type_c) {
@@ -165,6 +169,8 @@
                 $body_html = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body_html));
                 $body_html = str_replace('$aos_invoices_plumbing_notes_c', $invoice->plumbing_notes_c , $body_html);
                 $body_html = str_replace('$distance_to_suite_c', $invoice->distance_to_suite_c , $body_html);
+                $contact_installer = new Contact();
+                $contact_installer->retrieve($invoice->contact_id4_c);
             }else if($role == "electrician"){
                 $emailTemplate = BeanFactory::getBean(
                     'EmailTemplates',"dc0416cd-6867-5508-3d20-5df843ba69dc"
@@ -178,12 +184,37 @@
                 $body_html = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace('$name',$name,$emailTemplate->body_html));
                 $body_html = str_replace('$aos_invoices_electrical_notes_c', $invoice->electrical_notes_c , $body_html);
                 $body_html = str_replace('$distance_to_suite_c', $invoice->distance_to_suitecrm_c , $body_html);
-                $smsTemplate = BeanFactory::getBean(
-                    'pe_smstemplate',
-                    '303a9b3e-d0be-344a-1ddb-5fb2264b8860' 
-                );
-            
+                $contact_installer = new Contact();
+                $contact_installer->retrieve($invoice->contact_id_c);
             }
+
+            //VUT - S - Add file "Proposed Install Location" to email Plumber/Electrician
+            $invoice_file_attachments = scandir($_SERVER['DOCUMENT_ROOT'].'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c .'/');
+            $name_file_include = 'Proposed_Install_Location';
+            if (count($invoice_file_attachments)>0 ) foreach ($invoice_file_attachments as $att){
+                $source =  $_SERVER['DOCUMENT_ROOT'].'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c .'/'. $att;
+                if(!is_file($source)) continue;
+                if (strpos(strtolower($att),strtolower($name_file_include))) {
+                    $noteTemplate = new Note();
+                    $noteTemplate->id = create_guid();
+                    $noteTemplate->new_with_id = true; // duplicating the note with files
+                    $noteTemplate->parent_id = $email->id;
+                    $noteTemplate->parent_type = 'Emails';
+                    $noteTemplate->date_entered = '';
+                    // $noteTemplate->file_mime_type = 'application/pdf';
+                    $noteTemplate->filename = $att;
+                    $noteTemplate->name = $att;
+
+                    $noteTemplate->save();
+
+                    $destination = $_SERVER['DOCUMENT_ROOT'].'/upload/'.$noteTemplate->id;
+                    if (!symlink($source, $destination)) {
+                        $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                    }
+                   $email->attachNote($noteTemplate);
+                }
+            }
+            //VUT - E - Add file "Proposed Install Location" to email Plumber/Electrician
 
             $contact_customer = new Contact();
             $contact_customer->retrieve($invoice->contact_id3_c);
@@ -203,6 +234,26 @@
             $body_html = str_replace("\$aos_invoices_billing_contact", $contact_customer->name , $body_html);
             $body_html = str_replace("\$aos_invoices_install_address_c", $customer_address , $body_html);
             $body_html = str_replace("\$aos_invoices_contact_id3_c", $customer_phone , $body_html);
+
+            //Add SMS Template for Plumber/Electrician
+            $smsTemplate = BeanFactory::getBean(
+                'pe_smstemplate',
+                'ca646f5f-399a-d408-7536-601102429ed6' 
+            );
+
+            $body_sms =  $smsTemplate->body_c;
+            $body_sms = str_replace("\$first_name", $contact_installer->first_name, $body_sms);
+            $body_sms = str_replace("\$aos_invoices_billing_contact",  $contact_customer->name, $body_sms);
+            $smsTemplate->body_c = $body_sms;
+            $email->emails_pe_smstemplate_idb  =  $smsTemplate->id;
+            $email->emails_pe_smstemplate_name =  $smsTemplate->name; 
+
+            $email->number_receive_sms = "matthew_paul_client";
+            $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact_installer->phone_mobile));
+            $phone_number = preg_replace("/^61/", "+61", $phone_number);
+            $email->number_client =  $phone_number; 
+            $email->sms_message =trim(strip_tags(html_entity_decode($body_sms.' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+
         }
         $email->emails_email_templates_name = $emailTemplate->name;
         $email->emails_email_templates_idb = $emailTemplate->id;
@@ -272,10 +323,10 @@
 
         $email->description = $body;
         $email->description_html = $body_html;
-        $email->id = create_guid();
-        $email->new_with_id = true;
-        $email->type = "draft";
-        $email->status = "draft";
+        // $email->id = create_guid();
+        // $email->new_with_id = true;
+        // $email->type = "draft";
+        // $email->status = "draft";
         $email->save(false);
 
         return $email->id;

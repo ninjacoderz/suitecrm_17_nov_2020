@@ -826,6 +826,33 @@ class EmailsController extends SugarController
                         $description = str_replace("\$distance_to_suite_c",$invoice->distance_to_suitecrm_c , $description);
                         $description_html = str_replace("\$distance_to_suite_c", $invoice->distance_to_suitecrm_c , $description_html);
                     }
+                    //VUT - S - Add file "Proposed Install Location" to email Plumber/Electrician
+                    $invoice_file_attachments = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c ."/");
+                    $name_file_include = 'Proposed_Install_Location';
+                    if (count($invoice_file_attachments)>0 ) foreach ($invoice_file_attachments as $att){
+                        $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c ."/" . $att ;
+                        if(!is_file($source)) continue;
+                        if (strpos(strtolower($att),strtolower($name_file_include))) {
+                            $noteTemplate = new Note();
+                            $noteTemplate->id = create_guid();
+                            $noteTemplate->new_with_id = true; // duplicating the note with files
+                            $noteTemplate->parent_id = $this->bean->id;
+                            $noteTemplate->parent_type = 'Emails';
+                            $noteTemplate->date_entered = '';
+                            // $noteTemplate->file_mime_type = 'application/pdf';
+                            $noteTemplate->filename = $att;
+                            $noteTemplate->name = $att;
+        
+                            $noteTemplate->save();
+        
+                            $destination = realpath(dirname(__FILE__) . '/../../').'/upload/'.$noteTemplate->id;
+                            if (!symlink($source, $destination)) {
+                                $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                            }
+                            $this->bean->attachNote($noteTemplate);
+                        }
+                    }
+                    //VUT - E - Add file "Proposed Install Location" to email Plumber/Electrician
                 }
                 $description = str_replace("\$installation_calendar_url", $link_calendar, $description);
 
