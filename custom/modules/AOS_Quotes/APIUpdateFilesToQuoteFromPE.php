@@ -73,9 +73,9 @@ if( $lead_id != ""){
     if(count($_POST['files']['data-pe-files-hws']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-hws']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-hws']['name'][$i] != ""){
-                $file_type = $number_module.'_Old_Existing_Hws_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION);
-                $count = checkCountExistPhoto($file_type,$folderName,'_Old_Existing_Hws_');
-                $file_type = $number_module.'_Old_Existing_Hws_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION );
+                $file_type = $number_module.'_Existing_Hws_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_');
+                $file_type = $number_module.'_Existing_Hws_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION );
                 copy($_POST['files']['data-pe-files-hws']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -204,9 +204,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = basename($number_module.'_Old_Existing_Hws'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws']['name'][$i], PATHINFO_EXTENSION));
-                $count = checkCountExistPhoto($file_type,$folderName,'_Old_Existing_Hws');
-                $file_type = $number_module.'_Old_Existing_Hws'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-hws']['name'][$i]), PATHINFO_EXTENSION);
+                $file_type = basename($number_module.'_Existing_Hws'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws');
+                $file_type = $number_module.'_Existing_Hws'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-hws']['name'][$i]), PATHINFO_EXTENSION);
                 copy($_POST['files']['data-pe-files-existing-hws']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Old Existing HWS '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -223,9 +223,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = basename($number_module.'_Old_Existing_Hws_Brand_Model'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i], PATHINFO_EXTENSION));
-                $count = checkCountExistPhoto($file_type,$folderName,'_Old_Existing_Hws_Brand_Model');
-                $file_type = $number_module.'_Old_Existing_Hws_Brand_Model'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i]), PATHINFO_EXTENSION);
+                $file_type = basename($number_module.'_Existing_Hws_Brand_Model'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_Brand_Model');
+                $file_type = $number_module.'_Existing_Hws_Brand_Model'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i]), PATHINFO_EXTENSION);
                 copy($_POST['files']['data-pe-files-existing-hws-brand-model']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Old Existing HWS Brand/Model/Serial Number '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
