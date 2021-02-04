@@ -23,7 +23,7 @@ $connoteNumber = str_replace(' ', '', $_REQUEST['connot']);
 $carrier = $_REQUEST['carrier'];
 $method_action = $_REQUEST['method_action'];
 
-if($method_action == 'get_status_from_button') {
+if($method_action == 'get_status_from_button' && $carrier == 'Australia Post') {
 
     curl_get_status_from_devel($connoteNumber,$carrier);
     die();
@@ -64,6 +64,11 @@ function get_status($connoteNumber,$carrier,$whlog = ''){
         } else {
             $status = $html->find('p b')[0]->innertext;
         }
+
+        if(!isset($status)|| $status == ''){
+            $status = "Unavailable";
+        }
+        
         if($whlog != ''){
             $db  = DBManagerFactory::getInstance();
             $query = "SELECT id,parent_id FROM pe_stock_items WHERE parent_id = '$whlog->id' AND deleted = 0";
@@ -205,7 +210,9 @@ function get_status($connoteNumber,$carrier,$whlog = ''){
         curl_close($ch);
         $result = json_decode($result);
         $status = $result->tracking_results[0]->status;
-
+        if(!isset($status)|| $status == ''){
+            $status = "Unavailable";
+        }
         if($whlog != ''){
             $db  = DBManagerFactory::getInstance();
             $query = "SELECT id,parent_id FROM pe_stock_items WHERE parent_id = '$whlog->id' AND deleted = 0";
@@ -286,6 +293,9 @@ function get_status($connoteNumber,$carrier,$whlog = ''){
                 }
             }
         }
+        if(!isset($status)|| $status == ''){
+            $status = "Unavailable";
+        }
         if($whlog != ''){
             $db  = DBManagerFactory::getInstance();
             $query = "SELECT id,parent_id FROM pe_stock_items WHERE parent_id = '$whlog->id' AND deleted = 0";
@@ -324,6 +334,33 @@ function get_status($connoteNumber,$carrier,$whlog = ''){
     }
 }
 function curl_get_status_from_devel($connoteNumber,$carrier){
+    // 1 Login
+    $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+    $fields = array();
+    $fields['user_name'] = 'admin';
+    $fields['username_password'] = 'pureandtrue2020*';
+    $fields['module'] = 'Users';
+    $fields['action'] = 'Authenticate';
+
+    $url = 'http://suitecrm.devel.pure-electric.com.au';
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+    curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
+
+    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+    $result = curl_exec($curl);
+    // 2 Calling CURL
     $request_data = array (
         'connot' => $connoteNumber,
         'carrier' =>$carrier
