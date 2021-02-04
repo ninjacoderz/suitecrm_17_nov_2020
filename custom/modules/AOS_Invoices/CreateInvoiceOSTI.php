@@ -21,10 +21,17 @@ if($stc_aggregator_serial_c != ''){
     $InvoiceOSTI->billing_account_id = 'a0291eb6-5326-460f-f5fe-5aaa0d7c830d' ;
     $InvoiceOSTI->billing_contact = $OriginInvoice->site_contact_c = 'Natalie Barnes' ;
     $InvoiceOSTI->billing_contact_id = $OriginInvoice->contact_id3_c = '8be3e6c9-aba5-23fa-b5a2-5b63977bcca2';
-    $InvoiceOSTI->billing_address_street = $InvoiceOSTI->install_address_c =  $OriginInvoice->install_address_c ;
-    $InvoiceOSTI->billing_address_city = $InvoiceOSTI->install_address_city_c =  $OriginInvoice->install_address_city_c ;
-    $InvoiceOSTI->billing_address_state = $InvoiceOSTI->install_address_state_c =  $OriginInvoice->install_address_state_c ;
-    $InvoiceOSTI->billing_address_postalcode = $InvoiceOSTI->install_address_postalcode_c =  $OriginInvoice->install_address_postalcode_c ;
+    $InvoiceOSTI->quote_type_c = 'SOTI';
+
+    $InvoiceOSTI->billing_address_street = 'G.02 109 Burwood Rd';
+    $InvoiceOSTI->billing_address_city = 'Hawthorn';
+    $InvoiceOSTI->billing_address_state = 'VIC';
+    $InvoiceOSTI->billing_address_postalcode = '3122';
+
+    $InvoiceOSTI->install_address_c =  $OriginInvoice->install_address_c ;
+    $InvoiceOSTI->install_address_city_c =  $OriginInvoice->install_address_city_c ;
+    $InvoiceOSTI->install_address_state_c =  $OriginInvoice->install_address_state_c ;
+    $InvoiceOSTI->install_address_postalcode_c =  $OriginInvoice->install_address_postalcode_c ;
 
     $InvoiceOSTI->save();
     $result_data['IdInvoiceOSTI'] = $InvoiceOSTI->id;
