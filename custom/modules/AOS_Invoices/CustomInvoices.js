@@ -7623,6 +7623,27 @@ $(document).ready(function(){
         });
         //hide field not use 
         $('#delivery_contact_address_c,#delivery_contact_suburb_c,#delivery_contact_state_c,#delivery_contact_postcode_c').closest('.edit-view-row-item').hide();
+        
+        //thienpb
+        $('#order_number_c').parent().siblings('.label').append('<br> <button type="button" class="button primary" id="createLabelAuspost"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create Label Auspost</button>');
+        $('#createLabelAuspost').on("click", function(e){
+            if($("#order_number_c").val() != ""){
+                var url_getStatusSAM = '/index.php?entryPoint=ManuallyCreateLabel&order_number=' + $("#order_number_c").val();
+                $.ajax({
+                    url:url_getStatusSAM,
+                    success: function (data) {
+                        if(data.replace(/\s/g, '') != ''){
+                            alert("Successfully created Auspost Label.");
+                        }else{
+                            alert("We can not create label manually.");
+                        }   
+                    }
+                })
+            }else{
+                alert("Order Number is not found!");
+            }
+            
+        })
     }
 });
 //VUT-E-Seek install date in Quote
