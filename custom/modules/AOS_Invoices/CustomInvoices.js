@@ -6661,13 +6661,16 @@ $(function () {
                                         id: $("#id_ces_template").val(),
                                         action: 'create',
                                         content: encodeURIComponent($("#content_ces_template").val()),
-                                        title: encodeURIComponent($("#title_ces_template").val())
+                                        title: encodeURIComponent($("#title_ces_template").val()),
+                                        module: $("input[name='return_module']").val(),
+                                        module_id: $("input[name='record']").val(),
                                     },
                                     success: function(result) {              
                                         render_select_ces_template(result);
                                         SUGAR.ajaxUI.hideLoadingPanel();
                                     }
-                                }); 
+                                });
+                                $("#ces_cert_wording_c").val( $("#content_ces_template").val());
                             }   
                             //update
                             else{
@@ -6679,15 +6682,18 @@ $(function () {
                                         id: $("#id_ces_template").val(),
                                         action: 'update',
                                         content: encodeURIComponent($("#content_ces_template").val()),
-                                        title: encodeURIComponent($("#title_ces_template").val())
+                                        title: encodeURIComponent($("#title_ces_template").val()),
+                                        module: $("input[name='return_module']").val(),
+                                        module_id: $("input[name='record']").val(),
+            
                                     },
                                     success: function(result) {                         
                                         render_select_ces_template(result);
                                         SUGAR.ajaxUI.hideLoadingPanel();
+                                        $("#ces_cert_wording_c").val(window.data_ces_notes[$("#id_ces_template").val()].content);
                                     }
                                 }); 
                             }
-                            $("#ces_cert_wording_c").val( $("#content_ces_template").val());  
                             autosize.update($("#ces_cert_wording_c"));
                             $(this).dialog('close');
                         },
@@ -6697,7 +6703,11 @@ $(function () {
                             $("#content_ces_template").val('');
                         },
                         Insert: function(){
-                            $("#ces_cert_wording_c").val( $("#content_ces_template").val()); 
+                            if ($("#id_ces_template").val() != '')  {
+                                alert('PLease click Save!'); return;
+                            } else {
+                                $("#ces_cert_wording_c").val( $("#content_ces_template").val()); 
+                            }
                             autosize.update($("#ces_cert_wording_c"));     
                             $(this).dialog('close');
                         },
@@ -6714,7 +6724,9 @@ $(function () {
                                         id: $("#id_ces_template").val(),
                                         action: 'delete',
                                         content: encodeURIComponent($("#content_ces_template").val()),
-                                        title: encodeURIComponent($("#title_ces_template").val())
+                                        title: encodeURIComponent($("#title_ces_template").val()),
+                                        module: $("input[name='return_module']").val(),
+                                        module_id: $("input[name='record']").val(),
                                     },
                                     success: function(result) {                         
                                         render_select_ces_template(result);
@@ -6727,6 +6739,7 @@ $(function () {
                             }
                         },
                         Cancel: function(){
+                            render_select_ces_template(JSON.stringify(window.data_ces_note_prev));
                             $(this).dialog('close');
                         },
                     }
@@ -6743,6 +6756,7 @@ $(function () {
                 </div>';
                 $('#ces_cert_wording_c').parents('.edit-view-row-item').append(html_select_ces_template);
                 $("#dialog_ces_notes_button").click(function(e){
+                    window.data_ces_note_prev = window.data_ces_notes;
                     SUGAR.ajaxUI.showLoadingPanel();
                     $("#ajaxloading_mask").css("position",'fixed');
                     $.ajax({
@@ -6751,6 +6765,8 @@ $(function () {
                         data: 
                         {
                             action: 'read',
+                            // module: $("input[name='return_module']").val(),
+                            // module_id: $("input[name='record']").val(),
                         },
                         async: true,
                         success: function(result) {                         
@@ -6768,48 +6784,14 @@ $(function () {
                     var title = $('#select_title_template_ces_notes option:selected').text();
                     $("#title_ces_template").val(title);
                     $("#id_ces_template").val(id);
-                    $("#content_ces_template").val(window.data_pcoc_notes[id].content);
+                    $("#content_ces_template").val(window.data_ces_notes[id].content);
                 });
-        
-                function render_select_ces_template(result){
-                    var data_result = $.parseJSON(result);
-                    window.data_ces_notes = data_result;
-                    $('#select_title_template_ces_notes').empty();
-                    $("#select_template_ces").empty();
-                    $('#select_title_template_ces_notes').append($('<option>', {
-                        value: '',
-                        text: ''
-                    }));
-                    $('#select_template_ces').append($('<option>', {
-                        value: '',
-                        text: 'Select Template CES'
-                    }));
-                    $.each(data_result,function(k,v){
-                        $('#select_title_template_ces_notes').append($('<option>', {
-                            value: k,
-                            text: v.title
-                        }));
-                        $('#select_template_ces').append($('<option>', {
-                            value: k,
-                            text: v.title
-                        }));
-                    });
-                    autosize.update($("#ces_cert_wording_c")); 
-                }
+                //VUT >> move to end page
+                // function render_select_ces_template(result){
+                // }
+
                 // run first time
-                $.ajax({
-                    url: 'index.php?entryPoint=CRUD_Cert_Template&type_template=ces_type' ,
-                    type: 'POST',
-                    data: 
-                    {
-                        action: 'read',
-                    },
-                    async: true,
-                    success: function(result) {   
-                        if(result == '' && typeof result == undefined)return;
-                        render_select_ces_template(result);
-                    }
-                }); 
+                loadSelect_CES_Template();
         
                 $(document).find('#select_template_ces').change(function(){
                     $('#ces_cert_wording_c').val('');
@@ -7940,4 +7922,57 @@ function hasFileAndPhoto(str) {
         }
     });
     return res;
+}
+
+/**
+ * VUT - load select CES note template
+ */
+function loadSelect_CES_Template() {
+    SUGAR.ajaxUI.showLoadingPanel();
+    $.ajax({
+        url: 'index.php?entryPoint=CRUD_Cert_Template&type_template=ces_type' ,
+        type: 'POST',
+        data: 
+        {
+            action: 'read',
+            module: $("input[name='return_module']").val(),
+            module_id: $("input[name='record']").val(),
+        },
+        async: false,
+        success: function(result) {   
+            if(result == '' && typeof result == undefined)return;
+            render_select_ces_template(result);
+            SUGAR.ajaxUI.hideLoadingPanel();
+        }
+    }); 
+}
+
+/**
+ * VUT - move to here
+ * @param {JSON_ENCODE} result 
+ */
+function render_select_ces_template(result){
+    var data_result = $.parseJSON(result);
+    window.data_ces_notes = data_result;
+    $('#select_title_template_ces_notes').empty();
+    $("#select_template_ces").empty();
+    $('#select_title_template_ces_notes').append($('<option>', {
+        value: '',
+        text: ''
+    }));
+    $('#select_template_ces').append($('<option>', {
+        value: '',
+        text: 'Select Template CES'
+    }));
+    $.each(data_result,function(k,v){
+        $('#select_title_template_ces_notes').append($('<option>', {
+            value: k,
+            text: v.title
+        }));
+        $('#select_template_ces').append($('<option>', {
+            value: k,
+            text: v.title
+        }));
+    });
+    autosize.update($("#ces_cert_wording_c")); 
 }

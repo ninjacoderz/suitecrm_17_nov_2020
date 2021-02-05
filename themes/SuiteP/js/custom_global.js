@@ -339,6 +339,8 @@ $(document).ready(function(){
 
         if (module_sugar_grp1 == 'Calls') {
             autosize.destroy($('#description'));
+        } else if (module_sugar_grp1 == 'AOS_Invoices') {
+            autosize.destroy($('#content_ces_template'));
         }
         remove_break_line_textarea();
         $('textarea').on('change', function(){
