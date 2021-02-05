@@ -688,7 +688,8 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Body = $shortcuts;
         $mail->Body .= "<p>Link Quote: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote->id."' target='_blank'>".$quote->name."</a></p>";
         $mail->Body .= "<p>Email: <a href='https://mail.google.com/#search/".$account->email1."'>".$account->email1." GSearch</a></p>";
-        $mail->Body .= "<p>Phone number: <a href='#'>".$account->phone_mobile."</a></p></p>";
+        $mail->Body .= "<p>Phone number: <a href='#'>".$account->phone_mobile."</a></p>";
+        $mail->Body .= "<p><a href='http://sandentool.pure-electric.com.au/index.php?quote_id=".$quote->id."'>Sanden Design Tool</a></p>";
         $mail->Body .= "<p><a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=converToInvoice&record=".$quote->id."' target='_blank'>Convert Invoice</a></p>";
         $mail->Body .= $list_photos;
         email_notification_for_client($quote->account_firstname_c,$quote->account_lastname_c,$account->email1,$list_photos);
