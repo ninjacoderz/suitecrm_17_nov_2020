@@ -408,5 +408,13 @@ $(document).ready(function(){
         }
     });
 
+    //Return detail view when open and save record from Dashlet
+    if (action_sugar_grp1 == 'EditView' && $("input[name='return_module']").val() == 'Home' && $("input[name='return_action']").val() == 'index') {
+        // debugger;
+        $("input[name='return_module']").val('');
+        $("input[name='return_action']").val('');
+        $("input[name='relate_to']").val('');
+    }
+
     
 })
