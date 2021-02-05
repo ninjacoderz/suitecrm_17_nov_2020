@@ -49,6 +49,7 @@
     $get_all_photo = dirToArray($_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$quote->pre_install_photos_c.'/') ;
     
     //Setting Invoice Values
+    date_default_timezone_set('Australia/Melbourne');
     $invoice = BeanFactory::newBean('AOS_Invoices');
     $rawRow = $quote->fetched_row;
     $rawRow['id'] = '';
