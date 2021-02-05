@@ -83,6 +83,58 @@ if( $lead_id != ""){
             };
         }
     };
+    if(count($_POST['files']['data-pe-files-hws-centre']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-hws-centre']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-hws-centre']['name'][$i] != ""){
+                $file_type = $number_module.'_Existing_Hws_(Centre)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-centre']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(Centre)');
+                $file_type = $number_module.'_Existing_Hws_(Centre)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-centre']['name'][$i]), PATHINFO_EXTENSION );
+                copy($_POST['files']['data-pe-files-hws-centre']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (centre) '.$i.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws-centre']['tmp_name'][$i], 'fileName' => $file_type);
+            };
+        }
+    };
+    if(count($_POST['files']['data-pe-files-hws-right']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-hws-right']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-hws-right']['name'][$i] != ""){
+                $file_type = $number_module.'_Existing_Hws_(right)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-right']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(right)');
+                $file_type = $number_module.'_Existing_Hws_(right)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-right']['name'][$i]), PATHINFO_EXTENSION );
+                copy($_POST['files']['data-pe-files-hws-right']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (right)'.$i.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws-right']['tmp_name'][$i], 'fileName' => $file_type);
+            };
+        }
+    };
+    if(count($_POST['files']['data-pe-files-hws-left']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-hws-left']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-hws-left']['name'][$i] != ""){
+                $file_type = $number_module.'_Existing_Hws_(left)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-left']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(left)');
+                $file_type = $number_module.'_Existing_Hws_(left)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-left']['name'][$i]), PATHINFO_EXTENSION );
+                copy($_POST['files']['data-pe-files-hws-left']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (left)'.$i.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws-left']['tmp_name'][$i], 'fileName' => $file_type);
+            };
+        }
+    };
+    if(count($_POST['files']['data-pe-files-hws-serial']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-hws-serial']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-hws-serial']['name'][$i] != ""){
+                $file_type = $number_module.'_Existing_Hws_(serial)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-serial']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(serial)');
+                $file_type = $number_module.'_Existing_Hws_(serial)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-serial']['name'][$i]), PATHINFO_EXTENSION );
+                copy($_POST['files']['data-pe-files-hws-serial']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (serial)'.$i.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hws-serial']['tmp_name'][$i], 'fileName' => $file_type);
+            };
+        }
+    };
     if(count($_POST['files']['data-pe-files-switchboard']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-switchboard']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-switchboard']['name'][$i] != ""){
@@ -794,7 +846,7 @@ if($_POST['to_module'] == "aos_invoice"){
             $mail->Body .= "<p>Link Solargain Quote: <a href='https://crm.solargain.com.au/quote/edit/".$quote_slgain->solargain_quote_number_c."' target='_blank'>Solargain Quote Number ".$quote_slgain->solargain_quote_number_c."</a></p>";
             $mail->Body .= "<br><h4>Optional details (to speed up the quoting process)</h4>";
             $mail->Body .= $list_optional;
-            // $mail->AddCC('quochuybkdn@gmail.com');
+            $mail->AddCC('quochuybkdn@gmail.com');
         }   
         $mail->Body .= $list_photos;
         email_notification_for_client($lead->first_name,$lead->last_name,$lead->email1,$list_photos);
@@ -805,12 +857,12 @@ if($_POST['to_module'] == "aos_invoice"){
     foreach($file_to_attach as $file_attach) {
         $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
     }
-    // $mail->AddAddress('info@pure-electric.com.au');
+    $mail->AddAddress('info@pure-electric.com.au');
     // $mail->AddCC('paul.szuster@pure-electric.com.au');
     // $mail->AddCC('matthew.wright@pure-electric.com.au');
     // $mail->AddCC('john.hooper@pure-electric.com.au');
     // $mail->AddCC('quochuybkdn@gmail.com');
-    $mail->AddAddress('ngoanhtuan2510@gmail.com');
+    // $mail->AddAddress('ngoanhtuan2510@gmail.com');
     $mail->prepForOutbound();
     $mail->setMailerForSystem();  
     $mail->Send();
