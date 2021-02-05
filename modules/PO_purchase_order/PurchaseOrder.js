@@ -364,7 +364,7 @@ $(function () {
         for( var c = 1; c <=30; c++){
             options_quatity += '<option  value="'+c+'">'+c+'</option>';
         }
-        $('#create_solar_quote_fqs_c').hide();
+        $('#create_sanden_quote_fqs_c').hide();
         var po_sanden_supply_input = '<div id="po_sanden_supply_input">\
                                         <span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option>'+options_quatity+'</select>\
                                         <span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option>'+options_quatity+'</select>\
@@ -374,15 +374,21 @@ $(function () {
                                         <button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button>\
                                     </div>'
         if( $('#po_type_c').val() =="sanden_supply"){
-            $('#create_solar_quote_fqs_c').after(po_sanden_supply_input);
+            $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
+            LoadJSONPOInput();
         }
         $('#po_type_c').change(function(){
             if( $('#po_type_c').val() =="sanden_supply"){
                 $(document).find('#po_sanden_supply_input').remove();
-                $('#create_solar_quote_fqs_c').after(po_sanden_supply_input);
+                $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
+                LoadJSONPOInput();
             }else{
                 $(document).find('#po_sanden_supply_input').remove();
             }
+        });
+
+        $(document).find('#po_sanden_supply_input').on("change", "select", function(e){
+            saveJSONPOInput();
         });
 
         $("#link_realestate_shipping").click(function(){
@@ -1189,15 +1195,17 @@ function getInfoProductDaikin() {
 }
 
 function generatePOLineItem(){
-    if($("#group_body0").length == 0){
+    saveJSONPOInput();
+    SUGAR.ajaxUI.showLoadingPanel();
+    for (var i = 0; i < prodln; i++){
+        markLineDeleted(i,"product_");
+    }
+    if($("#lineItems").find(".group_body").length == 0){
         insertGroup(0);
         $("#group0name").val("Sanden");
     }else{
-        for (var i = 0; i < prodln; i++){
-            $('#product_delete_line'+i).trigger('click');
-        }
+        $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
     }
-
     var new_name = "Sanden ";
     var total_item = parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) +parseInt($("#sanden_fqs_250").val()) ;
     if( parseInt($("#sanden_fqs_315").val()) > 0){
@@ -1232,11 +1240,34 @@ function generatePOLineItem(){
         new_name += $("#QIK20_HPUMP").val()+"x QIK20 ";
     }
     setTimeout(function (){
-    autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
-    autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+        if(total_item > 0){
+            autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
+            autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+        }
     },200)
     new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  formatTimeforPOname($("#dispatch_date_c").val()) + " "+$("#supplier_order_number_c").val() ;
     $('#name').val(new_name);
+    setTimeout(function (){
+        SUGAR.ajaxUI.hideLoadingPanel();
+    },500)
+}
+
+function saveJSONPOInput(){
+    var values = {};
+    $(document).find('#po_sanden_supply_input select').each(function (){
+        var id_name = $(this).attr("id");
+        values[id_name] = $(this).val();
+    });
+    $("#create_sanden_quote_fqs_c").val(JSON.stringify(values));
+}
+
+function LoadJSONPOInput(){
+    if($("#create_sanden_quote_fqs_c").val() != ''){
+        var dataJSON = JSON.parse($("#create_sanden_quote_fqs_c").val());
+        for (let key in dataJSON) {  
+            $("#"+key).val(dataJSON[key]);
+        }
+    }
 }
 
 // $(document).ready(function(){
