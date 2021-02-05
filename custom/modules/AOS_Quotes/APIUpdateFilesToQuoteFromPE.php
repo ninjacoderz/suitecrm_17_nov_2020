@@ -696,13 +696,29 @@ if($_POST['to_module'] == "aos_invoice"){
     }else if( $lead_id != ""){
         $lead = new Lead();
         $lead->retrieve($lead_id);
+        $list_optional;
         if( $_POST['type_product'] == "Solar" ){
             $lead->name_on_billing_account_c = $_POST['name_as_it_appears_on_bill']? $_POST['name_as_it_appears_on_bill']: $lead->name_on_billing_account_c;
             $lead->meter_number_c = $_POST['meter_number']? $_POST['meter_number']:$lead->meter_number_c;
             $lead->account_number_c = $_POST['account_number']? $_POST['account_number']:$lead->account_number_c;
             $lead->nmi_c = $_POST['NMI_number']? $_POST['NMI_number']:$lead->nmi_c;
             $lead->roof_type_c = $_POST['main_roof_type']? $_POST['main_roof_type']:$lead->roof_type_c;
+            $lead->secondary_roof_type_c = $_POST['secondary_roof_type']? $_POST['secondary_roof_type']:$lead->secondary_roof_type_c;
+            $lead->primary_wall_type_c = $_POST['primary_wall_type']? $_POST['primary_wall_type']:$lead->primary_wall_type_c;
+            $lead->secondary_wall_type_c = $_POST['secondary_wall_type']? $_POST['secondary_wall_type']:$lead->secondary_wall_type_c;
+            $lead->switchboard_location_c = $_POST['switchboard_location']? $_POST['switchboard_location']:$lead->switchboard_location_c;
+            $lead->meter_location_c = $_POST['meter_location']? $_POST['meter_location']:$lead->meter_location_c;
             $lead->save();
+            $list_optional .= '<p>Name as it appears on bill: '.$_POST['name_as_it_appears_on_bill'] .'</p>';//
+            $list_optional .= '<p>Account Number: '.$_POST['account_number'].'</p>';//
+            $list_optional .= '<p>NMI Number: '.$_POST['NMI_number'].'</p>';//
+            $list_optional .= '<p>Meter Number: '.$_POST['meter_number'].'</p>';//
+            $list_optional .= '<p>Main Roof Type: '.$_POST['main_roof_type'].'</p>';//
+            $list_optional .= '<p>Secondary Roof Type: '.$_POST['secondary_roof_type'].'</p>';
+            $list_optional .= '<p>Primary Wall Type: '.$_POST['primary_wall_type'].'</p>';
+            $list_optional .= '<p>Secondary Wall Type: '.$_POST['secondary_wall_type'].'</p>';
+            $list_optional .= '<p>Switchboard location: '.$_POST['switchboard_location'].'</p>';
+            $list_optional .= '<p>Meter location: '.$_POST['meter_location'].'</p>';
             if( $lead->create_solar_quote_num_c != ""){
                 $quote_slgain = new AOS_Quotes();
                 $quote_slgain->retrieve($lead->create_solar_quote_num_c);
@@ -710,7 +726,12 @@ if($_POST['to_module'] == "aos_invoice"){
                 $quote_slgain->meter_number_c = ($_POST['meter_number'])? ($_POST['meter_number']) : $quote_slgain->meter_number_c;
                 $quote_slgain->account_number_c = ($_POST['account_number'])? ($_POST['account_number']) : $quote_slgain->account_number_c;
                 $quote_slgain->nmi_c = ($_POST['NMI_number'])? ($_POST['NMI_number']) : $quote_slgain->nmi_c;
-                $quote_slgain->roof_typec = ($_POST['main_roof_type'])? ($_POST['main_roof_type']) : $quote_slgain->roof_typec;
+                $quote_slgain->roof_type_c = ($_POST['main_roof_type'])? ($_POST['main_roof_type']) : $quote_slgain->roof_type_c;
+                $quote_slgain->secondary_roof_type_c = $_POST['secondary_roof_type']? $_POST['secondary_roof_type']:$quote_slgain->secondary_roof_type_c;
+                $quote_slgain->primary_wall_type_c = $_POST['primary_wall_type']? $_POST['primary_wall_type']:$quote_slgain->primary_wall_type_c;
+                $quote_slgain->secondary_wall_type_c = $_POST['secondary_wall_type']? $_POST['secondary_wall_type']:$quote_slgain->secondary_wall_type_c;
+                $quote_slgain->switchboard_location_c = $_POST['switchboard_location']? $_POST['switchboard_location']:$lequote_slgainad->switchboard_location_c;
+                $quote_slgain->meter_location_c = $_POST['meter_location']? $_POST['meter_location']:$quote_slgain->meter_location_c;
                 $quote_slgain->save();
             }else {
                 $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
@@ -764,15 +785,17 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->FromName = 'Pure Electric';  
         $mail->Subject = $_POST['type_product'] .' - '.$lead->first_name." ".$lead->last_name." uploaded file to lead#".$lead->number." ".$lead->account_name;
         $mail->Body = $shortcuts;
-        if( $_POST['type_product'] == "Solar" ){
-            $mail->Body .= "<p>Link Solargain Lead: <a href='https://crm.solargain.com.au/lead/edit/".$quote_slgain->solargain_lead_number_c."' target='_blank'>Solargain Lead Number ".$quote_slgain->solargain_lead_number_c."</a></p>";
-            $mail->Body .= "<p>Link Solargain Quote: <a href='https://crm.solargain.com.au/quote/edit/".$quote_slgain->solargain_quote_number_c."' target='_blank'>Solargain Quote Number ".$quote_slgain->solargain_quote_number_c."</a></p>";
-            $mail->Body .= "<p>Link Quote: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote_slgain->id."' target='_blank'>".$quote_slgain->name."</a></p>";
-            $mail->AddCC('quochuybkdn@gmail.com');
-        }   
         $mail->Body .= "<p>Link Lead: <a href='https://suitecrm.pure-electric.com.au/index.php?module=Leads&action=EditView&record=".$lead->id."' target='_blank'>".$lead->account_name."</a></p>";
         $mail->Body .= "<p>Email: <a href='https://mail.google.com/#search/".$lead->email1."'>".$lead->email1." GSearch</a></p>";
         $mail->Body .= "<p>Phone number: <a href='#'>".$lead->phone_mobile."</a></p></p>";
+        if( $_POST['type_product'] == "Solar" ){
+            $mail->Body .= "<p>Link Quote: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote_slgain->id."' target='_blank'>".$quote_slgain->name."</a></p>";
+            $mail->Body .= "<p>Link Solargain Lead: <a href='https://crm.solargain.com.au/lead/edit/".$quote_slgain->solargain_lead_number_c."' target='_blank'>Solargain Lead Number ".$quote_slgain->solargain_lead_number_c."</a></p>";
+            $mail->Body .= "<p>Link Solargain Quote: <a href='https://crm.solargain.com.au/quote/edit/".$quote_slgain->solargain_quote_number_c."' target='_blank'>Solargain Quote Number ".$quote_slgain->solargain_quote_number_c."</a></p>";
+            $mail->Body .= "<br><h4>Optional details (to speed up the quoting process)</h4>";
+            $mail->Body .= $list_optional;
+            // $mail->AddCC('quochuybkdn@gmail.com');
+        }   
         $mail->Body .= $list_photos;
         email_notification_for_client($lead->first_name,$lead->last_name,$lead->email1,$list_photos);
     }
@@ -782,12 +805,12 @@ if($_POST['to_module'] == "aos_invoice"){
     foreach($file_to_attach as $file_attach) {
         $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
     }
-    $mail->AddAddress('info@pure-electric.com.au');
+    // $mail->AddAddress('info@pure-electric.com.au');
     // $mail->AddCC('paul.szuster@pure-electric.com.au');
     // $mail->AddCC('matthew.wright@pure-electric.com.au');
     // $mail->AddCC('john.hooper@pure-electric.com.au');
     // $mail->AddCC('quochuybkdn@gmail.com');
-    // $mail->AddAddress('ngoanhtuan2510@gmail.com');
+    $mail->AddAddress('ngoanhtuan2510@gmail.com');
     $mail->prepForOutbound();
     $mail->setMailerForSystem();  
     $mail->Send();
@@ -1173,7 +1196,7 @@ function convert_file_and_photo_to_quote($from,$to){
             }  
             if($condition_change_file){    
                 $extension=end(explode(".", $file_name));
-                $new_file_name = 'Q'.$quote->number.$label_new_file;
+                $new_file_name = 'Q'.$to->number.$label_new_file;
                 $inv_file_path = 
                 $i = 1;
                 $will_rename = $new_file_name;

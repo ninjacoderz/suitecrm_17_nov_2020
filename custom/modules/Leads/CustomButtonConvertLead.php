@@ -701,7 +701,7 @@ $account->save();
 function convert_lead_to_quote($lead,$quote){
     //field same name
     $array_field_need_copy = array(
-        'customer_type_c','roof_type_c','gutter_height_c',
+        'customer_type_c','roof_type_c','secondary_roof_type_c','primary_wall_type_c','secondary_wall_type_c','switchboard_location_c','meter_location_c','gutter_height_c',
         'build_account_c','connection_type_c','main_type_c','meter_number_c','meter_phase_c','address_nmi_c','nmi_c','account_number_c',
         'phone_num_registered_account_c','name_on_billing_account_c','energy_retailer_c','distributor_c','jemena_account_c',
         'live_chat_c','solargain_lead_number_c','solargain_quote_number_c','solargain_tesla_quote_number_c','solargain_options_c',
