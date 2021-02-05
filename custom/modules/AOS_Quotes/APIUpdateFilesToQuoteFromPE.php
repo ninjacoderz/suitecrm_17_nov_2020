@@ -709,16 +709,16 @@ if($_POST['to_module'] == "aos_invoice"){
             $lead->switchboard_location_c = $_POST['switchboard_location']? $_POST['switchboard_location']:$lead->switchboard_location_c;
             $lead->meter_location_c = $_POST['meter_location']? $_POST['meter_location']:$lead->meter_location_c;
             $lead->save();
-            $list_optional .= '<p>Name as it appears on bill: '.$_POST['name_as_it_appears_on_bill'] .'</p>';//
-            $list_optional .= '<p>Account Number: '.$_POST['account_number'].'</p>';//
-            $list_optional .= '<p>NMI Number: '.$_POST['NMI_number'].'</p>';//
-            $list_optional .= '<p>Meter Number: '.$_POST['meter_number'].'</p>';//
-            $list_optional .= '<p>Main Roof Type: '.$_POST['main_roof_type'].'</p>';//
-            $list_optional .= '<p>Secondary Roof Type: '.$_POST['secondary_roof_type'].'</p>';
-            $list_optional .= '<p>Primary Wall Type: '.$_POST['primary_wall_type'].'</p>';
-            $list_optional .= '<p>Secondary Wall Type: '.$_POST['secondary_wall_type'].'</p>';
-            $list_optional .= '<p>Switchboard location: '.$_POST['switchboard_location'].'</p>';
-            $list_optional .= '<p>Meter location: '.$_POST['meter_location'].'</p>';
+            $list_optional .= '<p>Name as it appears on bill: '.$_POST['name_as_it_appears_on_bill'] .'</p>';
+            $list_optional .= '<p>Account Number: '. strtoupper(str_replace("_"," ",$_POST['account_number'])).'</p>';
+            $list_optional .= '<p>NMI Number: '.strtoupper(str_replace("_"," ",$_POST['NMI_number'])).'</p>';
+            $list_optional .= '<p>Meter Number: '.strtoupper(str_replace("_"," ",$_POST['meter_number'])).'</p>';
+            $list_optional .= '<p>Main Roof Type: '.strtoupper(str_replace("_"," ",$_POST['main_roof_type'])).'</p>';
+            $list_optional .= '<p>Secondary Roof Type: '.strtoupper(str_replace("_"," ",$_POST['secondary_roof_type'])).'</p>';
+            $list_optional .= '<p>Primary Wall Type: '.strtoupper(str_replace("_"," ",$_POST['primary_wall_type'])).'</p>';
+            $list_optional .= '<p>Secondary Wall Type: '.strtoupper(str_replace("_"," ",$_POST['secondary_wall_type'])).'</p>';
+            $list_optional .= '<p>Switchboard location: '.strtoupper(str_replace("_"," ",$_POST['switchboard_location'])).'</p>';
+            $list_optional .= '<p>Meter location: '.strtoupper(str_replace("_"," ",$_POST['meter_location'])).'</p>';
             if( $lead->create_solar_quote_num_c != ""){
                 $quote_slgain = new AOS_Quotes();
                 $quote_slgain->retrieve($lead->create_solar_quote_num_c);
