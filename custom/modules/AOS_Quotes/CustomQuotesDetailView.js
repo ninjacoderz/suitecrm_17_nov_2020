@@ -350,6 +350,7 @@ $(function () {
                 + '</div>'
                 + '<div id="group_custom_template_col_2_2" class="col-xs-12 col-sm-6 detail-view-row-item">'
                 + '</div>'
+                + '<div style="clear:both"></div>'
                 + '<div id="group_custom_template_col_2_3"  class="col-xs-12 col-sm-6 detail-view-row-item">'
                 + '</div>'
             + '</div>'
