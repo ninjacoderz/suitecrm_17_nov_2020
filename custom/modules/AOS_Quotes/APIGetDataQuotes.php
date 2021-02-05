@@ -48,6 +48,12 @@ if($quote->id != ""){
     $data_return['solargain_quote_number_c'] = ['solargain_quote_number_c',$quote->solargain_quote_number_c,'Solargain Quote Number'];
     $data_return['solargain_lead_number_c'] = ['solargain_lead_number_c',$quote->solargain_lead_number_c,'Solargain Lead Number'];
     $data_return['solargain_tesla_quote_number_c'] = ['solargain_tesla_quote_number_c',$quote->solargain_tesla_quote_number_c,'Solargain Quote Tesla Number'];
+    //VUT - S - Add GP Calculation >> https://trello.com/c/XmMZTQQO/2921-quote-overview-show-the-gross-profit-numbers-and-remove-certain-fields-from-overview?menu=filter&filter=*
+    $data_return['sanden_total_costs'] = ['sanden_total_costs',$quote->sanden_total_costs,'Sanden Total Costs'];
+    $data_return['sanden_gross_profit'] = ['sanden_gross_profit',$quote->sanden_gross_profit,'Sanden Gross Profit'];
+    $data_return['sanden_total_revenue'] = ['sanden_total_revenue',$quote->sanden_total_revenue,'Sub Total Revenue'];
+    $data_return['sanden_gprofit_percent'] = ['sanden_gprofit_percent',$quote->sanden_gprofit_percent,'Sanden Gross Profit %'];
+    //VUT - E - Add GP Calculation
     $account = new Account();
     $account->retrieve($quote->billing_account_id);
     if($account->id != ""){

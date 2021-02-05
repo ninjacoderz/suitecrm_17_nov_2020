@@ -350,6 +350,8 @@ $(function () {
                 + '</div>'
                 + '<div id="group_custom_template_col_2_2" class="col-xs-12 col-sm-6 detail-view-row-item">'
                 + '</div>'
+                + '<div id="group_custom_template_col_2_3"  class="col-xs-12 col-sm-6 detail-view-row-item">'
+                + '</div>'
             + '</div>'
         +'</div>';
         $("#custom_detail_in_detail_view").parent().hide();
@@ -370,7 +372,11 @@ $(function () {
                 $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_quote_number_c),json_data);
                 $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_lead_number_c),json_data);
                 $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_tesla_quote_number_c),json_data);
-            
+                //GP Calculation
+                $("body").find('#group_custom_template_col_2_3').append(render_field_data(json_data.sanden_total_costs),json_data);
+                $("body").find('#group_custom_template_col_2_3').append(render_field_data(json_data.sanden_gross_profit),json_data);
+                $("body").find('#group_custom_template_col_2_3').append(render_field_data(json_data.sanden_total_revenue),json_data);
+                $("body").find('#group_custom_template_col_2_3').append(render_field_data(json_data.sanden_gprofit_percent),json_data);
                 //site details
                 $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.address_site_details),json_data);
                 $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.roof_type_c),json_data);
