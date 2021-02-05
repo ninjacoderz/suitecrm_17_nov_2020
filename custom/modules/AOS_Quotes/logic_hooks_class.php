@@ -95,7 +95,7 @@
                             $new_name = "Q".$invoice_number.'Remittance_Advice';
                             break;
                         case "38":
-                            $new_name = "Q".$invoice_number.'_Old_Existing_HWS';
+                            $new_name = "Q".$invoice_number.'_Existing_HWS';
                             break;
                     }
                     // If new name look like old name
@@ -629,7 +629,7 @@ class CreateInternalNotes {
             'shipping_confirmation' => '_ShippingConfirmation',
             'street_view' => '_Street_View',
             'remittance_advice' => 'Remittance_Advice',
-            'Existing_HWS' => '_Old_Existing_HWS',
+            'Existing_HWS' => '_Existing_HWS',
             'Meter_UpClose' => '_Meter_UpClose',
             'Roof_Pitch' => '_Roof_Pitch',
             'Acceptance' => '_Acceptance',
