@@ -1412,3 +1412,9 @@ $entry_point_registry['CreateInvoiceOSTI'] = array(
     'auth' => false
 );
 
+//thien code -- create auspost label manually button
+$entry_point_registry['ManuallyCreateLabel'] = array(
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/ManuallyCreateLabel.php',
+    'auth' => false
+);
+
