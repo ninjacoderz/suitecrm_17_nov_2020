@@ -60,6 +60,7 @@ if ($_REQUEST['type_template'] == 'ces_type' && $module!='') {
        foreach ($json_data as $key => $value) {
          $text ='';
          $text = templateParserQuoteForm::parse_template_quote_form($value['content'], $module_array);
+         $text = preg_replace('/&nbsp;/', '', $text);
          $json_data[$key]['content'] = $text;
        }
    } 

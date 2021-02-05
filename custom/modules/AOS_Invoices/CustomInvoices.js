@@ -1632,6 +1632,7 @@ $(function () {
                 data: $("#EditView").serialize(),
                 success: function (data) {
                     $(".reload_after_rename").trigger("click");
+                    loadSelect_CES_Template();
                     SUGAR.ajaxUI.hideLoadingPanel();
                 }
             });
@@ -6662,7 +6663,7 @@ $(function () {
                                         action: 'create',
                                         content: encodeURIComponent($("#content_ces_template").val()),
                                         title: encodeURIComponent($("#title_ces_template").val()),
-                                        module: $("input[name='return_module']").val(),
+                                        module: module_sugar_grp1,
                                         module_id: $("input[name='record']").val(),
                                     },
                                     success: function(result) {              
@@ -6683,7 +6684,7 @@ $(function () {
                                         action: 'update',
                                         content: encodeURIComponent($("#content_ces_template").val()),
                                         title: encodeURIComponent($("#title_ces_template").val()),
-                                        module: $("input[name='return_module']").val(),
+                                        module: module_sugar_grp1 ,
                                         module_id: $("input[name='record']").val(),
             
                                     },
@@ -6725,7 +6726,7 @@ $(function () {
                                         action: 'delete',
                                         content: encodeURIComponent($("#content_ces_template").val()),
                                         title: encodeURIComponent($("#title_ces_template").val()),
-                                        module: $("input[name='return_module']").val(),
+                                        module: module_sugar_grp1,
                                         module_id: $("input[name='record']").val(),
                                     },
                                     success: function(result) {                         
@@ -6765,7 +6766,7 @@ $(function () {
                         data: 
                         {
                             action: 'read',
-                            // module: $("input[name='return_module']").val(),
+                            // module: module_sugar_grp1 ,
                             // module_id: $("input[name='record']").val(),
                         },
                         async: true,
@@ -7935,7 +7936,7 @@ function loadSelect_CES_Template() {
         data: 
         {
             action: 'read',
-            module: $("input[name='return_module']").val(),
+            module: module_sugar_grp1,
             module_id: $("input[name='record']").val(),
         },
         async: false,
