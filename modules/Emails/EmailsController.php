@@ -2032,7 +2032,7 @@ class EmailsController extends SugarController
                     }
                 }
 
-                $this->bean->name = $templateData['subject'];
+                $this->bean->name = trim(preg_replace('/\s+/',' ', $templateData['subject']));
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body'];
             }
