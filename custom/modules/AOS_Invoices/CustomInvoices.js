@@ -1751,29 +1751,29 @@ $(function () {
                 build_url += '&install_address='+ encodeURIComponent(install_address) ;
 
                 // installType
-                var old_tank_fuel_c = $("#old_tank_fuel_c").val();
-                var installType = old_tank_fuel_c;
-                if(old_tank_fuel_c == "electric_storage" || old_tank_fuel_c == "gravity_feed_electric" || old_tank_fuel_c == "instant_electric") {
-                    installType = "replacedElectricHeater";
-                }
-                if(old_tank_fuel_c == "gas_storage" || old_tank_fuel_c == "gas_instant" ) {
-                    installType = "replaceGasWh";
-                }
-                if(old_tank_fuel_c == "heatpump" ) {
-                    installType = "replacedHeatPump";
-                }
-                if(old_tank_fuel_c == "solar" ) {
-                    installType = "replacedSolarWaterHeater";
-                }
-                if(old_tank_fuel_c == "wood" || old_tank_fuel_c == "other") {
-                    installType = "other";
-                }
+                // var old_tank_fuel_c = $("#old_tank_fuel_c").val();
+                // var installType = old_tank_fuel_c;
+                // if(old_tank_fuel_c == "electric_storage" || old_tank_fuel_c == "gravity_feed_electric" || old_tank_fuel_c == "instant_electric") {
+                //     installType = "replacedElectricHeater";
+                // }
+                // if(old_tank_fuel_c == "gas_storage" || old_tank_fuel_c == "gas_instant" ) {
+                //     installType = "replaceGasWh";
+                // }
+                // if(old_tank_fuel_c == "heatpump" ) {
+                //     installType = "replacedHeatPump";
+                // }
+                // if(old_tank_fuel_c == "solar" ) {
+                //     installType = "replacedSolarWaterHeater";
+                // }
+                // if(old_tank_fuel_c == "wood" || old_tank_fuel_c == "other") {
+                //     installType = "other";
+                // }
 
-                if(old_tank_fuel_c == "newBuilding" ) {
-                    installType = "newBuilding";
-                }
-
-                build_url += '&installType='+ encodeURIComponent(installType) ;
+                // if(old_tank_fuel_c == "newBuilding" ) {
+                //     installType = "newBuilding";
+                // }
+                var installType = $("#geo_type_of_wh_replaced_c").val();
+                build_url += '&installType='+ encodeURIComponent(installType);
                 // Sanden Model
 
                 var sanden_model_c = $("#sanden_model_c").val();
