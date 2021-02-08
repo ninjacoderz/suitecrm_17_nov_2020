@@ -278,6 +278,8 @@
 
         //get bean quote
         $quote = new AOS_Quotes();
+        date_default_timezone_set('UTC');
+        $quote->quote_date_c = date('Y-m-d H:i:s', time());
         $quote->name = $first_name.' '.$last_name.' '.$primary_address_city.' '.$primary_address_state." Solar";
         $quote->account_firstname_c = $first_name;
         $quote->account_lastname_c = $last_name;
