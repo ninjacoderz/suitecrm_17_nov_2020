@@ -594,12 +594,14 @@ if ($_REQUEST['send_get_list'] == 'sanden_form'){
     $text= str_replace("\$how_to_accept", $short_description_bottom_c_mailing, $text);
     $text= str_replace("\$continue_link", $continue_link, $text);
     $text= str_replace("\$acceptance_link", $acceptance_link, $text);
+    $text= str_replace("Special Notes", "", $text);
 } else {
     $text = str_replace("\$list_choice_form", '', $text);
     // Change Templata PDF - From Paul
     $text= str_replace("\$how_to_accept", '', $text);
     $text= str_replace("\$continue_link", '', $text);
     $text= str_replace("\$acceptance_link", '', $text);
+    $text= str_replace("Special Notes", "", $text);
 }
 // Tri truong Code add List choice Form - Sanden Form
 
