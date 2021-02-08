@@ -5,166 +5,183 @@ $data = $_POST['data'];
 $InvoiceID = $_POST['invoice_id'];
 $path = $_POST['path'];
 $node_id = $data['node_id'];
-$array_model_product = array(
-    'Sanden FQS 315' => 'GAUS-315FQS',               
-    'Sanden FQS 300' => 'GAUS-300FQS',
-    'Sanden FQS 250' => 'GAUS-250FQS',
-    'Sanden FQV 300' => 'GAUS-315FQV',
-    'Sanden EQTAQ 315' => 'GAUS-315EQTAQ',
-    'Sanden EQTAQ 250' => 'GAUS-250EQTAQ',
-);
-
-$array_system = array(
-    'New Building' => 'newBuilding',               
-    'Replaced electric water heater' => 'electric_storage',
-    'Replaced solar water heater' => 'solar',
-    'Replaced heat pump' => 'heatpump',
-    'First SWH at existing building' => 'firstSwhAtExistingBuilding',
-    'Replaced gas water heater' => 'gas_storage',
-);
-
-$Invoice = new AOS_Invoices();
-$Invoice->retrieve($InvoiceID);
-if($Invoice->id != '') {
-
-    $installation_date = explode('-',$data['field_survey_installation_date']['value']);
-    $Invoice->installation_date_c = $installation_date[1] . '/' . $installation_date[2]. '/' .$installation_date[0] . ' 00:00';
-    $Invoice->sanden_hp_serial_c = str_replace('-','',$data['field_survey_hp_serial_number']['value']) ;
-    $Invoice->sanden_tank_serial_c = $data['field_survey_tank_serial_number']['value'] ;
-    $Invoice->install_address_c = $data['field_install_address_street']['value'];
-    $Invoice->install_address_city_c = $data['field_install_address_suburb']['value'];
-    $Invoice->install_address_state_c = $data['field_install_address_state']['value'];
-    $Invoice->install_address_postalcode_c = $data['field_install_address_postcode']['value'];
-    $Invoice->sanden_model_c = $array_model_product[$data['field_survey_wh_product']['value']];
-    $Invoice->vba_pic_cert_c = $data['field_survey_plumbing_cert_num']['value'];
-    $Invoice->ces_cert_c =  $data['field_survey_elec_ins_cert_num']['value'];
-    $Invoice->old_tank_fuel_c =  $array_system[$data['field_survey_system']['value']];
-    
-    if($data['field_survey_is_sys_company']['value'] == 'yes') {
-        $Invoice->registered_for_gst_c = true;
-    }else{
-        $Invoice->registered_for_gst_c = false;
-    }
-
-    //set up account and contact plumber
-    $email_plumber = $data['field_survey_plumbing_ins_email']['value'];
-    $data_address = get_address($data['field_survey_plumbing_ins_add']['value']);
-    $array_plumber_contacts = get_contacts_id_by_email($email_plumber);
-    $plumber_contact = create_contacts_plum( $data,$array_plumber_contacts[0],$Invoice,$data_address,$email_plumber );
-    $array_plumber_accounts = get_accounts_id_by_email($email_plumber);
-    $plumber_account = create_accounts_plum( $data,$array_plumber_contacts[0],$Invoice,$data_address,$email_plumber );
-    $plumber_account->load_relationship('contacts');
-    $plumber_account->contacts->add($plumber_contact);
-    $plumber_account->save();
-    $Invoice->account_id1_c = $plumber_account->id;
-    $Invoice->contact_id4_c = $plumber_contact->id;
-
-    //set up account and contact Electric
-    $email_electrican = $data['field_survey_elec_ins_email']['value'];
-    $data_address = get_address($data['field_survey_elec_ins_add']['value']);
-    $array_electrican_contacts = get_contacts_id_by_email($email_electrican);
-    $electrican_contact = create_contacts_elec( $data,$array_electrican_contacts[0],$Invoice,$data_address,$email_electrican);
-    $array_electrican_accounts = get_accounts_id_by_email($email_electrican);
-    $electrican_account = create_accounts_elec( $data,$array_electrican_contacts[0],$Invoice,$data_address,$email_electrican);
-    $electrican_account->load_relationship('contacts');
-    $electrican_account->contacts->add($electrican_contact);
-    $electrican_account->save();
-    $Invoice->account_id_c = $electrican_account->id;
-    $Invoice->contact_id_c = $electrican_contact->id;
-
-    switch ($data['field_survey_property_type']['value']) {
-        case 'Commercial':
-            $Invoice->property_type_c = 'commercial';
-            break;
-        case 'Residential':
-            $Invoice->property_type_c = 'residential';
-            break;  
-        default:
-            $Invoice->property_type_c = 'school';
-            break;
-    }
-    
-    if(strpos($data['field_survey_system_owner_addres']['value'],'The Postal Address is the same as the installation address') !== false) {
-        $custom_postal_address = preg_match('/Manually input the Postal Address:(.*)/s',$data['field_survey_system_owner_addres']['value'],$out_put);
-        $Invoice->billing_address_street =  $out_put[1];
-    }else{
-        //billing address =  install address
-        $Invoice->billing_address_street =  $Invoice->install_address_c;
-        $Invoice->billing_address_city =  $Invoice->install_address_city_c;
-        $Invoice->billing_address_state =  $Invoice->install_address_state_c;
-        $Invoice->billing_address_postalcode =  $Invoice->install_address_postalcode_c;
-    }
-
-    switch ($data['field_survey_number_of_storeys']['value']) {
-        case 'multi storeys':
-            $Invoice->number_of_storeys_c = 'true';
-            break;
-        default:
-            $Invoice->number_of_storeys_c = 'false';
-            break;
-    }
-
-
-    if($data['field_survey_number_installation']['value'] == "This is the only system installed at this address") {
-        $Invoice->number_of_installations_c = 'false';
-    }else  {
-        $Invoice->number_of_installations_c = 'true';
-    }
-
-    //check folder and  get file img
-    $pre_install_photos_c = $Invoice->installation_pictures_c;
-    $path_save_file = $_SERVER['DOCUMENT_ROOT']."/custom/include/SugarFields/Fields/Multiupload/server/php/files/" .$pre_install_photos_c.'/';
-    $array_link_result = $path;
-    $count_file_install_photos = 1;
-    foreach ($array_link_result as $key => $value) {
-            $out_source = '';
-            $in_source = '';
-            $file_name = '';
-
-            $array_link = explode('/',$value);
-           
-            //logic name file 
-            $type_file = strtolower(substr(strrchr($array_link[8], '.'), 1));
-            switch ($array_link[7]) {
-                case 'customer-agreement':
-                    $file_name = $array_link[7].'_'.$array_link[8];
-                    break;
-                case 'install-tax-invoice':
-                    $file_name = $array_link[7].'_'.$array_link[8];
-                    break;
-                case 'install-photos':
-                    $file_name = $Invoice->number.'New'.$count_file_install_photos.'.'.$type_file;
-                    $count_file_install_photos ++;
-                    break;
-                case 'plumbing-compliance-certificate':
-                    $file_name = $Invoice->number.'PCOC_'. str_replace(' ','_', $Invoice->vba_pic_cert_c).'.'.$type_file;
-                    break;
-                case 'electrical-installation-compliance-certificate':
-                    $file_name = $Invoice->number.'CES_'. str_replace(' ','_',$Invoice->ces_cert_c).'.'.$type_file;
-                    break;                      
-                case 'geo-tag-photo':
-                    $file_name =  $Invoice->number.'Geotaggedphoto'.'.'.$type_file;
-                    break;                
-                default:
-                    $file_name = $array_link[7].'_'.$array_link[8];
-                    break;
-            }
-            $out_source = $path_save_file.$file_name;
-            $in_source = $value;
-            // copy file root
-            if(!file_exists ($_SERVER['DOCUMENT_ROOT']."/custom/include/SugarFields/Fields/Multiupload/server/php/files/".$pre_install_photos_c .'/')) {
-                mkdir($_SERVER['DOCUMENT_ROOT']."/custom/include/SugarFields/Fields/Multiupload/server/php/files/".$pre_install_photos_c .'/');
-            }
-            copy($in_source,$out_source);
-            // create image for file pdf and create thumbnail
-            create_image_from_pdf($out_source,$file_name,$path_save_file);
-            create_thumbnail($out_source,$file_name,$path_save_file);       
-            
-    }
-    $Invoice->save();
-    Send_Email_Notification($node_id,$InvoiceID);
+$action = $_POST['action'];
+$data_return = [];
+switch ($action) {
+    case 'PUT':
+        $data_return = PUT_Data_To_Invoice($InvoiceID,$data,$path,$node_id);
+        break;
+    case 'GET':
+        $data_return = GET_DATA_Invoice($InvoiceID);
+        break;
+    default:
+        
+        break;
 }
 
+echo json_encode($data_return);
+
+function PUT_Data_To_Invoice($InvoiceID,$data,$path,$node_id){
+    $array_model_product = array(
+        'Sanden FQS 315' => 'GAUS-315FQS',               
+        'Sanden FQS 300' => 'GAUS-300FQS',
+        'Sanden FQS 250' => 'GAUS-250FQS',
+        'Sanden FQV 300' => 'GAUS-315FQV',
+        'Sanden EQTAQ 315' => 'GAUS-315EQTAQ',
+        'Sanden EQTAQ 250' => 'GAUS-250EQTAQ',
+    );
+    
+    $array_system = array(
+        'New Building' => 'newBuilding',               
+        'Replaced electric water heater' => 'electric_storage',
+        'Replaced solar water heater' => 'solar',
+        'Replaced heat pump' => 'heatpump',
+        'First SWH at existing building' => 'firstSwhAtExistingBuilding',
+        'Replaced gas water heater' => 'gas_storage',
+    );
+
+    $Invoice = new AOS_Invoices();
+    $Invoice->retrieve($InvoiceID);
+    if($Invoice->id != '') {
+    
+        $installation_date = explode('-',$data['field_survey_installation_date']['value']);
+        $Invoice->installation_date_c = $installation_date[1] . '/' . $installation_date[2]. '/' .$installation_date[0] . ' 00:00';
+        $Invoice->sanden_hp_serial_c = str_replace('-','',$data['field_survey_hp_serial_number']['value']) ;
+        $Invoice->sanden_tank_serial_c = $data['field_survey_tank_serial_number']['value'] ;
+        $Invoice->install_address_c = $data['field_install_address_street']['value'];
+        $Invoice->install_address_city_c = $data['field_install_address_suburb']['value'];
+        $Invoice->install_address_state_c = $data['field_install_address_state']['value'];
+        $Invoice->install_address_postalcode_c = $data['field_install_address_postcode']['value'];
+        $Invoice->sanden_model_c = $array_model_product[$data['field_survey_wh_product']['value']];
+        $Invoice->vba_pic_cert_c = $data['field_survey_plumbing_cert_num']['value'];
+        $Invoice->ces_cert_c =  $data['field_survey_elec_ins_cert_num']['value'];
+        $Invoice->old_tank_fuel_c =  $array_system[$data['field_survey_system']['value']];
+        
+        if($data['field_survey_is_sys_company']['value'] == 'yes') {
+            $Invoice->registered_for_gst_c = true;
+        }else{
+            $Invoice->registered_for_gst_c = false;
+        }
+    
+        //set up account and contact plumber
+        $email_plumber = $data['field_survey_plumbing_ins_email']['value'];
+        $data_address = get_address($data['field_survey_plumbing_ins_add']['value']);
+        $array_plumber_contacts = get_contacts_id_by_email($email_plumber);
+        $plumber_contact = create_contacts_plum( $data,$array_plumber_contacts[0],$Invoice,$data_address,$email_plumber );
+        $array_plumber_accounts = get_accounts_id_by_email($email_plumber);
+        $plumber_account = create_accounts_plum( $data,$array_plumber_contacts[0],$Invoice,$data_address,$email_plumber );
+        $plumber_account->load_relationship('contacts');
+        $plumber_account->contacts->add($plumber_contact);
+        $plumber_account->save();
+        $Invoice->account_id1_c = $plumber_account->id;
+        $Invoice->contact_id4_c = $plumber_contact->id;
+    
+        //set up account and contact Electric
+        $email_electrican = $data['field_survey_elec_ins_email']['value'];
+        $data_address = get_address($data['field_survey_elec_ins_add']['value']);
+        $array_electrican_contacts = get_contacts_id_by_email($email_electrican);
+        $electrican_contact = create_contacts_elec( $data,$array_electrican_contacts[0],$Invoice,$data_address,$email_electrican);
+        $array_electrican_accounts = get_accounts_id_by_email($email_electrican);
+        $electrican_account = create_accounts_elec( $data,$array_electrican_contacts[0],$Invoice,$data_address,$email_electrican);
+        $electrican_account->load_relationship('contacts');
+        $electrican_account->contacts->add($electrican_contact);
+        $electrican_account->save();
+        $Invoice->account_id_c = $electrican_account->id;
+        $Invoice->contact_id_c = $electrican_contact->id;
+    
+        switch ($data['field_survey_property_type']['value']) {
+            case 'Commercial':
+                $Invoice->property_type_c = 'commercial';
+                break;
+            case 'Residential':
+                $Invoice->property_type_c = 'residential';
+                break;  
+            default:
+                $Invoice->property_type_c = 'school';
+                break;
+        }
+        
+        if(strpos($data['field_survey_system_owner_addres']['value'],'The Postal Address is the same as the installation address') !== false) {
+            $custom_postal_address = preg_match('/Manually input the Postal Address:(.*)/s',$data['field_survey_system_owner_addres']['value'],$out_put);
+            $Invoice->billing_address_street =  $out_put[1];
+        }else{
+            //billing address =  install address
+            $Invoice->billing_address_street =  $Invoice->install_address_c;
+            $Invoice->billing_address_city =  $Invoice->install_address_city_c;
+            $Invoice->billing_address_state =  $Invoice->install_address_state_c;
+            $Invoice->billing_address_postalcode =  $Invoice->install_address_postalcode_c;
+        }
+    
+        switch ($data['field_survey_number_of_storeys']['value']) {
+            case 'multi storeys':
+                $Invoice->number_of_storeys_c = 'true';
+                break;
+            default:
+                $Invoice->number_of_storeys_c = 'false';
+                break;
+        }
+    
+    
+        if($data['field_survey_number_installation']['value'] == "This is the only system installed at this address") {
+            $Invoice->number_of_installations_c = 'false';
+        }else  {
+            $Invoice->number_of_installations_c = 'true';
+        }
+    
+        //check folder and  get file img
+        $pre_install_photos_c = $Invoice->installation_pictures_c;
+        $path_save_file = $_SERVER['DOCUMENT_ROOT']."/custom/include/SugarFields/Fields/Multiupload/server/php/files/" .$pre_install_photos_c.'/';
+        $array_link_result = $path;
+        $count_file_install_photos = 1;
+        foreach ($array_link_result as $key => $value) {
+                $out_source = '';
+                $in_source = '';
+                $file_name = '';
+    
+                $array_link = explode('/',$value);
+               
+                //logic name file 
+                $type_file = strtolower(substr(strrchr($array_link[8], '.'), 1));
+                switch ($array_link[7]) {
+                    case 'customer-agreement':
+                        $file_name = $array_link[7].'_'.$array_link[8];
+                        break;
+                    case 'install-tax-invoice':
+                        $file_name = $array_link[7].'_'.$array_link[8];
+                        break;
+                    case 'install-photos':
+                        $file_name = $Invoice->number.'New'.$count_file_install_photos.'.'.$type_file;
+                        $count_file_install_photos ++;
+                        break;
+                    case 'plumbing-compliance-certificate':
+                        $file_name = $Invoice->number.'PCOC_'. str_replace(' ','_', $Invoice->vba_pic_cert_c).'.'.$type_file;
+                        break;
+                    case 'electrical-installation-compliance-certificate':
+                        $file_name = $Invoice->number.'CES_'. str_replace(' ','_',$Invoice->ces_cert_c).'.'.$type_file;
+                        break;                      
+                    case 'geo-tag-photo':
+                        $file_name =  $Invoice->number.'Geotaggedphoto'.'.'.$type_file;
+                        break;                
+                    default:
+                        $file_name = $array_link[7].'_'.$array_link[8];
+                        break;
+                }
+                $out_source = $path_save_file.$file_name;
+                $in_source = $value;
+                // copy file root
+                if(!file_exists ($_SERVER['DOCUMENT_ROOT']."/custom/include/SugarFields/Fields/Multiupload/server/php/files/".$pre_install_photos_c .'/')) {
+                    mkdir($_SERVER['DOCUMENT_ROOT']."/custom/include/SugarFields/Fields/Multiupload/server/php/files/".$pre_install_photos_c .'/');
+                }
+                copy($in_source,$out_source);
+                // create image for file pdf and create thumbnail
+                create_image_from_pdf($out_source,$file_name,$path_save_file);
+                create_thumbnail($out_source,$file_name,$path_save_file);       
+                
+        }
+        $Invoice->save();
+        Send_Email_Notification($node_id,$InvoiceID);
+    }
+}
 //function create thumbnail from source
 function create_thumbnail($source,$file_name,$path_save_file){
     $type = strtolower(substr(strrchr($file_name, '.'), 1));
@@ -476,3 +493,67 @@ function get_address($string_address){
     }
     return $return_data;
 }
+
+function GET_DATA_Invoice($InvoiceID){
+    $invoice = new AOS_Invoices();
+    $invoice->retrieve($InvoiceID);
+
+    $array_map_distributor_c = array (
+        0 => '-Blank-',
+        1 => 'Western Power',
+        2 => 'Energex',
+        3 => 'Ergon',
+        4 => 'Citipower',
+        5 => 'Jemena',
+        6 => 'Powercor',
+        7 => 'SP Ausnet',
+        8 => 'United Energy Distribution',
+        9 => 'Essential Energy',
+        10 => 'Ausgrid',
+        11 => 'EVO Energy',
+        12 => 'Endeavour Energy',
+        13 => 'South Australia Power Network',
+        14 => 'AusNet Electricity Services Pty Ltd'
+    
+    );
+    
+    $array_map_gutter_height_c = array (
+        1 => '0-3m',
+        2 => '3-5m',
+        3 => '5m - 10m',
+        4 => '10m - 15m',
+        5 => '15m+',
+        6 => 'Other',
+    );
+    
+    $data_return = [];
+
+    
+    if($invoice->id != ""){
+        foreach ($invoice->field_name_map as $key => $value) {
+           $data_return[$key] = $invoice->$key;
+        }
+    }
+    if($invoice->installation_date_c != ''){
+        $dateInfos = explode(" ",$invoice->installation_date_c);
+        $dateInfos = explode("/",$dateInfos[0]);
+        $inv_install_date_str = "$dateInfos[2]-$dateInfos[0]-$dateInfos[1]T00:00:00";
+        $data_return['installation_date_c'] = date("Y-m-d", strtotime($inv_install_date_str));
+    }else{
+        $data_return['installation_date_c'] = time();
+    }
+
+    $contactPlumber = new Contact();
+    $contactPlumber->retrieve($invoice->contact_id4_c);
+    foreach ($contactPlumber->field_name_map as $key => $value) {
+        $data_return['contactPlumber'][$key] = $contactPlumber->$key;
+    }
+    $contactElectrican = new Contact();
+    $contactElectrican->retrieve($invoice->contact_id_c);
+    foreach ($contactElectrican->field_name_map as $key => $value) {
+        $data_return['contactElectrican'][$key] = $contactElectrican->$key;
+    }
+    
+    return $data_return;
+} 
+
