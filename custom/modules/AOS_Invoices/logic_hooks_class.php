@@ -96,6 +96,9 @@
                         case "40":
                             $new_name = $invoice_number.'New_Install_Water_Pressure_NRIPRV';
                             break;
+                        case "41":
+                            $new_name = $invoice_number.'_Existing_HWS';
+                            break;
                     }
                     // If new name look like old name
 

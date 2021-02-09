@@ -743,7 +743,8 @@ $(function () {
                                 '<option value="36">[Invoice #] Proposed Install Location[#]</option>'+
                                 '<option value="37">[Invoice #] Remittance Advice[#]</option>'+
                                 '<option value="39">[Invoice #] New Install Water Pressure Property[#]</option>'+
-                                '<option value="40">[Invoice #] New Install Water Pressure NRIPRV[#]</option>'
+                                '<option value="40">[Invoice #] New Install Water Pressure NRIPRV[#]</option>',
+                                '<option value="41">[Invoice #] Existing HWS[#]</option>'
                                 ) :
                                 (
                                     ( module_sugar_grp1 == 'AOS_Quotes') ? 
@@ -901,7 +902,8 @@ $(function () {
                             '<option value="36">[Invoice #] Proposed Install Location[#]</option>'+
                             '<option value="37">[Invoice #] Remittance Advice[#]</option>'+
                             '<option value="39">[Invoice #] New Install Water Pressure Property[#]</option>'+
-                            '<option value="40">[Invoice #] New Install Water Pressure NRIPRV[#]</option>'
+                            '<option value="40">[Invoice #] New Install Water Pressure NRIPRV[#]</option>',
+                            '<option value="41">[Invoice #] Existing HWS[#]</option>'
                             ) :
                             (
                                 ( module_sugar_grp1 == 'AOS_Quotes') ? 
@@ -1251,7 +1253,8 @@ window.addEventListener("paste", function(e){
                             '<option value="36">[Invoice #] Proposed Install Location[#]</option>'+
                             '<option value="37">[Invoice #] Remittance Advice[#]</option>'+
                             '<option value="39">[Invoice #] New Install Water Pressure Property[#]</option>'+
-                            '<option value="40">[Invoice #] New Install Water Pressure NRIPRV[#]</option>'
+                            '<option value="40">[Invoice #] New Install Water Pressure NRIPRV[#]</option>',
+                            '<option value="41">[Invoice #] Existing HWS[#]</option>'
                             ) :
                             (
                                 ( module_sugar_grp1 == 'AOS_Quotes') ? 
