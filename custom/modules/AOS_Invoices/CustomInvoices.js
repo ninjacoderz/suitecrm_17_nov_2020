@@ -2402,8 +2402,13 @@ $(function () {
                         async: true
                     }).done(function (data) {
                         //step2: load new invoice 
-                        window.onbeforeunload = null;
-                        window.location.href = "/index.php?module=AOS_Invoices&action=EditView&record="+recordId;
+                        $("#meeting_c").val(data);
+                        if ($("#meeting_c").val() != "") {
+                            
+                            var href = "<a target='_blank' href='/index.php?module=Meetings&action=DetailView&record="+data+"'>Open Meeting</a>";
+                            $('#meeting_c').parent().siblings('.label').append(href);
+
+                        }
                         SUGAR.ajaxUI.hideLoadingPanel();
                     });
                 }
@@ -5516,8 +5521,14 @@ $(document).ready(function(){
                                 async: true
                             }).done(function (data) {
                                 //step2: load new invoice 
-                                window.onbeforeunload = null;
-                                window.location.href = "/index.php?module=AOS_Invoices&action=EditView&record="+invoice_id;
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                                $("#meeting_c").val(data);
+                                if ($("#meeting_c").val() != "") {
+                                    
+                                    var href = "<a target='_blank' href='/index.php?module=Meetings&action=DetailView&record="+data+"'>Open Meeting</a>";
+                                    $('#meeting_c').parent().siblings('.label').append(href);
+
+                                }
                             });
                         }
                     }else{
