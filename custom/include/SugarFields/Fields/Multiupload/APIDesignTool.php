@@ -11,7 +11,7 @@
     $design_json = html_entity_decode($_REQUEST['design_json']);
     $type = $_REQUEST['type'];
     $status = $_REQUEST['status'];
-    $dataURL = $_REQUEST['dataURL'];
+    $dataURL = base64_decode($_REQUEST['dataURL']);
     $quote  = new AOS_Quotes();
     $quote->retrieve($quote_id);
 
@@ -21,7 +21,7 @@
     if($type == 'save'){
         $quote->design_tool_json_c = $design_json;
         $quote->save();
-        $img = str_replace('data:image/png;base64,', '', $dataURL);
+        $img = str_replace('data:image/jpeg;base64,', '', $dataURL);
         $img = str_replace(' ', '+', $img);
         $data = base64_decode($img);
         $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
