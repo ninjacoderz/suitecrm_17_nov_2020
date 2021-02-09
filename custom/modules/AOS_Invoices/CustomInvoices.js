@@ -3093,9 +3093,9 @@ $(function () {
             }
             var file_dir = $('input[name="installation_pictures_c"]').val();
             //var plumbing_note = $('#plumbing_notes_c').val();
-            var suburb = $('#shipping_address_city').val()+' '+$('#shipping_address_state').val();
+            var suburb = $('#install_address_city_c').val()+' '+$('#install_address_state_c').val();
             if(suburb.trim() == ''){
-                suburb = $('#install_address_city_c').val()+' '+$('#install_address_state_c').val();
+                suburb = $('#shipping_address_city').val()+' '+$('#shipping_address_state').val();           
             }
             var group_name = $('input.group_name').val();
             var plumbing_contact_number = $('#plumber_contact_c').siblings( ".phone-number" ).text();
@@ -3411,9 +3411,9 @@ $(function () {
             }
             var file_dir = $('input[name="installation_pictures_c"]').val();
             var customer_notes_c = $('#customer_notes_c').val();
-            var suburb = $('#shipping_address_city').val()+' '+$('#shipping_address_state').val();
+            var suburb = $('#install_address_city_c').val()+' '+$('#install_address_state_c').val();
             if(suburb.trim() == ''){
-                suburb = $('#install_address_city_c').val()+' '+$('#install_address_state_c').val();
+                suburb = $('#shipping_address_city').val()+' '+$('#shipping_address_state').val();           
             }
             var group_name = $('input.group_name').val();
             var plumbing_contact_number = $('#plumber_contact_c').siblings( ".phone-number" ).text();
@@ -3692,9 +3692,9 @@ $(function () {
             }
             var file_dir = $('input[name="installation_pictures_c"]').val();
             var plumbing_note = $('#plumbing_notes_c').val();
-            var suburb = $('#shipping_address_city').val()+' '+$('#shipping_address_state').val();
+            var suburb = $('#install_address_city_c').val()+' '+$('#install_address_state_c').val();
             if(suburb.trim() == ''){
-                suburb = $('#install_address_city_c').val()+' '+$('#install_address_state_c').val();
+                suburb = $('#shipping_address_city').val()+' '+$('#shipping_address_state').val();           
             }
             var group_name = $('input.group_name').val();
             // //dung code
