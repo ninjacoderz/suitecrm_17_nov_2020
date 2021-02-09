@@ -158,7 +158,7 @@ if ($type == 'gp_cal' && (count($geoAssignments)>0)) {
     curl_close ($curl);
     $result_json  = json_decode($result);
     $returnValues[$key]['status'] = $result_json->assignment->result->status;
-    $returnValues[$key]['totalValue'] = $result_json->assignment->result->totalValue;
+    $returnValues[$key]['totalValue'] = $result_json->assignment->result->certificateBundles[0]->value;
   }
   echo json_encode($returnValues);
 } else {
