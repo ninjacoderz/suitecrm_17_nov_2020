@@ -277,7 +277,7 @@ if($short_description_c != ""){
     $product_type = current(explode(" ", $group->name));
     $short_description_c = str_replace("\$product_type", $product_type, $short_description_c);
 
-    $name_explode = explode(" ",$bean->billing_account);
+    $name_explode = explode(" ",$bean->billing_contact);
     if ($_REQUEST['send_get_list'] == 'sanden_form')
     {
         if($_REQUEST['firstname'] != '') {
@@ -392,7 +392,7 @@ if($short_description_bottom_c != ""){
     $product_type = current(explode(" ", $group->name));
     $short_description_bottom_c = str_replace("\$product_type", $product_type, $short_description_bottom_c);
 
-    $name_explode = explode(" ",$bean->billing_account);
+    $name_explode = explode(" ",$bean->billing_contact);
     if ($_REQUEST['send_get_list'] == 'sanden_form')
     {
         if($_REQUEST['firstname'] != '') {
@@ -791,7 +791,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                         'pe_smstemplate',
                         $smsTemplateID
                     );
-                    $name_explode = explode(" ",$bean->billing_account);
+                    $name_explode = explode(" ",$bean->billing_contact);
                     $first_name_quote = current($name_explode);
             
                     $sms_content = trim(strip_tags(html_entity_decode(parse_sms_template($smsTemplate,$first_name_quote),ENT_QUOTES)));     
