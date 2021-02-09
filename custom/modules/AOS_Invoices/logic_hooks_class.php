@@ -430,6 +430,15 @@
              
                 $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
                 $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
+            }else {
+                $bean_intenal_notes = new  pe_internal_note();
+                $bean_intenal_notes->type_inter_note_c = 'status_updated';
+                $decription_internal_notes = 'Invoice Status : New Invoice';
+                $bean_intenal_notes->description =  $decription_internal_notes;
+                $bean_intenal_notes->save();
+             
+                $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
+                $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
             }
         }
     }
