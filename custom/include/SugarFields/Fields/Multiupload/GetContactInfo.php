@@ -43,7 +43,7 @@ if($module_name == "Employees"){
         $mess_phone_number = preg_replace("/^0/", "#61", preg_replace('/\D/', '', $bean->phone_mobile));
         $mess_phone_number = preg_replace("/^61/", "#61", $mess_phone_number);
         $mess_phone_number = str_replace(" ", "", $mess_phone_number);
-        echo "M: <span class='employee_phone_number'>". $bean->phone_mobile .'</span> <img class="sms_icon_invoice" data-source="employee" src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a href=http://message.pure-electric.com.au/"'.$mess_phone_number.'"><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="16" width="16"></a>';
+        echo "M: <span class='employee_phone_number'>". $bean->phone_mobile .'</span> <img class="sms_icon_invoice" data-source="employee" src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a target="_blank" href=http://message.pure-electric.com.au/'.$mess_phone_number.'><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="16" width="16"></a>';
         echo " ";
     }
     if($bean->phone_home != ""){
@@ -61,7 +61,7 @@ if($module_name == "Contacts"||$module_name == "Leads"){
         $mess_phone_number = preg_replace("/^0/", "#61", preg_replace('/\D/', '', $bean->phone_mobile));
         $mess_phone_number = preg_replace("/^61/", "#61", $mess_phone_number);
         $mess_phone_number = str_replace(" ", "", $mess_phone_number);
-        echo "M: <span class='contact_phone_number'>". $bean->phone_mobile.'</span> <img class="sms_icon_invoice"  data-source="contact"  src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a href=http://message.pure-electric.com.au/"'.$mess_phone_number.'"><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="16" width="16"></a>';
+        echo "M: <span class='contact_phone_number'>". $bean->phone_mobile.'</span> <img class="sms_icon_invoice"  data-source="contact"  src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a target="_blank" href=http://message.pure-electric.com.au/'.$mess_phone_number.'><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="16" width="16"></a>';
         echo " ";
     }
     if($bean->phone_home != ""){
@@ -98,7 +98,7 @@ if($module_name == "Accounts") {
         $mess_phone_number = preg_replace("/^61/", "#61", $mess_phone_number);
         $mess_phone_number = str_replace(" ", "", $mess_phone_number);
         if($lookup_result[0]['phone_mobile'] != ""){
-            echo "M: <span class='account_phone_number'>". $lookup_result[0]['phone_mobile'].'</span> <img class="sms_icon_invoice" data-source="account"  src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a href=http://message.pure-electric.com.au/"'.$mess_phone_number.'"><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="16" width="16"></a>';
+            echo "M: <span class='account_phone_number'>". $lookup_result[0]['phone_mobile'].'</span> <img class="sms_icon_invoice" data-source="account"  src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14"> <a target="_blank" href=http://message.pure-electric.com.au/'.$mess_phone_number.'><img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="16" width="16"></a>';
             echo " ";
         }
         if($lookup_result[0]['phone_home']!= ""){
