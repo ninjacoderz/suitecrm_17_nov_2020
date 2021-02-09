@@ -5170,9 +5170,24 @@ $(document).ready(function(){
                         $(this).removeClass('fileupload-processing');
             
                     }).done(function (result) {
-                        $(this).fileupload('option', 'done')
-                            .call(this, $.Event('done'), {result: result});
-                        $('#get_all_files_invoice span.glyphicon-refresh').addClass('hidden');
+                        $.ajax({
+                            url: "?entryPoint=getAllFilesMessageApp&invoice_id="+$("input[name='record']").val()+"&installation_pictures_c="+installation_pictures_c,
+                            success: function(data)
+                            {
+                                $(".files").empty();                
+                                $.ajax({
+                                    url: $('#fileupload').fileupload('option', 'url'),
+                                    dataType: 'json',
+                                    context: $('#fileupload')[0]
+                                }).always(function () {
+                                    $(this).removeClass('fileupload-processing');
+                        
+                                }).done(function (result) {
+                                    $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
+                                    $('#get_all_files_sms span.glyphicon-refresh').addClass('hidden');
+                                });
+                            }
+                        });  
                     });
                 },
                 error: function(response){},
