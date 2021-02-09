@@ -463,7 +463,26 @@ $(function () {
             display_link_contact_plum_elec_invoice();
             YAHOO.util.Event.addListener(["account_id1_c","account_id_c"], "change", display_link_contact_plum_elec_invoice);
             $('#plumber_c').parent().siblings('.label').append('<br> <button class="button primary" id="distanceFlumbertoSuite"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DISTANCE</button>');
+            $('#plumber_c').parent().siblings('.label').append('<button style="margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedPlumber"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
         }
+
+        //Get Distance Selected Plumber
+        $('#getDistance_selectedPlumber').click(function(){
+            $('#getDistance_selectedPlumber span.glyphicon-refresh').removeClass('hidden');
+            var distance_selected = '';
+            var id_account = $('#account_id1_c').val().trim();
+            distance_selected = get_distance_by_account_id(id_account);
+
+            if (typeof(distance_selected) == 'string') {
+                $('#distance_to_suite_c').val(`${distance_selected}`);
+            } else {
+                $('#distance_to_suite_c').val(`${distance_selected} km`);
+            }
+            $('#getDistance_selectedPlumber span.glyphicon-refresh').addClass('hidden');            
+        });
+
+        
+
         // distance to plumber tuan
         $('#distanceFlumbertoSuite').click(function (){
             $('#distanceFlumbertoSuite span.glyphicon-refresh').removeClass('hidden');
@@ -984,6 +1003,21 @@ $(function () {
              //tuan code --------------------
         if(module_sugar_grp1 == 'AOS_Invoices'){
             $('#electrician_c').parent().siblings('.label').append('<br> <button class="button primary" id="distanceElectrictoSuite"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DISTANCE</button>');
+            $('#electrician_c').parent().siblings('.label').append('<button style="margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedElectrician"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
+            //Get Distance Selected Electrician
+            $('#getDistance_selectedElectrician').click(function(){
+                $('#getDistance_selectedElectrician span.glyphicon-refresh').removeClass('hidden');
+                var distance_selected = '';
+                var id_account = $('#account_id_c').val().trim();
+                distance_selected = get_distance_by_account_id(id_account);
+
+                if (typeof(distance_selected) == 'string') {
+                    $('#distance_to_suitecrm_c').val(`${distance_selected}`);
+                } else {
+                    $('#distance_to_suitecrm_c').val(`${distance_selected} km`);
+                }
+                $('#getDistance_selectedElectrician span.glyphicon-refresh').addClass('hidden');            
+            });
             // check water quality 
             $('#detail_site_install_address_postalcode_c').css('width','35%');
             $('#detail_site_install_address_postalcode_c').after( '&nbsp;<button  type="button" id="check_water_quality_invoice" class="button primary" title="Check Your Water Quality">CHECK WATER QUALITY<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
@@ -8003,3 +8037,54 @@ function render_select_ces_template(result){
     });
     autosize.update($("#ces_cert_wording_c")); 
 }
+
+/**
+ * VUT - get distance selected for Quote/Invoice
+ * @param {account_id} id_account 
+ */
+function get_distance_by_account_id(id_account){
+    if(id_account == '') return '';
+    if( $('#install_address_c').val() == "" ){  
+        var from_address =  $("#billing_address_street").val() +", " +
+                            $("#billing_address_city").val() + ", " +
+                            $("#billing_address_state").val() + ", " +
+                            $("#billing_address_postalcode").val();
+     
+    }else {
+        var from_address =  $("#install_address_c").val() +", " +
+                            $("#install_address_city_c").val() + ", " +
+                            $("#install_address_state_c").val() + ", " +
+                            $("#install_address_postalcode_c").val();
+    }
+    var result_distance = '';
+    $.ajax({
+        url: "/index.php?entryPoint=getdistance_Flum_or_Elec_to_Suite&ac_id="+id_account,
+        type: 'GET',
+        async:false,
+        success: function(data)
+            {
+                if(data == ', , , '){
+                    alert('Sorry! - Not see address');
+                }else {       
+                    $.ajax({
+                            url: "/index.php?entryPoint=customDistance&address_from=" + from_address + "&address_to=" + data,
+                            type: 'GET',
+                            async:false,
+                            success: function(result)
+                            {
+                                try {
+                                    var jsonObject = $.parseJSON(result);
+                                    var l_distance = parseFloat(jsonObject.routes[0].legs[0].distance.text.replace(/[^\d.-]/g, ''));
+                                    result_distance = l_distance;
+                                } catch (error) {
+                                    result_distance = 'not found';
+                                }
+                                
+                            } 
+                        
+                    });
+                }
+            },
+    })
+    return result_distance;
+};

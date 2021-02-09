@@ -5313,6 +5313,7 @@ function genExtraDaikinItemFunc(elem){
         window.accountFocus = $(this).siblings('input[type=hidden]');
     });
     $(document).on('click', '#getDistance_selected', function () {
+        $('#getDistance_selected span.glyphicon-refresh').removeClass('hidden');
         let accFocus = window.accountFocus;
         let accFocus_idElement = accFocus.attr('id');
         let account_id = $(`#${accFocus_idElement}`).val();
@@ -5336,6 +5337,7 @@ function genExtraDaikinItemFunc(elem){
         } else {
             $("#"+field_distance_idElement).val(`${distance_selected} km`);
         }
+        $('#getDistance_selected span.glyphicon-refresh').addClass('hidden');
     });
     //VUT - E - button GET DISTANCE SELECTED
     $(document).on("click","#getDistance",function(){
@@ -5465,52 +5467,53 @@ function getDistances(from_address){
     
 }
  /// END
- function get_distance_by_account_id(id_account){
-    if(id_account == '') return '';
-    if( $('#install_address_c').val() == "" ){  
-        var from_address =  $("#billing_address_street").val() +", " +
-                            $("#billing_address_city").val() + ", " +
-                            $("#billing_address_state").val() + ", " +
-                            $("#billing_address_postalcode").val();
+////Comment function (copied to Invoice)
+//  function get_distance_by_account_id(id_account){
+//     if(id_account == '') return '';
+//     if( $('#install_address_c').val() == "" ){  
+//         var from_address =  $("#billing_address_street").val() +", " +
+//                             $("#billing_address_city").val() + ", " +
+//                             $("#billing_address_state").val() + ", " +
+//                             $("#billing_address_postalcode").val();
      
-    }else {
-        var from_address =  $("#install_address_c").val() +", " +
-                            $("#install_address_city_c").val() + ", " +
-                            $("#install_address_state_c").val() + ", " +
-                            $("#install_address_postalcode_c").val();
-    }
-    var result_distance = '';
-    $.ajax({
-        url: "/index.php?entryPoint=getdistance_Flum_or_Elec_to_Suite&ac_id="+id_account,
-        type: 'GET',
-        async:false,
-        success: function(data)
-            {
-                if(data == ', , , '){
-                    alert('Sorry! - Not see address');
-                }else {       
-                    $.ajax({
-                            url: "/index.php?entryPoint=customDistance&address_from=" + from_address + "&address_to=" + data,
-                            type: 'GET',
-                            async:false,
-                            success: function(result)
-                            {
-                                try {
-                                    var jsonObject = $.parseJSON(result);
-                                    var l_distance = parseFloat(jsonObject.routes[0].legs[0].distance.text.replace(/[^\d.-]/g, ''));
-                                    result_distance = l_distance;
-                                } catch (error) {
-                                    result_distance = 'not found';
-                                }
+//     }else {
+//         var from_address =  $("#install_address_c").val() +", " +
+//                             $("#install_address_city_c").val() + ", " +
+//                             $("#install_address_state_c").val() + ", " +
+//                             $("#install_address_postalcode_c").val();
+//     }
+//     var result_distance = '';
+//     $.ajax({
+//         url: "/index.php?entryPoint=getdistance_Flum_or_Elec_to_Suite&ac_id="+id_account,
+//         type: 'GET',
+//         async:false,
+//         success: function(data)
+//             {
+//                 if(data == ', , , '){
+//                     alert('Sorry! - Not see address');
+//                 }else {       
+//                     $.ajax({
+//                             url: "/index.php?entryPoint=customDistance&address_from=" + from_address + "&address_to=" + data,
+//                             type: 'GET',
+//                             async:false,
+//                             success: function(result)
+//                             {
+//                                 try {
+//                                     var jsonObject = $.parseJSON(result);
+//                                     var l_distance = parseFloat(jsonObject.routes[0].legs[0].distance.text.replace(/[^\d.-]/g, ''));
+//                                     result_distance = l_distance;
+//                                 } catch (error) {
+//                                     result_distance = 'not found';
+//                                 }
                                 
-                            } 
+//                             } 
                         
-                    });
-                }
-            },
-    })
-    return result_distance;
-};
+//                     });
+//                 }
+//             },
+//     })
+//     return result_distance;
+// };
 
  function showPopup(){
      $('#popup_image_site_detail').show();
