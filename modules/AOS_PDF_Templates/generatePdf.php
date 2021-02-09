@@ -289,8 +289,11 @@ if($short_description_c != ""){
         $first_name = current($name_explode);
     }
     $last_name = end($name_explode);
-
-    $short_description_c = str_replace("\$customer_first_name", $first_name, $short_description_c);
+    if ($bean->po_type_c == "sanden_supply") {
+        $short_description_c = str_replace("\$customer_first_name", "Sanden", $short_description_c);
+    }else {
+        $short_description_c = str_replace("\$customer_first_name", $first_name, $short_description_c);
+    }
     //VUT-S-change $sanden_dispatch_date $sanden_freight_company
     if ($_REQUEST['module'] == 'PO_purchase_order' && ($_REQUEST['templateID']=='1876bff3-5e6b-e49c-e8a1-5e2530fba9ca' || $_REQUEST['templateID']=='3bd2f6d5-46f9-d804-9d5b-5a407d37d4c5')) {
         if ($bean->po_type_c == "sanden_supply") {
