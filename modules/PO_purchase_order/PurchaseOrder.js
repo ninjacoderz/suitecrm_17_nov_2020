@@ -1039,8 +1039,8 @@ function loadButton(){
 function generatePOname() {
     let order_number = $('#supplier_order_number_c').val();
     let po_type = $('#po_type_c').val();
-    let dispatch_date = formatTimeforPOname($('#dispatch_date_c').val());
-    let delivery_date = formatTimeforPOname($('#delivery_date_c').val());
+    let dispatch_date = ($('#dispatch_date_c').val() != '') ? formatTimeforPOname($('#dispatch_date_c').val()) : '';
+    let delivery_date = ($('#delivery_date_c').val() != '') ? formatTimeforPOname($('#delivery_date_c').val()) : '';
     let shipping_city = $('#shipping_address_city').val();
     let shipping_state = $('#shipping_address_state').val();
     let invoice_id = $('#aos_invoices_po_purchase_order_1aos_invoices_ida').val();
@@ -1124,7 +1124,7 @@ function getInfoProductSanden() {
     let i; 
     let sanden_groups = {};
     for (i=0;i< products.length; i++) {
-        if (parseFloat($(`#product_product_list_price${i}`).val()) !== 0) {
+        if (parseFloat($(`#product_product_list_price${i}`).val()) !== 0 && products[i].getAttribute('style') != "display: none;") {
             let qty = $(`#product_product_qty${i}`).val();
             let product_id = $(`#product_product_id${i}`).val();
             let partNumber = $(`#product_part_number${i}`).val();
@@ -1245,7 +1245,7 @@ function generatePOLineItem(){
             autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
         }
     },200)
-    new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  formatTimeforPOname($("#dispatch_date_c").val()) + " "+$("#supplier_order_number_c").val() ;
+    new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#dispatch_date_c").val() != '') ? formatTimeforPOname($("#dispatch_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
     $('#name').val(new_name);
     setTimeout(function (){
         SUGAR.ajaxUI.hideLoadingPanel();
