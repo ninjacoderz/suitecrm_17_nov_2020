@@ -366,13 +366,14 @@ $(function () {
         }
         $('#create_sanden_quote_fqs_c').hide();
         var po_sanden_supply_input = '<div id="po_sanden_supply_input">\
-                                        <span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>250FQS</span> <select name="GAUS-250FQS" id="sanden_fqs_250" data-id="67605168-6b72-5504-282c-5cc8e1492ec9" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>QIK15</span> <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>QIK20</span> <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option>'+options_quatity+'</select>\
-                                        <button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button>\
-                                    </div>'
+        <span>315FQV</span> <select name="GAUS-315FQV" id="sanden_fqv_315" data-name="315FQV" data-id="40d20616-6007-44c4-1e9b-5ca447459af6" ><option value="0"></option>'+options_quatity+'</select>\
+        <span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-name="315FQS" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option>'+options_quatity+'</select>\
+        <span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-name="300FQS" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option>'+options_quatity+'</select>\
+        <span>250FQS</span> <select name="GAUS-250FQS" id="sanden_fqs_250" data-name="250FQS" data-id="67605168-6b72-5504-282c-5cc8e1492ec9" ><option value="0"></option>'+options_quatity+'</select>\
+        <span>QIK15</span>  <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-name="QIK15" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option>'+options_quatity+'</select>\
+        <span>QIK20</span>  <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-name="QIK20" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option>'+options_quatity+'</select>\
+        <div style="padding-top:10px"><button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
+    </div>';
         if( $('#po_type_c').val() =="sanden_supply"){
             $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
             LoadJSONPOInput();
@@ -1095,20 +1096,20 @@ function autoCreateLineItem(id,total_item){
         type: 'GET',
         success: function(data)
         {   
-            var info_pro = $.parseJSON(data)
+            var info_pro = JSON.parse(data);
             insertProductLine('product_group0', '0');
             lineno  = prodln-1;  
             var popupReplyData = {}; //
             popupReplyData.form_name = "EditView";
             var name_to_value_array = {};
-            name_to_value_array["product_currency"+lineno] = info_pro["line_items"][""][0]['product_currency'];
-            name_to_value_array["product_item_description"+lineno] = info_pro["line_items"][""][0]['product_item_description'];
-            name_to_value_array["product_name"+lineno] = info_pro["line_items"][""][0]['product_name'];
-            name_to_value_array["product_part_number"+lineno] =  info_pro["line_items"][""][0]['product_part_number'];
-            name_to_value_array["product_product_cost_price"+lineno] = info_pro["line_items"][""][0]['product_product_cost_price'];
+            name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
+            name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
+            name_to_value_array["product_name"+lineno] = info_pro['product_name'];
+            name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
+            name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
 
-            name_to_value_array["product_product_id"+lineno] = info_pro["line_items"][""][0]['product_product_id'];
-            name_to_value_array["product_product_list_price"+lineno] = info_pro["line_items"][""][0]['product_product_cost_price'];
+            name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
+            name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
             name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
             popupReplyData["name_to_value_array"] = name_to_value_array;            
             $('#product_product_list_price'+lineno).focus();
@@ -1207,38 +1208,41 @@ function generatePOLineItem(){
         $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
     }
     var new_name = "Sanden ";
-    var total_item = parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) +parseInt($("#sanden_fqs_250").val()) ;
-    if( parseInt($("#sanden_fqs_315").val()) > 0){
-        autoCreateLineItem($("#sanden_fqs_315").attr('data-id'),$("#sanden_fqs_315").val());
-        setTimeout(function (){
-            autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',$("#sanden_fqs_315").val());//SAN-315SAQA
-        },100)
-        new_name += $("#sanden_fqs_315").val()+"x 315FQS ";
-    }
-    if( parseInt($("#sanden_fqs_300").val()) > 0){
-        autoCreateLineItem($("#sanden_fqs_300").attr('data-id'),$("#sanden_fqs_300").val());
-        setTimeout(function (){
-            autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',$("#sanden_fqs_300").val());//SAN-300SAQA
-        },100)
-        new_name += $("#sanden_fqs_300").val()+"x 300FQS ";
-    }
-    if( parseInt($("#sanden_fqs_250").val()) > 0){
-        autoCreateLineItem($("#sanden_fqs_250").attr('data-id'),$("#sanden_fqs_250").val());
-        setTimeout(function (){
-            autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',$("#sanden_fqs_250").val());//SAN-250SAQA
-        },100)
-        new_name += $("#sanden_fqs_250").val()+"x 250FQS ";
-    }
-    if( parseInt($("#QIK15_HPUMP").val()) > 0){
-        setTimeout(function (){
-        autoCreateLineItem($("#QIK15_HPUMP").attr('data-id'),$("#QIK15_HPUMP").val());
-        },100)
-        new_name += $("#QIK15_HPUMP").val()+"x QIK15 ";
-    }
-    if( parseInt($("#QIK20_HPUMP").val()) > 0){
-        autoCreateLineItem($("#QIK20_HPUMP").attr('data-id'),$("#QIK20_HPUMP").val());
-        new_name += $("#QIK20_HPUMP").val()+"x QIK20 ";
-    }
+    var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) +parseInt($("#sanden_fqs_250").val()) ;
+    $("#po_sanden_supply_input").find("select").each(function(index, e){
+        if(parseInt( $(this).val()) > 0){
+            (function($this,index) {
+                let i = index+1;
+                setTimeout(function (){
+                    autoCreateLineItem($this.attr('data-id'),parseInt($this.val()));
+                },10*i);
+                switch ($this.attr("data-name")) {
+                    case '315FQV':
+                        setTimeout(function (){
+                            autoCreateLineItem('d2548387-59da-2980-cdd5-5cff2e43f980',parseInt($this.val()));
+                        },70)
+                        break;
+                    case '315FQS':
+                        setTimeout(function (){
+                            autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',parseInt($this.val()));//SAN-315SAQA
+                        },80)
+                        break;
+                    case '300FQS':
+                        setTimeout(function (){
+                            autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',parseInt($this.val()));//SAN-300SAQA
+                        },90)
+                        break;
+                    case '250FQS':
+                        setTimeout(function (){
+                            autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($this.val()));//SAN-250SAQA
+                        },100)  
+                        break;
+                }
+              
+            }($(this),index));
+            new_name += $(this).val()+"x "+$(this).attr("data-name")+" ";
+        }
+    });
     setTimeout(function (){
         if(total_item > 0){
             autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
