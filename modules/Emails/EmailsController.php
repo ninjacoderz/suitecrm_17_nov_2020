@@ -505,12 +505,12 @@ class EmailsController extends SugarController
                         $link_upload = '<a href="https://pure-electric.com.au/upload_file_delivery_purchase?purchase_id='.$_REQUEST['record_id'].'" target="_blank">Please click this link to upload your photo.</a>';
 
                         $description = str_replace("\$contact_first_name",$contact_bean->first_name , $description);
-                        $description = str_replace("\$aos_invoices_delivery_date_c",$purchase_bean->delivery_date_c, $description);
+                        $description = str_replace("\$aos_invoices_delivery_date_time_c",$purchase_bean->delivery_date_c, $description);
                         $description = str_replace("\$aos_invoices_quote_type_c",  $product , $description);
                         $description = str_replace("\$aos_link_upload_delivery",  $link_upload , $description);
 
                         $description_html = str_replace("\$contact_first_name",$contact_bean->first_name , $description_html);
-                        $description_html = str_replace("\$aos_invoices_delivery_date_c", $purchase_bean->delivery_date_c , $description_html);
+                        $description_html = str_replace("\$aos_invoices_delivery_date_time_c", $purchase_bean->delivery_date_c , $description_html);
                         $description_html = str_replace("\$aos_invoices_quote_type_c",  $product , $description_html);
                         $description_html = str_replace("\$aos_link_upload_delivery",  $link_upload , $description_html);
                 
@@ -518,7 +518,7 @@ class EmailsController extends SugarController
                         $deleted_name = preg_replace('/([\d]{1,2} [\w]{3} [\d]{0,4} [\d].*)/', '', $purchase_bean->name);
                         $name = str_replace("\$aos_invoices_name", $deleted_name, $name);
                         // $name = str_replace("\$aos_invoices_name",  $purchase_bean->name , $name);
-                        $name = str_replace("\$aos_invoices_delivery_date_c",  $purchase_bean->delivery_date_c , $name);
+                        $name = str_replace("\$aos_invoices_delivery_date_time_c",  $purchase_bean->delivery_date_c , $name);
 
                     }else {
                         $record_id = trim($_REQUEST['record_id']);
