@@ -83,18 +83,7 @@ class sendEmail
         // set sms content that relate with email
         $email->sms_message = str_replace("\n\n","\n",str_replace("<br />","\n",$sms_content));
         $email->number_client = $sms_received;
-        // custom sms signture for email Invoice
-        if($_REQUEST['module'] == "AOS_Invoices") {
-            $path_file_json_sms_signture = dirname(__FILE__) .'/../../custom/modules/Users/json_sms_signture.json';
-            $json_data = json_decode(file_get_contents($path_file_json_sms_signture),true);
-            if(isset($json_data)) {
-                if(isset($json_data['1588651225'])) {
-                    $email->sms_message .= $json_data['1588651225']['content'];
-                }else{
-                    $email->sms_message .= $current_user->sms_signature_c;
-                }
-            }
-        }
+
 
         // body
         $email_edit_link = "";
