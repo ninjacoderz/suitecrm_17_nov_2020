@@ -514,7 +514,10 @@ class EmailsController extends SugarController
                         $description_html = str_replace("\$aos_invoices_quote_type_c",  $product , $description_html);
                         $description_html = str_replace("\$aos_link_upload_delivery",  $link_upload , $description_html);
                 
-                        $name = str_replace("\$aos_invoices_name",  $purchase_bean->name , $name);
+                        //Change subject Email Delivery
+                        $deleted_name = preg_replace('/([\d]{1,2} [\w]{3} [\d]{0,4} [\d].*)/', '', $purchase_bean->name);
+                        $name = str_replace("\$aos_invoices_name", $deleted_name, $name);
+                        // $name = str_replace("\$aos_invoices_name",  $purchase_bean->name , $name);
                         $name = str_replace("\$aos_invoices_delivery_date_c",  $purchase_bean->delivery_date_c , $name);
 
                     }else {
@@ -585,8 +588,8 @@ class EmailsController extends SugarController
                         }
                     }
                     //get email from contact
-
-                    $this->bean->name = $templateData['subject'];
+                    $this->bean->name = trim(preg_replace('/\s+/',' ', $templateData['subject']));
+                    // $this->bean->name = $templateData['subject'];
                     $this->bean->description_html = $templateData['body_html'];
                     $this->bean->description = $templateData['body_html'];
                     //start - code render sms_template  
@@ -1072,8 +1075,9 @@ class EmailsController extends SugarController
                     $description = $emailTemplate->body;
                     //parse value
                     $product = ucwords(str_replace("_", " " , $purchase_bean->po_type_c));
-
-                        $name = str_replace("\$po_purchase_order_name", $purchase_bean->name, $name);
+                        //Change subject Email Delivery
+                        $deleted_name = preg_replace('/([\d]{1,2} [\w]{3} [\d]{0,4} [\d].*)/', '', $purchase_bean->name);
+                        $name = str_replace("\$po_purchase_order_name", $deleted_name, $name);
                         $name = str_replace("\$aos_invoices_delivery_date_c", $purchase_bean->delivery_date_c, $name);
 
                         $description = str_replace("\$contact_first_name",$contact_bean->first_name , $description);
@@ -1149,8 +1153,8 @@ class EmailsController extends SugarController
                     }
                 }
                 //get email from contact
-
-                $this->bean->name = $templateData['subject'];
+                $this->bean->name = trim(preg_replace('/\s+/',' ', $templateData['subject']));
+                // $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
                 //start - code render sms_template  
