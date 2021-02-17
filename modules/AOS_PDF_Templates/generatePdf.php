@@ -732,8 +732,13 @@ if ($task == 'pdf' || $task == 'emailpdf') {
             $pdf->Output($sugar_config['upload_dir'] . 'attachfile.pdf', 'F');
             $sendEmail = new sendEmail();
             // BinhNT
-            $body_sms_link = "To firm the quote, upload photos via this link : https://pure-electric.com.au/pe-sanden-quote-form/confirm?quote-id=".$quote->id;
+            if ($_REQUEST['module'] == 'AOS_Quotes') {
+                $body_sms_link = "To firm the quote, upload photos via this link : https://pure-electric.com.au/pe-sanden-quote-form/confirm?quote-id=".$quote->id;
+            } else {
+                $body_sms_link = '';
+            }
             $sms_content = $short_description_c_mailing."\n\n".$body_sms_link."\n\n".$short_description_bottom_c_mailing;
+            $sms_content = trim(preg_replace('/\s\s+/',' ', $sms_content));
             $short_description_c_mailing = "<table style='width:735px;font-family:Arial;text-align:center;'>
                                                         <tbody style='text-align:left'>
                                                         <tr> <td>".
