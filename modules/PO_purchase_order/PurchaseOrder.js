@@ -49,7 +49,7 @@ function  updateToXero(el){
 function showLinkXero($xeroID){
     $("#xeroLink").remove();
     if($xeroID != ''){
-        $('#xero_po_id_c').after("<div id='xeroLink'><a href = 'https://go.xero.com/Accounts/Payable/PurchaseOrders/Edit/"+$('#xero_po_id_c').val()+"'>Go to Xero Link</a></div>");
+        $('#xero_po_id_c').after("<div id='xeroLink'><a target='_blank' href='https://go.xero.com/Accounts/Payable/PurchaseOrders/Edit/"+$('#xero_po_id_c').val()+"'>Go to Xero Link</a></div>");
     }
 }
 
