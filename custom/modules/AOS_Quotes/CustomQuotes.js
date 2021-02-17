@@ -2174,8 +2174,27 @@ function genExtraDaikinItemFunc(elem){
     return sanden_groups;
 } 
  function convertToInvoice(){ /////
-
-    if ($('#quote_type_c').val() == "quote_type_daikin") {
+    var check = isSandenSupply();
+    if ($('#quote_type_c').val() == "quote_type_sanden") {
+        if( $('#proposed_dispatch_date_c').val() == "" && (check.SSO == true || check.SSI == true) ){
+             // with sanden supply only not need show the Proposed Dispath Date
+            // var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
+            // if (question) {
+            // }
+            // else {
+            //     return false;
+            // }
+        }else if ( $('#proposed_install_date_c').val() == ''  && check.SSO == false && check.SSI == false ) {
+            var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
+            if (question) {
+            }
+            else {
+                return false;
+            }
+        } else {
+            $('#proposed_install_date_c_date').css('border', '1px solid #a5e8d6');
+        }
+    }else if ($('#quote_type_c').val() == "quote_type_daikin") {
         if ($('#proposed_delivery_date_c').val() == '') {
             var question = confirm("Field Proposed Delivery Date is not filled - are you sure to continue?");
             if (question) {
