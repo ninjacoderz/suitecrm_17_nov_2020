@@ -120,7 +120,7 @@
             }
         }
         $quote->solar_pv_pricing_input_c = json_encode($pricings);
-        $quote->save();
+        //$quote->save();
         
     }else {
         $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
@@ -210,7 +210,10 @@
                                 </div>';
     }
     $solar_pricing_options .= '<div style="clear:left"></div>';
-       
+    //Change status when customer accepted option
+    $quote->stage = 'Option_Accepted';
+    $quote->save();
+
     $emailObj = new Email();
     $defaults = $emailObj->getSystemDefaultEmail();
     $mail = new SugarPHPMailer();
