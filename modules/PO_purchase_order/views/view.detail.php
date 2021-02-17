@@ -56,7 +56,7 @@ class PO_purchase_orderViewDetail extends ViewDetail {
 						</td>
 					</tr>';
 				//VUT-S-PO Sanden supply >> Selected pdf template PO For Electrical & Plumber
-				if ($this->bean->po_type_c == 'sanden_supply') {
+				if ($this->bean->po_type_c == 'sanden_supply' || $this->bean->po_type_c =='daikin_supply') {
 					$template = '1876bff3-5e6b-e49c-e8a1-5e2530fba9ca';
 					$templates = array();
 					$templates[0]= $template;

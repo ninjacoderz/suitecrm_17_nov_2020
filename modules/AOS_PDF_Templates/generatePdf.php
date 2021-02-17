@@ -291,6 +291,8 @@ if($short_description_c != ""){
     $last_name = end($name_explode);
     if ($bean->po_type_c == "sanden_supply") {
         $short_description_c = str_replace("\$customer_first_name", "Sanden", $short_description_c);
+    }elseif ($bean->po_type_c == "daikin_supply") {
+        $short_description_c = str_replace("\$customer_first_name", "Daikin", $short_description_c);
     }else {
         $short_description_c = str_replace("\$customer_first_name", $first_name, $short_description_c);
     }
@@ -311,6 +313,22 @@ if($short_description_c != ""){
                 $short_description_c = str_replace("\$sanden_supplier_order_number", "This is a NEW Sanden order", $short_description_c);
             }
             $short_description_c = str_replace("\$sanden_dispatch_date", $dispatch_date, $short_description_c);
+            $short_description_c = str_replace("\$sanden_freight_company", $freight_company, $short_description_c);
+        } elseif ($bean->po_type_c == "daikin_supply") {
+            $delivery_date ='';
+            $freight_company='';
+            if ($bean->delivery_date_c!= '') {
+                $delivery_date = 'Please delivery '.$bean->delivery_date_c.' thank you.';
+            }
+            if ($bean->freight_company_c != '') {
+                $freight_company = 'Delivery via '.$freight_companys[$bean->freight_company_c].'.';
+            }
+            if ($bean->supplier_order_number_c != '') {
+                $short_description_c = str_replace("\$sanden_supplier_order_number", "This is an EXISTING Daikin order #".$bean->supplier_order_number_c, $short_description_c);
+            } else {
+                $short_description_c = str_replace("\$sanden_supplier_order_number", "This is a NEW Daikin order", $short_description_c);
+            }
+            $short_description_c = str_replace("\$sanden_dispatch_date", $delivery_date, $short_description_c);
             $short_description_c = str_replace("\$sanden_freight_company", $freight_company, $short_description_c);
         } else {
             $short_description_c = str_replace("\$sanden_dispatch_date", '', $short_description_c);
