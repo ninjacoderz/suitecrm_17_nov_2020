@@ -2186,7 +2186,6 @@ function get_lead_source_company(module_get,record){
                     $('#select_sms_signture').val('_1588918966').change();
                 }
                 //Email invoice -- detail view
-                debugger
                 if ($('input[name="return_module"]').val() == 'AOS_Invoices' && $("input[name='pdf_id']").val() == '91964331-fd45-e2d8-3f1b-57bbe4371f9c') {
                   $('#select_sms_signture').val('_1588918966').change();
                 }
