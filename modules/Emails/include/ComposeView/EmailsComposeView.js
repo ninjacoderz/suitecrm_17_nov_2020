@@ -1396,11 +1396,11 @@
             //   }
             // }
 
-            if($(self).find("[name=return_module]").val() == "PO_purchase_order" || $(self).find("[name=return_module]").val() == "AOS_Invoices" || $(self).find("[name=return_module]").val() == "AOS_Quotes")
+            if((module_sugar_grp1 == 'PO_purchase_order' || $(self).find("[name=return_module]").val() == "PO_purchase_order") || $(self).find("[name=return_module]").val() == "AOS_Invoices" || $(self).find("[name=return_module]").val() == "AOS_Quotes")
             {
               //thienpb code
                // all email from po send by email operations
-               if($(self).find("[name=return_module]").val() == "PO_purchase_order"){
+               if($(self).find("[name=return_module]").val() == "PO_purchase_order" || module_sugar_grp1 == 'PO_purchase_order'){
                 if(v.attributes.from == 'operations@pure-electric.com.au'){
                   selectOption.attr('selected', 'true');
                   $(self).find('[name=inbound_email_id]').val($(self).find('[name=from_addr] option:selected').attr('inboundid'));
