@@ -626,6 +626,7 @@ $(function () {
     $('#group_custom_invoice_checklist').parent().before('<input type="button" id="save_invoice_checklist" value="Save Checklist" class="button primary" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-record-id="'+ $("input[name='record']").val() + '"/>')
     if (module_sugar_grp1 == 'AOS_Invoices' && action_sugar_grp1 == 'DetailView') {
         $('#tab-actions').parent().append('<li><input type="button" id="create_service_case" value="Create Service Case" class="button primary"/></li>');
+        $('#tab-actions').parent().append('<li><input type="button" id="better_sg_solar_date" value="BETTER SG SOLAR DATE" class="button primary" data-email-type="better_sg_solar_date" onclick="$(document).openComposeViewModal(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-contact-name="'+$('#billing_contact_id').text()+'"  data-record-id="'+ $("input[name='record']").val() +'"/></li>');
         // var link_servicecase = '<div id="link_servicecase"><a href="/index.php?module=pe_service_case&action=EditView&record='+trim(data)+'" target="_blank">Open link Service Case</></div>';
     }
     $('#create_service_case').click(function() {

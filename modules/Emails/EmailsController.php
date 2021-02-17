@@ -1262,6 +1262,81 @@ class EmailsController extends SugarController
                 $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
                 //end - code render sms_template
             }
+            // tuan Seek Better SG Solar PV Install Date
+            if($_REQUEST['email_type'] == 'better_sg_solar_date'){ 
+                $emailTemplateID = '1ebb24a7-11ab-cc01-b31d-60220a3e0adb';// 'test 7f0890f4-536c-20d6-6cda-602cc64ad9dd'; 
+
+                $emailTemplate = BeanFactory::getBean(
+                        'EmailTemplates',
+                        $emailTemplateID
+                    );
+
+                $invoice = new AOS_Invoices();
+                $invoice->retrieve($_REQUEST['record_id']);
+                $contact =  new Contact();
+                $contact->retrieve($invoice->billing_contact_id);
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                $name = str_replace("\$contact_name", $contact->first_name .' '.$contact->last_name , $name);
+                $name = str_replace("\$aos_invoices_install_address_city_c", $invoice->install_address_city_c  , $name);
+                $name = str_replace("\$aos_invoices_order_number_c", $invoice->order_number_c , $name);
+
+
+                $description = str_replace("\$aos_invoices_order_number_c",$invoice->order_number_c , $description);
+                $description = str_replace("\$contact_name",$contact->first_name .' '.$contact->last_name, $description);
+                $description = str_replace("\$contact_email1",$contact->email1 , $description);
+                $description = str_replace("\$aos_quotes_site_detail_addr__c",$invoice->install_address_c .' '.$invoice->install_address_city_c .' '.$invoice->install_address_state_c .' '.$invoice->install_address_postalcode_c, $description);
+                $description = str_replace("\$contact_phone_mobile",$contact->phone_mobile , $description);
+                $description = str_replace("\$aos_quotes_distributor_c",$invoice->distributor_c , $description);
+                $description = str_replace("\$aos_invoices_quick_notes_c",$invoice->description , $description);
+
+                $description_html = str_replace("\$aos_invoices_order_number_c",$invoice->order_number_c , $description_html);
+                $description_html = str_replace("\$contact_name",$contact->first_name .' '.$contact->last_name, $description_html);
+                $description_html = str_replace("\$contact_email1",$contact->email1 , $description_html);
+                $description_html = str_replace("\$aos_quotes_site_detail_addr__c",$invoice->install_address_c .' '.$invoice->install_address_city_c .' '.$invoice->install_address_state_c .' '.$invoice->install_address_postalcode_c, $description_html);
+                $description_html = str_replace("\$contact_phone_mobile",$contact->phone_mobile , $description_html);
+                $description_html = str_replace("\$aos_quotes_distributor_c",$invoice->distributor_c , $description_html);
+                $description_html = str_replace("\$aos_invoices_quick_notes_c",$invoice->description , $description_html);
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+                //get email from contact
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+            }
             //dung code --- button Advise_Install_Date
             if($_REQUEST['email_type'] == 'Advise_Install_Date'){
                 $seek_install_date_c = trim(Urldecode($_GET['seek_install_date_c']));
