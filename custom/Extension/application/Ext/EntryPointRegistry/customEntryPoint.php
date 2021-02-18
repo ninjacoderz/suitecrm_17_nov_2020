@@ -1418,3 +1418,7 @@ $entry_point_registry['ManuallyCreateLabel'] = array(
     'auth' => false
 );
 
+$entry_point_registry['Generate_REPS_WH1_PDF'] = array( 
+    'file' => 'custom/modules/AOS_Invoices/Generate_REPS_WH1_PDF.php',
+    'auth' => false
+);

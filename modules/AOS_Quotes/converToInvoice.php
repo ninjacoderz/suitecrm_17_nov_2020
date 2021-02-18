@@ -242,6 +242,7 @@
             $quoteToInvoiceGroupIds[$quoteGroupId] = $group_invoice->id;
         }
 
+        $sanden_model_c = '';
         //Setting Line Items
         // $isSandenSupply = false;
         $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
@@ -266,9 +267,9 @@
             $prod_invoice = BeanFactory::newBean('AOS_Products_Quotes');
             $prod_invoice->populateFromRow($row);
             $prod_invoice->save();
-            // if ($row['part_number'] == 'SANDEN_SUPPLY_ONLY') {
-            //     $isSandenSupply = true;
-            // }
+            if (strpos($row['part_number'],'GAUS-') !== false && $sanden_model_c == '' ) { 
+                $sanden_model_c  = $row['part_number'];
+            }
     }
     //Dung code
 	$invoice_title  = strtolower($rawRow['name']);
@@ -288,6 +289,10 @@
 			$invoice->delivery_contact_phone_numbe_c =  $accout_daikin->phone_office ;
 		}
 	}
+    //save value default
+    $invoice->existing_sh_flow_rate_c = '9';
+    $invoice->replacement_showerhead_c = '5.0';
+    $invoice->sanden_model_c = $sanden_model_c;
     //dung code- convert payments json string
     if(isset($_REQUEST['payment_amount'])) {
         $array_payments_link = array(
@@ -370,6 +375,10 @@
             
     }
 	//End Dung code
+    if(strtolower(trim($quote->install_address_state_c)) == 'sa' && ($quote->quote_type_c == 'quote_type_sanden' || strpos(strtolower($quote->name),'sanden') !== false) ) {
+        Generate_REPS_WH1_PDF($invoice);
+    }
+   
     ob_clean();
 	$create_three_po = true;
 	// BinhNT;   
@@ -753,4 +762,25 @@
             vCal::cache_sugar_vcal($user);
         }
         // echo $meetings->id;
+    }
+
+    // Function Generate REPS_WH1_PDF 
+    function Generate_REPS_WH1_PDF($invoice){
+        $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+        $fields = array();
+        $url = 'http://locsuitecrm.com/index.php?entryPoint=Generate_REPS_WH1_PDF&InvoiceID='.$invoice->id;
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+        $result = curl_exec($curl); 
     }

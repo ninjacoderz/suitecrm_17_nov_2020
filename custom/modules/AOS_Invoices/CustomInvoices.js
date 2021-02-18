@@ -5335,6 +5335,43 @@ $(document).ready(function(){
                 }
             })      
          })
+         //button create generate REPS_WH1_PDF
+         $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #00b2e2;" id="Generate_REPS_WH1_PDF" class="button primary" title="Generate REPS WH1 PDF"><span class="glyphicon glyphicon-file"></span> Generate REPS WH1 PDF</button>');
+         $("#Generate_REPS_WH1_PDF").click(function(){
+            if($("input[name='record']").val().trim() != ''){
+                SUGAR.ajaxUI.showLoadingPanel(); 
+                $("#EditView input[name='action']").val('Save');
+                $.ajax({
+                    type: $("#EditView").attr('method'),
+                    url: $("#EditView").attr('action'),
+                    data: $("#EditView").serialize(),
+                    async:false,
+                    success: function (data) {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'index.php?entryPoint=Generate_REPS_WH1_PDF&InvoiceID='+$("input[name='record']").val().trim(),
+                        }).done(function(data) {
+                            $(".files").empty();
+                            $.ajax({
+                                url: $('#fileupload').fileupload('option', 'url'),
+                                dataType: 'json',
+                                context: $('#fileupload')[0]
+                            }).always(function () {
+                                $(this).removeClass('fileupload-processing');
+                            }).done(function (result) {
+                                $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
+                            });
+                            SUGAR.ajaxUI.hideLoadingPanel(); 
+                        })
+                    }
+                });  
+
+            }else{
+                $('#alert_modal').find('.modal-body').empty();
+                $('#alert_modal').find('.modal-body').append('Could you saving Invoice before, please?'); 
+                $('#alert_modal').modal('show'); 
+            }
+         })
          //VUT-S-Get all files sms
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_all_files_sms" class="button primary" title="Get all files from SMS">GET ALL FILES FROM SMS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
          $('#get_all_files_sms').click(function(){
