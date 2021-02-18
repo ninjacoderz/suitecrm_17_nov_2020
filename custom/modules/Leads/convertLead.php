@@ -2232,7 +2232,7 @@ function update_solar_quote($SGquote_ID, $quoteSuite) {
             // 'Sunpower Maxeon 2 350' => '144',
             // 'Sunpower Maxeon 3 395' => '167',
             // 'Sunpower X22 360W'=> '110',
-            'Sunpower Maxeon 3 400W'=> '145',
+            'Sunpower Maxeon 3 400'=> '145',
             // 'Sunpower P3 325 BLACK' => '174', 
             'Sunpower P3 370 BLACK' => '193',                               
         );
@@ -2550,7 +2550,7 @@ function update_solar_quote($SGquote_ID, $quoteSuite) {
     
             if( ($panelType == 'Sunpower Maxeon 2 350' || $panelType == 'Sunpower P3 370 BLACK') && strpos($inverterType,'S Edge') !== false){
                 $datakey = array_search($option_inverters['SolarEdge with P370'], $dataid);
-            }else if($panelType == 'Sunpower Maxeon 3 400W' && strpos($inverterType,'S Edge') !== false ){
+            }else if($panelType == 'Sunpower Maxeon 3 400' && strpos($inverterType,'S Edge') !== false ){
                 $datakey = array_search($option_inverters['SolarEdge with P500'], $dataid);
             }else{
                 $datakey = array_search($option_inverters[$inverterType], $dataid);

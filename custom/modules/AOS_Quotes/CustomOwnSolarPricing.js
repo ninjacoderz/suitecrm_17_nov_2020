@@ -41,7 +41,7 @@ function getDataProductSolar() {
         /*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W',*/
         'Sunpower P3 370 BLACK',
         /*'Sunpower X22 360W',*/
-        'Sunpower Maxeon 3 400W',
+        'Sunpower Maxeon 3 400',
         'Solar PV Standard Install',
         /*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/
     ];

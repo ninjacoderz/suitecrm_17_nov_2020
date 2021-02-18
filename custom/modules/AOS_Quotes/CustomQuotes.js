@@ -3132,7 +3132,7 @@ function genExtraDaikinItemFunc(elem){
                                     // 'Sunpower Maxeon 2 350':'144',
                                     // 'Sunpower Maxeon 3 395':'167',
                                     // 'Sunpower X22 360W':'110',
-                                    'Sunpower Maxeon 3 400W':'145',
+                                    'Sunpower Maxeon 3 400':'145',
                                     // 'Sunpower P3 325 BLACK':'174',
                                     'Sunpower P3 370 BLACK':'193',                               
                                  }
@@ -3232,7 +3232,7 @@ function genExtraDaikinItemFunc(elem){
                  //if( (option_panel_type == 'Sunpower Maxeon 2 350' && option_panel_type == 'Sunpower P3 325 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5'|| option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10')){
                  if( (option_panel_type == 'Sunpower X22 360W' || option_panel_type == 'Sunpower P3 370 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P'|| option_inverter_type == 'S Edge 10')){
                     build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters['SolarEdge with P500']);
-                 }else if(option_panel_type == 'Sunpower Maxeon 3 400W' && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10') ){
+                 }else if(option_panel_type == 'Sunpower Maxeon 3 400' && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10') ){
                      build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters['SolarEdge with P370']);
                  }else{
                      build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters[option_inverter_type]);
