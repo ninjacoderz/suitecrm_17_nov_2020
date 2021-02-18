@@ -3,6 +3,7 @@
     require_once('include/SugarPHPMailer.php');
 
     /// Data Request
+    $file_to_attach = array();
     $solarOptions = json_encode(($_POST['products']), true);
     
     $type_form = $_POST['type_form'];
@@ -222,6 +223,7 @@
 
         $leads_intenal_notes->load_relationship('aos_quotes_pe_internal_note_1');
         $leads_intenal_notes->aos_quotes_pe_internal_note_1->add($quote->id);
+        $file_to_attach = upload_file_form_solar($quote_id);
         echo  $quote_id;
     } else {
         $lead =  new Lead();
@@ -357,6 +359,7 @@
 
         $leads_intenal_notes->load_relationship('aos_quotes_pe_internal_note_1');
         $leads_intenal_notes->aos_quotes_pe_internal_note_1->add($quote->id);
+        $file_to_attach = upload_file_form_solar($quote_id);
         echo  $quote_id;
     }
 
@@ -754,23 +757,26 @@
         $mail->IsHTML(true);
         $mail->AddAddress($email_customer);
         $array = array();
-        foreach($attachmentBeans as $attachment) {
+        // foreach($attachmentBeans as $attachment) {
     
-            $noteTemplate = clone $attachment;
-            $noteTemplate->id = create_guid();
+        //     $noteTemplate = clone $attachment;
+        //     $noteTemplate->id = create_guid();
 
-            $noteFile = new UploadFile();
-            $noteFile->duplicate_file($attachment->id, $noteTemplate->id, $noteTemplate->filename);
+        //     $noteFile = new UploadFile();
+        //     $noteFile->duplicate_file($attachment->id, $noteTemplate->id, $noteTemplate->filename);
 
-            $noteTemplate->save();
+        //     $noteTemplate->save();
 
-            $file_name = $attachment->filename;
-            $filename = $attachment->id . $attachment->filename;
-            $file_location = "upload/".$attachment->id;
-            $mime_type = $attachment->file_mime_type;
-            $filename = substr($filename, 36, strlen($filename)); 
+        //     $file_name = $attachment->filename;
+        //     $filename = $attachment->id . $attachment->filename;
+        //     $file_location = "upload/".$attachment->id;
+        //     $mime_type = $attachment->file_mime_type;
+        //     $filename = substr($filename, 36, strlen($filename)); 
 
-            $mail->AddAttachment($file_location, $file_name, 'base64', $mime_type);
+        //     $mail->AddAttachment($file_location, $file_name, 'base64', $mime_type);
+        // }
+        foreach($file_to_attach as $file_attach) {
+            $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
         }
         $mail->AddCC($email_assigigned);
         $mail->AddCC('info@pure-electric.com.au');
@@ -792,5 +798,119 @@
         exec("cd " . $message_dir . "; php send-message.php sms " . $phone . ' "' . $body_sms . '"');
 
     }
-
-    // If Lead is existing 
+    function upload_file_form_solar($quote_id){
+        $quote = new AOS_Quotes();
+        $quote->retrieve($quote_id);
+        $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
+        $dirName        = $quote->pre_install_photos_c;
+        $folderName     = $path . $dirName . '/';
+        $thumbnail      = $path . $dirName . '/thumbnail' . '/';
+        if (!file_exists($folderName)) {
+            mkdir($path . $dirName, 0777, true);
+            $folderName = $path . $dirName.'/';
+        }
+        for( $j = 1; $j <= 6; $j++){
+            if(count($_POST['files']['data-design-upload-'.$j]['tmp_name']) > 0) {
+                for($i = 0; $i < count($_POST['files']['data-design-upload-'.$j]['tmp_name']); $i++) {
+                    if($_POST['files']['data-design-upload-'.$j]['name'][$i] != ""){
+                        $file_type = 'Q'.$quote->number.'_Solar_Design'.$j.'_'.$i.'.'.pathinfo( basename($_POST['files']['data-design-upload-'.$j]['name'][$i]), PATHINFO_EXTENSION);
+                        $count = checkCountExistPhoto($file_type,$folderName,'_Solar_Design'.$j);
+                        $file_type =  'Q'.$quote->number.'_Solar_Design'.$j.'_'.$count.'.'.pathinfo( basename($_POST['files']['data-design-upload-'.$j]['name'][$i]), PATHINFO_EXTENSION );
+                        copy($_POST['files']['data-design-upload-'.$j]['tmp_name'][$i], $folderName.$file_type);
+                        // $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Solar Design'.$j.'_'.$i.'</a>';
+                        addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                        $file_to_attach[] = array('folderName' => $_POST['files']['data-design-upload-'.$j]['tmp_name'][$i], 'fileName' => $file_type);
+                    };
+                }
+            };
+        }
+        return $file_to_attach;
+    }
+    function checkCountExistPhoto($file_type,$folderName,$new_name){
+        $data_exist= [];
+        $get_all_photo = dirToArray($folderName);
+        foreach ($get_all_photo as $photo_exist) {
+            if( strpos($photo_exist, $new_name) == true){
+                $data_exist[] = $photo_exist;
+            }
+        }
+        $count =  count($data_exist);
+        return $count;   
+    }
+    function dirToArray($dir) { 
+       
+        $result = array();
+        $cdir = scandir($dir); 
+        foreach ($cdir as $key => $value) 
+        { 
+           if (!in_array($value,array(".",".."))) 
+           { 
+              if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
+              { 
+                 $result[$value] = dirToArray($dir . DIRECTORY_SEPARATOR . $value); 
+              } 
+              else 
+              { 
+                 $result[] = $value; 
+              } 
+           } 
+        }
+        return $result; 
+    }
+    function addToNotes($file,$folderName,$parent_id,$parent_type){
+        // $listFile = dirToArray($folderName);
+        resize_image($file, $folderName);
+        
+        $noteTemplate = new Note();
+        $noteTemplate->id = create_guid();
+        $noteTemplate->new_with_id = true; // duplicating the note with files
+        $noteTemplate->parent_id = $parent_id;
+        $noteTemplate->parent_type = $parent_type;
+        $noteTemplate->date_entered = '';
+        $noteTemplate->file_mime_type = mime_content_type($folderName.$file);
+        $noteTemplate->filename = $file;
+        $noteTemplate->name = $file;
+        $noteTemplate->save();
+    }
+    function resize_image($file, $current_file_path) {
+        $type = strtolower(substr(strrchr($file, '.'), 1));
+        $typeok = TRUE;
+        if($type == 'gif' || $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
+            if(!file_exists ($current_file_path."/thumbnail/")) {
+                mkdir($current_file_path."/thumbnail/");
+            }
+            $thumb =  $current_file_path."/thumbnail/".$file;
+            switch ($type) {
+                case 'jpg': // Both regular and progressive jpegs
+                case 'jpeg':
+                    $src_func = 'imagecreatefromjpeg';
+                    $write_func = 'imagejpeg';
+                    $image_quality = isset($options['jpeg_quality']) ?
+                        $options['jpeg_quality'] : 75;
+                    break;
+                case 'gif':
+                    $src_func = 'imagecreatefromgif';
+                    $write_func = 'imagegif';
+                    $image_quality = null;
+                    break;
+                case 'png':
+                    $src_func = 'imagecreatefrompng';
+                    $write_func = 'imagepng';
+                    $image_quality = isset($options['png_quality']) ?
+                        $options['png_quality'] : 9;
+                    break;
+                default: $typeok = FALSE; break;
+            }
+            if ($typeok){
+                list($w, $h) = getimagesize($current_file_path.'/'. $file);
+    
+                $src = $src_func($current_file_path.'/'. $file);
+                $new_img = imagecreatetruecolor(80,80);
+                imagecopyresampled($new_img,$src,0,0,0,0,80,80,$w,$h);
+                $write_func($new_img,$thumb, $image_quality);
+                
+                imagedestroy($new_img);
+                imagedestroy($src);
+            }
+        } 
+    }
