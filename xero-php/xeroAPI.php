@@ -83,15 +83,15 @@
             // Po supplier
             if(strpos($poTitle,"sanden") !== false){
                 if($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida == ""){
-                    $reference = 'Inv-'.$supTitle[count($supTitle)-1].' Sanden';
+                    $reference = 'Inv-'.$supTitle[count($supTitle)-1].' PE PO '.$poBean->number.' Sanden';
                 }else{
-                    $reference = 'Inv-'.$supTitle[count($supTitle)-1].' '.$customerAccount->name;
+                    $reference = 'Inv-'.$supTitle[count($supTitle)-1].' PE PO '.$poBean->number.' '.$customerAccount->name;
                 }
             }else{
                 if($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida == ""){
-                    $reference = 'Inv- Daikin';
+                    $reference = 'Inv-'.' PE PO '.$poBean->number.' Daikin';
                 }else{
-                    $reference = 'Inv-'.$customerAccount->name;
+                    $reference = 'Inv-'.' PE PO '.$poBean->number.' '.$customerAccount->name;
                 }
             }
 
@@ -99,9 +99,9 @@
         }else if((strpos($poTitle,"sanden") !== false || strpos($poTitle,"daikin") !== false) && (strpos($poTitle,"plumbing") !== false || strpos($poTitle,"electrical") !== false)){
             // Po
             if($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida == ""){
-                $reference = 'Inv-';
+                $reference = 'Inv-'.' PE PO '.$poBean->number;
             }else{
-                $reference = 'Inv-'.$customerAccount->name;
+                $reference = 'Inv-'.' PE PO '.$poBean->number.' '.$customerAccount->name;
             }
             
         }
