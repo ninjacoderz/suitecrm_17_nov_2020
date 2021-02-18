@@ -768,7 +768,7 @@
     function Generate_REPS_WH1_PDF($invoice){
         $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
         $fields = array();
-        $url = 'http://locsuitecrm.com/index.php?entryPoint=Generate_REPS_WH1_PDF&InvoiceID='.$invoice->id;
+        $url = 'https://suitecrm.pure-electric.com.au/index.php?entryPoint=Generate_REPS_WH1_PDF&InvoiceID='.$invoice->id;
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_URL, $url);
