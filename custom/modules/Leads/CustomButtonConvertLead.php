@@ -460,6 +460,7 @@ $account->save();
         if ($quote->solargain_lead_number_c != "") {
             $quote->solargain_quote_number_c = create_solar_quote($quote->solargain_lead_number_c,$quote);
             if ($quote->solargain_quote_number_c != "") {
+                $quote->save();
                 update_solar_quote($quote->solargain_quote_number_c,$quote);
             }
             // $quote->solargain_lead_number_c  = '229214';
