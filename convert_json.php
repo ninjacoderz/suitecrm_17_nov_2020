@@ -14,7 +14,7 @@
                     // 'Q CELLS Q.PEAK DUO G6+ 350W',
                     // 'Sunpower X22 360W',
                     'Sunpower P3 370 BLACK',
-                    'Sunpower Maxeon 3 400');
+                    'Sunpower Maxeon 3 400W');
     $json_file  = array();
 
     foreach ( $csv as $key => $value) {
