@@ -3123,8 +3123,8 @@ function genExtraDaikinItemFunc(elem){
          //Travel option and Price option
          var count_option = 0;
          var option_models =    {
-                                    // 'Jinko 330W Mono PERC HC':'149',
-                                    'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
+                                    'Jinko 330W Mono PERC HC':'149',
+                                    // 'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
                                     //'Longi Hi-MO X 350W':'162',
                                     // 'Q CELLS Q.MAXX 330W':'156',
                                     'Q CELLS Q.MAXX-G2 350W':'185',
@@ -3133,7 +3133,8 @@ function genExtraDaikinItemFunc(elem){
                                     // 'Sunpower Maxeon 3 395':'167',
                                     // 'Sunpower X22 360W':'110',
                                     'Sunpower Maxeon 3 400W':'145',
-                                    'Sunpower P3 325 BLACK':'174',                                
+                                    // 'Sunpower P3 325 BLACK':'174',
+                                    'Sunpower P3 370 BLACK':'193',                               
                                  }
           var option_inverters = {'Primo 3':'274',
                                 'Primo 4':'275',
@@ -3229,7 +3230,7 @@ function genExtraDaikinItemFunc(elem){
                  build_url +=  '&splits_'+ count_option + '='+ encodeURIComponent(parseInt(groups));
                  build_url += '&additional_'+ count_option + '='+additional;
                  //if( (option_panel_type == 'Sunpower Maxeon 2 350' && option_panel_type == 'Sunpower P3 325 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5'|| option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10')){
-                 if( (option_panel_type == 'Sunpower X22 360W' || option_panel_type == 'Sunpower P3 325 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P'|| option_inverter_type == 'S Edge 10')){
+                 if( (option_panel_type == 'Sunpower X22 360W' || option_panel_type == 'Sunpower P3 370 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P'|| option_inverter_type == 'S Edge 10')){
                     build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters['SolarEdge with P500']);
                  }else if(option_panel_type == 'Sunpower Maxeon 3 400W' && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10') ){
                      build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters['SolarEdge with P370']);

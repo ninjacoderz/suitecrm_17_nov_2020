@@ -1227,15 +1227,16 @@ function update_solar_quote_c($SGquote_ID, $quoteSuite) {
         }
         //THIENPB UPDATE
         $option_models = array(
-            // 'Jinko 330W Mono PERC HC' => '149',
-            'Jinko 370W Cheetah Plus JKM370M-66H' => '171',
+            'Jinko 330W Mono PERC HC' => '149',
+            // 'Jinko 370W Cheetah Plus JKM370M-66H' => '171',
             'Q CELLS Q.MAXX-G2 350W'=>'185',
             // 'Q CELLS Q.PEAK DUO G6+ 350W' => '173',
             // 'Sunpower Maxeon 2 350' => '144',
             // 'Sunpower Maxeon 3 395' => '167',
             // 'Sunpower X22 360W'=> '110',
             'Sunpower Maxeon 3 400W'=> '145',
-            'Sunpower P3 325 BLACK' => '174',                                
+            // 'Sunpower P3 325 BLACK' => '174',
+            'Sunpower P3 370 BLACK' => '193',                               
         );
     
         $option_inverters = array(
@@ -1549,7 +1550,7 @@ function update_solar_quote_c($SGquote_ID, $quoteSuite) {
             $inverters= json_decode($result);
             $dataid = array_column($inverters, 'ID');
     
-            if( ($panelType == 'Sunpower Maxeon 2 350' || $panelType == 'Sunpower P3 325 BLACK') && strpos($inverterType,'S Edge') !== false){
+            if( ($panelType == 'Sunpower Maxeon 2 350' || $panelType == 'Sunpower P3 370 BLACK') && strpos($inverterType,'S Edge') !== false){
                 $datakey = array_search($option_inverters['SolarEdge with P370'], $dataid);
             }else if($panelType == 'Sunpower Maxeon 3 400W' && strpos($inverterType,'S Edge') !== false ){
                 $datakey = array_search($option_inverters['SolarEdge with P500'], $dataid);

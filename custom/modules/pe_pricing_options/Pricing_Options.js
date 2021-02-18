@@ -2,7 +2,7 @@ $(function(){
 
     'use strict';
 
-    var panel_type = ['','Jinko 370W Cheetah Plus JKM370M-66H','Q CELLS Q.MAXX-G2 350W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W',*/'Sunpower P3 325 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
+    var panel_type = ['',/*'Jinko 370W Cheetah Plus JKM370M-66H'*/'Jinko 330W Mono PERC HC','Q CELLS Q.MAXX-G2 350W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W','Sunpower P3 325 BLACK'*/'Sunpower P3 370 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
     var inverter_type = ['','Primo 3','Primo 4','Primo 5','Primo 6','Primo 8.2','Symo 5','Symo 6','Symo 8.2','Symo 10','Symo 15','SYMO 20','S Edge 3','S Edge 5','S Edge 6','S Edge 8','S Edge 8 3P','S Edge 10','IQ7 plus',/*'IQ7',*/'IQ7X',/*'Growatt 3','Growatt 5','Growatt 6','Growatt8','Growatt 8.2',*/'Sungrow 3','Sungrow 5','Sungrow 8','Sungrow 10 3P','Sungrow 15 3P'];
     var bool_val = ["No", "Yes"];
     var data = [["Option", "1", "2", "3", "4", "5", "6"], //headers

@@ -4,8 +4,8 @@
 $panels_type = $_POST["panel_type"];
 $inverters_type = $_POST["inverter_type"];
 //change name panel
-if (array_search('Sunpower P3 325 BLACK',$panels_type) != false) {
-    $panels_type[array_search('Sunpower P3 325 BLACK',$panels_type)] = 'Sunpower P3 325W BLACK';
+if (array_search('Sunpower P3 370 BLACK',$panels_type) != false) {
+    $panels_type[array_search('Sunpower P3 370 BLACK',$panels_type)] = 'Sunpower P3 370W BLACK';
 }
 
 $panel_sql = implode('|', $panels_type);
@@ -68,9 +68,9 @@ function getProductSolar($string, $type='') {
     }
     
     //check product Sunpower P3 325W BLACK
-    if ($type == 'panel' && array_key_exists('Sunpower P3 325W BLACK',$products)) {
-        $products['Sunpower P3 325 BLACK'] = $products['Sunpower P3 325W BLACK'];
-        unset($products['Sunpower P3 325W BLACK']);
+    if ($type == 'panel' && array_key_exists('Sunpower P3 370W BLACK',$products)) {
+        $products['Sunpower P3 370 BLACK'] = $products['Sunpower P3 370W BLACK'];
+        unset($products['Sunpower P3 370W BLACK']);
     }
     return $products;
 }

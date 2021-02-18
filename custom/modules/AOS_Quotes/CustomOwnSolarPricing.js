@@ -35,10 +35,11 @@ $(function () {
  */
 function getDataProductSolar() {
     let panel_type = [
-        'Jinko 370W Cheetah Plus JKM370M-66H',
+        'Jinko 330W Mono PERC HC',
+        // 'Jinko 370W Cheetah Plus JKM370M-66H',
         'Q CELLS Q.MAXX-G2 350W',
         /*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W',*/
-        'Sunpower P3 325 BLACK',
+        'Sunpower P3 370 BLACK',
         /*'Sunpower X22 360W',*/
         'Sunpower Maxeon 3 400W',
         'Solar PV Standard Install',
