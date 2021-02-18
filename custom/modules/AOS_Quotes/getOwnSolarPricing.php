@@ -1,5 +1,5 @@
 <?php
-// $test = '{"own_totalkW_1":"6.5","own_totalkW_2":"10.4","own_totalkW_3":"6.5","own_totalkW_4":"10.8","own_totalkW_5":"6.65","own_totalkW_6":"10.5","own_panelType_1":"Sunpower P3 325 BLACK","own_panelType_2":"Sunpower Maxeon 3 400","own_panelType_3":"Sunpower P3 325 BLACK","own_panelType_4":"Sunpower Maxeon 3 400","own_panelType_5":"Q CELLS Q.MAXX-G2 350W","own_panelType_6":"Q CELLS Q.MAXX-G2 350W","own_inverterType_1":"Sungrow 5","own_inverterType_2":"Sungrow 8","own_inverterType_3":"Primo 5","own_inverterType_4":"Primo 8.2","own_inverterType_5":"S Edge 5","own_inverterType_6":"S Edge 8","own_totalPanels_1":"20","own_totalPanels_2":"26","own_totalPanels_3":"20","own_totalPanels_4":"27","own_totalPanels_5":"19","own_totalPanels_6":"30"}';
+// $test = '{"own_totalkW_1":"6.5","own_totalkW_2":"10.4","own_totalkW_3":"6.5","own_totalkW_4":"10.8","own_totalkW_5":"6.65","own_totalkW_6":"10.5","own_panelType_1":"Sunpower P3 325 BLACK","own_panelType_2":"Sunpower Maxeon 3 400W","own_panelType_3":"Sunpower P3 325 BLACK","own_panelType_4":"Sunpower Maxeon 3 400W","own_panelType_5":"Q CELLS Q.MAXX-G2 350W","own_panelType_6":"Q CELLS Q.MAXX-G2 350W","own_inverterType_1":"Sungrow 5","own_inverterType_2":"Sungrow 8","own_inverterType_3":"Primo 5","own_inverterType_4":"Primo 8.2","own_inverterType_5":"S Edge 5","own_inverterType_6":"S Edge 8","own_totalPanels_1":"20","own_totalPanels_2":"26","own_totalPanels_3":"20","own_totalPanels_4":"27","own_totalPanels_5":"19","own_totalPanels_6":"30"}';
 // $input = json_decode($test, true);
 $panels_type = $_POST["panel_type"];
 $inverters_type = $_POST["inverter_type"];
@@ -92,7 +92,7 @@ function getProductSolar($string, $type='') {
 //         'Q CELLS Q.MAXX-G2 350W' => 'Q CELLS Q.MAXX-G2 350W',
 //         // 'Q CELLS Q.PEAK DUO G6+ 350W',
 //         // 'Sunpower X22 360W',
-//         'Sunpower Maxeon 3 400' => 'Sunpower Maxeon 3 400',
+//         'Sunpower Maxeon 3 400W' => 'Sunpower Maxeon 3 400W',
 //         'Sunpower P3 325 BLACK' => 'Sunpower P3 325W BLACK',
 //     );
     
