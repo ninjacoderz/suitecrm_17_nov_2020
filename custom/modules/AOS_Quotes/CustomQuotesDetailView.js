@@ -499,17 +499,29 @@ $(function () {
                 alert("Field Product Type is not filled !");
                 return false;     
             }
-            if ($('#quote_type_c').val() == 'quote_type_sanden' && $('div[field="proposed_install_date_c"]').text().trim() == '' && $('#name').text().trim().toLowerCase().includes("supply only") != true) {
-                var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
-                if (!question) {
-                    return false;
-                }
-            }else if ($('#quote_type_c').val() == 'quote_type_sanden' && $('div[field="proposed_dispatch_date_c"]').text().trim() == '' && $('#name').text().trim().toLowerCase().includes("supply only") == true) {
-                // with sanden supply only not need show the Proposed Dispath Date
-                // var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
-                // if (!question) {
-                //     return false;
-                // }
+            if($('#quote_type_c').val() == 'quote_type_sanden'){
+                // dispatch date  and install date require for sanden 
+                // dispatch date require for sanden supply not need install date
+                var check = isSandenSupply();
+                if( $('div[field="proposed_install_date_c"]').text().trim() == '' ) {
+                    if(check.SSO == false){
+                        var question = confirm("Field Proposed Install Date is not filled - are you sure to continue?");
+                        if (question) {} 
+                        else {
+                            return false;
+                        }
+                    }
+                }   
+
+                if( $('div[field="proposed_dispatch_date_c"]').text().trim() == '') {
+                  
+                    var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
+                    if (question) {} 
+                    else {
+                        return false;
+                    }
+                    
+                }  
             }else if ($('#quote_type_c').val() == 'quote_type_daikin' && $('div[field="proposed_delivery_date_c"]').text().trim() == '') {
                 var question = confirm("Field Proposed Delivery Date is not filled - are you sure to continue?");
                 if (!question) {
@@ -1167,3 +1179,18 @@ $(function () {
         return $(self);
     };
 }(jQuery));
+
+/** Check SSI and SSO for Quote type Sanden to create PO Sanden Supply*/
+function isSandenSupply() {
+    let sanden_groups = {
+        SSI : true,
+        SSO : false,
+    };
+    $("#line_items_span table tbody td[class='tabDetailViewDF']").each(function(i, e) {
+        if($(e).text().toLowerCase().includes('supply only')){
+            sanden_groups.SSI = false;
+            sanden_groups.SSO = true;
+        }
+    });
+    return sanden_groups;
+}  
