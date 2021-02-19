@@ -853,7 +853,7 @@ if($_POST['to_module'] == "aos_invoice"){
             $mail->Body .= "<p>Link Quote: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote_slgain->id."' target='_blank'>".$quote_slgain->name."</a></p>";
             $mail->Body .= "<p>Link Solargain Lead: <a href='https://crm.solargain.com.au/lead/edit/".$quote_slgain->solargain_lead_number_c."' target='_blank'>Solargain Lead Number ".$quote_slgain->solargain_lead_number_c."</a></p>";
             $mail->Body .= "<p>Link Solargain Quote: <a href='https://crm.solargain.com.au/quote/edit/".$quote_slgain->solargain_quote_number_c."' target='_blank'>Solargain Quote Number ".$quote_slgain->solargain_quote_number_c."</a></p>";
-            $mail->Body .= "<p>Link Solargain Design: <a href='".$link_sg_design."' target='_blank'>Solargain Design Tool</a></p>";
+            $mail->Body .= "<p>Link PE Design: <a href='".$link_sg_design."' target='_blank'>PE Design Tool</a></p>";
             $mail->Body .= "<br><h4>Optional details (to speed up the quoting process)</h4>";
             $mail->Body .= $list_optional;
             $mail->AddCC('quochuybkdn@gmail.com');
