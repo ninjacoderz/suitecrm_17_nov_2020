@@ -8125,3 +8125,26 @@ function get_distance_by_account_id(id_account){
     })
     return result_distance;
 };
+
+//change description STCs product
+function change_description_STCs(){
+    if($('#registered_for_gst_c:checked').val() == 'true'){
+        var company_name = $("#billing_account").val();
+        var template_default = 'Small-scale Technology Certificates (STC) - Financial \
+        Incentive provided as a point of sale discount* Title and property in the equipment (including full legal and beneficial ownership) does not pass to Customer until ' + company_name +' has received payment in full of the amount specified in the contract for the supply and installation of the equipment (including any amount to be generated through the creation and sale of Smallscale Technology Certificates (STCs), or 60 days has passed';
+        
+        var returnSTCs='';     
+        $('#lineItems').find('input').each( function(index){                            
+            var selector = $('#product_part_number'+index).val();
+            if(typeof(selector) == 'string') {
+                if(selector.includes('STC Rebate Certificate')){
+                    $('#product_item_description'+index).val(template_default);
+                    return false;
+                }    
+            }
+        });
+    }
+
+}
+
+YAHOO.util.Event.addListener(["registered_for_gst_c"], "change", change_description_STCs);
