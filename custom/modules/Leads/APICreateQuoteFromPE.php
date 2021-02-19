@@ -610,6 +610,7 @@ function convert_lead_to_quote_api_from_pe($bean,$type_button){
         if ($quote->solargain_lead_number_c != "") {
             $quote->solargain_quote_number_c = create_solar_quote_c($quote->solargain_lead_number_c,$quote);
             if ($quote->solargain_quote_number_c != "") {
+                $quote->save();
                 update_solar_quote_c($quote->solargain_quote_number_c,$quote);
             }
             // $quote->solargain_lead_number_c  = '229214';
