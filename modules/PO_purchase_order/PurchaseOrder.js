@@ -1198,6 +1198,32 @@ function getInfoProductDaikin() {
 function generatePOLineItem(){
     saveJSONPOInput();
     SUGAR.ajaxUI.showLoadingPanel();
+    switch ($('#shipping_address_state').val()) {
+        case "VIC":
+            $('#shipping_account').val('PureElectric VIC');
+            $('#shipping_account_id').val("7a36afbe-04a1-2830-eaa8-5ae65dc8c4ba"); // Unit 7, 23 Mildura Street,Fyshwick, Australian Capital Territory 2609
+        break;
+        case "ACT":
+            $('#shipping_account').val('PureElectric ACT');
+            $('#shipping_account_id').val("8cdef336-2c50-6355-5101-5af0fea48795");//53 Britton Street,Smithfield, New South Wales 2164
+        break;
+        case "QLD":
+            $('#shipping_account').val('PureElectric QLD');
+            $('#shipping_account_id').val("4485ecd2-33fa-f128-a171-5add589966cd");//2 Stephens Way,Luscombe, Queensland 4207
+        break;
+        case "SA":
+            $('#shipping_account').val('PureElectric SA');
+            $('#shipping_account_id').val("bfdb9053-635c-b212-6958-5af0fe72edd4"); //1A Symonds Street, Royal Park, South Australia 5014
+        break;
+        case "WA":
+            $('#shipping_account').val('PureElectric WA');
+            $('#shipping_account_id').val("60a92cda-3c50-018b-73df-5cf613950c25");//40 Fulton Drive,Derrimut, Victoria 3030
+        break;
+        case "NSW":
+            $('#shipping_account').val('PureElectric NSW');
+            $('#shipping_account_id').val("13f3384a-36a1-e053-4d9e-5b3c509c427d"); //15 Modal Crescent,Canning Vale, West Australia 6155
+        break;
+     }
     for (var i = 0; i < prodln; i++){
         markLineDeleted(i,"product_");
     }
