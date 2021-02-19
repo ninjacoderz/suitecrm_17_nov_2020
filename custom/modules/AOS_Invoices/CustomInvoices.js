@@ -8132,8 +8132,7 @@ function change_description_STCs(){
         var company_name = $("#billing_account").val();
         var template_default = 'Small-scale Technology Certificates (STC) - Financial \
         Incentive provided as a point of sale discount* Title and property in the equipment (including full legal and beneficial ownership) does not pass to Customer until ' + company_name +' has received payment in full of the amount specified in the contract for the supply and installation of the equipment (including any amount to be generated through the creation and sale of Smallscale Technology Certificates (STCs), or 60 days has passed';
-        
-        var returnSTCs='';     
+            
         $('#lineItems').find('input').each( function(index){                            
             var selector = $('#product_part_number'+index).val();
             if(typeof(selector) == 'string') {
@@ -8143,6 +8142,16 @@ function change_description_STCs(){
                 }    
             }
         });
+        $invoice_date = $("#invoice_date").val();
+        if($invoice_date == '') {
+            $invoice_date = $("#due_date").val();
+        }
+        $("#invoice_date").val($invoice_date);
+        $("#due_date").val($invoice_date);
+        $('#installation_date_c').val($invoice_date +' 12:00');
+        $('#installation_date_c_date').val($invoice_date);
+        $('#installation_date_c_hours').val('12');
+        $('#installation_date_c_minutes').val('00');
     }
 
 }
