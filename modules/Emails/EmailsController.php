@@ -5106,7 +5106,7 @@ class EmailsController extends SugarController
                                             $l_Image->clear();
                                             $l_Image->destroy();
                                             $image_url = "https://".$_SERVER['HTTP_HOST'].'/public_files/'.$attachment.$i.".jpg";
-                                            exec("cd " . $message_dir . "; php send-message.php mms " . $phone_number . ' "' . $image_url . '"');
+                                            exec("cd " . $message_dir . "; php send-message.php mms " . $phone_number ." ".escapeshellarg($image_url));
                                         }
                                     }else {
                                         for ($i = 0; $i < $noOfPagesInPDF; $i++) {
@@ -5127,7 +5127,7 @@ class EmailsController extends SugarController
                                             $l_Image->clear();
                                             $l_Image->destroy();
                                             $image_url = "https://".$_SERVER['HTTP_HOST'].'/public_files/'.$attachment.$i.".jpg";
-                                            exec("cd " . $message_dir . "; php send-message.php mms " . $phone_number . ' "' . $image_url . '"');
+                                            exec("cd " . $message_dir . "; php send-message.php mms " . $phone_number ." ".escapeshellarg($image_url));
                                         }
                                     }
 
@@ -5773,7 +5773,7 @@ class EmailsController extends SugarController
                             $client_firstname = $leads_bean->first_name;
                             $sms_body = "Hi $client_firstname,  $admin_name here from Pure Electric I've just sent you your solargain solar quote which you should have on your email - please also check your spam folder.  can you please confirm that you've got it ok? Kind Regards, $admin_name";
                             if($client_number != "" && $message_dir!=""){
-                                exec("cd ".$message_dir."; php send-message.php sms ".$client_number.' "'.$sms_body.'"');
+                                exec("cd ".$message_dir."; php send-message.php sms ".$client_number." ".escapeshellarg($sms_body));
                             }
                             $sms = new pe_smsmanager();
                             $sms->description = $sms_body;
@@ -7220,10 +7220,10 @@ class EmailsController extends SugarController
                 $message_dir = '/var/www/message';
             }
             
-            exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number_customer.' "'.$content_messager.'" ' .$timestamp .' ' .$uniqid);
+            exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number_customer." ".escapeshellarg($content_messager)." ".$timestamp .' ' .$uniqid);
             $phone_number = "+61421616733";
             $content_messager = "Sent to: ".$phone_number_customer.". ".$content_messager;
-            exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number.' "'.$content_messager.'" ' .$timestamp .' ' .$uniqid);
+            exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number." ".escapeshellarg($content_messager)." ".$timestamp .' ' .$uniqid);
         } 
     }
     /**

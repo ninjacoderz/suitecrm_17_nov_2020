@@ -435,14 +435,14 @@ elseif( $_POST['from_phone_number'] == "+61490942067"){
     $message_dir = '/var/www/message';
 }
 if($status == 'sent'){
-    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number_customer.' "'.$content_messager.'"');
+    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number_customer." ".escapeshellarg($content_messager));
     $phone_number = "+61421616733";
     $content_messager = "Sent to: ".$phone_number_customer.". ".$content_messager;
-    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number.' "'.$content_messager.'"');
+    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." ".escapeshellarg($content_messager));
 }else{
-    exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number_customer.' "'.$content_messager.'" ' .$timestamp .' ' .$uniqid);
+    exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number_customer." ".escapeshellarg($content_messager)." ".$timestamp .' ' .$uniqid);
     $phone_number = "+61421616733";
     $content_messager = "Sent to: ".$phone_number_customer.". ".$content_messager;
-    exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number.' "'.$content_messager.'" ' .$timestamp .' ' .$uniqid);
+    exec("cd ".$message_dir."; php send-message-scheduled.php sms ".$phone_number." ".escapeshellarg($content_messager)." ".$timestamp .' ' .$uniqid);
 }
 

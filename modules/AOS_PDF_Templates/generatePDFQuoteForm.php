@@ -807,7 +807,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
 
                     $sms_body = $body;
                     
-                    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number.' "'.$sms_body.'"');
+                    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." ".escapeshellarg($sms_body));
 
                     if($_REQUEST['type_form'] == 'sanden_sms') {
                         // $descriptionSMS = str_replace('</th></tr>',' \n', $decription_internal_notes);
@@ -817,7 +817,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
 
                         $body_sms_link = "To firm the quote, upload photos via this link : https://pure-electric.com.au/pesandenform?customer_confirm=".$quote->id;
 
-                        exec("cd " . $message_dir . "; php send-message.php sms " . $phone_number . ' "' . $body_sms_link . '"');
+                        exec("cd " . $message_dir . "; php send-message.php sms " . $phone_number ." ".escapeshellarg($body_sms_link));
                     }
                    
                     $file_path = $folderName . $name_file;
@@ -848,7 +848,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                             $l_Image->clear();
                             $l_Image->destroy();
                             $image_url = "https://".$_SERVER['HTTP_HOST'].'/public_files/'.$name_file.$i.".jpg";
-                            exec("cd " . $message_dir . "; php send-message.php mms " . $phone_number . ' "' . $image_url . '"');
+                            exec("cd " . $message_dir . "; php send-message.php mms " . $phone_number." ".escapeshellarg($image_url));
                         }
                     }
 
