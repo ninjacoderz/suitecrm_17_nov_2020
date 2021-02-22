@@ -52,7 +52,7 @@ function generatePDF($Invoice){
     //New Water Heater Model
     $pdf->Write($pdf->SetXY(130,59), html_entity_decode($Invoice->sanden_model_c,ENT_QUOTES));
     //Has a new gas connection been made to this property?
-    $pdf->Image(__DIR__.'/text/icon.jpg' ,67,68,3,2.8);
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,77.4,68,3,2.8);
 
     // Property is Class 1 or Class 2 Dwelling 
     $pdf->Image(__DIR__.'/text/icon.jpg' ,52.5,72.5,3,2.8);
@@ -62,7 +62,7 @@ function generatePDF($Invoice){
     $pdf->Write($pdf->SetXY(84,81.5), html_entity_decode($Invoice->existing_sh_flow_rate_c,ENT_QUOTES)); // The ﬂow rate tested 
 
     //Have been replaced with a minimum three star showerhead
-    $pdf->Image(__DIR__.'/text/icon.jpg' ,13,84.5,3,2.8);
+    // $pdf->Image(__DIR__.'/text/icon.jpg' ,13,84.5,3,2.8);
     $pdf->Write($pdf->SetXY(75,86), html_entity_decode($Invoice->replacement_showerhead_c,ENT_QUOTES)); // star showerhead 
     $pdf->Write($pdf->SetXY(105,86), html_entity_decode($Invoice->existing_sh_flow_rate_c,ENT_QUOTES)); // model WELS rated 
 
