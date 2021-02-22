@@ -407,7 +407,7 @@ $(function () {
                     if( extFileInfos[i].name.indexOf("VBA") >= 0 ){
                         extFileInfos[i].name = extFileInfos[i].name.replace("VBA","PCOC");
                         extFileInfos[i].deleteUrl = extFileInfos[i].deleteUrl.replace("VBA","PCOC");
-                        extFileInfos[i].thumbnailUrl = extFileInfos[i].thumbnailUrl.replace("VBA","PCOC");
+                        extFileInfos[i].thumbnailUrl = extFileInfos[i].thumbnailUrl ? extFileInfos[i].thumbnailUrl.replace("VBA","PCOC") : "";
                         extFileInfos[i].url= extFileInfos[i].url.replace("VBA","PCOC");
                     }
                 }
