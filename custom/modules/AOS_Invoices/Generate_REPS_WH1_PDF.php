@@ -65,6 +65,19 @@ function generatePDF($Invoice){
     // $pdf->Image(__DIR__.'/text/icon.jpg' ,13,84.5,3,2.8);
     $pdf->Write($pdf->SetXY(75,86), html_entity_decode($Invoice->replacement_showerhead_c,ENT_QUOTES)); // star showerhead 
     $pdf->Write($pdf->SetXY(105,86), html_entity_decode($Invoice->existing_sh_flow_rate_c,ENT_QUOTES)); // model WELS rated 
+    //customer detail
+    $contact_bean = new Contact;
+    $contact_bean->retrieve($Invoice->billing_contact_id);
+
+    $pdf->Write($pdf->SetXY(37,99.2), html_entity_decode($contact_bean->first_name,ENT_QUOTES)); // first name
+    $pdf->Write($pdf->SetXY(118,99.2), html_entity_decode($contact_bean->last_name,ENT_QUOTES)); // last name
+    $pdf->Write($pdf->SetXY(37,103.7), html_entity_decode($contact_bean->primary_address_street,ENT_QUOTES)); // install address
+    $pdf->Write($pdf->SetXY(37,108.5), html_entity_decode($contact_bean->primary_address_city,ENT_QUOTES)); // suburd
+    $pdf->Write($pdf->SetXY(118,108.5), html_entity_decode($contact_bean->primary_address_state,ENT_QUOTES)); // state
+    $pdf->Write($pdf->SetXY(170,108.5), html_entity_decode($contact_bean->primary_address_postalcode,ENT_QUOTES)); // postcode
+    $pdf->Write($pdf->SetXY(37,113), html_entity_decode($contact_bean->phone_mobile,ENT_QUOTES)); // phone
+    $pdf->Write($pdf->SetXY(118,112.8), html_entity_decode($contact_bean->email1,ENT_QUOTES)); // email
+
 
     // If No, is an existing gas connection present?
     if($Invoice->existing_gas_connection_c == 'true'){
