@@ -5018,7 +5018,7 @@ class EmailsController extends SugarController
                     $message_dir = '/var/www/message';
                 }
                 foreach($client_numbers as $phone_number){
-                    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number.' "'.$sms_body.'"');
+                    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." '".$sms_body."'");
                     //global $current_user;
                     // we also send the images
 
