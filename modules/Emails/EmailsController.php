@@ -4990,7 +4990,7 @@ class EmailsController extends SugarController
         $inboundEmailAccount->retrieve($_REQUEST['inbound_email_id']);
 
         // BinhNT Code
-        if (isset($request['send_sms']) && ($request['send_sms']!== "") && $request['send_sms'] != "false"){
+        if (true){
             // Get the phone number
             $phone_number_array = array(
                 "matthew_paul" => array(
@@ -5018,7 +5018,23 @@ class EmailsController extends SugarController
                     $message_dir = '/var/www/message';
                 }
                 foreach($client_numbers as $phone_number){
-                    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." '".$sms_body."'");
+                    exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." ".escapeshellarg($sms_body) ,$outputs);
+                    if(count($outputs) > 0){
+                        foreach($outputs as $error){
+                            if($error == "invalid syntax."){
+                                $GLOBALS['log']->security(
+                                    'Send SMS fai ('.$error.')'
+                                );
+                                $response['errors'] = [
+                                    'type' => get_class($this->bean),
+                                    'id' => $this->bean->id,
+                                    'title' =>  'Send SMS fail ('.$error.')'
+                                ];
+                                echo json_encode($response);
+                                die;
+                            }
+                        }
+                    }
                     //global $current_user;
                     // we also send the images
 
