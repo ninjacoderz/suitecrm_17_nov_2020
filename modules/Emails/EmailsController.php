@@ -6125,7 +6125,7 @@ class EmailsController extends SugarController
             $info_PO = explode('#', $check[0]);
             if (trim($info_PO[0]) == 'PO') {
                 $sql_PO = "SELECT id
-                            FROM PO_purchase_order
+                            FROM po_purchase_order
                             WHERE number = '$info_PO[1]' AND deleted != 1
                             ";
                 $ret_PO = $db->query($sql_PO);
