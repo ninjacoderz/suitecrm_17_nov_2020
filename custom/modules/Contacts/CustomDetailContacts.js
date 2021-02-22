@@ -11,7 +11,9 @@ $(document).ready(function(){
     //dung code -button US7 TIPS 
     $('#tab-actions').after('<li><input type="button" id="email_us7_tips" value="US7 Tips" class="button primary" data-email-type="us7_tips" onclick="$(document).openComposeViewModal(this);" data-module="Contacts" data-module-name="'+ $("#first_name").text()+' '+$("#last_name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
     //dung code -button Sanden TIPS 
-    $('#tab-actions').after('<li><input type="button" id="email_sanden_tips" value="Sanden Tips" class="button primary" data-email-type="sanden_tips" onclick="$(document).openComposeViewModal(this);" data-module="Contacts" data-module-name="'+ $("#first_name").text()+' '+$("#last_name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
+   $("#tab-actions").after(
+        '&nbsp;<button data-email-type="sanden_tips" data-record-id="'+$('input[name="record"]').val()+'" data-module-name="'+ $("#first_name").text() + ' ' + $("#last_name").text() +'" type="button" id="email_sanden_tips" class="button email_sanden_tips" title="Sanden Tips" data-module="Contacts" onClick="popupSandenProduct(this);" >Sanden Tips<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+        )
     //dung code-- button Send Email TrustPilot 
     $('body').on('click','#send_trustpilop',function(){
         var answer = confirm("Are you want to send email TrustPilot to customer?")
@@ -124,7 +126,7 @@ $(document).ready(function(){
             alert('Please Save before !');
             return;
         }
-
+        var sanden_product = $(source).attr('data-sanden-product');
         var self = this;
 
         self.emailComposeView = null;
@@ -136,7 +138,7 @@ $(document).ready(function(){
         var record_id= $(source).attr('data-record-id') ;
         var email_type = $(source).attr('data-email-type');
         var  email_module  =  $(source).attr('data-module');
-        var url_email = 'index.php?module=Emails&action=ComposeView&in_popup=1'+ ((record_id!="")? ("&record_id="+record_id):"") + ((email_type!="")? ("&email_type="+email_type):"") + ((email_module!="")? ("&email_module="+email_module):"") ;
+        var url_email = 'index.php?module=Emails&action=ComposeView&in_popup=1'+ ((record_id!="")? ("&record_id="+record_id):"") + ((email_type!="")? ("&email_type="+email_type):"") + ((email_module!="")? ("&email_module="+email_module):"")   + ((sanden_product!="")? ("&sanden_product="+sanden_product):"") ;
         
         $.ajax({
             type: "GET",
@@ -204,3 +206,27 @@ $(document).ready(function(){
         return $(self);
     };
 }(jQuery));
+
+//VUT-S-Create popup when click Sandan Tip
+function popupSandenProduct(e) {
+    var popupList = $('<div id="popupSanden" title="Sanden Product">'
+                    + '<input name="sandenProduct" type="radio" value="G2">G2<br>'
+                    + '<input name="sandenProduct" type="radio" value="G3">G3<br>'
+                    + '<input name="sandenProduct" type="radio" value="G4">G4<br>'
+                    + '</div>');
+    popupList.dialog({
+        modal:true,
+        buttons: {
+            Cancel : function(){
+                $(this).dialog("close");
+            },
+            OK : function() {
+                $(e).attr('data-sanden-product', $('input[name="sandenProduct"]:checked').val());
+                $(document).openComposeViewModal(e);
+                $(this).dialog("close");
+
+            }
+        }
+    });
+}
+//VUT-S-Create popup when click Sandan Tip
