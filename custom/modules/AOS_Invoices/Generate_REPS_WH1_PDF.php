@@ -29,7 +29,7 @@ function generatePDF($Invoice){
     $pdf->SetTextColor(0, 0, 0);
     
     //Transaction Id/Internal Reference Number
-    $pdf->Write($pdf->SetXY(62, 29.5), html_entity_decode($Invoice->number,ENT_QUOTES));
+    //$pdf->Write($pdf->SetXY(62, 29.5), html_entity_decode($Invoice->number,ENT_QUOTES));
     //Activity Completed Date
     if($Invoice->installation_date_c != ''){
         $dateInfos_explode = explode(" ",$Invoice->installation_date_c);
