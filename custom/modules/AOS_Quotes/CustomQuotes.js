@@ -2199,7 +2199,7 @@ function genExtraDaikinItemFunc(elem){
                     }
                 }
                 
-                if(check_display_warning) {
+                if(check_display_warning || check.SSO == true) {
                     var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
                     if (question) {} 
                     else {
