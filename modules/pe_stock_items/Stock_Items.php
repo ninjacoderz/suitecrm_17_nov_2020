@@ -61,7 +61,7 @@ function display_lines_stock_items($focus, $field, $value, $view){
             require_once('modules/pe_stock_items/pe_stock_items.php');
             require_once('modules/AOS_Line_Item_Groups/AOS_Line_Item_Groups.php');
 
-            $sql = "SELECT pg.id, pg.group_id FROM pe_stock_items pg LEFT JOIN aos_line_item_groups lig ON pg.group_id = lig.id WHERE pg.parent_type = '" . $focus->object_name . "' AND pg.paret_id = '" . $focus->id . "' AND pg.deleted = 0 ORDER BY lig.number ASC, pg.number ASC";
+            $sql = "SELECT pg.id, pg.group_id FROM pe_stock_items pg LEFT JOIN aos_line_item_groups lig ON pg.group_id = lig.id WHERE pg.parent_type = '" . $focus->object_name . "' AND pg.parent_id = '" . $focus->id . "' AND pg.deleted = 0 ORDER BY lig.number ASC, pg.number ASC";
 
             $result = $focus->db->query($sql);
             $html .= "<script>
