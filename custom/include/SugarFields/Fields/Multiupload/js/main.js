@@ -406,9 +406,9 @@ $(function () {
                 for( var i = 0; i < extFileInfos.length ;i++){
                     if( extFileInfos[i].name.indexOf("VBA") >= 0 ){
                         extFileInfos[i].name = extFileInfos[i].name.replace("VBA","PCOC");
-                        extFileInfos[i].deleteUrl = extFileInfos[i].deleteUrl.replace("VBA","PCOC");
+                        extFileInfos[i].deleteUrl = extFileInfos[i].deleteUrl.replace("VBA","PCOC") ? extFileInfos[i].deleteUrl.replace("VBA","PCOC") : "";
                         extFileInfos[i].thumbnailUrl = extFileInfos[i].thumbnailUrl ? extFileInfos[i].thumbnailUrl.replace("VBA","PCOC") : "";
-                        extFileInfos[i].url= extFileInfos[i].url.replace("VBA","PCOC");
+                        extFileInfos[i].url= extFileInfos[i].url.replace("VBA","PCOC") ? extFileInfos[i].url.replace("VBA","PCOC") : "";
                     }
                 }
                 if (extFileInfos && $.isArray(extFileInfos))
