@@ -514,11 +514,22 @@ $(function () {
                 }   
 
                 if( $('div[field="proposed_dispatch_date_c"]').text().trim() == '') {
-                  
-                    var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
-                    if (question) {} 
-                    else {
-                        return false;
+                    // igore when state = VIC
+                    var address_quote = $("#address_site_details").text().trim();
+                    var check_display_warning = true;
+                    if(address_quote != '') {
+                        var array_address_quote = address_quote.toUpperCase().split(' ');
+                        if(array_address_quote.indexOf('VIC') != -1){
+                            check_display_warning = false;
+                        }
+                    }
+                    
+                    if(check_display_warning) {
+                        var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
+                        if (question) {} 
+                        else {
+                            return false;
+                        }
                     }
                     
                 }  

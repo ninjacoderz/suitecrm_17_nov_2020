@@ -2190,11 +2190,22 @@ function genExtraDaikinItemFunc(elem){
         }   
 
         if( $('#proposed_dispatch_date_c').val() == '') {
-                var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
-                if (question) {} 
-                else {
-                    $('#proposed_dispatch_date_c_date').css('border', '1px solid #a5e8d6');
-                    return false;
+                // igore when state = VIC
+                var address_quote = $("#install_address_state_c").val().trim().toUpperCase();
+                var check_display_warning = true;
+                if(address_quote != '') {
+                    if(address_quote.indexOf('VIC') != -1){
+                        check_display_warning = false;
+                    }
+                }
+                
+                if(check_display_warning) {
+                    var question = confirm("Field Proposed Dispatch Date is not filled - are you sure to continue?");
+                    if (question) {} 
+                    else {
+                        $('#proposed_dispatch_date_c_date').css('border', '1px solid #a5e8d6');
+                        return false;
+                    }
                 }
         }  
     }else if ($('#quote_type_c').val() == "quote_type_daikin") {
