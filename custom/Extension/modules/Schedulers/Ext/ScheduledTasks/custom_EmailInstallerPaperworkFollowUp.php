@@ -173,8 +173,8 @@ function send_email_report_paperwork_follow_up($data_inv){
     $defaults = $emailObj->getSystemDefaultEmail();
     $mail = new SugarPHPMailer();
     $mail->setMailerForSystem();
-    $mail->From = "accounts@pure-electric.com.au";
-    $mail->FromName = "Pure Electric Accounts";
+    $mail->From = "info@pure-electric.com.au";
+    $mail->FromName = "Pure Electric Info";
     $mail->IsHTML(true);
     $mail->ClearAllRecipients();
     $mail->ClearReplyTos();
