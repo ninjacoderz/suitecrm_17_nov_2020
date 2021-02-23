@@ -416,29 +416,45 @@
         }
     }
 
-    // dung code  --- This is a hook for task " Auto create new Internal Notes When we change status Invoice"
+    //  Auto create new Internal Notes When we change status Invoice
     class CreateInternalNotes_invoice {
         function before_save_method($bean, $event, $arguments){
             $old_fields = $bean->fetched_row;
-            if($old_fields['status'] != $bean->status && $bean->status != ''){
-                $bean_intenal_notes = new  pe_internal_note();
-                $bean_intenal_notes->type_inter_note_c = 'status_updated';
-                $decription_internal_notes = 'Invoice Status : ';
-                $decription_internal_notes .= str_replace('_',' ',$bean->status);
-                $bean_intenal_notes->description =  $decription_internal_notes;
-                $bean_intenal_notes->save();
-             
-                $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
-                $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
-            }else {
-                $bean_intenal_notes = new  pe_internal_note();
-                $bean_intenal_notes->type_inter_note_c = 'status_updated';
-                $decription_internal_notes = 'Invoice Status : New Invoice';
-                $bean_intenal_notes->description =  $decription_internal_notes;
-                $bean_intenal_notes->save();
-             
-                $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
-                $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
+            if($old_fields == false){
+                //check internal notes new 
+                $db = DBManagerFactory::getInstance();
+                $sql = "SELECT pe_internal_note.id as id  FROM pe_internal_note 
+                LEFT JOIN aos_invoices_pe_internal_note_1_c ON aos_invoices_pe_internal_note_1_c.aos_invoices_pe_internal_note_1pe_internal_note_idb  = pe_internal_note.id 
+                LEFT JOIN pe_internal_note_cstm ON pe_internal_note_cstm.id_c = pe_internal_note.id
+                WHERE pe_internal_note_cstm.type_inter_note_c  = 'status_updated' 
+                AND pe_internal_note.description = 'Invoice Status : New Invoice' 
+                AND aos_invoices_pe_internal_note_1_c.aos_invoices_pe_internal_note_1aos_invoices_ida  ='$bean->id' ";
+    
+                $ret = $db->query($sql);
+                if($ret->num_rows == 0){
+                    $bean_intenal_notes = new  pe_internal_note();
+                    $bean_intenal_notes->type_inter_note_c = 'status_updated';
+                    $decription_internal_notes = 'Invoice Status : New Invoice';
+                    $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->save();
+                    
+                    $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
+                    $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
+                }
+            }else{
+                //case 2 : updated
+                if($old_fields['status'] != $bean->status && $bean->status != ''){
+                    $bean_intenal_notes = new  pe_internal_note();
+                    $bean_intenal_notes->type_inter_note_c = 'status_updated';
+                    $decription_internal_notes = 'Invoices Status : ';
+                    $decription_internal_notes .= str_replace('_',' ',$bean->status);
+
+                    $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->save();
+                 
+                    $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
+                    $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
+                }
             }
         }
     }

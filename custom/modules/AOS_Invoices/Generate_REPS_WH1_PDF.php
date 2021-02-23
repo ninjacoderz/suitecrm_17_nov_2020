@@ -59,7 +59,7 @@ function generatePDF($Invoice){
 
     //Are existing water eﬃcient models 9l or less
     $pdf->Image(__DIR__.'/text/icon.jpg' ,13,80,3,2.8);
-    $pdf->Write($pdf->SetXY(84,81.5), html_entity_decode($Invoice->existing_sh_flow_rate_c,ENT_QUOTES)); // The ﬂow rate tested 
+    $pdf->Write($pdf->SetXY(84,81.5), html_entity_decode($Invoice->the_flow_rate_tested_c,ENT_QUOTES)); // The ﬂow rate tested 
 
     //Have been replaced with a minimum three star showerhead
     // $pdf->Image(__DIR__.'/text/icon.jpg' ,13,84.5,3,2.8);
@@ -78,6 +78,15 @@ function generatePDF($Invoice){
     $pdf->Write($pdf->SetXY(37,113), html_entity_decode($contact_bean->phone_mobile,ENT_QUOTES)); // phone
     $pdf->Write($pdf->SetXY(118,112.8), html_entity_decode($contact_bean->email1,ENT_QUOTES)); // email
 
+    //Have you resided in the premises for more than 3 years?
+    if($Invoice->resided_in_the_premises_c == '1'){
+        $pdf->Image(__DIR__.'/text/icon.jpg' ,168.5,120,3,2.8);
+    }else{
+        $pdf->Image(__DIR__.'/text/icon.jpg' ,178.8,120,3,2.8);
+    }
+
+    //Customer is NOT Priority Group Status
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,154.2,148.2,3,2.8);
 
     // If No, is an existing gas connection present?
     if($Invoice->existing_gas_connection_c == 'true'){
@@ -86,6 +95,10 @@ function generatePDF($Invoice){
         $pdf->Image(__DIR__.'/text/icon.jpg' ,168.3,72.5,3,2.8);
     }
     
+    //CUSTOMER / INSTALLER DECLARATION
+    $pdf->Write($pdf->SetXY(36.5,203.5), html_entity_decode($Invoice->plumber_c,ENT_QUOTES)); // Installer Name
+    $pdf->Write($pdf->SetXY(36.5,208), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
+    $pdf->Write($pdf->SetXY(125,208), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
 
     $fp = fopen($ds_dir.'/REPS_WH1_Hot_Water_Replacement.pdf', 'wb');
     fclose($fp);
