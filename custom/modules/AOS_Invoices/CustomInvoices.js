@@ -8173,7 +8173,7 @@ function getFileDesign(str) {
             }
         }); 
     }
-    return link.trim();
+    return link? link.trim() : '';
 }
 
 //change description STCs product
