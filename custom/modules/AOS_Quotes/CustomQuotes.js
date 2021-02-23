@@ -3161,17 +3161,17 @@ function genExtraDaikinItemFunc(elem){
                                 'Symo 10':'285',
                                 'Symo 15':'287',
                                 'SYMO 20':'289',
-                                'S Edge 3':'203',
-                                'S Edge 5':'203',
-                                'S Edge 6':'203',
-                                'S Edge 8':'203',
-                                'S Edge 8 3P':'203',
-                                'S Edge 10':'203',
+                                'S Edge 3G':'292',
+                                'S Edge 5G':'292',
+                                'S Edge 6G':'292',
+                                'S Edge 8G':'292',
+                                'S Edge 8 3P':'292',
+                                'S Edge 10G':'292',
                                 'IQ7 plus':'201',
                                 //'IQ7':'200',
                                 'IQ7X':'229',
                                 'SolarEdge with P500':'168',
-                                'SolarEdge with P505':'214',
+                                'SolarEdge with P401':'292',
                                 'SolarEdge with P370':'203',
                                 //'Growatt 3':'233',
                                 // 'Growatt 5':'213',
@@ -3244,10 +3244,8 @@ function genExtraDaikinItemFunc(elem){
                  build_url +=  '&splits_'+ count_option + '='+ encodeURIComponent(parseInt(groups));
                  build_url += '&additional_'+ count_option + '='+additional;
                  //if( (option_panel_type == 'Sunpower Maxeon 2 350' && option_panel_type == 'Sunpower P3 325 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5'|| option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10')){
-                 if( (option_panel_type == 'Sunpower X22 360W' || option_panel_type == 'Sunpower P3 370 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P'|| option_inverter_type == 'S Edge 10')){
-                    build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters['SolarEdge with P500']);
-                 }else if(option_panel_type == 'Sunpower Maxeon 3 400W' && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10') ){
-                     build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters['SolarEdge with P370']);
+                 if(option_panel_type == 'Sunpower Maxeon 3 400W' && (option_inverter_type == 'S Edge 3G' || option_inverter_type == 'S Edge 5G' || option_inverter_type == 'S Edge 6G' || option_inverter_type == 'S Edge 8G' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10G') ){
+                     build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters['SolarEdge with P500']);
                  }else{
                      build_url += '&option_inverter_'+ count_option +'='+ encodeURIComponent(option_inverters[option_inverter_type]);
                  }

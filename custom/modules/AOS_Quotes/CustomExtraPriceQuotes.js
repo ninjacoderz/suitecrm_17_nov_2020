@@ -13,7 +13,7 @@ $(function () {
         }else{
             installYear = 2021;
         }
-        if($("#distance_to_sg_c").val() != ""){
+        if($("#distance_to_sg_c").val() != "" && $("#distance_to_sg_c").val() !== undefined){
             $("input[id*='travel_km_']").val($("#distance_to_sg_c").val().replace(" km",""));
         }
     }
@@ -372,7 +372,7 @@ $(function () {
     function init(state,installYear){
 
         var panel_type = ['',/*'Jinko 370W Cheetah Plus JKM370M-66H'*/'Jinko 330W Mono PERC HC','Q CELLS Q.MAXX-G2 350W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W','Sunpower P3 325 BLACK'*/'Sunpower P3 370 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
-        var inverter_type = ['','Primo 3','Primo 4','Primo 5','Primo 6','Primo 8.2','Symo 5','Symo 6','Symo 8.2','Symo 10','Symo 15','SYMO 20','S Edge 3','S Edge 5','S Edge 6','S Edge 8','S Edge 8 3P','S Edge 10','IQ7 plus',/*'IQ7',*/'IQ7X',/*'Growatt 3','Growatt 5','Growatt 6','Growatt8','Growatt 8.2',*/'Sungrow 3','Sungrow 5','Sungrow 8','Sungrow 10 3P','Sungrow 15 3P'];
+        var inverter_type = ['','Primo 3','Primo 4','Primo 5','Primo 6','Primo 8.2','Symo 5','Symo 6','Symo 8.2','Symo 10','Symo 15','SYMO 20','S Edge 3G','S Edge 5G','S Edge 6G','S Edge 8G','S Edge 8 3P','S Edge 10G','IQ7 plus',/*'IQ7',*/'IQ7X',/*'Growatt 3','Growatt 5','Growatt 6','Growatt8','Growatt 8.2',*/'Sungrow 3','Sungrow 5','Sungrow 8','Sungrow 10 3P','Sungrow 15 3P'];
         var extra_1 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
         var extra_2 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
         var extra_3 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
@@ -827,8 +827,19 @@ $(function () {
                         +'</tr>';
                         $('#Solar-PV-Pricing tbody').append(loan_html)
                     }
-                } else 
-                    $("#"+key).val(json_val[key]);
+                } else {
+                    let value_field = json_val[key];
+                    if(value_field !== undefined && value_field != ''){
+                        if(value_field.indexOf('S Edge') >= 0 && value_field != 'S Edge 8 3P'){
+                            value_field = value_field+'G';
+                            $("#"+key).val(value_field);
+                        }else{
+                            $("#"+key).val(value_field);
+                        }
+                    }else{
+                        $("#"+key).val(value_field);
+                    }
+                }
             }
         }
     }
@@ -1226,17 +1237,17 @@ $(function () {
                                 'Symo 10':'285',
                                 'Symo 15':'287',
                                 'SYMO 20':'289',
-                                'S Edge 3':'203',
-                                'S Edge 5':'203',
-                                'S Edge 6':'203',
-                                'S Edge 8':'203',
-                                'S Edge 8 3P':'203',
-                                'S Edge 10':'203',
+                                'S Edge 3G':'292',
+                                'S Edge 5G':'292',
+                                'S Edge 6G':'292',
+                                'S Edge 8G':'292',
+                                'S Edge 8 3P':'292',
+                                'S Edge 10G':'292',
                                 'IQ7 plus':'201',
                                 //'IQ7':'200',
                                 'IQ7X':'229',
                                 'SolarEdge with P500':'168',
-                                'SolarEdge with P505':'214',
+                                'SolarEdge with P401':'292',
                                 'SolarEdge with P370':'203',
                                 //'Growatt 3':'233',
                                 // 'Growatt 5':'213',
@@ -1288,9 +1299,7 @@ $(function () {
                 build_url_quote_price += '&option_model_'+ j +'='+ encodeURIComponent(option_models[option_panel_type])
                 
                 //if( (option_panel_type == 'Sunpower Maxeon 2 350' || option_panel_type == 'Sunpower P3 325 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P'|| option_inverter_type == 'S Edge 10')){
-                if( (option_panel_type == 'Sunpower X22 360W' || option_panel_type == 'Sunpower P3 370 BLACK') && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P'|| option_inverter_type == 'S Edge 10')){
-                    build_url_quote_price += '&option_inverter_'+ j +'='+ encodeURIComponent(option_inverters['SolarEdge with P370']);
-                }else if(option_panel_type == 'Sunpower Maxeon 3 400W' && (option_inverter_type == 'S Edge 3' || option_inverter_type == 'S Edge 5' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 6' || option_inverter_type == 'S Edge 8' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10') ){
+                if(option_panel_type == 'Sunpower Maxeon 3 400W' && (option_inverter_type == 'S Edge 3G' || option_inverter_type == 'S Edge 5G' || option_inverter_type == 'S Edge 6G' || option_inverter_type == 'S Edge 8G' || option_inverter_type == 'S Edge 8 3P' || option_inverter_type == 'S Edge 10G') ){
                     build_url_quote_price += '&option_inverter_'+ j +'='+ encodeURIComponent(option_inverters['SolarEdge with P500']);
                 }else{
                     build_url_quote_price += '&option_inverter_'+ j +'='+ encodeURIComponent(option_inverters[option_inverter_type]);
@@ -1409,7 +1418,17 @@ $(function () {
                     if($("#"+key).attr('type') == 'checkbox'){
                         $("#"+key).prop( "checked", json_val[key] );
                     } else {
-                        $("#"+key).val(json_val[key]);
+                        let value_field = json_val[key];
+                        if(value_field !== undefined && value_field != ''){
+                            if(value_field.indexOf('S Edge') >= 0 && value_field != 'S Edge 8 3P'){
+                                value_field = value_field+'G';
+                                $("#"+key).val(value_field);
+                            }else{
+                                $("#"+key).val(value_field);
+                            }
+                        }else{
+                            $("#"+key).val(value_field);
+                        }
                     }
                 }
                 $("input[id*='pm_").val(100);

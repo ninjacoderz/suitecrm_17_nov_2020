@@ -643,20 +643,23 @@ if($bean_module_data->id){
                 $data_option_extra[count($data_option_extra)] = $option_accessories[$datakey_3];
             }
             if((int)$_GET['option_extra_1_'.$i] > 0 && ((int)$_GET['option_extra_1_'.$i] == 22 || (int)$_GET['option_extra_1_'.$i] == 17)){
-               if($_GET['option_inverter_type_name_'.$i] == 'S Edge 5'){
-                    $datakey_3 = array_search(415,$dataid);
+                if($_GET['option_inverter_type_name_'.$i] == 'S Edge 3G'){
+                    $datakey_3 = array_search(568,$dataid);
                     $data_option_extra[count($data_option_extra)] = $option_accessories[$datakey_3];
-               }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 6'){
-                    $datakey_3 = array_search(498,$dataid);
+               }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 5G'){
+                    $datakey_3 = array_search(569,$dataid);
                     $data_option_extra[count($data_option_extra)] = $option_accessories[$datakey_3];
-               }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 8'){
-                    $datakey_3 = array_search(499,$dataid);
+               }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 6G'){
+                    $datakey_3 = array_search(570,$dataid);
+                    $data_option_extra[count($data_option_extra)] = $option_accessories[$datakey_3];
+               }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 8G'){
+                    $datakey_3 = array_search(571,$dataid);
                     $data_option_extra[count($data_option_extra)] = $option_accessories[$datakey_3];
                }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 8 3P'){
                     $datakey_3 = array_search(500,$dataid);
                     $data_option_extra[count($data_option_extra)] = $option_accessories[$datakey_3];
-                }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 10'){
-                    $datakey_3 = array_search(433,$dataid);
+                }else if($_GET['option_inverter_type_name_'.$i] == 'S Edge 10G'){
+                    $datakey_3 = array_search(572,$dataid);
                     $data_option_extra[count($data_option_extra)] = $option_accessories[$datakey_3];
                }
                 //array_reverse($data_option_extra,true);
