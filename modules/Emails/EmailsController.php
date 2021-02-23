@@ -4990,7 +4990,8 @@ class EmailsController extends SugarController
         $inboundEmailAccount->retrieve($_REQUEST['inbound_email_id']);
 
         // BinhNT Code
-        if (true){
+        if (isset($request['send_sms']) && ($request['send_sms']!== "") && $request['send_sms'] != "false"){
+
             // Get the phone number
             $phone_number_array = array(
                 "matthew_paul" => array(
