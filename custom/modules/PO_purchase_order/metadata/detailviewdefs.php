@@ -26,6 +26,23 @@ array (
           array (
             'customCode' => '<input type="button" class="button" onClick="showPopup(\'email\');" value="{$MOD.LBL_EMAIL_INVOICE}">',
           ),
+          7 => 
+          array (
+            'customCode' => '<input type="submit" class="button" onClick="this.form.action.value=\'POconverToBill\';" value="Convert To Bill">',
+            'sugar_html' => 
+            array (
+              'type' => 'submit',
+              'value' => 'Convert to Bill',
+              'htmlOptions' => 
+              array (
+                'class' => 'button',
+                'id' => 'convert_to_bill_button',
+                'title' => 'Convert to Bill',
+                'onclick' => 'this.form.action.value=\'POconverToBill\';',
+                'name' => 'Convert to Bill',
+              ),
+            ),
+          ),
         ),
       ),
       'maxColumns' => '2',
@@ -162,7 +179,12 @@ array (
             'name' => 'supplier_order_number_c',
             'label' => 'LBL_SUPPLIER_ORDER_NUMBER',
           ),
-          1 => '',
+          1 => 
+          array (
+            'name' => 'local_freight_company_c',
+            'studio' => 'visible',
+            'label' => 'LBL_LOCAL_FREIGHT_COMPANY',
+          ),
         ),
         8 => 
         array (
