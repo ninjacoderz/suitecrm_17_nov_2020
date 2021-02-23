@@ -4190,6 +4190,17 @@ $( window ).load(function() {
                     }).done(function(data){
                         setTimeout(function(){ 
                             CopyToClipboard();
+                            if (module_sugar_grp1 == 'AOS_Invoices') {
+                                // debugger
+                                setTimeout(function(){ 
+                                    var files_design = getFileDesign('Design_');
+                                    $('#img_design').remove();
+                                    if (files_design != '') {
+                                        var urlImageDesign = '<a style="margin: 10px;" id="img_design" data-gallery="image" href="'+files_design+'"><img style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:220px;height:auto;margin-top: 5em;" src="'+files_design+'"></a>';
+                                        $('#Map_Template_Image').after(urlImageDesign);
+                                    }
+                                },5000);
+                            }
                         },5000);
                     });
                 }else{
@@ -4197,7 +4208,19 @@ $( window ).load(function() {
                 }
             }
         });
-    }
+    } else {
+        if (module_sugar_grp1 == 'AOS_Invoices') {
+            // debugger
+            setTimeout(function(){ 
+                var files_design = getFileDesign('Design_');
+                $('#img_design').remove();
+                if (files_design != '') {
+                    var urlImageDesign = '<a style="margin: 10px;" id="img_design" data-gallery="image" href="'+files_design+'"><img style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:220px;height:auto;margin-top: 5em;" src="'+files_design+'"></a>';
+                    $('#Map_Template_Image').after(urlImageDesign);
+                }
+            },5000);
+        }
+}
 });
 
 function CopyToClipboard(generateUUID){
@@ -8125,6 +8148,33 @@ function get_distance_by_account_id(id_account){
     })
     return result_distance;
 };
+
+function getFileDesign(str) {
+    let files_design = [];
+    $("#fileupload tr p.name a").each(function(e) {
+        if ($(this).attr("href").indexOf(str) != -1) {
+            files_design.push($(this).attr("href").split('/').pop());
+        }
+    });
+    if (files_design.length > 0) {
+        $.ajax({
+            url: 'index.php?entryPoint=checkFileDesign',
+            type: 'POST',
+            data: 
+            {
+                module: module_sugar_grp1,
+                module_id: $("input[name='record']").val(),
+                installation_pictures_c: $('input[name="installation_pictures_c"]').val(),
+                files: files_design,
+            },
+            async: false,
+            success: function(result) {   
+                link = result;
+            }
+        }); 
+    }
+    return link.trim();
+}
 
 //change description STCs product
 function change_description_STCs(){
