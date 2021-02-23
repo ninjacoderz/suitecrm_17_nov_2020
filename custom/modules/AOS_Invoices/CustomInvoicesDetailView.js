@@ -627,6 +627,7 @@ $(function () {
     if (module_sugar_grp1 == 'AOS_Invoices' && action_sugar_grp1 == 'DetailView') {
         $('#tab-actions').parent().append('<li><input type="button" id="create_service_case" value="Create Service Case" class="button primary"/></li>');
         $('#tab-actions').parent().append('<li><input type="button" id="better_sg_solar_date" value="BETTER SG SOLAR DATE" class="button primary" data-email-type="better_sg_solar_date" onclick="$(document).openComposeViewModal(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-contact-name="'+$('#billing_contact_id').text()+'"  data-record-id="'+ $("input[name='record']").val() +'"/></li>');
+        $('#tab-actions').parent().append('<li><input type="button" id="genarate_yes_sa_reps" value="GENERATE YESS SA REPS INVOICE" class="button primary" onclick="document.getElementById(\'popupDivBack_ara\').style.display=\'none\';document.getElementById(\'popupDiv_ara\').style.display=\'none\';var form=document.getElementById(\'popupForm\');if(form!=null){$(form).attr(\'target\', \'_blank\');form.task.value=\'emailpdf\'; form.templateID.value=\'d7919d5e-c9fc-58f9-0448-603360469ccb\';form.submit();}else{alert(\'Error!\');}"/></li>'); //local 5c732964-ddde-dffa-a503-603373d19734
         // var link_servicecase = '<div id="link_servicecase"><a href="/index.php?module=pe_service_case&action=EditView&record='+trim(data)+'" target="_blank">Open link Service Case</></div>';
     }
     $('#create_service_case').click(function() {
