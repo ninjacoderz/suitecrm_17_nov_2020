@@ -1427,3 +1427,9 @@ $entry_point_registry['POconverToBill'] = array(
     'file' => 'custom/modules/PO_purchase_order/POconverToBill.php',
     'auth' => false
 );
+
+//VUT - check File Design in Invoice
+$entry_point_registry['checkFileDesign'] = array(
+    'file' => 'custom/modules/AOS_Invoices/checkFileDesign.php',
+    'auth' => false
+);

@@ -47,6 +47,11 @@ if($invoice->id != ""){
     $data_return['invoice_type_c'] = ['invoice_type_c',$invoice->invoice_type_c,'Invoice type'];
     //SG Order number
     $data_return['solargain_invoices_number_c'] = ['solargain_invoices_number_c', $invoice->solargain_invoices_number_c ,'Solargain Order Number'];
+    //VUT - GP Calculation
+    $data_return['sanden_total_costs'] = ['sanden_total_costs',$invoice->sanden_total_costs_c,'Sanden Total Costs'];
+    $data_return['sanden_gross_profit'] = ['sanden_gross_profit',$invoice->sanden_gross_profit_c,'Sanden Gross Profit'];
+    $data_return['sanden_total_revenue'] = ['sanden_total_revenue',$invoice->sanden_total_revenue_c,'Sub Total Revenue'];
+    $data_return['sanden_gprofit_percent'] = ['sanden_gprofit_percent',$invoice->sanden_gprofit_percent_c,'Sanden Gross Profit %'];
     //id xero invoice
     $data_return['xero_invoice_c'] = ['xero_invoice_c',$invoice->xero_invoice_c,'Xero Invoice'];
     $data_return['xero_stc_rebate_invoice_c'] = ['xero_stc_rebate_invoice_c',$invoice->xero_stc_rebate_invoice_c,'Xero STC Rebate Invoice'];
@@ -73,7 +78,13 @@ if($invoice->id != ""){
     }else{
         $data_return['installation_pictures_c'] = ['installation_pictures_c',$invoice->installation_pictures_c,false];
     }
-    
+    //file design
+    $link_file_design = getFileDesign($invoice,'Design_');
+    if ($link_file_design == '') {
+        $data_return['file_design'] = ['file_design',$link_file_design,false];
+    } else {
+        $data_return['file_design'] = ['file_design',$link_file_design,true];
+    }
     //data site details
     if(is_null($data_site_detail)) {
         $data_site_detail = array (
@@ -126,3 +137,23 @@ if($invoice->id != ""){
 }
 
 echo json_encode($data_return);
+
+
+function getFileDesign($invoice, $str) {
+    $array_files = [];
+    $invoice_file_attachments = scandir($_SERVER['DOCUMENT_ROOT'].'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c ."/");
+    foreach ($invoice_file_attachments as $att){
+        $source = '/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c ."/" . $att ;
+        if(!is_file($_SERVER['DOCUMENT_ROOT'].$source)) continue;
+        if (strpos($att, $str) !== false && mime_content_type($_SERVER['DOCUMENT_ROOT'].$source) == "image/jpeg") {
+            $fullname = $_SERVER['DOCUMENT_ROOT'].$source;
+            $array_files[$source] = filectime($fullname);
+        }
+    }
+    arsort($array_files);
+    if (count($array_files) > 0) {
+        return key($array_files);
+    } else {
+        return '';
+    }
+}

@@ -22,7 +22,6 @@ $(function () {
     if( $("#quote_type_c").val() == 'quote_type_solar' || $("#quote_type_c").val() == 'quote_type_tesla'){
         $('#tab-actions').after('<input type="button" name="Email Invoice Solar" value="Email Invoice Solar" class="button primary" onclick="document.getElementById(\'popupDivBack_ara\').style.display=\'none\';document.getElementById(\'popupDiv_ara\').style.display=\'none\';var form=document.getElementById(\'popupForm\');if(form!=null){$(form).attr(\'target\', \'_blank\');form.task.value=\'emailpdf\'; form.templateID.value=\'13e05dc5-5d61-9898-6a07-5918de5ff9e4\';form.submit();}else{alert(\'Error!\');}" />');
     }
-   
     SUGAR.CRUD_Xero_Invoice= function(elemt){
         var html_alert = '';
         if($('#due_date').text() == ''){
@@ -291,7 +290,12 @@ $(function () {
            }else{
             var html_image_site_detail = '<div id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;margin-bottom:5px;text-align:center;">Map Template Image</div>';
            }
-           $("body").find('#group_custom_invoice_template_col_2_2').append(html_image_site_detail);
+           if (json_data.file_design[2]) {
+                var html_img_design = '<img style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;" src="'+json_data.file_design[1]+'">';
+           } else {
+               var html_img_design ='';
+           }
+           $("body").find('#group_custom_invoice_template_col_2_2').append(html_image_site_detail+html_img_design);
            //Auto loading image detail 
            $("body").find('#group_custom_invoice_template_col_2_2').append('<canvas hidden="" id="clipboard"></canvas>');
            var generateUUID = json_data.installation_pictures_c[1];
