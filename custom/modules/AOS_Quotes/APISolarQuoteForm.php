@@ -572,23 +572,23 @@
                         case "IQ7+":
                             $inverter = "Enphase IQ7+ 290W Micro Inverter";
                             break;
-                        case "S Edge 3": 
-                            $inverter = "SolarEdge 3";
+                        case "S Edge 3G": 
+                            $inverter = "SolarEdge 3kW Genesis HD-Wave 1Ph Inverter";
                             break; 
-                        case "S Edge 5": 
-                             $inverter = "SolarEdge with P500 for Sunpower Maxeon";
+                        case "S Edge 5G": 
+                             $inverter = "SolarEdge 5kW Genesis HD-Wave 1Ph Inverter";
                             break; 
-                        case "S Edge 6":
-                            $inverter = "SolarEdge 6" ;
+                        case "S Edge 6G":
+                            $inverter = "SolarEdge 6kW Genesis HD-Wave 1Ph Inverter" ;
                             break; 
-                        case "S Edge 8":
-                            $inverter = "SolarEdge 8"; 
+                        case "S Edge 8G":
+                            $inverter = "SolarEdge 8.25kW Genesis HD-Wave 1Ph Inverter"; 
                             break;
                         case "S Edge 8 3P":
-                            $inverter = "SolarEdge 8 3P"; 
+                            $inverter = "SolarEdge 8kW Three Phases Inverter"; 
                             break;
-                        case "S Edge 10":
-                            $inverter = "SolarEdge 10";
+                        case "S Edge 10G":
+                            $inverter = "SolarEdge 10kW Genesis HD Wave 1Ph Inverter";
                             break;
                         // case "Growatt 5":
                         //  $inverter = "Growatt 5000TL-X Dual MPPT 5kW"; 

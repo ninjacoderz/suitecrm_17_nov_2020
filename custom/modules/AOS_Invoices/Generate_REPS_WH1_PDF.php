@@ -9,6 +9,27 @@ $user = new User();
 $user->retrieve($paul_id);
 global $current_user;
 $current_user = $user;
+// $foldeId = '5f2c2b1a-898e-102d-9c19-a95fffcb502a';
+// $foldeId = $_REQUEST['foldeId'];
+$InvoiceID = $_REQUEST['InvoiceID'];
+$Invoice = BeanFactory::getBean('AOS_Invoices', $InvoiceID);
+$action = ($_REQUEST['action'])? $_REQUEST['action'] : 'default';
+if($Invoice->id != '') {
+    switch ($action) {
+        case 'REPS_Infor_State':
+            // generate PDF REPS_Information_Statement
+            echo Generate_REPS_Information_Statement($Invoice);
+            break;
+        
+        default:
+            // generate PDF REPS_WH1_PDF
+            echo generatePDF($Invoice);
+            break;
+    } 
+    
+}else{
+    echo 'Error';
+}
 
 function generatePDF($Invoice){
     $foldeId = $Invoice->installation_pictures_c;
@@ -109,12 +130,77 @@ function generatePDF($Invoice){
 }
 
 
-// $foldeId = '5f2c2b1a-898e-102d-9c19-a95fffcb502a';
-// $foldeId = $_REQUEST['foldeId'];
-$InvoiceID = $_REQUEST['InvoiceID'];
-$Invoice = BeanFactory::getBean('AOS_Invoices', $InvoiceID);
-if($Invoice->id != '') {
-    echo generatePDF($Invoice);
-}else{
-    echo 'Error';
+function Generate_REPS_Information_Statement($Invoice){
+    $foldeId = $Invoice->installation_pictures_c;
+    $ds_dir =  $_SERVER['DOCUMENT_ROOT'] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' .$foldeId;
+    $pdf = new Fpdi();
+    // add a page
+    $pdf->AddPage();
+    // set the source file
+    $pdf->setSourceFile(__DIR__.'/text/SA_REP_Information_Statement.pdf');
+    // import page 1
+    $tplIdx = $pdf->importPage(1);
+    // use the imported page and place it at position 10,10 with a width of 100 mm
+    $pdf->useTemplate($tplIdx);
+    
+    // now write some text above the imported page
+    $pdf->SetFont('Helvetica');
+    $pdf->SetFontSize(8);
+    $pdf->SetTextColor(0, 0, 0);
+    
+    //WH1 - REPLACE OR UPGRADE WATER HEATER
+    //$pdf->Write($pdf->SetXY(62, 29.5), html_entity_decode($Invoice->number,ENT_QUOTES));
+    //Activity Completed Date
+    if($Invoice->installation_date_c != ''){
+        $dateInfos_explode = explode(" ",$Invoice->installation_date_c);
+        $dateInfos = $dateInfos_explode[0];
+    }else{
+        $dateInfos = '';
+    }
+  
+    $pdf->Write($pdf->SetXY(137, 29.5), html_entity_decode($dateInfos,ENT_QUOTES));
+   
+    //REPS ACTIVITY 
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,13,41.5,3,2.8); //WH1 - REPLACE OR UPGRADE WATER HEATER
+
+    //CUSTOMER DETAILS
+    $contact_bean = new Contact;
+    $contact_bean->retrieve($Invoice->billing_contact_id);
+
+    $pdf->Write($pdf->SetXY(37,59.5), html_entity_decode($contact_bean->first_name,ENT_QUOTES)); // first name
+    $pdf->Write($pdf->SetXY(118,59.5), html_entity_decode($contact_bean->last_name,ENT_QUOTES)); // last name
+    $pdf->Write($pdf->SetXY(37,64), html_entity_decode($contact_bean->primary_address_street,ENT_QUOTES)); // install address
+    $pdf->Write($pdf->SetXY(37,69), html_entity_decode($contact_bean->primary_address_city,ENT_QUOTES)); // suburd
+    $pdf->Write($pdf->SetXY(118,69), html_entity_decode($contact_bean->primary_address_state,ENT_QUOTES)); // state
+    $pdf->Write($pdf->SetXY(170,69), html_entity_decode($contact_bean->primary_address_postalcode,ENT_QUOTES)); // postcode
+    $pdf->Write($pdf->SetXY(37,73), html_entity_decode($contact_bean->phone_mobile,ENT_QUOTES)); // phone
+    $pdf->Write($pdf->SetXY(118,73), html_entity_decode($contact_bean->email1,ENT_QUOTES)); // email
+
+    //Customer is NOT Priority Group Status
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,153,99.2,3,2.8);
+
+
+
+    //CUSTOMER / INSTALLER DECLARATION
+        //I confirm that all shower heads connected to the installed water heater have been tested or replaced and are 9 litres per minute or less. 
+        $pdf->Image(__DIR__.'/text/icon.jpg' ,13.5,160,3,2.8);
+
+        $pdf->Write($pdf->SetXY(36.5,169.5), html_entity_decode($Invoice->plumber_c,ENT_QUOTES)); // Installer Name
+        $pdf->Write($pdf->SetXY(125,169.5), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
+        $pdf->Write($pdf->SetXY(125,173.7), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
+
+        //I confirm that a minimum of $33 has been paid for this service as evidenced on my Tax Invoice
+        $pdf->Image(__DIR__.'/text/icon.jpg' ,13.5,216,3,2.8);
+        $pdf->Image(__DIR__.'/text/icon.jpg' ,13.5,223,3,2.8);
+        $pdf->Image(__DIR__.'/text/icon.jpg' ,13.5,230,3,2.8);
+        // $pdf->Image(__DIR__.'/text/icon.jpg' ,13.5,236,3,2.8);
+
+        $pdf->Write($pdf->SetXY(34.5,244), html_entity_decode($contact_bean->first_name .' ' .$contact_bean->last_name ,ENT_QUOTES)); // Customer Name
+
+
+    $fp = fopen($ds_dir.'/SA_REP_Information_Statement.pdf', 'wb');
+    fclose($fp);
+    $pdf->Output($ds_dir.'/SA_REP_Information_Statement.pdf', 'F');
+   
+    return 'Finish';
 }

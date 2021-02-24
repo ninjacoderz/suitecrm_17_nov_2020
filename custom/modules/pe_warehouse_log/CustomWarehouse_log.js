@@ -37,30 +37,32 @@
                 var state_Destination_Address =($("#destination_address_state").val().trim() != '' )? $("#destination_address_state").val().trim().toLowerCase() : '';
                 switch (state_Destination_Address) {
                     case "act":
-                        email_address_to = "actops@cope.com.au";
+                        email_address_to = "<actops@cope.com.au>";
+                        email_address_to += ', <kugov@cope.com.au>';
                     break;
                     case "nsw":
-                        email_address_to = "nsw@cope.com.au";
+                        email_address_to = "<nsw@cope.com.au>";
                     break;
                     case "qld":
-                        email_address_to = "qldcust@cope.com.au";
+                        email_address_to = "<qldcust@cope.com.au>";
+                        email_address_to += ', <afurner@cope.com.au>';
                     break;
                     case "sa":
                         // email_address_to = "sa@cope.com.au";
-                        email_address_to = "mellbourn@cope.com.au";
+                        email_address_to = "<mellbourn@cope.com.au>";
                         email_address_cc = ", Cope SA <sa@cope.com.au>";
                     break;
                     case "vic":
                     case "victory":
-                        email_address_to = "vic@cope.com.au";
+                        email_address_to = "<vic@cope.com.au>";
                     break;
                     case "wa":
-                        email_address_to = "wa@cope.com.au";
+                        email_address_to = '<waops@cope.com.au>, <KElliott@cope.com.au>';//"wa@cope.com.au";
                     break;
                  }
             }
 
-            $(self.emailComposeView).find('input[name="to_addrs_names"]').val(name_address_to+'<'+email_address_to + '>');    
+            $(self.emailComposeView).find('input[name="to_addrs_names"]').val(name_address_to+email_address_to);    
             $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>"+email_address_cc);
             $(self.emailComposeView).find('input[name="return_id"]').val(record_id);
             $(self.emailComposeView).find('input[name="return_module"]').val(module_name);
