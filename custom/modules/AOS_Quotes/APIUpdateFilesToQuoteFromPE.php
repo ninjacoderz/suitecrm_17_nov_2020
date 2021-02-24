@@ -640,6 +640,29 @@ if( $lead_id != ""){
             };
         }
     };
+    // CLient warranty
+    if(count($_POST['files']['data-pe-files-tank-serial-warranty']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-tank-serial-warranty']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-tank-serial-warranty']['name'][$i] != ""){
+                $file_type =  $number_module.'_Tank_Serial_Client_Warranty'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-tank-serial-warranty']['name'][$i]), PATHINFO_EXTENSION);
+                copy($_POST['files']['data-pe-files-tank-serial-warranty']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Sanden Tank Serial Number (Client warranty) '.$i.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-tank-serial-warranty']['tmp_name'][$i], 'fileName' => $file_type);
+            };
+        }
+    };
+    if(count($_POST['files']['data-pe-files-hp-serial-warranty']['tmp_name']) > 0) {
+        for($i = 0; $i < count($_POST['files']['data-pe-files-hp-serial-warranty']['tmp_name']); $i++) {
+            if($_POST['files']['data-pe-files-hp-serial-warranty']['name'][$i] != ""){
+                $file_type =  $number_module.'_HP_Serial_Client_Warranty'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hp-serial-warranty']['name'][$i]), PATHINFO_EXTENSION);
+                copy($_POST['files']['data-pe-files-hp-serial-warranty']['tmp_name'][$i], $folderName.$file_type);
+                $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Sanden HP Serial Number (Client warranty) '.$i.'</a>';
+                addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                $file_to_attach[] = array('folderName' => $_POST['files']['data-pe-files-hp-serial-warranty']['tmp_name'][$i], 'fileName' => $file_type);
+            };
+        }
+    };
 
 // clone file from Quote To Leads
     $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
@@ -692,8 +715,8 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Body .= "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
         $mail->Body .= "<p>Email Client: <a href='https://mail.google.com/#search/".$client->email1."'>".$client->email1." GSearch</a></p>";
     }else {
-        if ( $worker_type == "Customer" ){
-            $mail->Subject = $worker_type." ".$installer->name." Upload Install Photos - Sanden international (Australia) Pty Customer Warranty registration - Invoice#".$invoice->number." ".$invoice->name;
+        if ( $worker_type == "Customer"){
+            $mail->Subject = $worker_type." ".$client->name." Upload Install Photos - Sanden international (Australia) Pty Customer Warranty registration - Invoice#".$invoice->number." ".$invoice->name;
         }else {
             $mail->Subject = $worker_type." ".$installer->name." uploaded photo to Invoice#".$invoice->number." ".$invoice->name;
         }

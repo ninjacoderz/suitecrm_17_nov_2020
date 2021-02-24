@@ -5361,40 +5361,15 @@ $(document).ready(function(){
          //button create generate REPS_WH1_PDF
          $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #00b2e2;" id="Generate_REPS_WH1_PDF" class="button primary" title="Generate REPS WH1 PDF"><span class="glyphicon glyphicon-file"></span> Generate REPS WH1 PDF</button>');
          $("#Generate_REPS_WH1_PDF").click(function(){
-            if($("input[name='record']").val().trim() != ''){
-                SUGAR.ajaxUI.showLoadingPanel(); 
-                $("#EditView input[name='action']").val('Save');
-                $.ajax({
-                    type: $("#EditView").attr('method'),
-                    url: $("#EditView").attr('action'),
-                    data: $("#EditView").serialize(),
-                    async:false,
-                    success: function (data) {
-                        $.ajax({
-                            type: 'POST',
-                            url: 'index.php?entryPoint=Generate_REPS_WH1_PDF&InvoiceID='+$("input[name='record']").val().trim(),
-                        }).done(function(data) {
-                            $(".files").empty();
-                            $.ajax({
-                                url: $('#fileupload').fileupload('option', 'url'),
-                                dataType: 'json',
-                                context: $('#fileupload')[0]
-                            }).always(function () {
-                                $(this).removeClass('fileupload-processing');
-                            }).done(function (result) {
-                                $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
-                            });
-                            SUGAR.ajaxUI.hideLoadingPanel(); 
-                        })
-                    }
-                });  
-
-            }else{
-                $('#alert_modal').find('.modal-body').empty();
-                $('#alert_modal').find('.modal-body').append('Could you saving Invoice before, please?'); 
-                $('#alert_modal').modal('show'); 
-            }
+            Ajax_Generate_File_PDF_REPS('');
          })
+
+        //button create generate Generate_REPS_Information_Statement
+        $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #FF8800;" id="Generate_REPS_Information_Statement" class="button primary" title="Generate REPS Inforamtion Statement"><span class="glyphicon glyphicon-file"></span> SA REPS Inforamtion Statement</button>');
+        $("#Generate_REPS_Information_Statement").click(function(){
+            Ajax_Generate_File_PDF_REPS('REPS_Infor_State');
+        })
+
          //VUT-S-Get all files sms
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_all_files_sms" class="button primary" title="Get all files from SMS">GET ALL FILES FROM SMS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
          $('#get_all_files_sms').click(function(){
@@ -8207,3 +8182,49 @@ function change_description_STCs(){
 }
 
 YAHOO.util.Event.addListener(["registered_for_gst_c"], "change", change_description_STCs);
+
+function Ajax_Generate_File_PDF_REPS(action=''){
+    if($("input[name='record']").val().trim() != ''){
+        SUGAR.ajaxUI.showLoadingPanel(); 
+        $("#EditView input[name='action']").val('Save');
+        var url_generate_pdf = 'index.php?entryPoint=Generate_REPS_WH1_PDF&InvoiceID='+$("input[name='record']").val().trim();
+        switch (action) {
+            case 'REPS_Infor_State':
+                url_generate_pdf += '&action=REPS_Infor_State';
+                break;
+        
+            default:
+                break;
+        }
+        
+        $.ajax({
+            type: $("#EditView").attr('method'),
+            url: $("#EditView").attr('action'),
+            data: $("#EditView").serialize(),
+            async:false,
+            success: function (data) {
+                $.ajax({
+                    type: 'POST',
+                    url: url_generate_pdf,
+                }).done(function(data) {
+                    $(".files").empty();
+                    $.ajax({
+                        url: $('#fileupload').fileupload('option', 'url'),
+                        dataType: 'json',
+                        context: $('#fileupload')[0]
+                    }).always(function () {
+                        $(this).removeClass('fileupload-processing');
+                    }).done(function (result) {
+                        $(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
+                    });
+                    SUGAR.ajaxUI.hideLoadingPanel(); 
+                })
+            }
+        });  
+
+    }else{
+        $('#alert_modal').find('.modal-body').empty();
+        $('#alert_modal').find('.modal-body').append('Could you saving Invoice before, please?'); 
+        $('#alert_modal').modal('show'); 
+    }
+}

@@ -416,29 +416,45 @@
         }
     }
 
-    // dung code  --- This is a hook for task " Auto create new Internal Notes When we change status Invoice"
+    //  Auto create new Internal Notes When we change status Invoice
     class CreateInternalNotes_invoice {
         function before_save_method($bean, $event, $arguments){
             $old_fields = $bean->fetched_row;
-            if($old_fields['status'] != $bean->status && $bean->status != ''){
-                $bean_intenal_notes = new  pe_internal_note();
-                $bean_intenal_notes->type_inter_note_c = 'status_updated';
-                $decription_internal_notes = 'Invoice Status : ';
-                $decription_internal_notes .= str_replace('_',' ',$bean->status);
-                $bean_intenal_notes->description =  $decription_internal_notes;
-                $bean_intenal_notes->save();
-             
-                $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
-                $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
-            }else {
-                $bean_intenal_notes = new  pe_internal_note();
-                $bean_intenal_notes->type_inter_note_c = 'status_updated';
-                $decription_internal_notes = 'Invoice Status : New Invoice';
-                $bean_intenal_notes->description =  $decription_internal_notes;
-                $bean_intenal_notes->save();
-             
-                $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
-                $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
+            if($old_fields == false){
+                //check internal notes new 
+                $db = DBManagerFactory::getInstance();
+                $sql = "SELECT pe_internal_note.id as id  FROM pe_internal_note 
+                LEFT JOIN aos_invoices_pe_internal_note_1_c ON aos_invoices_pe_internal_note_1_c.aos_invoices_pe_internal_note_1pe_internal_note_idb  = pe_internal_note.id 
+                LEFT JOIN pe_internal_note_cstm ON pe_internal_note_cstm.id_c = pe_internal_note.id
+                WHERE pe_internal_note_cstm.type_inter_note_c  = 'status_updated' 
+                AND pe_internal_note.description = 'Invoice Status : New Invoice' 
+                AND aos_invoices_pe_internal_note_1_c.aos_invoices_pe_internal_note_1aos_invoices_ida  ='$bean->id' ";
+    
+                $ret = $db->query($sql);
+                if($ret->num_rows == 0){
+                    $bean_intenal_notes = new  pe_internal_note();
+                    $bean_intenal_notes->type_inter_note_c = 'status_updated';
+                    $decription_internal_notes = 'Invoice Status : New Invoice';
+                    $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->save();
+                    
+                    $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
+                    $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
+                }
+            }else{
+                //case 2 : updated
+                if($old_fields['status'] != $bean->status && $bean->status != ''){
+                    $bean_intenal_notes = new  pe_internal_note();
+                    $bean_intenal_notes->type_inter_note_c = 'status_updated';
+                    $decription_internal_notes = 'Invoices Status : ';
+                    $decription_internal_notes .= str_replace('_',' ',$bean->status);
+
+                    $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->save();
+                 
+                    $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
+                    $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);
+                }
             }
         }
     }
@@ -452,4 +468,130 @@
     //         }
     //     }
     // }
+            /**
+     * Auto AutoSendCustomerWarrantyMail
+     */
+    class AutoSendCustomerWarrantyMail {
+        function after_save_AutoSendCustomerWarrantyMail($bean, $event, $arguments) {
+            date_default_timezone_set('Australia/Melbourne');
+            $old_fields = $bean->fetched_row;
+            if($old_fields['installation_date_c'] != $bean->installation_date_c && $bean->installation_date_c != ''){
+                $db = DBManagerFactory::getInstance();
+                $sql = "UPDATE `emails` SET `deleted` = 1 WHERE `status` = 'email_schedule' AND `parent_id` = '$bean->id' AND `name` = 'Warranty registration photos and serials' AND deleted = 0";
+                $db->query($sql);
+                $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
+
+                $emailtemplate = new EmailTemplate();
+                $emailtemplate = $emailtemplate->retrieve($emailTemplateID);
+
+                $contact =  new Contact();
+                $contact->retrieve($bean->billing_contact_id);
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+                
+                $template_data = $emailtemplate->parse_email_template(
+                    array(
+                        "subject" => $emailtemplate->subject,
+                        "body_html" => htmlspecialchars($emailtemplate->body_html),
+                        "body" => $emailtemplate->body_html
+                        ),
+                        'AOS_Invoices',
+                        $lead,
+                        $macro_nv
+                    );
+                
+                $name = $template_data['subject'];
+                $description = $template_data['body'];
+                $description_html = $template_data['body_html'];
+                //parse value
+
+                $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $description = str_replace("\$contact_first_name",$contact->first_name , $description);
+                $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
+
+                $description_html = str_replace("\$contact_first_name",$contact->first_name , $description_html);
+                $description_html = str_replace("\$aos_invoices_link_upload",$string_link_upload_files, $description_html);
+
+                $mail_From = "info@pure-electric.com.au";
+                $mail_FromName = "Pure Electric";
+                $emailSignatureId = '3ad8f82a-d3e7-5897-7c98-5ba1c4ac785e'; 
+                //signature
+                $user = new User();
+                $user->retrieve('8d159972-b7ea-8cf9-c9d2-56958d05485e');
+                $defaultEmailSignature = $user->getSignature($emailSignatureId);
+            
+                if (empty($defaultEmailSignature)) {
+                    $defaultEmailSignature = array(
+                        'html' => '<br>',
+                        'plain' => '\r\n',
+                    );
+                    $defaultEmailSignature['no_default_available'] = true;
+                } else {
+                    $defaultEmailSignature['no_default_available'] = false;
+                }
+                $defaultEmailSignature['signature_html'] =  str_replace('Accounts', '', $defaultEmailSignature['signature_html']);
+                $description .= "<br><br><br>";
+                $description .=  $defaultEmailSignature['signature_html'];
+                $description_html .= "<br><br><br>";
+                $description_html .=  $defaultEmailSignature['signature_html'];
+                $schedule_time = strtotime(str_replace('/', '-',$bean->installation_date_c)) + 60*60*24; //+ 24 minutes
+                //create email 
+                $email = new Email();
+                $email->id = create_guid();
+                $email->new_with_id = true;
+                $email->name = $name;
+                $email->type = "out";
+                $email->status = "email_schedule";
+                $email->parent_type = 'AOS_Invoices';
+                $email->parent_id = $bean->id;
+                $email->parent_name = $bean->name;
+                $email->mailbox_id = 'b4fc56e6-6985-f126-af5f-5aa8c594e7fd';
+                $email->description_html = $description_html;
+                $email->description = $description_html;
+                $email->schedule_timestamp_c = $schedule_time;
+                $email->from_addr = $mail_From;
+                $email->from_name = $mail_FromName;
+                $email->to_addrs_emails = $contact->email1 . ";";
+                $email->to_addrs = $contact->first_name." ".$contact->last_name . " <" . $contact->email1 . ">";
+                $email->to_addrs_names = $contact->first_name." ".$contact->last_name . " <" . $contact->email1 . ">";
+                $email->to_addrs_arr = array(
+                    array(
+                        'email' => $contact->email1,
+                        'display' =>  $contact->first_name." ".$contact->last_name,
+                    )
+                );
+                $email->cc_addrs_emails = "Pure Info <info@pure-electric.com.au>;";
+                $email->cc_addrs = 'Pure Info <info@pure-electric.com.au>';
+                $email->cc_addrs_names = "Pure Info <info@pure-electric.com.au>";
+                $email->cc_addrs_arr = array(
+                    array(
+                        'email' => 'info@pure-electric.com.au',
+                        'display' => 'Pure Info'
+                    )
+                );
+                $email_id = $email->id;
+            
+                // $note = new Note();
+                // $where = "notes.parent_id = '$emailTemplateID'";
+                // $attachments = $note->get_full_list("", $where, true);
+                // $all_attachments = array();
+                // $all_attachments = array_merge($all_attachments, $attachments);
+                // foreach($all_attachments as $attachment) {
+                //     $noteTemplate = clone $attachment;
+                //     $noteTemplate->id = create_guid();
+                //     $noteTemplate->new_with_id = true; 
+                //     $noteTemplate->parent_id = $email->id;
+                //     $noteTemplate->parent_type = 'Emails';
+                //     $noteFile = new UploadFile();
+                //     $noteFile->duplicate_file($attachment->id, $noteTemplate->id, $noteTemplate->filename);
+                //     $noteTemplate->save();
+                //     $email->attachNote($noteTemplate);
+                // }
+                $email->save();
+            }
+        }
+    }
 ?>

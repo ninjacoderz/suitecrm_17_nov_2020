@@ -22,7 +22,7 @@ $PO_purchase_order->save();
 $Bill = BeanFactory::newBean('pe_bills');
 // $Bill->id = create_guid();
 $Bill->save();
-$array_field_ignore = ["id",'number'];
+$array_field_ignore = ["id",'number','installation_pdf_c'];
 if ($PO_purchase_order->id != "") {
     foreach ($Bill->field_name_map as $key => $value) {
         if (!in_array($key, $array_field_ignore)) {
