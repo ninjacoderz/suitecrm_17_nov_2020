@@ -74,11 +74,11 @@
     //     'after_save_method'
     // );
     // tuan code auto send customer warranty upload email
-    $hook_array['after_save'][] = Array(
-        6,
-        'auto_send_customer_warranty_mail',
-        'custom/modules/AOS_Invoices/logic_hooks_class.php',
-        'AutoSendCustomerWarrantyMail',
-        'after_save_AutoSendCustomerWarrantyMail'
-    );
+    // $hook_array['after_save'][] = Array(
+    //     6,
+    //     'auto_send_customer_warranty_mail',
+    //     'custom/modules/AOS_Invoices/logic_hooks_class.php',
+    //     'AutoSendCustomerWarrantyMail',
+    //     'after_save_AutoSendCustomerWarrantyMail'
+    // );
 ?>
