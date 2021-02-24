@@ -40,19 +40,20 @@ $(function(){
         for (let key in json_val) {  
             if($("#"+key).attr('type') == 'checkbox'){
                 $("#"+key).prop( "checked", json_val[key] );
-            } else 
-            let value_field = json_val[key];
-            if(value_field !== undefined && value_field != ''){
-                const regex = /S Edge [\d]{1,2}$/;
-                let m;
-                if(m = regex.exec(value_field) !== null){
-                    value_field = value_field+'G';
-                    $("#"+key).val(value_field);
+            } else {
+                let value_field = json_val[key];
+                if(value_field !== undefined && value_field != ''){
+                    const regex = /S Edge [\d]{1,2}$/;
+                    let m;
+                    if(m = regex.exec(value_field) !== null){
+                        value_field = value_field+'G';
+                        $("#"+key).val(value_field);
+                    }else{
+                        $("#"+key).val(value_field);
+                    }
                 }else{
                     $("#"+key).val(value_field);
                 }
-            }else{
-                $("#"+key).val(value_field);
             }
         }
     }
