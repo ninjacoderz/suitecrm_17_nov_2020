@@ -63,7 +63,7 @@ if (isset($matches[1]) && $matches[1] != "") {
                                     $crm_links .= 'CRM Invoice : https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record='.$row['id_c'].PHP_EOL;
 								}
 
-                                $crm_links .= "End CRM Links";
+                                $crm_links .= "End Links";
                                 if( strpos($email_segments_new[$i],'Content-Type: text/plain; charset="UTF-8"') !== false ){
                                     $email_segments_new[$i] = str_replace('Content-Type: text/plain; charset="UTF-8"', 'Content-Type: text/plain; charset="UTF-8"'.PHP_EOL.PHP_EOL.$crm_links, $email_segments_new[$i]);
                                 }
@@ -82,7 +82,7 @@ if (isset($matches[1]) && $matches[1] != "") {
                                         $crm_links .= '<a href="https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record='.$row1['id_c'].'">[CRM Invoice]</a>'.PHP_EOL;
                                     }
 								}
-                                $crm_links .= "End CRM Links";
+                                $crm_links .= "End Links";
                                 preg_match('/<BODY[^>]*>.*?/', $email_segments_new[$i], $out);
                                 $first_div = "";
                                 if(isset($out[0])){
@@ -123,7 +123,7 @@ if (isset($matches[1]) && $matches[1] != "") {
 		$matches[1] ==  "lee.andrewartha@pure-electric.com.au" ||
 		$matches[1] == "pure.electric.com.au@gmail.com" || 
 		$matches[1] == "john.hooper@pure-electric.com.au"){
-			$data = preg_replace('/CRM Links\:[\s\S]+?End CRM Links/', '', $data);
+			$data = preg_replace('/CRM Links\:[\s\S]+?End Links/', '', $data);
 			file_put_contents("email/".$file, $data);
 			return;
 	}
@@ -149,7 +149,7 @@ if (isset($matches[1]) && $matches[1] != "") {
 $matches = array();
 preg_match('/boundary=(.*?)\n/i', $data, $matches);
 if(count($matches) == 0){
-	preg_match("/CRM Links:(.+?)End CRM Links/s", $email_segments[$i], $link_matches);
+	preg_match("/CRM Links:(.+?)End Links/s", $email_segments[$i], $link_matches);
 	if (isset($link_matches[0])&& $link_matches[0]!= ""){
 		$email_segments[$i] = str_replace($link_matches[0], "", $email_segments[$i]);
 	}
@@ -230,8 +230,8 @@ if(count($matches) == 0){
 												$lead->primary_address_state. " ".
 												$lead->primary_address_postalcode .PHP_EOL;
 				}
-
-				if(isset($lead->id) && $lead->id != ""){
+				// BinhNT Remove this links
+				if(false) if(isset($lead->id) && $lead->id != ""){
 						$crm_links .= "Acceptance Email: https://suitecrm.pure-electric.com.au/index.php?entryPoint=customCreateAcceptanceLink&lead_id=".$lead->id.PHP_EOL;
 						//thienpb code - add link forward acceptance email to sg sam
 						$crm_links .= "Forward Acceptance Email: https://suitecrm.pure-electric.com.au/index.php?entryPoint=customCreateForwardAcceptanceLink&lead_id=".$lead->id.PHP_EOL;
@@ -310,7 +310,7 @@ if(count($matches) == 0){
 			}
 		}
 
-		$crm_links .= "End CRM Links";
+		$crm_links .= "End Links";
 	}
 
 	if(isset($reference_no) && $reference_no != ""){
@@ -334,7 +334,7 @@ if(count($matches) == 0){
 			foreach($lookup_result as $res){
 				$crm_links .= "AOS_Invoices: https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$res['id'].PHP_EOL;
 			}
-			$crm_links .= "End CRM Links";
+			$crm_links .= "End Links";
 		}
 		file_put_contents("email/".$file, file_get_contents("email/".$file).PHP_EOL.$crm_links);
 		return;
@@ -351,7 +351,7 @@ if(count($matches) && $matches[1] != ""){
 	{
 		if (strpos($email_segments[$i], "Content-Type: text/plain") !== false)
 		{
-			preg_match("/CRM Links:(.+?)End CRM Links/s", $email_segments[$i], $link_matches);
+			preg_match("/CRM Links:(.+?)End Links/s", $email_segments[$i], $link_matches);
 			if (isset($link_matches[0])&& $link_matches[0]!= ""){
 				$email_segments[$i] = str_replace($link_matches[0], "", $email_segments[$i]);
 			}
@@ -422,7 +422,7 @@ if(count($matches) && $matches[1] != ""){
 														$lead->primary_address_postalcode .PHP_EOL;
 						}
 
-						if(isset($lead->id) && $lead->id != ""){
+						if(false) if(isset($lead->id) && $lead->id != ""){
 								$crm_links .= "Acceptance Email: https://suitecrm.pure-electric.com.au/index.php?entryPoint=customCreateAcceptanceLink&lead_id=".$lead->id.PHP_EOL;
 								//thienpb code - add link forward acceptance email to sg sam
 								$crm_links .= "Forward Acceptance Email: https://suitecrm.pure-electric.com.au/index.php?entryPoint=customCreateForwardAcceptanceLink&lead_id=".$lead->id.PHP_EOL;
@@ -501,7 +501,7 @@ if(count($matches) && $matches[1] != ""){
 						$crm_links .= 'PEINV '.$invoice_new->number.": https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice_new->id.PHP_EOL;
 					}
 				}
-				$crm_links .= "End CRM Links";
+				$crm_links .= "End Links";
 			}
 			if( strpos($email_segments[$i],'Content-Type: text/plain; charset="UTF-8"') !== false ){
 				$email_segments[$i] = str_replace('Content-Type: text/plain; charset="UTF-8"', 'Content-Type: text/plain; charset="UTF-8"'.PHP_EOL.PHP_EOL.$crm_links, $email_segments[$i]);
@@ -523,7 +523,7 @@ if(count($matches) && $matches[1] != ""){
 
 		if (strpos($email_segments[$i], "Content-Type: text/html;") !== false)
 		{
-			preg_match("/CRM Links:(.+?)End CRM Links/s", $email_segments[$i], $link_matches);
+			preg_match("/CRM Links:(.+?)End Links/s", $email_segments[$i], $link_matches);
 			if (isset($link_matches[0])&& $link_matches[0]!= ""){
 				$email_segments[$i] = str_replace($link_matches[0], "", $email_segments[$i]);
 			}
@@ -669,7 +669,7 @@ if(count($matches) && $matches[1] != ""){
 														$lead->primary_address_postalcode .PHP_EOL;
 						}
 
-						if(isset($lead->id) && $lead->id != ""){
+						if(false) if(isset($lead->id) && $lead->id != ""){
 							if(strpos($email_segments[$i], "Content-Transfer-Encoding: quoted-printable") !== false) {
 								$crm_links .= 
 								'<a href=3D"https://suitecrm.pure-electric.com.au/index.php?entryPoint=3DcustomCreateAcceptanceLink&lead_id=3D'.$lead->id.'">Acceptance Email</a>'.PHP_EOL;
@@ -808,7 +808,7 @@ if(count($matches) && $matches[1] != ""){
 						}
 					}
 				}
-				$crm_links .= "End CRM Links";
+				$crm_links .= "End Links";
 				//if(strpos($email_segments[$i], "Content-Transfer-Encoding: quoted-printable") !== false){
 					//$email_segments[$i] = str_replace("Content-Transfer-Encoding: quoted-printable".PHP_EOL.PHP_EOL, "Content-Transfer-Encoding: quoted-printable".PHP_EOL.PHP_EOL.$crm_links, $email_segments[$i]);
 				//}
@@ -891,7 +891,7 @@ if(count($matches) && $matches[1] != ""){
 							$crm_links .= 
 							'<a href="https://geocreation.com.au/assignments/'.$reference_no.'/edit">[GEO Creation]</a>'.PHP_EOL;
 						}
-				$crm_links .= "End CRM Links";
+				$crm_links .= "End Links";
 				//file_put_contents("email/".$file, file_get_contents("email/".$file).PHP_EOL.$crm_links);
 				preg_match('/<div[^>]*>.*?/', $email_segments[$i], $out);
 				$first_div = "";
