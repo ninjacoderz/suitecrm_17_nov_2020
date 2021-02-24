@@ -4447,7 +4447,7 @@ class EmailsController extends SugarController
 
             $emailTemplate = BeanFactory::getBean(
                 'EmailTemplates',
-                '91964331-fd45-e2d8-3f1b-57bbe4371f9c'
+                '78866e51-461b-7b16-075e-60335d35ccba'
             );
 
             $name = $emailTemplate->subject;
