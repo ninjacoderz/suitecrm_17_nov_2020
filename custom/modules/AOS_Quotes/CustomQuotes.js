@@ -846,18 +846,18 @@ function genExtraDaikinItemFunc(elem){
      });
      //tuan code -
      $('#billing_address_state').on('change',function(){
-         $('#meter_phase_c').trigger('change');
+         $('#phases').trigger('change');
      })
      $('#solargain_options_c').on('click',function(){
-         $('#meter_phase_c').trigger('change');
+         $('#phases').trigger('change');
      })
-     $('#meter_phase_c').on('change', function (){
-         if( $('#meter_phase_c').find(":selected").val() == 3 ){
+     $('#phases').on('change', function (){
+         if( $('#phases').find(":selected").val() == 'Three Phases' ){
              for( var i = 1 ; i <= 6 ; i++){
                      $('#extra_1_'+i).val('Fro. Smart Meter (3P)');       
                  }
          }
-         if($('#meter_phase_c').find(":selected").val() == 1) {
+         if($('#phases').find(":selected").val() == 'Single Phase') {
              for( var i = 1 ; i <= 6 ; i++){
                      $('#extra_1_'+i).val('Fro. Smart Meter (1P)');
              }
@@ -881,7 +881,7 @@ function genExtraDaikinItemFunc(elem){
          distributor_meter =  $("#distributor_c").val();
          var record_id = $("input[name='record']").val();
          var customer_name = $("#first_name").val() +' ' + $('#last_name').val();
-         var meter_phase_c = $("#meter_phase_c").val();
+         var meter_phase_c = (($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))) ;
  
          $('#getMeter span.glyphicon-refresh').removeClass('hidden');
          if(distributor_meter == 4 ||  distributor_meter == 6){
@@ -3071,17 +3071,14 @@ function genExtraDaikinItemFunc(elem){
          build_url += '&billing_name='+ encodeURIComponent($("#name_on_billing_account_c").val());
          build_url += '&energy_retailer='+ encodeURIComponent($("#energy_retailer_c").val());
          build_url += '&distributor='+ encodeURIComponent($("#distributor_c").val());
-         var roof_type = $("#roof_type_c").val();
-         var roof_type_arr ={"Tin"           :2,
-                             "Tile"          :3,
-                             "klip_loc"      :4,
-                             "Concrete"      :5,    
-                             "Trim_Deck"     :6,
-                             "Insulated"     :7,
-                             "Asbestos"      :8,
-                             "Ground_Mount"  :9,
-                             "Terracotta"    :10,
-                             "Other"         :1};
+         var roof_type = $("#roof_type").val();
+         var roof_type_arr ={"TIN/COLORBOND":2,
+                             "CONCRETE TILE":3,
+                             "KLIPLOC"      :4,
+                             "SLATE ROOF"   :1,
+                             "ASBESTOS ROOF":8,
+                             "TERRACOTTA"   :10,
+                             "UNSURE"       :1};
          build_url += '&roof_type='+ encodeURIComponent(roof_type_arr[roof_type]);
          $.ajax({
              url: build_url,
@@ -3331,7 +3328,7 @@ function genExtraDaikinItemFunc(elem){
          build_url_quote += "&quoteSG_ID="+encodeURIComponent($("#solargain_quote_number_c").val());
          build_url_quote += "&leadSG_ID="+encodeURIComponent($("#solargain_lead_number_c").val());
          build_url_quote += "&meter_number="+encodeURIComponent($("#meter_number_c").val());
-         build_url_quote += "&meter_phase="+encodeURIComponent($("#meter_phase_c").val());
+         build_url_quote += "&meter_phase="+encodeURIComponent((($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))));
          build_url_quote += '&account_number='+ encodeURIComponent($("#account_number_c").val());
          build_url_quote += "&nmi_number="+encodeURIComponent($("#nmi_c").val());
          build_url_quote += "&name_on_billing_account="+encodeURIComponent($("#name_on_billing_account_c").val());
@@ -3346,17 +3343,14 @@ function genExtraDaikinItemFunc(elem){
          var customer_type = $('input[name=customer_type_c]:checked').val();
          build_url_quote += '&customer_type='+ encodeURIComponent(customer_type) ;
  
-         var roof_type = $("#roof_type_c").val();
-         var roof_type_arr ={"Tin"           :2,
-                             "Tile"          :3,
-                             "klip_loc"      :4,
-                             "Concrete"      :5,    
-                             "Trim_Deck"     :6,
-                             "Insulated"     :7,
-                             "Asbestos"      :8,
-                             "Ground_Mount"  :9,
-                             "Terracotta"    :10,
-                             "Other"         :1};
+         var roof_type = $("#roof_type").val();
+         var roof_type_arr ={"TIN/COLORBOND":2,
+                             "CONCRETE TILE":3,
+                             "KLIPLOC"      :4,
+                             "SLATE ROOF"   :0,
+                             "ASBESTOS ROOF":8,
+                             "TERRACOTTA"   :10,
+                             "UNSURE"       :1};
          build_url_quote += '&roof_type='+ encodeURIComponent(roof_type_arr[roof_type]);
          build_url_quote += '&build_height='+ encodeURIComponent($("#gutter_height_c").val());
          build_url_quote += '&connection_type='+ encodeURIComponent($("#connection_type_c").val());
@@ -3451,17 +3445,14 @@ function genExtraDaikinItemFunc(elem){
          build_url += '&billing_name='+ encodeURIComponent($("#name_on_billing_account_c").val());
          build_url += '&energy_retailer='+ encodeURIComponent($("#energy_retailer_c").val());
          build_url += '&distributor='+ encodeURIComponent($("#distributor_c").val());
-         var roof_type = $("#roof_type_c").val();
-         var roof_type_arr ={"Tin"           :2,
-                             "Tile"          :3,
-                             "klip_loc"      :4,
-                             "Concrete"      :5,    
-                             "Trim_Deck"     :6,
-                             "Insulated"     :7,
-                             "Asbestos"      :8,
-                             "Ground_Mount"  :9,
-                             "Terracotta"    :10,
-                             "Other"         :1};
+         var roof_type = $("#roof_type").val();
+         var roof_type_arr ={"TIN/COLORBOND":2,
+                             "CONCRETE TILE":3,
+                             "KLIPLOC"      :4,
+                             "SLATE ROOF"   :1,
+                             "ASBESTOS ROOF":8,
+                             "TERRACOTTA"   :10,
+                             "UNSURE"       :1};
          build_url += '&roof_type='+ encodeURIComponent(roof_type_arr[roof_type]);
  
          $.ajax({
@@ -3500,7 +3491,7 @@ function genExtraDaikinItemFunc(elem){
                      + "&billing_address_city=" + $("#install_address_city_c").val()
                      + "&billing_address_state=" + $("#install_address_state_c").val()
                      + "&billing_address_postalcode=" + $("#install_address_postalcode_c").val();
-         build_url += '&meter_phase_c='+ $('#meter_phase_c').val();
+         build_url += '&meter_phase_c='+ (($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : '')));
          build_url += '&solargain_inverter_model='+ encodeURIComponent($("#solargain_inverter_model_c").val());
  
          $.ajax({
@@ -3547,7 +3538,7 @@ function genExtraDaikinItemFunc(elem){
  
          build_url_quote_tesla += "&tesla_quote_id="+tesla_quote_id;
          build_url_quote_tesla += "&meter_number="+encodeURIComponent($("#meter_number_c").val());
-         build_url_quote_tesla += "&meter_phase="+encodeURIComponent($("#meter_phase_c").val());
+         build_url_quote_tesla += "&meter_phase="+encodeURIComponent((($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))));
          build_url_quote_tesla += '&account_number='+ encodeURIComponent($("#account_number_c").val());
          build_url_quote_tesla += "&nmi_number="+encodeURIComponent($("#nmi_c").val());
          build_url_quote_tesla += "&name_on_billing_account="+encodeURIComponent($("#name_on_billing_account_c").val());
@@ -3562,17 +3553,14 @@ function genExtraDaikinItemFunc(elem){
          var customer_type = $('input[name=customer_type_c]:checked').val();
          build_url_quote_tesla += '&customer_type='+ encodeURIComponent(customer_type) ;
  
-         var roof_type = $("#roof_type_c").val();
-         var roof_type_arr ={"Tin"           :2,
-                             "Tile"          :3,
-                             "klip_loc"      :4,
-                             "Concrete"      :5,    
-                             "Trim_Deck"     :6,
-                             "Insulated"     :7,
-                             "Asbestos"      :8,
-                             "Ground_Mount"  :9,
-                             "Terracotta"    :10,
-                             "Other"         :1};
+         var roof_type = $("#roof_type").val();
+         var roof_type_arr ={"TIN/COLORBOND":2,
+                             "CONCRETE TILE":3,
+                             "KLIPLOC"      :4,
+                             "SLATE ROOF"   :1,
+                             "ASBESTOS ROOF":8,
+                             "TERRACOTTA"   :10,
+                             "UNSURE"       :1};
          build_url_quote_tesla += '&roof_type='+ encodeURIComponent(roof_type_arr[roof_type]);
          build_url_quote_tesla += '&build_height='+ encodeURIComponent($("#gutter_height_c").val());
          build_url_quote_tesla += '&connection_type='+ encodeURIComponent($("#connection_type_c").val());
@@ -5215,7 +5203,7 @@ function genExtraDaikinItemFunc(elem){
 //                      "Longitude"             :dsg_lng,
 //                      "Value"                 :$("#install_address_c").val()+', '+$("#install_address_city_c").val()+' '+$("#install_address_state_c").val()+' '+$("#install_address_postalcode_c").val(),
 //                  },
-//                  "RoofType"     : encodeURIComponent(roof_type_arr[$("#roof_type_c").val()]),
+//                  "RoofType"     : encodeURIComponent(roof_type_arr[$("#roof_type").val()]),
 //                  "CustomerTypeID": parseInt($("#customer_type_c").val()),
 //                  "BuildHeight"   : $("#gutter_height_c").val(),
 //                  "EnergyRetailer": $("#energy_retailer_c").val(),

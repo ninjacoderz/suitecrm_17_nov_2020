@@ -178,7 +178,7 @@ if($_REQUEST['type'] == 'updateMeterPhase'){
             "State"	=> (urldecode($_GET['state']))?urldecode($_GET['state']):$quote_decode->Install->Address->State,
             "PostCode" =>	(urldecode($_GET['postalcode']))?urldecode($_GET['postalcode']):$quote_decode->Install->Address->PostCode,
         ),
-        "RoofType" =>array("ID" =>(urldecode($_GET['roof_type']))?urldecode($_GET['roof_type']):$quote_decode->Install->RoofType->ID), //roof_type,
+        "RoofType" =>array("ID" =>(urldecode($_GET['roof_type']) && urldecode($_GET['roof_type']) != '0') ? urldecode($_GET['roof_type']): ((urldecode($_GET['roof_type']) == '0') ? 1 : $quote_decode->Install->RoofType->ID)), //roof_type,
         "Notes" => array(array(
             "ID" => 0,
         )),
@@ -203,6 +203,16 @@ if($_REQUEST['type'] == 'updateMeterPhase'){
         $data['ConnectionType'] = 'Semi Rural/Remote Meter';
     }else{
         $data['ConnectionType'] = (urldecode($_GET['connection_type']))?urldecode($_GET['connection_type']):$quote_decode->Install->ConnectionType;
+    }
+    $roof_type_arr =array(  2 => "TIN/COLORBOND",
+                            3 => "CONCRETE TILE",
+                            4 => "KLIPLOC"      ,
+                            0 => "SLATE ROOF"   ,
+                            8 => "ASBESTOS ROOF",
+                            10 => "TERRACOTTA"  ,
+                            1 => "UNSURE");
+    if(urldecode($_GET['roof_type']) == '0' || urldecode($_GET['roof_type']) == '1'){
+        $data['RoofDetails'] = $roof_type_arr[urldecode($_GET['roof_type'])];
     }
     $data_string = json_encode($data);
 

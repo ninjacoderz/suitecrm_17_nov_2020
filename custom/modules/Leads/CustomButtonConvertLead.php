@@ -1053,6 +1053,16 @@ function create_solar_lead($quote, $lead) {
     if($quote->nmi_c !== ""){
         $data["NMINumber"]	= $quote->nmi_c;
     }
+    $roof_type_arr =array(  2 => "TIN/COLORBOND",
+                            3 => "CONCRETE TILE",
+                            4 => "KLIPLOC"      ,
+                            0 => "SLATE ROOF"   ,
+                            8 => "ASBESTOS ROOF",
+                            10 => "TERRACOTTA"  ,
+                            1 => "UNSURE");
+    if(urldecode($_GET['roof_type']) == '0' || urldecode($_GET['roof_type']) == '1'){
+        $data['RoofDetails'] = $roof_type_arr[urldecode($_GET['roof_type'])];
+    }
     $data_string = json_encode($data);
 
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -2226,22 +2236,7 @@ function  create_tesla_lead($quote, $lead) {
         $connection_type = "Semi Rural/Remote Meter";
     }
     $fields['connection_type'] = $connection_type;
-    /**Check field "roof_type_c" */
-    $roof_type = $quote->roof_type_c;
-    $roof_type_arr = array (
-                            "Tin"           => 2,
-                            "Tile"          => 3,
-                            "klip_loc"      => 4,
-                            "Concrete"      => 5,    
-                            "Trim_Deck"     => 6,
-                            "Insulated"     => 7,
-                            "Asbestos"      => 8,
-                            "Ground_Mount"  => 9,
-                            "Terracotta"    => 10,
-                            "Other"         => 1,
-                            );
-    $fields['roof_type'] = $roof_type_arr[$roof_type];
-                        
+    
     $data = http_build_query($fields);
     $url =$main_url."index.php?entryPoint=quoteCreateSGQuote";
 

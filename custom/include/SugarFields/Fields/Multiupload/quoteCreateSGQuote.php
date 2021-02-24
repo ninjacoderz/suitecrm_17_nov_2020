@@ -9,6 +9,7 @@
 
     global $current_user;
     $username = $password = "";
+    $GLOBALS['data_return'] = [];
 
     if($current_user->id == '8d159972-b7ea-8cf9-c9d2-56958d05485e'){
         $username = "matthew.wright";
@@ -67,7 +68,8 @@
     function return_message($quote,$specialMess=''){
 
         if($specialMess != ''){
-            echo $specialMess;
+            $GLOBALS['data_return']['SG_error'] = $specialMess;
+            echo json_encode($GLOBALS['data_return']);
             die();
         }
         $message_return = '';
@@ -80,7 +82,8 @@
     
             }else{
                 $message_return = $matches[1];
-                echo str_replace("\\","",$message_return);
+                $GLOBALS['data_return']['SG_error'] = str_replace("\\","",$message_return);
+                echo json_encode($GLOBALS['data_return']);
                 die();
             }
         }else{
@@ -88,10 +91,13 @@
             preg_match($patten_err , $quote, $matches);
             if(isset($matches) && $matches[1] != ''){
                 $message_return = $matches[1];
-                echo str_replace("\\","",$message_return);
+                $GLOBALS['data_return']['SG_error'] = str_replace("\\","",$message_return);
+                echo json_encode($GLOBALS['data_return']);
                 die();
             }
         }
+        
+        echo json_encode($GLOBALS['data_return']);
     }
 
     if($_GET['process'] == 'lead'){
@@ -392,7 +398,7 @@
         $result = curl_exec($curl);
         //$result = json_encode(curl_exec($curl));
 
-        print_r($result);
+        echo $result;
 
         $record = urldecode($_GET['record']);
         $bean = BeanFactory::getBean("AOS_Quotes", $record);
@@ -571,7 +577,8 @@
             'SiteDetailNumber' => $quote_decode->Install->ID,
             'QuoteNumber' => $quote_decode->ID,
         );
-        print_r(json_encode($data_result));
+
+        $GLOBALS['data_return']['quote_info'] = $data_result;
 
         //thienpb code here
         $suite_field = urldecode($_GET['suite_field']);

@@ -2998,21 +2998,6 @@ function  create_tesla_lead($quote, $lead) {
         $connection_type = "Semi Rural/Remote Meter";
     }
     $fields['connection_type'] = $connection_type;
-    /**Check field "roof_type_c" */
-    $roof_type = $quote->roof_type_c;
-    $roof_type_arr = array (
-                            "Tin"           => 2,
-                            "Tile"          => 3,
-                            "klip_loc"      => 4,
-                            "Concrete"      => 5,    
-                            "Trim_Deck"     => 6,
-                            "Insulated"     => 7,
-                            "Asbestos"      => 8,
-                            "Ground_Mount"  => 9,
-                            "Terracotta"    => 10,
-                            "Other"         => 1,
-                            );
-    $fields['roof_type'] = $roof_type_arr[$roof_type];
                         
     $data = http_build_query($fields);
     $url =$main_url."index.php?entryPoint=quoteCreateSGQuote";
