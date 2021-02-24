@@ -288,9 +288,9 @@ if(count($matches) == 0){
 				$ret = $db->query($sql);
 				$row = $db->fetchByAssoc($ret);
 				if(strpos(strtolower($row['name']),'daikin') !== false){
-					$group_name = ' DAIKIN';
+					$group_name = ' AC';
 				}else if(strpos(strtolower($row['name']),'sanden') !== false){
-					$group_name = ' SANDEN';
+					$group_name = ' SAN';
 				}else if(strpos(strtolower($row['name']),'methven') !== false){
 					$group_name = ' METHVEN';
 					$crm_links .= "Auspost Link: https://auspost.com.au/mypost-business/shipping-and-tracking/orders/ready".PHP_EOL;
@@ -479,9 +479,9 @@ if(count($matches) && $matches[1] != ""){
 						$ret = $db->query($sql);
 						$row = $db->fetchByAssoc($ret);
 						if(strpos(strtolower($row['name']),'daikin') !== false){
-							$group_name = ' DAIKIN';
+							$group_name = ' AC';
 						}else if(strpos(strtolower($row['name']),'sanden') !== false){
-							$group_name = ' SANDEN';
+							$group_name = ' SAN';
 						}else if(strpos(strtolower($row['name']),'methven') !== false){
 							$group_name = ' METHVEN';
 							$crm_links .= "Auspost Link: https://auspost.com.au/mypost-business/shipping-and-tracking/orders/ready".PHP_EOL;
@@ -737,9 +737,9 @@ if(count($matches) && $matches[1] != ""){
 						$ret = $db->query($sql);
 						$row = $db->fetchByAssoc($ret);
 						if(strpos(strtolower($row['name']),'daikin') !== false){
-							$group_name = ' DAIKIN';
+							$group_name = ' AC';
 						}else if(strpos(strtolower($row['name']),'sanden') !== false){
-							$group_name = ' SANDEN';
+							$group_name = ' SAN';
 						}else if(strpos(strtolower($row['name']),'methven') !== false){
 							$group_name = ' METHVEN';
 							if(strpos($email_segments[$i], "Content-Transfer-Encoding: quoted-printable") !== false) {
