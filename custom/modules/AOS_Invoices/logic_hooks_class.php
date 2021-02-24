@@ -474,19 +474,11 @@
     class AutoSendCustomerWarrantyMail {
         function after_save_AutoSendCustomerWarrantyMail($bean, $event, $arguments) {
             date_default_timezone_set('Australia/Melbourne');
-            $db = DBManagerFactory::getInstance();
-            $sql = "SELECT id FROM emails WHERE `status` = 'email_schedule' AND `parent_id` = '$bean->id' AND deleted = 0";
-            $result_email = $db->query($sql);
-            if($result_email->num_rows > 0){
-                while ($email_row = $db->fetchByAssoc($result_email))
-                {
-                    // delete email schedule old
-                    $delete_sql = "DELETE FROM `emails` WHERE `emails`.`id` = '".$email_row['id']."' ";
-                    $db->query($delete_sql);
-                }
-            }
             $old_fields = $bean->fetched_row;
             if($old_fields['installation_date_c'] != $bean->installation_date_c && $bean->installation_date_c != ''){
+                $db = DBManagerFactory::getInstance();
+                $sql = "UPDATE `emails` SET `deleted` = 1 WHERE `status` = 'email_schedule' AND `parent_id` = '$bean->id' AND `name` = 'Warranty registration photos and serials' AND deleted = 0";
+                $db->query($sql);
                 $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
 
                 $emailtemplate = new EmailTemplate();
