@@ -830,7 +830,9 @@ $(function () {
                 } else {
                     let value_field = json_val[key];
                     if(value_field !== undefined && value_field != ''){
-                        if(value_field.indexOf('S Edge') >= 0 && value_field != 'S Edge 8 3P'){
+                        const regex = /S Edge [\d]{1,2}$/;
+                        let m;
+                        if(m = regex.exec(value_field) !== null){
                             value_field = value_field+'G';
                             $("#"+key).val(value_field);
                         }else{
@@ -1420,7 +1422,9 @@ $(function () {
                     } else {
                         let value_field = json_val[key];
                         if(value_field !== undefined && value_field != ''){
-                            if(value_field.indexOf('S Edge') >= 0 && value_field != 'S Edge 8 3P'){
+                            const regex = /S Edge [\d]{1,2}$/;
+                            let m;
+                            if(m = regex.exec(value_field) !== null){
                                 value_field = value_field+'G';
                                 $("#"+key).val(value_field);
                             }else{
