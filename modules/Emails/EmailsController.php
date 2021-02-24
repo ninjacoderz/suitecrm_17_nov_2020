@@ -4433,6 +4433,102 @@ class EmailsController extends SugarController
             $this->bean->description = $templateData['body'];
         }
 
+        //Email SA REPS To Yes 
+        if (isset($_REQUEST['email_type']) && $_REQUEST['email_type']== 'email_sa_reps_to_yess') { 
+
+            $macro_nv = array();
+            $focusName = "AOS_Invoices";
+            $focus = BeanFactory::getBean($focusName, $_REQUEST['record_id']);
+
+            if(!$focus->id) return;
+            /**
+             * @var EmailTemplate $emailTemplate
+             */
+
+            $emailTemplate = BeanFactory::getBean(
+                'EmailTemplates',
+                '91964331-fd45-e2d8-3f1b-57bbe4371f9c'
+            );
+
+            $name = $emailTemplate->subject;
+            $description_html = $emailTemplate->body_html;
+            $description = $emailTemplate->body;
+            $templateData = $emailTemplate->parse_email_template(
+                array(
+                    'subject' => $name,
+                    'body_html' => $description_html,
+                    'body' => $description,
+                ),
+                $focusName,
+                $focus,
+                $macro_nv
+            );
+            
+            $attachmentBeans = $emailTemplate->getAttachments();
+
+            if($attachmentBeans) {
+                $this->bean->status = "draft";
+                $this->bean->save();
+                foreach($attachmentBeans as $attachmentBean) {
+                
+                    $noteTemplate = clone $attachmentBean;
+                    $noteTemplate->id = create_guid();
+                    $noteTemplate->new_with_id = true; // duplicating the note with files
+                    $noteTemplate->parent_id = $this->bean->id;
+                    $noteTemplate->parent_type = 'Emails';
+
+
+                    $noteFile = new UploadFile();
+                    $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                    $noteTemplate->save();
+                    $this->bean->attachNote($noteTemplate);
+                }
+            }
+
+            /**Custom Attachments From Folder Files and Photo*/
+            $file_attachments = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->installation_pictures_c ."/");
+            $name_file_include = ['SA_REP_Information_Statement.pdf','REPS_WH1_Hot_Water_Replacement.pdf'];
+            if (count($file_attachments)>0 ) {
+                $this->bean->status = "draft";
+                $this->bean->save();
+                foreach ($file_attachments as $att) {
+                    $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->installation_pictures_c ."/" . $att ;
+                    if(!is_file($source)) continue;
+                    if (in_array($att,$name_file_include)) {
+                        $noteTemplate = new Note();
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; // duplicating the note with files
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteTemplate->date_entered = '';
+                        $noteTemplate->filename = $att;
+                        $noteTemplate->name = $att;
+                        if(strpos(strtolower($att), "png") !== false) {
+                            $noteTemplate->file_mime_type = 'image/png';
+                        } elseif (strpos(strtolower($att), "pdf") !== false) {
+                            $noteTemplate->file_mime_type = 'application/pdf';
+                        } else {
+                            $noteTemplate->file_mime_type = 'image/jpg';
+                        }
+                            
+                        $noteTemplate->save();
+
+                        $destination = realpath(dirname(__FILE__) . '/../../').'/upload/'.$noteTemplate->id;
+                        if (!symlink($source, $destination)) {
+                            $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                        }
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+            }
+
+            $this->bean->name = $templateData['subject'];
+            $this->bean->description_html = $templateData['body_html'];
+            $this->bean->description = $templateData['body'];
+            $this->bean->to_addrs_names = ($focus->email1) ? $focus->email1 : '';      
+        }
+
         //dung code - button US7 TIPS
         if (isset($_REQUEST['email_type']) && $_REQUEST['email_type']== 'us7_tips') { 
             $contact = new Contact();
