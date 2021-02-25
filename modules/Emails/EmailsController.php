@@ -835,7 +835,9 @@ class EmailsController extends SugarController
                     if (count($invoice_file_attachments)>0 ) foreach ($invoice_file_attachments as $att){
                         $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c ."/" . $att ;
                         if(!is_file($source)) continue;
-                        if (strpos(strtolower($att),strtolower($name_file_include))) {
+                        if (strpos(strtolower($att),strtolower($name_file_include)) !== false 
+                            || strpos(strtolower($att),strtolower('_Existing_Hws')) !== false /**https://trello.com/c/3Fe84CCL/3026-invoice-email-po-and-send-out-the-calendar-link-to-the-installers-please-ensure-automatically-show-the-old-hws-photos-and-switch?menu=filter&filter=member:paulszuster1,mode:and */
+                            || strpos(strtolower($att),strtolower('Switchboard')) !== false) {
                             $noteTemplate = new Note();
                             $noteTemplate->id = create_guid();
                             $noteTemplate->new_with_id = true; // duplicating the note with files
