@@ -1551,7 +1551,7 @@ $(function () {
                 $("#billing_address_city").val(address3[0].trim());
                 $("#billing_address_state").val(address3[1].trim());
                 $("#billing_address_postalcode").val(address3[2].trim());
-                $("#solargain_options_c").trigger('change');
+                // $("#solargain_options_c").trigger('change');
                 return false;
             }
         });
