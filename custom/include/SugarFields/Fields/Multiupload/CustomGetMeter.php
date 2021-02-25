@@ -8,12 +8,12 @@
     ini_set('memory_limit', '-1');
 
     $nmi_number =  urlencode($_GET['nmi_number']);
-    $lead_id = urldecode($_GET['lead_id']);
+    $quote_id = urldecode($_GET['record']);
     $meter_phase_c = urlencode($_GET['meter_phase_c']);
-    $lead = new Lead();
-    $lead = $lead->retrieve($lead_id);
+    $quote = new AOS_Quotes();
+    $quote = $quote->retrieve($quote_id);
     
-    function getMeterAndSaveFile($nmi_number,$lead,$meter_phase_c){
+    function getMeterAndSaveFile($nmi_number,$quote,$meter_phase_c){
         //solarpreapprovalrequestpage : Step1 (curl get data string)
         $url = "https://econnect.portal.powercor.com.au/customer/solarpreapprovalrequestpage";
         
@@ -253,7 +253,7 @@
                 $ViewStateMAC = $html->find("input[id='com.salesforce.visualforce.ViewStateMAC']",0)->value;
 
                 //set data string for submit form
-                $customer_name = $lead->first_name." ".$lead->last_name;
+                $customer_name = $quote->account_firstname_c." ".$quote->account_lastname_c;
                 $data_string["com.salesforce.visualforce.ViewState"] = $ViewState;
                 $data_string["com.salesforce.visualforce.ViewStateVersion"] = $ViewStateVersion;
                 $data_string["com.salesforce.visualforce.ViewStateMAC"] =  $ViewStateMAC;
@@ -505,8 +505,8 @@
 
                     }
 
-                    if($lead->id !=''){
-                        $generate_ID = $lead->installation_pictures_c;
+                    if($quote->id !=''){
+                        $generate_ID = $quote->pre_install_photos_c;
                         $folder = dirname(__FILE__)."/server/php/files/".$generate_ID;
 
                         if(!file_exists ( $folder )) {
@@ -537,10 +537,10 @@
     }
     if(isset($nmi_number) && $nmi_number !=''){
         if($meter_phase_c == 1){
-            getMeterAndSaveFile($nmi_number,$lead,1);
+            getMeterAndSaveFile($nmi_number,$quote,1);
         }elseif($meter_phase_c == 3){
-            getMeterAndSaveFile($nmi_number,$lead,1);
-            getMeterAndSaveFile($nmi_number,$lead,3);
+            getMeterAndSaveFile($nmi_number,$quote,1);
+            getMeterAndSaveFile($nmi_number,$quote,3);
         }
     }else{
         echo '';

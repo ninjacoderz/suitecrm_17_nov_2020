@@ -881,7 +881,7 @@ function genExtraDaikinItemFunc(elem){
      function ajax_get_number_meter(){
          nmi_number_meter =  $("#nmi_c").val();
          distributor_meter =  $("#distributor_c").val();
-         var record_id = $("input[name='leads_aos_quotes_1leads_ida']").val();
+         var record_id = $("input[name='record']").val();
          var customer_name = $("#first_name").val() +' ' + $('#last_name').val();
          if($("#phases").val() == ''){
             alert("Please select Meter Pharse");
@@ -895,7 +895,7 @@ function genExtraDaikinItemFunc(elem){
          $('#getMeter span.glyphicon-refresh').removeClass('hidden');
          if(distributor_meter == 4 ||  distributor_meter == 6){
              $.ajax({
-                 url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&lead_id="+record_id+"&meter_phase_c="+meter_phase_c,
+                 url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&record="+record_id+"&meter_phase_c="+meter_phase_c,
                  type: 'GET',
                  success: function(data)
                  {
