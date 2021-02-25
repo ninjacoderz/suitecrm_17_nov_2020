@@ -47,7 +47,7 @@
         }
         $jform_id1 = $matches[1];
         //get form id 2
-        $pattern = '/setParameters=function\(tranName,tranInsCapacity,tranLimit,tranParentName,tranParentInsCapacity,tranParentLimit\)\{A4J.AJAX.Submit\(\'j_id0:solarPreApprovalForm\',null,\{\'similarityGroupingId\':\'(.*?)\',\'parameters\'/';
+        $pattern = '/setParameters=function\(.*\)\{A4J.AJAX.Submit\(\'j_id0:solarPreApprovalForm\',null,\{\'similarityGroupingId\':\'(.*?)\',\'parameters\'/';
         $returnValue = preg_match($pattern, $result, $matches);
         if ( $returnValue == false || $matches == null || count($matches) < 2){
             echo ''; die();

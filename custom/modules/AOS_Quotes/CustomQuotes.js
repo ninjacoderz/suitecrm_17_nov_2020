@@ -879,8 +879,15 @@ function genExtraDaikinItemFunc(elem){
      function ajax_get_number_meter(){
          nmi_number_meter =  $("#nmi_c").val();
          distributor_meter =  $("#distributor_c").val();
-         var record_id = $("input[name='record']").val();
+         var record_id = $("input[name='leads_aos_quotes_1leads_ida']").val();
          var customer_name = $("#first_name").val() +' ' + $('#last_name').val();
+         if($("#phases").val() == ''){
+            alert("Please select Meter Pharse");
+            $("html, body").animate({
+                scrollTop: $("#phases").offset().top - 300
+            }, 1000);
+             return;
+         }
          var meter_phase_c = (($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))) ;
  
          $('#getMeter span.glyphicon-refresh').removeClass('hidden');
@@ -5231,7 +5238,11 @@ function genExtraDaikinItemFunc(elem){
 //          });
 //      });
 //      //end
- 
+     //thienpb - code button get dnsp approval_number_c
+     $("body").find("#dnsp_approval_number_c").after("<button type='button' class='button' id='get_dnsp_approval' name='get_dnsp_approval'>GET DNSP Approval</button>")
+     $("body").on("click","#get_dnsp_approval", function(e){
+         
+     })
  });
  $( window ).load(function() {
      // auto import image map
