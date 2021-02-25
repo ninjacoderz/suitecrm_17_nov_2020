@@ -384,6 +384,11 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $row['item_description'] = $product['product_item_description'];
             $row['number'] = $number_items;
             $row['product_qty'] = format_number(1);
+            //if PO electrican and electrican = mike , $product['product_product_cost_price'] =215
+            if($product['product_part_number'] == 'Sanden_Elec_Install_Std' && $invoice->contact_id_c == '3cde081c-117c-0e61-1081-5987d249b952'){
+                $product['product_product_cost_price'] = '215.00';
+            }
+
             $row['product_cost_price'] = format_number($product['product_product_cost_price']);
             $row['product_list_price'] = format_number($product['product_product_cost_price']);
             $row['discount'] = "Percentage";
