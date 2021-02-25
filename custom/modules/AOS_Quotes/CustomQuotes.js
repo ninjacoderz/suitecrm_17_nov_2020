@@ -723,6 +723,8 @@ function genExtraDaikinItemFunc(elem){
      if(module_sugar_grp1 == 'AOS_Quotes'){
           //hidden -- not use all field
          $('#opportunity ,#approval_status, #approval_issue').closest('.edit-view-row-item').hide();
+        //VUT - hidden subpanel SOLAR PV PRICING >> https://trello.com/c/W3QKyBI7/3023-suite-solar-quote-look-for-hiding-the-inputs-coding?menu=filter&filter=member:paulszuster1,mode:and
+        $('#solar_pv_pricing_input_c').closest('.panel.panel-default').hide();
      }
      $('input[id="SAVE"]').prop('onclick',null).off('click');
      $('input[id="SAVE"]').click(function(event){

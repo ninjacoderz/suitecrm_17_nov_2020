@@ -20,10 +20,15 @@
             $("#quote_note_inputs_c").val("");
             if($(this).val() == "quote_type_solar"){
                 renderQuoteInputHTML('quote_type_solar');
+                init_table_own_solar();
+                getDataProductSolar();
+                getOwnSolarPricing($("#solar_pv_pricing_input_c").val(), 'solar_input');
             }else if($(this).val() == "quote_type_sanden"){
                 renderQuoteInputHTML('quote_type_sanden');
+                $('body').find("#own_solar_pv_pricing_table").remove();
             } else {
                 $('#group_custom_quote_inputs_checklist .edit-view-row').empty();
+                $('body').find("#own_solar_pv_pricing_table").remove();
                 SUGAR.ajaxUI.hideLoadingPanel();
             }
         });

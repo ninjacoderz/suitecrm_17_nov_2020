@@ -167,7 +167,8 @@ function getInputTypes(solar_input) {
  * VUT - init table own solar pv pricing  
  */
 function init_table_own_solar() {
-    let own_solar_pv_pricing_table   = $("<div id='own_solar_pv_pricing_table'></div>");
+    // let own_solar_pv_pricing_table   = $("<div id='own_solar_pv_pricing_table'></div>"); 
+    let own_solar_pv_pricing_table   = $('<div id="own_solar_pv_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row"></div>'); 
     
     let data = [
         ["", 'Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'],
@@ -180,15 +181,16 @@ function init_table_own_solar() {
         ["Base Price:", makeInputBox("own_basePrice_1 own_solar_pv_pricing", "own_basePrice_1", true), makeInputBox("own_basePrice_2 own_solar_pv_pricing", "own_basePrice_2", true), makeInputBox("own_basePrice_3 own_solar_pv_pricing", "own_basePrice_3", true), makeInputBox("own_basePrice_4 own_solar_pv_pricing", "own_basePrice_4", true), makeInputBox("own_basePrice_5 own_solar_pv_pricing", "own_basePrice_5", true), makeInputBox("own_basePrice_6 own_solar_pv_pricing", "own_basePrice_6", true)],
     ];
     //select Panel OWN SOLAR
-    let selector_panel_own_solar = '';
-    $('.panel-content .panel-default').each(function(){
-        let title_panel_default = $(this).find('.panel-heading a div').text().toLowerCase().trim();
-        if(title_panel_default.indexOf('own solar') >= 0 ){
-            selector_panel_own_solar = '#' + $(this).find('.panel-body').attr('id');
-        }
-    });
+    // let selector_panel_own_solar = '';
+    // $('.panel-content .panel-default').each(function(){
+    //     let title_panel_default = $(this).find('.panel-heading a div').text().toLowerCase().trim();
+    //     if(title_panel_default.indexOf('own solar') >= 0 ){
+    //         selector_panel_own_solar = '#' + $(this).find('.panel-body').attr('id');
+    //     } 
 
-    $(selector_panel_own_solar).find(".tab-content").html(own_solar_pv_pricing_table);
+    // $(selector_panel_own_solar).find(".tab-content").html(own_solar_pv_pricing_table);
+    $('body').find("#group_custom_quote_inputs_checklist").after(own_solar_pv_pricing_table);
+
     makeTable(own_solar_pv_pricing_table, data, "Own-Solar-PV-Pricing", "Own-Solar-PV-Pricing");
     //css Table
     $(".Own-Solar-PV-Pricing td").css({"padding":"0px 5px"});
