@@ -63,7 +63,7 @@
     $description .=  $defaultEmailSignature['signature_html'];
     $description_html .= "<br><br><br>";
     $description_html .=  $defaultEmailSignature['signature_html'];
-    $schedule_time = strtotime(date('d-m-Y H:i:s')); //+ 24 minutes
+    $schedule_time = strtotime(date('d-m-Y H:i:s')) + 3; //+ 24 minutes
     //create email 
     $email = new Email();
     $email->id = create_guid();
@@ -117,7 +117,7 @@
     //     $email->attachNote($noteTemplate);
     // }
     $email->save();
-die;
+die();
 $db = DBManagerFactory::getInstance();
 $sql = "SELECT DISTINCT calls_aos_quotes_1calls_ida as id FROM `calls_aos_quotes_1_c` WHERE `date_modified` >= '2020-06-25 04:50:53' AND `deleted` = 0";
 $ret = $db->query($sql);
