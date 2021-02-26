@@ -2,8 +2,6 @@ $(function () {
     'use strict';
     //INIT
     $(document).find('#own_solar_pv_pricing_c').attr('readonly', 'readonly');
-    init_table_own_solar();
-    getDataProductSolar();
 
     // //test
     // $('#detailpanel_11').append('<button id="testVUT">CLICK</button>');
@@ -19,6 +17,8 @@ $(function () {
     var own_solar = $("#own_solar_pv_pricing_c").val();
 
     if (quote_type == 'quote_type_solar') {
+        init_table_own_solar();
+        getDataProductSolar();
         if (own_solar != '') {
             getOwnSolarPricing(own_solar);
         } else if (solar_input != '') {
