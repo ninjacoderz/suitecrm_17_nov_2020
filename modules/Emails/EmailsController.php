@@ -1265,7 +1265,7 @@ class EmailsController extends SugarController
                 //end - code render sms_template
             }
             if($_REQUEST['email_type'] == 'client_warranty_registration'){ 
-                $emailTemplateID = 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
+                $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
 
 
                 $emailTemplate = BeanFactory::getBean(
