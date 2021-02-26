@@ -203,6 +203,8 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
     date_default_timezone_set('UTC');
     $dateQuote = new DateTime();
     $quote->quote_date_c = date('Y-m-d H:i:s', time());
+    $dateAction = new DateTime('+7 day');
+    $quote->next_action_date_c = $dateAction->format('Y-m-d');
     $quote->quote_type_c = 'quote_type_sanden';
     $quote->install_address_postalcode_c = $_REQUEST['postcode_customer'];
     $quote->billing_address_postalcode = $_REQUEST['postcode_customer'];
