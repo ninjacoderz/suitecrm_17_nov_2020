@@ -1,11 +1,11 @@
 <?php
     $bean = new AOS_Invoices();
-    $bean->retrieve('ab3dc7c0-8d9a-6f93-8593-60330be5f3e9');
+    $bean->retrieve('611e5cc6-8c67-ea50-eac8-603330a8a178');
 
     $db = DBManagerFactory::getInstance();
     $sql = "UPDATE `emails` SET `deleted` = 1 WHERE `status` = 'email_schedule' AND `parent_id` = '$bean->id' AND `name` = 'Warranty registration photos and serials' AND deleted = 0";
     $db->query($sql);
-    $emailTemplateID = 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
+    $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
 
     $emailtemplate = new EmailTemplate();
     $emailtemplate = $emailtemplate->retrieve($emailTemplateID);
