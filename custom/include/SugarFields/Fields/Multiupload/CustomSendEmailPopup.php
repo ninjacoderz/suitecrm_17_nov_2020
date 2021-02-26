@@ -1158,12 +1158,12 @@ if($mail_format != 'custommer') {
             if (!is_dir($file)) {
                 if($mail_format == "electrical"){
                     if (
-                        ((stripos(strtolower($file), $invoice_number.'_old') !== FALSE) && (stripos(strtolower($file), $invoice_number.'_hws') !== FALSE)) 
+                        (stripos(strtolower($file), strtolower('_Existing_Hws')) !== FALSE) 
                     // (stripos(strtolower($file), 'docket') !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'_photo') !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'_new') !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'diagram') !== FALSE)
-                    || (stripos(strtolower($file), 'switchboard') !== FALSE)
+                    || (stripos(strtolower($file), strtolower('Switchboard')) !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'PCOC') !== FALSE)
                     || (stripos(strtolower($file), 'proposed') !== FALSE && stripos(strtolower($file), 'install') !== FALSE && stripos(strtolower($file), 'location') !== FALSE)
                     ){
@@ -1188,12 +1188,12 @@ if($mail_format != 'custommer') {
                 }
                 else{
                     if (
-                        ((stripos(strtolower($file), $invoice_number.'_old') !== FALSE) && (stripos(strtolower($file), $invoice_number.'_hws') !== FALSE)) 
+                        (stripos(strtolower($file), strtolower('_Existing_Hws')) !== FALSE) 
                     // (stripos(strtolower($file), 'docket') !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'_photo') !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'_new') !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'diagram') !== FALSE)
-                    || (stripos(strtolower($file), 'switchboard') !== FALSE)
+                    || (stripos(strtolower($file), strtolower('Switchboard')) !== FALSE)
                     // || (stripos(strtolower($file), $invoice_number.'PCOC') !== FALSE)
                     || (stripos(strtolower($file), 'proposed') !== FALSE && stripos(strtolower($file), 'install') !== FALSE && stripos(strtolower($file), 'location') !== FALSE)
                     ){

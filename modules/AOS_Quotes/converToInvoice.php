@@ -408,6 +408,8 @@
         }
     }
     //VUT - E - Auto create PO
+    //Automatically Create Invoice Xero
+    Create_Invoice_Xero($invoice);
     header('Location: index.php?module=AOS_Invoices&action=EditView&record='.$invoice->id);
 
     function dirToArray($dir) { 
@@ -783,4 +785,31 @@
         curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
         curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
         $result = curl_exec($curl); 
+    }
+
+    // Function CREATE Invoice Xero
+    function Create_Invoice_Xero($invoice){
+        $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+        $fields = array();
+        $fields['user_name'] = 'admin';
+        $fields['username_password'] = 'pureandtrue2020*';
+        $fields['module'] = 'Users';
+        $fields['action'] = 'Authenticate';
+        $url = 'https://suitecrm.pure-electric.com.au/index.php';
+        $url .= '?entryPoint=CRUD_Invoice_Xero&from_action=button';
+        $url .= '&record=' .$invoice->id .'&method=create';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+        $result = curl_exec($curl); 
+        return $result;
     }

@@ -490,21 +490,7 @@
     //             $name = $emailTemplate->subject;
     //             $description_html = $emailTemplate->body_html;
     //             $description = $emailTemplate->body;
-                
-    //             $template_data = $emailtemplate->parse_email_template(
-    //                 array(
-    //                     "subject" => $emailtemplate->subject,
-    //                     "body_html" => htmlspecialchars($emailtemplate->body_html),
-    //                     "body" => $emailtemplate->body_html
-    //                     ),
-    //                     'AOS_Invoices',
-    //                     $lead,
-    //                     $macro_nv
-    //                 );
-                
-    //             $name = $template_data['subject'];
-    //             $description = $template_data['body'];
-    //             $description_html = $template_data['body_html'];
+            
     //             //parse value
 
     //             $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
@@ -514,7 +500,16 @@
 
     //             $description_html = str_replace("\$contact_first_name",$contact->first_name , $description_html);
     //             $description_html = str_replace("\$aos_invoices_link_upload",$string_link_upload_files, $description_html);
-
+                    // $template_data = $emailtemplate->parse_email_template(
+                    //     array(
+                    //         "subject" => $name,
+                    //         "body_html" => $description_html,
+                    //         "body" => $description
+                    //         ),
+                    //         'AOS_Invoices',
+                    //         $bean,
+                    //         $macro_nv
+                    //     );
     //             $mail_From = "info@pure-electric.com.au";
     //             $mail_FromName = "Pure Electric";
     //             $emailSignatureId = '3ad8f82a-d3e7-5897-7c98-5ba1c4ac785e'; 
