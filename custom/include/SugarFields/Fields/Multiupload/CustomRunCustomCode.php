@@ -63,6 +63,7 @@
     $description .=  $defaultEmailSignature['signature_html'];
     $description_html .= "<br><br><br>";
     $description_html .=  $defaultEmailSignature['signature_html'];
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
     $schedule_time = strtotime(date('d-m-Y H:i:s')) + 3; //+ 24 minutes
     //create email 
     $email = new Email();
