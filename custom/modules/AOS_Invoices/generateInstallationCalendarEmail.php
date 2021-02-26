@@ -242,7 +242,7 @@
                 'pe_smstemplate',
                 'ca646f5f-399a-d408-7536-601102429ed6' 
             );
-
+            $body_sms = '';
             $body_sms =  $smsTemplate->body_c;
             $body_sms = str_replace("\$first_name", $contact_installer->first_name, $body_sms);
             $body_sms = str_replace("\$aos_invoices_billing_contact",  $contact_customer->name, $body_sms);
