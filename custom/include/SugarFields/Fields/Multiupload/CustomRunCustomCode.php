@@ -34,12 +34,14 @@
     //parse value
 
     $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
-    $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+    $string_link_upload_files = '<a target="_blank" href=3D"'.$link_upload_files.'">Link Upload Here have 3D</a>';
+    $link_upload_files_no3d = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
+    $string_link_upload_files_no3d = '<a target="_blank" href="'.$link_upload_files_no3d.'">Link Upload Here no 3D</a>';
     $description = str_replace("\$contact_first_name",$contact->first_name , $description);
-    $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
+    $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files .' | '.$string_link_upload_files_no3d , $description);
 
     $description_html = str_replace("\$contact_first_name",$contact->first_name , $description_html);
-    $description_html = str_replace("\$aos_invoices_link_upload",$string_link_upload_files, $description_html);
+    $description_html = str_replace("\$aos_invoices_link_upload",$string_link_upload_files . ' | '.$string_link_upload_files_no3d, $description_html);
 
     $mail_From = "info@pure-electric.com.au";
     $mail_FromName = "Pure Electric";
