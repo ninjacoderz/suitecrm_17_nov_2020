@@ -346,6 +346,19 @@ $dictionary['AOS_Quotes'] = array(
                         'include' => 'modules/AOS_Products_Quotes/Line_Items.php'
                     ),
             ),
+        'grid_export_limit' =>
+            array(
+                'name'  => 'grid_export_limit',
+                'vname' => 'Approved Grid Export Capacity (kW)',
+                'type'  => 'int',
+                'required' => false,
+                'function' =>  array(
+                    'name' => 'generateNumberField',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/customField.php'
+                ),
+                'default' => '0',
+            ),
         'total_amt' =>
             array(
                 'required' => false,
@@ -987,7 +1000,6 @@ $dictionary['AOS_Quotes'] = array(
             'default' => '0',
         ),
         //VUT-E-Create fields for Sanden profit
-
     ),
     'relationships' => array(
 

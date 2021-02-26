@@ -1433,3 +1433,9 @@ $entry_point_registry['checkFileDesign'] = array(
     'file' => 'custom/modules/AOS_Invoices/checkFileDesign.php',
     'auth' => false
 );
+
+// NhanTV -- custom api get Lbl Quote Note Input
+$entry_point_registry['APIGetLblQuoteNoteInput'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetLblQuoteNoteInput.php',
+    'auth' => false
+);

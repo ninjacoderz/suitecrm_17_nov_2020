@@ -723,6 +723,8 @@ function genExtraDaikinItemFunc(elem){
      if(module_sugar_grp1 == 'AOS_Quotes'){
           //hidden -- not use all field
          $('#opportunity ,#approval_status, #approval_issue').closest('.edit-view-row-item').hide();
+        //VUT - hidden subpanel SOLAR PV PRICING >> https://trello.com/c/W3QKyBI7/3023-suite-solar-quote-look-for-hiding-the-inputs-coding?menu=filter&filter=member:paulszuster1,mode:and
+        $('#solar_pv_pricing_input_c').closest('.panel.panel-default').hide();
      }
      $('input[id="SAVE"]').prop('onclick',null).off('click');
      $('input[id="SAVE"]').click(function(event){
@@ -848,9 +850,9 @@ function genExtraDaikinItemFunc(elem){
      $('#billing_address_state').on('change',function(){
          $('#phases').trigger('change');
      })
-     $('#solargain_options_c').on('click',function(){
-         $('#phases').trigger('change');
-     })
+    //  $('#solargain_options_c').on('click',function(){
+    //      $('#phases').trigger('change');
+    //  })
      $('#phases').on('change', function (){
          if( $('#phases').find(":selected").val() == 'Three Phases' ){
              for( var i = 1 ; i <= 6 ; i++){
@@ -881,12 +883,19 @@ function genExtraDaikinItemFunc(elem){
          distributor_meter =  $("#distributor_c").val();
          var record_id = $("input[name='record']").val();
          var customer_name = $("#first_name").val() +' ' + $('#last_name').val();
+         if($("#phases").val() == ''){
+            alert("Please select Meter Pharse");
+            $("html, body").animate({
+                scrollTop: $("#phases").offset().top - 300
+            }, 1000);
+             return;
+         }
          var meter_phase_c = (($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))) ;
  
          $('#getMeter span.glyphicon-refresh').removeClass('hidden');
          if(distributor_meter == 4 ||  distributor_meter == 6){
              $.ajax({
-                 url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&lead_id="+record_id+"&meter_phase_c="+meter_phase_c,
+                 url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&record="+record_id+"&meter_phase_c="+meter_phase_c,
                  type: 'GET',
                  success: function(data)
                  {
@@ -1385,7 +1394,7 @@ function genExtraDaikinItemFunc(elem){
      }else {
          div_html = 'Not data for this state ';
      }
-     $('#solargain_options_c').after("<div id='state_option_price' style='position: absolute;left: 150px;top:-5px;font-size:13px'>"+div_html+"</div>");
+    //  $('#solargain_options_c').after("<div id='state_option_price' style='position: absolute;left: 150px;top:-5px;font-size:13px'>"+div_html+"</div>");
      // Thienpb code for get state option price 
      $(document).find('#state_option_price').after('</br><br> <button type="button" class="button primary" id="getSGPrice"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get SG Price </button>');
  
@@ -4111,13 +4120,14 @@ function genExtraDaikinItemFunc(elem){
         
     });
     $("#btn_pe_solar_form").click(function(e) {
-        if(lead_id_solar != '') {
+        let quoteId = $('input[name="record"]').val();
+        if(quoteId != '') {
             window.open(
-                'https://pure-electric.com.au/pesolarform?lead-id='+lead_id_solar,
+                'https://pure-electric.com.au/pesolarform?quote-id='+quoteId,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {
-            alert('No leads in quote, please add lead information !')
+            alert('No quote exist, please check again !')
             // window.open(
             //     'https://pure-electric.com.au/pedaikinform',
             //     '_blank' // <- This is what makes it open in a new window.
@@ -4259,20 +4269,20 @@ function genExtraDaikinItemFunc(elem){
      if(($("#time_sent_to_client_c").val() != "") && ($("#do_not_email_c").is(':checked') == false))
          dialog_message += '<li>"We also sent design to client before. Do you want to send design to client again?</li>';
      //dung code - check suggest_price field
-     var select_option = $("#solargain_options_c").val();
-     var html_option = '<li>Pricing Options ';
-     var check_empty_suggest_price = false;
-     select_option.forEach(function(element){
-         element++;
-         if($("#suggest_price_"+(element+1)).val() == ''){
-             html_option = html_option + element +',';
-             check_empty_suggest_price = true;
-         } 
-     });
-     html_option +=' is NOT FILLED IN! Are you sure you want to continue?</li>';
-     if(check_empty_suggest_price){
-         dialog_message += html_option; 
-     }
+    //  var select_option = $("#solargain_options_c").val();
+    //  var html_option = '<li>Pricing Options ';
+    //  var check_empty_suggest_price = false;
+    //  select_option.forEach(function(element){
+    //      element++;
+    //      if($("#suggest_price_"+(element+1)).val() == ''){
+    //          html_option = html_option + element +',';
+    //          check_empty_suggest_price = true;
+    //      } 
+    //  });
+    //  html_option +=' is NOT FILLED IN! Are you sure you want to continue?</li>';
+    //  if(check_empty_suggest_price){
+    //      dialog_message += html_option; 
+    //  }
      dialog_message += "</ul>";
      if(dialog_message !== "<ul style='list-style-type: circle; padding: 0 40px;'></ul>") {
          var dialog = $(dialog_message).dialog({
@@ -5231,7 +5241,11 @@ function genExtraDaikinItemFunc(elem){
 //          });
 //      });
 //      //end
- 
+     //thienpb - code button get dnsp approval_number_c
+     $("body").find("#dnsp_approval_number_c").after("<button type='button' class='button' id='get_dnsp_approval' name='get_dnsp_approval'>GET DNSP Approval</button>")
+     $("body").on("click","#get_dnsp_approval", function(e){
+         
+     })
  });
  $( window ).load(function() {
      // auto import image map

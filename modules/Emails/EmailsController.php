@@ -835,7 +835,9 @@ class EmailsController extends SugarController
                     if (count($invoice_file_attachments)>0 ) foreach ($invoice_file_attachments as $att){
                         $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c ."/" . $att ;
                         if(!is_file($source)) continue;
-                        if (strpos(strtolower($att),strtolower($name_file_include))) {
+                        if (strpos(strtolower($att),strtolower($name_file_include)) !== false 
+                            || strpos(strtolower($att),strtolower('_Existing_Hws')) !== false /**https://trello.com/c/3Fe84CCL/3026-invoice-email-po-and-send-out-the-calendar-link-to-the-installers-please-ensure-automatically-show-the-old-hws-photos-and-switch?menu=filter&filter=member:paulszuster1,mode:and */
+                            || strpos(strtolower($att),strtolower('Switchboard')) !== false) {
                             $noteTemplate = new Note();
                             $noteTemplate->id = create_guid();
                             $noteTemplate->new_with_id = true; // duplicating the note with files
@@ -1198,7 +1200,7 @@ class EmailsController extends SugarController
                 $description = $emailTemplate->body;
                 
                 $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/for-customer?invoice_id=' . $invoice->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $description = str_replace("\$aos_invoices_customer",$contact->first_name , $description);
                 $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
 
@@ -1260,6 +1262,107 @@ class EmailsController extends SugarController
                 $phone_number = preg_replace("/^61/", "+61", $phone_number);
                 $this->bean->number_client =  $phone_number; 
                 $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                //end - code render sms_template
+            }
+            if($_REQUEST['email_type'] == 'client_warranty_registration'){ 
+                $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
+
+
+                $emailTemplate = BeanFactory::getBean(
+                        'EmailTemplates',
+                        $emailTemplateID
+                    );
+
+                $invoice = new AOS_Invoices();
+                $invoice->retrieve($_REQUEST['record_id']);
+                $contact =  new Contact();
+                $contact->retrieve($invoice->billing_contact_id);
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+                
+                $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
+                $description = str_replace("\$contact_first_name",$contact->first_name , $description);
+                $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
+
+                $description_html = str_replace("\$contact_first_name",$contact->first_name , $description_html);
+                $description_html = str_replace("\$aos_invoices_link_upload",$string_link_upload_files, $description_html);
+                    //signature
+                $emailSignatureId = '3ad8f82a-d3e7-5897-7c98-5ba1c4ac785e'; 
+                $user = new User();
+                $user->retrieve('8d159972-b7ea-8cf9-c9d2-56958d05485e');
+                $defaultEmailSignature = $user->getSignature($emailSignatureId);
+            
+                if (empty($defaultEmailSignature)) {
+                    $defaultEmailSignature = array(
+                        'html' => '<br>',
+                        'plain' => '\r\n',
+                    );
+                    $defaultEmailSignature['no_default_available'] = true;
+                } else {
+                    $defaultEmailSignature['no_default_available'] = false;
+                }
+                $defaultEmailSignature['signature_html'] =  str_replace('Accounts', '', $defaultEmailSignature['signature_html']);
+                // $description .= "<br><br><br>";
+                $description .=  $defaultEmailSignature['signature_html'];
+                // $description_html .= "<br><br><br>";
+                $description_html .=  $defaultEmailSignature['signature_html'];
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+                //get email from contact
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+                //start - code render sms_template  
+                // global $current_user;
+                // $smsTemplateID = '1d415167-da0b-628f-9e36-601a68d8a93c';
+                // $smsTemplate = BeanFactory::getBean(
+                //     'pe_smstemplate',
+                //     $smsTemplateID 
+                // );
+                // $body =  $smsTemplate->body_c;
+                // $body = str_replace("\$aos_invoices_customer", $contact->first_name, $body);
+                // $body = str_replace("\$aos_invoices_link_upload", $string_link_upload_files, $body);
+
+                // $smsTemplate->body_c = $body;
+                // $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                // $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                // $this->bean->number_receive_sms = "matthew_paul_client";
+                // $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+                // $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                // $this->bean->number_client =  $phone_number; 
+                // $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
                 //end - code render sms_template
             }
             // tuan Seek Better SG Solar PV Install Date
@@ -1834,7 +1937,7 @@ class EmailsController extends SugarController
                 $this->bean->description = $templateData['body_html'];
 
                 $link_upload_files = 'https://pure-electric.com.au/pedaikinform-new/confirm-to-lead?lead-id=' . $focus->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
                 //start - code render sms_template  
                 global $current_user;
@@ -1965,7 +2068,7 @@ class EmailsController extends SugarController
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
                 $link_upload_files = 'https://pure-electric.com.au/pe-sanden-quote-form/confirm-to-lead?lead-id=' . $focus->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
             
                 //start - code render sms_template  
@@ -2042,7 +2145,7 @@ class EmailsController extends SugarController
                 $this->bean->description = $templateData['body_html'];
                 
                 $link_upload_files = 'https://pure-electric.com.au/pe-sanden-quote-form/confirm-to-lead?lead-id=' . $focus->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
                 //start - code render sms_template  
                 global $current_user;
@@ -4045,7 +4148,7 @@ class EmailsController extends SugarController
             $this->bean->description = $templateData['body_html'];
 
             $link_upload_files = 'https://pure-electric.com.au/pedaikinform-new/confirm-to-lead?lead-id=' . $focus->id;
-            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
             $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
             //start - code render sms_template  
             global $current_user;
@@ -4120,7 +4223,7 @@ class EmailsController extends SugarController
             $this->bean->description = $templateData['body_html'];
 
             $link_upload_files = 'https://pure-electric.com.au/pesolarform/confirm-to-lead?lead-id=' . $focus->id;
-            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
             $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
             //start - code render sms_template  
             global $current_user;

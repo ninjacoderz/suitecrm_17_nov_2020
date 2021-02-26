@@ -110,6 +110,7 @@
             $xeroInvoice->setReference($invoice_info['invoice_name'])
                         ->setDate($invoice_info['date'])
                         ->setDueDate($invoice_info['due_date'] )
+                        ->setStatus('SUBMITTED')
                         ->setType(\XeroPHP\Models\Accounting\Invoice::INVOICE_TYPE_ACCREC)
                         ->setLineAmountType('Exclusive')
                         ->setContact($invoice_info['contact']);

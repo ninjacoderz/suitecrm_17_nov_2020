@@ -173,11 +173,11 @@
         $quote->lead_source_co_c = 'PureElectric';
         $quote->assigned_user_id = $assigned_user;
         $quote->the_quote_prepared_c = "solar_quote_form";
-        if(  $first_solar == "yes_first_solar" ){
-            $quote->first_solar_c = "bool_true";
-        }else {
-            $quote->first_solar_c = "bool_false";
-        }
+        // if(  $first_solar == "yes_first_solar" ){
+        //     $quote->first_solar_c = "bool_true";
+        // }else {
+        //     $quote->first_solar_c = "bool_false";
+        // }
         $quote->quote_note_inputs_c = json_encode($data_solar_input); 
         // if( $strorey == "Double Storey"){
         //     $quote->Double_Storey = 1;
@@ -302,11 +302,11 @@
         $quote->lead_source_co_c = 'PureElectric';
         $quote->assigned_user_id = $assigned_user;
         $quote->the_quote_prepared_c = "solar_quote_form";
-        if(  $first_solar == "yes_first_solar" ){
-            $quote->first_solar_c = "bool_true";
-        }else {
-            $quote->first_solar_c = "bool_false";
-        }
+        // if(  $first_solar == "yes_first_solar" ){
+        //     $quote->first_solar_c = "bool_true";
+        // }else {
+        //     $quote->first_solar_c = "bool_false";
+        // }
         $quote->quote_note_inputs_c = json_encode($data_solar_input);
         // if( $strorey == "Double Storey"){
         //     $quote->Double_Storey = 1;

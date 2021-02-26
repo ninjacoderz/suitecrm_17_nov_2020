@@ -8,12 +8,35 @@
     ini_set('memory_limit', '-1');
 
     $nmi_number =  urlencode($_GET['nmi_number']);
+    $quote_id = urldecode($_GET['record']);
     $lead_id = urldecode($_GET['lead_id']);
     $meter_phase_c = urlencode($_GET['meter_phase_c']);
-    $lead = new Lead();
-    $lead = $lead->retrieve($lead_id);
+    $bean = [];
+    if(empty($lead_id)){
+        $quote = new AOS_Quotes();
+        $quote = $quote->retrieve($quote_id);
+        if($quote->id){
+            $bean['id'] = $quote->id;
+            $bean['fullname'] = $quote->account_firstname_c . ' ' .$quote->account_lastname_c;
+            $bean['folderID'] = $quote->pre_install_photos_c;
+        }else{
+            echo '';
+            die;
+        }
+    }else{
+        $lead = new Lead();
+        $lead = $lead->retrieve($lead_id);
+        if($lead->id){
+            $bean['id'] = $lead->id;
+            $bean['fullname'] = $lead->first_name . ' ' .$lead->last_name;
+            $bean['folderID'] = $lead->installation_pictures_c;
+        }else{
+            echo '';
+            die;
+        }
+    }
     
-    function getMeterAndSaveFile($nmi_number,$lead,$meter_phase_c){
+    function getMeterAndSaveFile($nmi_number,$bean,$meter_phase_c){
         //solarpreapprovalrequestpage : Step1 (curl get data string)
         $url = "https://econnect.portal.powercor.com.au/customer/solarpreapprovalrequestpage";
         
@@ -47,7 +70,7 @@
         }
         $jform_id1 = $matches[1];
         //get form id 2
-        $pattern = '/setParameters=function\(tranName,tranInsCapacity,tranLimit,tranParentName,tranParentInsCapacity,tranParentLimit\)\{A4J.AJAX.Submit\(\'j_id0:solarPreApprovalForm\',null,\{\'similarityGroupingId\':\'(.*?)\',\'parameters\'/';
+        $pattern = '/setParameters=function\(.*\)\{A4J.AJAX.Submit\(\'j_id0:solarPreApprovalForm\',null,\{\'similarityGroupingId\':\'(.*?)\',\'parameters\'/';
         $returnValue = preg_match($pattern, $result, $matches);
         if ( $returnValue == false || $matches == null || count($matches) < 2){
             echo ''; die();
@@ -253,7 +276,7 @@
                 $ViewStateMAC = $html->find("input[id='com.salesforce.visualforce.ViewStateMAC']",0)->value;
 
                 //set data string for submit form
-                $customer_name = $lead->first_name." ".$lead->last_name;
+                $customer_name = $bean['fullname'];
                 $data_string["com.salesforce.visualforce.ViewState"] = $ViewState;
                 $data_string["com.salesforce.visualforce.ViewStateVersion"] = $ViewStateVersion;
                 $data_string["com.salesforce.visualforce.ViewStateMAC"] =  $ViewStateMAC;
@@ -505,8 +528,8 @@
 
                     }
 
-                    if($lead->id !=''){
-                        $generate_ID = $lead->installation_pictures_c;
+                    if($bean['id'] !=''){
+                        $generate_ID = $bean['folderID'];
                         $folder = dirname(__FILE__)."/server/php/files/".$generate_ID;
 
                         if(!file_exists ( $folder )) {
@@ -537,10 +560,10 @@
     }
     if(isset($nmi_number) && $nmi_number !=''){
         if($meter_phase_c == 1){
-            getMeterAndSaveFile($nmi_number,$lead,1);
+            getMeterAndSaveFile($nmi_number,$bean,1);
         }elseif($meter_phase_c == 3){
-            getMeterAndSaveFile($nmi_number,$lead,1);
-            getMeterAndSaveFile($nmi_number,$lead,3);
+            getMeterAndSaveFile($nmi_number,$bean,1);
+            getMeterAndSaveFile($nmi_number,$bean,3);
         }
     }else{
         echo '';

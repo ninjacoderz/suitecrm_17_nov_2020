@@ -1309,6 +1309,11 @@ function addSandenData() {
     } else {
         $sandenData['quote_choice_type_install'] = '';
     }
+    if($_REQUEST['bca_building'] != '') {
+        $sandenData['quote_bca_building'] = $_REQUEST['bca_building'];
+    } else {
+        $sandenData['quote_bca_building'] = '';
+    }
     if($_REQUEST['is_your_replacement_urgent'] != '') {
         $sandenData['quote_replacement_urgent'] = $_REQUEST['is_your_replacement_urgent'];
     } else {

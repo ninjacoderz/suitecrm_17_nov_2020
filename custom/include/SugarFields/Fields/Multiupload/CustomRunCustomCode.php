@@ -1,5 +1,4 @@
 <?php
-
 $db = DBManagerFactory::getInstance();
 $sql = "SELECT DISTINCT calls_aos_quotes_1calls_ida as id FROM `calls_aos_quotes_1_c` WHERE `date_modified` >= '2020-06-25 04:50:53' AND `deleted` = 0";
 $ret = $db->query($sql);
