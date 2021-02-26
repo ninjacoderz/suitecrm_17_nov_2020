@@ -1200,7 +1200,7 @@ class EmailsController extends SugarController
                 $description = $emailTemplate->body;
                 
                 $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/for-customer?invoice_id=' . $invoice->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $description = str_replace("\$aos_invoices_customer",$contact->first_name , $description);
                 $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
 
@@ -1265,7 +1265,7 @@ class EmailsController extends SugarController
                 //end - code render sms_template
             }
             if($_REQUEST['email_type'] == 'client_warranty_registration'){ 
-                $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
+                $emailTemplateID = 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
 
 
                 $emailTemplate = BeanFactory::getBean(
@@ -1283,7 +1283,7 @@ class EmailsController extends SugarController
                 $description = $emailTemplate->body;
                 
                 $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $description = str_replace("\$contact_first_name",$contact->first_name , $description);
                 $description = str_replace("\$aos_invoices_link_upload",$string_link_upload_files , $description);
 
@@ -1305,9 +1305,9 @@ class EmailsController extends SugarController
                     $defaultEmailSignature['no_default_available'] = false;
                 }
                 $defaultEmailSignature['signature_html'] =  str_replace('Accounts', '', $defaultEmailSignature['signature_html']);
-                $description .= "<br><br><br>";
+                // $description .= "<br><br><br>";
                 $description .=  $defaultEmailSignature['signature_html'];
-                $description_html .= "<br><br><br>";
+                // $description_html .= "<br><br><br>";
                 $description_html .=  $defaultEmailSignature['signature_html'];
                 $templateData = $emailTemplate->parse_email_template(
                     array(
@@ -1937,7 +1937,7 @@ class EmailsController extends SugarController
                 $this->bean->description = $templateData['body_html'];
 
                 $link_upload_files = 'https://pure-electric.com.au/pedaikinform-new/confirm-to-lead?lead-id=' . $focus->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
                 //start - code render sms_template  
                 global $current_user;
@@ -2068,7 +2068,7 @@ class EmailsController extends SugarController
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
                 $link_upload_files = 'https://pure-electric.com.au/pe-sanden-quote-form/confirm-to-lead?lead-id=' . $focus->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
             
                 //start - code render sms_template  
@@ -2145,7 +2145,7 @@ class EmailsController extends SugarController
                 $this->bean->description = $templateData['body_html'];
                 
                 $link_upload_files = 'https://pure-electric.com.au/pe-sanden-quote-form/confirm-to-lead?lead-id=' . $focus->id;
-                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
                 $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
                 //start - code render sms_template  
                 global $current_user;
@@ -4148,7 +4148,7 @@ class EmailsController extends SugarController
             $this->bean->description = $templateData['body_html'];
 
             $link_upload_files = 'https://pure-electric.com.au/pedaikinform-new/confirm-to-lead?lead-id=' . $focus->id;
-            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
             $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
             //start - code render sms_template  
             global $current_user;
@@ -4223,7 +4223,7 @@ class EmailsController extends SugarController
             $this->bean->description = $templateData['body_html'];
 
             $link_upload_files = 'https://pure-electric.com.au/pesolarform/confirm-to-lead?lead-id=' . $focus->id;
-            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
+            $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
             $this->bean->description_html = str_replace("\$link_upload_files",$string_link_upload_files, $this->bean->description_html);
             //start - code render sms_template  
             global $current_user;
