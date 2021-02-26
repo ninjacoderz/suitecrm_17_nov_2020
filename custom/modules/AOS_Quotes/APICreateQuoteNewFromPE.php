@@ -24,6 +24,7 @@ $Tank_slab                  = 0;
 $Pavers                     = 0;
 $priceReticulated_gas       = 0;
 $id_special                 = '';
+$priceSA_REPS               = 0;
 //
 /// If Generate for Suite
 if($_REQUEST['quote_generate_type'] == "bySuite") {
@@ -203,7 +204,7 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
     date_default_timezone_set('UTC');
     $dateQuote = new DateTime();
     $quote->quote_date_c = date('Y-m-d H:i:s', time());
-    $dateAction = new DateTime('+7 day');
+    $dateAction = new DateTime('+7 day'); 
     $quote->next_action_date_c = $dateAction->format('Y-m-d');
     $quote->quote_type_c = 'quote_type_sanden';
     $quote->install_address_postalcode_c = $_REQUEST['postcode_customer'];
@@ -272,6 +273,13 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
     if($_REQUEST['hot_water_rebate'] == 'Yes') {
         array_push($part_numbers,'SV_SHWR');
     };
+    if($_REQUEST['choice_type_install'] == 'Replace Hot Water System') {
+        if($_REQUEST['connected_to_reticulated_gas'] == 'No') {
+            array_push($part_numbers,'SA_REPS_Cl1_No_Gas_Cl20');
+        } else if($_REQUEST['connected_to_reticulated_gas'] == 'Yes') {
+            array_push($part_numbers,'SA_REPS_Cl1_Reti_Gas_Conn');
+        } 
+    } 
     
     if($_REQUEST['extra_field']['plumbing_extra'] == 'Yes') {
         array_push($part_numbers,'Sanden_Complex_Install');
@@ -384,7 +392,7 @@ while ($row = $db->fetchByAssoc($ret))
             } else {
                 $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
             } 
-        }elseif($row['part_number'] == 'SV_SHWR'){
+        }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
             $product_line->product_qty =1; 
             $product_line->product_list_price = $row['cost'];
         }elseif($row['part_number'] == 'SA_REES'){
@@ -495,6 +503,8 @@ while ($row = $db->fetchByAssoc($ret))
             // $price_veec_stc += -1023;
         } elseif($row['part_number'] == 'SV_SHWR'){
             $priceHotWater += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+        } elseif($row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+            $priceSA_REPS += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
         } elseif($row['part_number'] == 'SA_REES'){
             $priceReticulated_gas += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
         }else {
@@ -511,8 +521,10 @@ while ($row = $db->fetchByAssoc($ret))
             $product_line->number = 4;
         } elseif($row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Site_Delivery' || $row['part_number'] == 'Spec_Trade_Disc' || $row['part_number'] == 'san_wall_bracket' || $row['part_number'] == 'Travel') {
             $product_line->number = 5;
-        } else {
+        } elseif($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'VEEC Rebate Certificate') {
             $product_line->number = 6;
+        } else {
+            $product_line->number = 7;
         }
         
         $total_amt += $product_line->product_total_price;
@@ -691,7 +703,7 @@ while ($row = $db->fetchByAssoc($ret))
                 $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
                 $product_line->product_unit_price = ((int)$array_stc_veec['veec'] -2)*(-1);
             }
-        }elseif($row['part_number'] == 'SV_SHWR'){
+        }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
             $product_line->product_qty =1; 
             $product_line->product_list_price = $row['cost'];
             $product_line->product_unit_price = $row['cost'];
@@ -707,7 +719,7 @@ while ($row = $db->fetchByAssoc($ret))
             $product_line->product_total_price = 0;
         }
 
-        if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'VEEC Rebate Certificate'){
+        if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'VEEC Rebate Certificate' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
             $product_line->vat = '0';
             $product_line->vat_amt = 0;
         } else {
@@ -758,7 +770,7 @@ foreach ($products_return as $key => $row)
 array_multisort($index, SORT_ASC, $products_return);
     
 $discount_amount = 0;
-$extraPrice = ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $Tank_slab + $Pavers)*0.1);
+$extraPrice = ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $priceSA_REPS + ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $Tank_slab + $priceSA_REPS + $Pavers)*0.1);
 $price_include_admin_20 = ($price_include_admin + $price_state) + ($price_include_admin + $price_state)*0.19;
 $gst = $price_include_admin_20*0.1;
 $subTotal = $price_include_admin_20 + $price_veec_stc + $priceHotWater + $priceReticulated_gas + $extraPrice;
