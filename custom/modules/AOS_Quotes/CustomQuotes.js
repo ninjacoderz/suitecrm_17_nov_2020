@@ -4120,13 +4120,14 @@ function genExtraDaikinItemFunc(elem){
         
     });
     $("#btn_pe_solar_form").click(function(e) {
-        if(lead_id_solar != '') {
+        let quoteId = $('input[name="record"]').val();
+        if(quoteId != '') {
             window.open(
-                'https://pure-electric.com.au/pesolarform?lead-id='+lead_id_solar,
+                'https://pure-electric.com.au/pesolarform?quote-id='+quoteId,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {
-            alert('No leads in quote, please add lead information !')
+            alert('No quote exist, please check again !')
             // window.open(
             //     'https://pure-electric.com.au/pedaikinform',
             //     '_blank' // <- This is what makes it open in a new window.
