@@ -599,6 +599,8 @@ $quote->pre_install_photos_c = $_REQUEST['pre_install_photos_c'];
 date_default_timezone_set('UTC');
 $dateQuote = new DateTime();
 $quote->quote_date_c = date('Y-m-d H:i:s', time());
+$dateAction = new DateTime('+7 day');
+$quote->next_action_date_c = $dateAction->format('Y-m-d');
 
 if($type_product == 'Daikin US7') {
     $quote->quote_type_c = 'quote_type_daikin';
