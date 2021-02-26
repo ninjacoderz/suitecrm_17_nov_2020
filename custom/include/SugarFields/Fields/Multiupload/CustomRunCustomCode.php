@@ -34,7 +34,7 @@
     //parse value
 
     $link_upload_files = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
-    $string_link_upload_files = '<a target="_blank" href=3D"'.$link_upload_files.'">Link Upload Here have 3D</a>';
+    $string_link_upload_files = '<a target="_blank" href=3D"'.$link_upload_files.'">Link Upload Here have 3D</a>'.PHP_EOL;
     $link_upload_files_no3d = 'https://pure-electric.com.au/upload_file_sanden/client-warranty?invoice_id=' . $invoice->id;
     $string_link_upload_files_no3d = '<a target="_blank" href="'.$link_upload_files_no3d.'">Link Upload Here no 3D</a>';
     $description = str_replace("\$contact_first_name",$contact->first_name , $description);
