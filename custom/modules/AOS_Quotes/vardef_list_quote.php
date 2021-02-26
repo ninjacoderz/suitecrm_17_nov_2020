@@ -95,6 +95,17 @@ $vardefs_array = array(
         ) ,
         "parent" => "",
     ),
+    "quote_bca_building" => array(
+        "name" => "quote_bca_building",
+        "display_label" => "BCA Building Class Type?",
+        "type" => "select",
+        "list_array" => array(
+            "",
+            "Class 1",
+            "Class 2",
+        ) ,
+        "parent" => "",
+    ),
     "quote_choice_type_install" => array(
         "name" => "quote_choice_type_install",
         "display_label" => "Replace an existing Hot Water System (HWS) or do you have no HWS (e.g. new build, renovation)",
