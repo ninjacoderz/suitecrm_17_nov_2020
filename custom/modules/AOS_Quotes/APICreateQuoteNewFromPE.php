@@ -515,7 +515,7 @@ while ($row = $db->fetchByAssoc($ret))
             $product_line->number = 1;
         } elseif ($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
             $product_line->number = 2;
-        } elseif ($row['part_number'] == 'QIK15−HPUMP' || $row['part_number'] == 'QIK25−HPUMP') {
+        } elseif ($row['part_number'] == 'QIK15−HPUMP' || $row['part_number'] == 'QIK25−HPUMP' || $row['part_number'] == 'QIK20−HPUMP') {
             $product_line->number = 3;
         } elseif($row['part_number'] == 'Sanden_Plb_Install_Std' || $row['part_number'] == 'Sanden_Elec_Install_Std') {
             $product_line->number = 4;
