@@ -237,11 +237,14 @@
             $body_html = str_replace("\$aos_invoices_install_address_c", $customer_address , $body_html);
             $body_html = str_replace("\$aos_invoices_contact_id3_c", $customer_phone , $body_html);
 
-            //Add SMS Template for Plumber/Electrician
-            $smsTemplate = BeanFactory::getBean(
-                'pe_smstemplate',
-                'ca646f5f-399a-d408-7536-601102429ed6' 
-            );
+            //Add SMS Template for Plumber/Electrician https://trello.com/c/TzmOCJ2e/3032-bug-system-gets-the-name-of-the-electrician-for-the-plumbers-name-on-sms-calendar
+            // $smsTemplate = BeanFactory::getBean( 
+            //     'pe_smstemplate',
+            //     'ca646f5f-399a-d408-7536-601102429ed6' 
+            // );
+            $smsTemplate = new pe_smstemplate();
+            $smsTemplate->retrieve('ca646f5f-399a-d408-7536-601102429ed6');
+
             $body_sms = '';
             $body_sms =  $smsTemplate->body_c;
             $body_sms = str_replace("\$first_name", $contact_installer->first_name, $body_sms);
