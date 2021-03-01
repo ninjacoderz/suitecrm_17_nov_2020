@@ -93,6 +93,7 @@
         public function Create_Invoice($invoice_info){
          
             $xeroInvoice = new \XeroPHP\Models\Accounting\Invoice($this->xero);
+            $xeroInvoice->setStatus('AUTHORISED');
             $xeroInvoice = $this->Set_Invoice($invoice_info,$xeroInvoice);
             return  $xeroInvoice;    
         }
@@ -110,7 +111,6 @@
             $xeroInvoice->setReference($invoice_info['invoice_name'])
                         ->setDate($invoice_info['date'])
                         ->setDueDate($invoice_info['due_date'] )
-                        ->setStatus('SUBMITTED')
                         ->setType(\XeroPHP\Models\Accounting\Invoice::INVOICE_TYPE_ACCREC)
                         ->setLineAmountType('Exclusive')
                         ->setContact($invoice_info['contact']);
@@ -234,6 +234,7 @@
         public function Create_Bill($bill_info){
          
             $xeroBill = new \XeroPHP\Models\Accounting\Invoice($this->xero);
+            $xeroBill->setStatus('AUTHORISED');
             $xeroBill = $this->Set_Bill($bill_info,$xeroBill);
             return  $xeroBill;    
         }
@@ -254,7 +255,6 @@
                         ->setStatus(\XeroPHP\Models\Accounting\Invoice::INVOICE_STATUS_SUBMITTED)
                         ->setType(\XeroPHP\Models\Accounting\Invoice::INVOICE_TYPE_ACCPAY)
                         ->setLineAmountType('Exclusive')
-                        ->setStatus('SUBMITTED')
                         ->setContact($bill_info['contact']);
 
             if($bill_info['ExpectedPaymentDate'] != ''){
