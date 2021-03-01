@@ -99,7 +99,7 @@
         }
 
         public function Update_Invoice($invoice_info,$xeroInvoice){
-            if($xeroInvoice->getStatus() == 'DELETED'){
+            if($xeroInvoice->getStatus() == 'DELETED' || $xeroInvoice->getStatus() == 'VOIDED'){
                 return  $xeroInvoice;
             }
             $xeroInvoice = $this->Set_Invoice($invoice_info,$xeroInvoice);
@@ -240,7 +240,7 @@
         }
 
         public function Update_Bill($bill_info,$xeroBill){
-            if($xeroBill->getStatus() == 'DELETED'){
+            if($xeroBill->getStatus() == 'DELETED' || $xeroBill->getStatus() == 'VOIDED'){
                 return  $xeroBill;
             }
             $xeroBill = $this->Set_Bill($bill_info,$xeroBill);
