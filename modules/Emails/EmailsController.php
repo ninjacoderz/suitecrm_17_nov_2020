@@ -793,6 +793,23 @@ class EmailsController extends SugarController
                     $description_html = str_replace("\$contact_first_name", $contact->first_name , $description_html);
                     $description = str_replace("\$aos_invoices_quote_type_c",$product , $description);
                     $description_html = str_replace("\$aos_invoices_quote_type_c", $product , $description_html);
+                    //SMS 
+                    $smsTemplate_Client = BeanFactory::getBean(
+                        'pe_smstemplate',
+                        'ab4b8f77-4bb5-a00d-9c55-5f9b4ad921b6' 
+                    );
+                    $AccountClient = new Account();
+                    $AccountClient = $AccountClient->retrieve($invoice->billing_account_id);
+                    $body_sms =  $smsTemplate_Client->body_c;
+                    $body_sms = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace("\$first_name", explode(" ", $AccountClient->name,2)[0], $body_sms));
+                    $body_sms = str_replace('$aos_invoices_quote_type_c', $quote_type,$body_sms);
+                    $smsTemplate_Client->body_c = $body_sms;
+                    $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $AccountClient->phone_mobile));
+                    $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                    $this->bean->emails_pe_smstemplate_idb = $smsTemplate_Client->id;
+                    $this->bean->emails_pe_smstemplate_name =  $smsTemplate_Client->name; 
+                    $this->bean->number_client =  $phone_number; 
+                    $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate_Client,$focus),ENT_QUOTES)));
                 }else{
                     $description = str_replace("\$name",$contact->first_name , $description);
                     $description_html = str_replace("\$name", $contact->first_name , $description_html);
@@ -817,7 +834,6 @@ class EmailsController extends SugarController
                     $description = str_replace("\$aos_invoices_contact_id3_c",$customer_phone , $description);
                     $description_html = str_replace("\$aos_invoices_contact_id3_c", $customer_phone , $description_html);
                     //VUT - E - customer infomation
-                    $smsTemplateID = 'ca646f5f-399a-d408-7536-601102429ed6'; 
                     if( $_REQUEST['email_type'] == 'plumber_calendar' ){
                         $description = str_replace("\$aos_invoices_plumbing_notes_c",$invoice->plumbing_notes_c , $description);
                         $description_html = str_replace("\$aos_invoices_plumbing_notes_c", $invoice->plumbing_notes_c , $description_html);
@@ -858,6 +874,24 @@ class EmailsController extends SugarController
                         }
                     }
                     //VUT - E - Add file "Proposed Install Location" to email Plumber/Electrician
+                    // //start - code render sms_template  
+                    // global $current_user;
+                        $smsTemplate = BeanFactory::getBean(
+                            'pe_smstemplate',
+                            'ca646f5f-399a-d408-7536-601102429ed6' 
+                        );
+                        $body =  $smsTemplate->body_c;
+                        $body = str_replace("\$first_name", $contact->first_name, $body);
+                        $body = str_replace("\$aos_invoices_billing_contact",  $contact_customer->name, $body);
+                        $smsTemplate->body_c = $body;
+                        $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                        $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                    $this->bean->number_receive_sms = "matthew_paul_client";
+                    $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+                    $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                    $this->bean->number_client =  $phone_number; 
+                    $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus),ENT_QUOTES)));   
+                    // //end - code render sms_template
                 }
                 $description = str_replace("\$installation_calendar_url", $link_calendar, $description);
 
@@ -896,27 +930,6 @@ class EmailsController extends SugarController
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
-                // //start - code render sms_template  
-                global $current_user;
-                if ($smsTemplateID != '') { 
-                    $smsTemplate = BeanFactory::getBean(
-                        'pe_smstemplate',
-                        $smsTemplateID 
-                    );
-                    $body =  $smsTemplate->body_c;
-                    $body = str_replace("\$first_name", $contact->first_name, $body);
-                    $body = str_replace("\$aos_invoices_billing_contact",  $contact_customer->name, $body);
-                    $smsTemplate->body_c = $body;
-                    $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
-                    $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
-                }
-                $this->bean->number_receive_sms = "matthew_paul_client";
-                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
-                $phone_number = preg_replace("/^61/", "+61", $phone_number);
-                $this->bean->number_client =  $phone_number; 
-                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
-                // //end - code render sms_template
-                
             }
 
             /**VUT-E-Quote-Button 'Send Inspection Request' (send for installer Sanden/Daikin) */
