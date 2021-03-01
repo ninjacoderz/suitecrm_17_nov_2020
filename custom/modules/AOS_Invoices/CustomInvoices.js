@@ -35,7 +35,37 @@ $(function () {
         }
         
     }
-    
+
+    function change_type_of_water_with_old_tank_fuel(){
+        var old_tank_fuel_c = $("#old_tank_fuel_c").val();
+        var installType = old_tank_fuel_c;
+        switch (old_tank_fuel_c) {
+            case "electric_storage":  case "gravity_feed_electric": case "instant_electric":
+                installType = "replacedElectricHeater";
+                break;
+            case "gas_storage": case "gas_instant":
+                installType = "replaceGasWh";
+                break;
+            case "heatpump": 
+                installType = "replacedHeatPump";
+                break;
+             case "solar": 
+                installType = "replacedSolarWaterHeater";
+                break;
+            case "wood": case "other": 
+                installType = "other";
+                break;
+            case "newBuilding":
+                installType = "newBuilding";
+                break;
+            default:
+                break;
+        }
+
+        $("#geo_type_of_wh_replaced_c").val(installType);
+    }
+    YAHOO.util.Event.addListener(["old_tank_fuel_c"], "change", change_type_of_water_with_old_tank_fuel);
+
     function display_link_PE_order_methven(){
         if( $("#order_number_c").val() != "" ){
             $("#order_number_c").parent().append("<p id='link_order'><a  href='https://pure-electric.com.au/admin/commerce/orders/"+$('#order_number_c').val()+"' target='_blank'>Open Methven Order</a></p>");
