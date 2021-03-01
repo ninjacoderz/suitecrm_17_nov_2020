@@ -221,6 +221,67 @@
             return $Item;
         }
 
+        public function Get_Bill_By_ID($ID) {
+            if($ID != '') {
+                $Bill =  $this->xero->loadByGUID('Accounting\\Invoice',$ID);
+            }else{
+                $Bill = null;
+            }
+            
+            return $Bill;
+        }
+
+        public function Create_Bill($bill_info){
+         
+            $xeroBill = new \XeroPHP\Models\Accounting\Invoice($this->xero);
+            $xeroBill = $this->Set_Bill($bill_info,$xeroBill);
+            return  $xeroBill;    
+        }
+
+        public function Update_Bill($bill_info,$xeroBill){
+            if($xeroBill->getStatus() == 'DELETED'){
+                return  $xeroBill;
+            }
+            $xeroBill = $this->Set_Bill($bill_info,$xeroBill);
+            return  $xeroBill;   
+        }
+
+        public function Set_Bill($bill_info,$xeroBill){
+            $xeroBill->setInvoiceNumber($bill_info['bill_number']);
+            $xeroBill->setReference($bill_info['bill_name'])
+                        ->setDate($bill_info['date'])
+                        ->setDueDate($bill_info['due_date'] )
+                        ->setStatus(\XeroPHP\Models\Accounting\Invoice::INVOICE_STATUS_SUBMITTED)
+                        ->setType(\XeroPHP\Models\Accounting\Invoice::INVOICE_TYPE_ACCPAY)
+                        ->setLineAmountType('Exclusive')
+                        ->setStatus('SUBMITTED')
+                        ->setContact($bill_info['contact']);
+
+            if($bill_info['ExpectedPaymentDate'] != ''){
+                $xeroBill->setExpectedPaymentDate($bill_info['ExpectedPaymentDate']);
+            }
+            
+            $xeroBill->LineItems->removeAll();
+            foreach ($bill_info['LineItems'] as $key => $value) {
+                $xeroBill->addLineItem( $value);
+            }
+            $xeroBill->save();
+            
+            $history_detail = $invoice_info['History_payment_expected_date'];
+            if($history_detail != ''){
+                $history = new \XeroPHP\Models\Accounting\History($this->xero);
+                $history->setDetails($history_detail);
+                $xeroBill->addHistory($history);
+            }
+
+            $attachmentFile = $invoice_info['attachment_link'];
+            if($attachmentFile != ''){
+                $attachment = \XeroPHP\Models\Accounting\Attachment::createFromLocalFile($attachmentFile);
+                $xeroBill->addAttachment($attachment);
+            }
+
+            return  $xeroBill;   
+        }
     }
     
 

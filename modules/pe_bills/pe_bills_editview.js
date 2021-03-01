@@ -289,7 +289,101 @@ $(document).ready(function(){
     }
     autoLookupAddress('billing');
     autoLookupAddress('shipping');
+    showLinkXero();
+    createLinkProduct();
 
+    $('#line_items_span').on('change', '.product_name', function (e) {
+        setTimeout(function() {
+            createLinkProduct();
+        }, 500)
+    })
 
-    
+    $("#SAVE").after(
+        ' <button style="background:#009acf;" type="button" id="CRUD_Xero_Bill" class="button CRUD_Xero_Bill" title="Create And Update Xero Bill" onClick="SUGAR.CRUD_Xero_Bill(this);" >Create & Update Xero <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+    );
+  
+    SUGAR.CRUD_Xero_Bill= function(elemt){
+        
+        var html_alert = '';
+        if($("input[name='record']").val() == ''){
+            html_alert += '<h4 class="text-danger">Bill is not saved! Please Save and Reload Page?</h4>';
+        }
+        
+        if( html_alert != ''){
+            $('#alert_modal').find('.modal-body').empty();
+            $('#alert_modal').find('.modal-body').append(html_alert); 
+            $('#alert_modal').modal('show'); 
+            return false;
+        }
+        // save invoice
+        SUGAR.ajaxUI.showLoadingPanel(); 
+        $("#EditView input[name='action']").val('Save');
+        $.ajax({
+            type: $("#EditView").attr('method'),
+            url: $("#EditView").attr('action'),
+            data: $("#EditView").serialize(),
+            async:false,
+            success: function (data) { 
+                
+                var bill_id = $("input[name='record']").val();
+              
+                if(bill_id !='')  {
+                    // create and update invoice xero
+                    var url_xero_bill = "/index.php?entryPoint=CRUD_Bill_Xero&method=create&from_action=button" + '&record='+ encodeURIComponent($('input[name="record"]').val());
+                    $.ajax({
+                        url:url_xero_bill,
+                        success:function(data){   
+                            SUGAR.ajaxUI.hideLoadingPanel();                             
+                                try {
+                                    var json = $.parseJSON(data);
+                                    console.log(json);
+                                    if( $('#xero_bill_c').val() == ''){
+                                        $('#xero_bill_c').val(json.bill_xero_id);
+                                    }
+                                    showLinkXero();
+                                    if(json.msg != ''){
+                                        $('#alert_modal').find('.modal-body').empty();
+                                        $('#alert_modal').find('.modal-body').append(json.msg); 
+                                        $('#alert_modal').modal('show'); 
+                                        return false;
+                                    }else{
+                                        $('#alert_modal').find('.modal-body').empty();
+                                        $('#alert_modal').find('.modal-body').append('Push and update XERO Bill done!'); 
+                                        $('#alert_modal').modal('show'); 
+                                        return false;
+                                    }
+
+                                } catch (e) {
+                                    return false;
+                                }                   
+                        }
+                    });
+                }
+                
+            }
+        });
+
+       
+    }
+
+    function showLinkXero(){
+        xeroID = $('#xero_bill_c').val();
+        $("#xeroLink").remove();
+        if(xeroID != ''){
+            $('#xero_bill_c').after("<div id='xeroLink'><a target='_blank' href='https://go.xero.com/AccountsPayable/Edit.aspx?InvoiceID="+xeroID+"'>Xero Bill Link</a></div>");
+        }
+    }
+    function createLinkProduct() {
+        setTimeout(function() {
+            if($('.product_link').length) {
+                $('.product_link').remove();
+            }
+            $('input[id*=product_product_id]').each(function(index) {
+                var product_id = $(this).val();
+                if($(this).val() != '') {
+                    $(this).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ product_id +'">Link</a></div>');
+                }
+            })
+        },500);
+    }
 });

@@ -1439,3 +1439,9 @@ $entry_point_registry['APIGetLblQuoteNoteInput'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetLblQuoteNoteInput.php',
     'auth' => false
 );
+
+//CRUD Bill Xero
+$entry_point_registry['CRUD_Bill_Xero'] = array(
+    'file' => 'xero-php/CRUD_Bill_Xero.php',
+    'auth' => false
+);
