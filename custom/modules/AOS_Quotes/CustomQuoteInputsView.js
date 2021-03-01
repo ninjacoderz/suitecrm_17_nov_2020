@@ -46,7 +46,21 @@
         $(document).on("change","#group_custom_quote_inputs_checklist .custom_fields",function(){
             generateJSONForInput();
         });
+
+        hideSolarPanel();
     });
+
+    // .:nhantv:. If Product Type is not Solar -> hide all solar panels: "SOLARGAIN INFORMATION" / "PRICING PV SECTION" / "SOLAR VICTORIA PROVIDER STATEMENT"
+    function hideSolarPanel(){
+        if ($("#quote_type_c").val() !== "quote_type_solar"){
+            // "SOLARGAIN INFORMATION"
+            $('#special_notes_c').closest('.panel.panel-default').hide();
+            // "PRICING PV SECTION"
+            $('#Terracotta_checkbox').closest('.panel.panel-default').hide();
+            // "SOLAR VICTORIA PROVIDER STATEMENT"
+            $('#slv_solar_vic_id_c').closest('.panel.panel-default').hide();
+        }
+    }
 
     function renderQuoteInputHTML(type){
         $.ajax({
