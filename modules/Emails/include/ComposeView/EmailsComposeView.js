@@ -2189,9 +2189,14 @@ function get_lead_source_company(module_get,record){
                 if ($('#emails_pe_smstemplate_idb').val() == '5fcde64f-63ac-dc94-21fb-5e5ef5cf4c70') {
                     $('#select_sms_signture').val('_1588918966').change();
                 }
-                //Email invoice -- detail view
-                if ($('input[name="return_module"]').val() == 'AOS_Invoices' && $("input[name='pdf_id']").val() == '91964331-fd45-e2d8-3f1b-57bbe4371f9c') {
-                  $('#select_sms_signture').val('_1588918966').change();
+                //Slected SMS Signature
+                if ($('input[name="return_module"]').val() == 'AOS_Invoices') {
+                  if ($("input[name='pdf_id']").val() == '91964331-fd45-e2d8-3f1b-57bbe4371f9c' /**Email Invoice - DetailView */) {
+                    $('#select_sms_signture').val('_1588918966').change(); // PE Account signature
+                  }
+                  if ($('#emails_pe_smstemplate_idb').val() == "ca646f5f-399a-d408-7536-601102429ed6" || $('#emails_pe_smstemplate_idb').val() == 'ab4b8f77-4bb5-a00d-9c55-5f9b4ad921b6' /**Calendar Date SMS Notification*/) {
+                    $('#select_sms_signture').val('_1588651777').change(); // PE Account operation
+                  }
                 }
               },100);
             }
