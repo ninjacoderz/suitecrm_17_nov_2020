@@ -21,7 +21,15 @@ $vardefs_array = array(
             "Citipower",
             "Jemena",
             "Powercor",
-            "United Energy"
+            "United Energy",
+            "EvoEnergy",
+            "SA Power Networks",
+            "Western Power",
+            "Energex",
+            "Ergon",
+            "Ausgrid",
+            "Endeavour Energy",
+            "Essential Energy",
         ) ,
         "parent" => "",
     ) ,
@@ -108,7 +116,8 @@ $vardefs_array = array(
         "list_array" => array(
             "",
             "Yes",
-            "No"
+            "No",
+            "Unsure",
         ) ,
         "parent" => "",
     ) ,
