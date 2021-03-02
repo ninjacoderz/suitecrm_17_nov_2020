@@ -6587,7 +6587,16 @@ $(function () {
                 var  plumber_firstname  = $("#plumber_c").val().split(/\s(.+)/)[0];
                 var  plumber_lastname   = $("#plumber_c").val().split(/\s(.+)/)[1];
                 var  created_by         = $("#user_id_c").val();
+                var getDaysArray = function(start, end) {
+                    for(var arr=[],dt=new Date(start); dt.getDate()<=end.getDate(); dt.setDate(dt.getDate()+1)){
+                        arr.push(new Date(dt));
+                    }
+                    return arr;
+                };
 
+                var today = new Date();
+                var pe_available_date = JSON.stringify(getDaysArray(today,new Date(today.getFullYear(), today.getMonth(), today.getDate()+21)));
+                
                 $.ajax({
                     type: "POST",
                     url : "https://calendar.pure-electric.com.au/api/API.php/saveInstallation",
@@ -6604,7 +6613,11 @@ $(function () {
                             "plumber_id"        : (plumber_id         != 'undefined') ? plumber_id         : '',
                             "plumber_firstname" : (plumber_firstname  != 'undefined') ? plumber_firstname  : '',
                             "plumber_lastname"  : (plumber_lastname   != 'undefined') ? plumber_lastname   : '',
-                            "created_by"        : (created_by         != 'undefined') ? created_by         : ''
+                            "created_by"        : (created_by         != 'undefined') ? created_by         : '',
+                            "pe_available_date"        : pe_available_date,
+                            "electric_available_date"  : [],
+                            "plumber_available_date"   : [],
+                            "client_available_date"    : [],
                         },
                     success : function(data){
                         if(data['success']){
