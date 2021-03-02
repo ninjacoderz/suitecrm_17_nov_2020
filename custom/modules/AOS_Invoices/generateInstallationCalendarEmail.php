@@ -152,7 +152,7 @@
             $email->emails_pe_smstemplate_idb = $smsTemplate->id;
             $email->emails_pe_smstemplate_name =  $smsTemplate->name; 
             $email->number_client =  $phone_number; 
-            $email->sms_message =trim(strip_tags(html_entity_decode($body_sms.' '.$current_user->sms_signature_c,ENT_QUOTES)));
+            $email->sms_message =trim(strip_tags(html_entity_decode($body_sms/**.' '.$current_user->sms_signature_c */,ENT_QUOTES)));
             //end generate sms template
 
         }else{
@@ -257,7 +257,7 @@
             $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact_installer->phone_mobile));
             $phone_number = preg_replace("/^61/", "+61", $phone_number);
             $email->number_client =  $phone_number; 
-            $email->sms_message =trim(strip_tags(html_entity_decode($body_sms.' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+            $email->sms_message =trim(strip_tags(html_entity_decode($body_sms/**.' '.$current_user->sms_signature_c*/,ENT_QUOTES)));   
 
         }
         $email->emails_email_templates_name = $emailTemplate->name;
