@@ -986,6 +986,24 @@ $(function () {
                 url: $("#EditView").attr('action'),
                 data: $("#EditView").serialize(),
                 success: function (data) {
+                    if($("input[name='record']").val() == ''){
+                        var record_id_patt = /"record" value="(.*)"/g;
+                        var records = record_id_patt.exec(data);
+                        if(records !== null && typeof records === 'object'){
+                            if(records[1] !='')  {
+                                window.onbeforeunload = null;
+                                window.onunload = null;
+                                window.addEventListener('beforeunload', function(e) {
+                                    window.onbeforeunload = null;
+                                    window.onunload = null;
+                                });
+                                var url = 'https://suitecrm.pure-electric.com.au';
+                                // var url = 'http://locsuitecrm.com/';
+                                window.location.href = url+"index.php?module="+module_sugar_grp1+"&action=EditView&record="+records[1];
+                            }
+                        }
+                        return false;
+                    }
                     $(".reload_after_rename").trigger("click");
                     SUGAR.ajaxUI.hideLoadingPanel();
                 }
