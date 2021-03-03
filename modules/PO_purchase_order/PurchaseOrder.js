@@ -521,7 +521,7 @@ $(function () {
         //VUT-Button generate PO's name
         $('#name').parent().siblings('.label').append('<br/><button type="button" class="button" id="generate_po_name">Generate PO name</button>');
         $('#generate_po_name').on('click', function(){
-            $('#name').val(generatePOname());
+            $('#name').val(generatePOname()).trigger('change');
         });
 
         /*
