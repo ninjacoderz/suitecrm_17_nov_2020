@@ -7015,7 +7015,10 @@ class EmailsController extends SugarController
             $invoice_file_attachments = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->installation_pictures_c ."/");
             $name_file_include = 'Proposed_Install_Location';
             //VUT - S - check install date <> today ==> dont include Proposed Install Location (https://trello.com/c/RClziQkW/2984-invoice-when-we-click-email-invocie-if-the-customer-balance-owing-is-0-and-the-install-date-is-over-current-date-please-dont-inc?menu=filter&filter=*)
-            $today = new DateTime();
+            // $today = new DateTime();
+            global $timedate;
+            $today_datetime = explode(" ",$timedate->now());
+            $today = new DateTime(str_replace("/","-",$today_datetime[0]));
             $install_datetime = explode(" ", $focus->installation_date_c);
             $install_date = new DateTime(str_replace("/","-",$install_datetime[0]));
             if (($install_date->format('Y-m-d') < $today->format('Y-m-d')) && floatval($focus->total_balance_owing_c) <= 0) {
