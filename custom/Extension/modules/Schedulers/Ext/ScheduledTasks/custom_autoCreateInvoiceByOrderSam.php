@@ -606,12 +606,15 @@ function Email_Report_Invoice_Sam_Daily($data_inv) {
     }
 
     //config mail
+    global $current_user;
     $emailObj = new Email();
     $defaults = $emailObj->getSystemDefaultEmail();
     $mail = new SugarPHPMailer();
     $mail->setMailerForSystem();
     $mail->From = $defaults['email'];
     $mail->FromName = $defaults['name'];
+    $mail->From = "info@pure-electric.com.au";
+    $mail->FromName = "Pure Electric Info";
     $mail->IsHTML(true);
     $mail->Subject = "Pure-Electric Invoice Solargain - Daily Report - Date " . $today;
     $mail->Body =  $html_content;
