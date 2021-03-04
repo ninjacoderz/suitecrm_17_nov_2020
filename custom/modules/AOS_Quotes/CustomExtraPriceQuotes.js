@@ -307,9 +307,10 @@ $(function () {
         display_button_price();
     });
 
-    $('input[name="sl_quote_option"]').on('change', function() {
-        $('input[name="sl_quote_option"]').not(this).prop('checked', false);
-    });
+    // .:nhantv:. Comment to do the task: Add a checkbox to Itemise in LINE ITEMS
+    // $('input[name="sl_quote_option"]').on('change', function() {
+    //     $('input[name="sl_quote_option"]').not(this).prop('checked', false);
+    // });
 
     
     if($("#solar_pv_pricing_input_c").val() == '' && $("#quote_type_c").val() == 'quote_type_solar'){
@@ -381,7 +382,13 @@ $(function () {
         var data = [
             ["Option <input type='checkbox' id='checkall' style='float: right; clear: both; margin-right: 15px;'>", "1 <input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_option_push' id='sl_option_push_1' checked style='margin-bottom:5px'>", "2 <input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_option_push' id='sl_option_push_2' checked style='margin-bottom:5px'>", "3 <input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_option_push' id='sl_option_push_3' checked style='margin-bottom:5px'>", "4 <input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_option_push' id='sl_option_push_4' checked style='margin-bottom:5px'>", "5  <input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_option_push' id='sl_option_push_5' checked style='margin-bottom:5px'>", "6  <input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_option_push' id='sl_option_push_6' checked style='margin-bottom:5px'>"],
             ["", "<button data-option ='1' id='btn_clear_option_1' class='button default'>Clear Option 1</button>", "<button data-option ='2' id='btn_clear_option_2' class='button default'>Clear Option 2</button>", "<button data-option ='3' id='btn_clear_option_3' class='button default'>Clear Option 3</button>", "<button data-option ='4' id='btn_clear_option_4' class='button default'>Clear Option 4</button>", "<button data-option ='5' id='btn_clear_option_5' class='button default'>Clear Option 5</button>", "<button data-option ='6' id='btn_clear_option_6' class='button default'>Clear Option 6</button>"],
-            ["Selected Quote Option", "<input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_1' style='margin-bottom:5px'>","<input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_2' style='margin-bottom:5px'>","<input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_3' style='margin-bottom:5px'>","<input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_4' style='margin-bottom:5px'>","<input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_5' style='margin-bottom:5px'>","<input type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_6' style='margin-bottom:5px'>"],
+            ["Selected Quote Option"
+                , "<input data-attr='1' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_1' style='margin-bottom:5px'>"
+                ,"<input data-attr='2' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_2' style='margin-bottom:5px'>"
+                ,"<input data-attr='3' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_3' style='margin-bottom:5px'>"
+                ,"<input data-attr='4' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_4' style='margin-bottom:5px'>"
+                ,"<input data-attr='5' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_5' style='margin-bottom:5px'>"
+                ,"<input data-attr='6' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_6' style='margin-bottom:5px'>"],
             ["PM", makeInputBox("pm_1 solar_pv_pricing_input","pm_1"), makeInputBox("pm_2 solar_pv_pricing_input", "pm_2"), makeInputBox("pm_3 solar_pv_pricing_input", "pm_3"), makeInputBox("pm_4 solar_pv_pricing_input", "pm_4"), makeInputBox("pm_5 solar_pv_pricing_input", "pm_5"), makeInputBox("pm_6 solar_pv_pricing_input", "pm_6")],
             ["Total kW:", makeInputBox("total_kW_1 solar_pv_pricing_input", "total_kW_1", true), makeInputBox("total_kW_2 solar_pv_pricing_input", "total_kW_2", true), makeInputBox("total_kW_3 solar_pv_pricing_input", "total_kW_3",true), makeInputBox("total_kW_4 solar_pv_pricing_input", "total_kW_4",true), makeInputBox("total_kW_5 solar_pv_pricing_input", "total_kW_5",true), makeInputBox("total_kW_6 solar_pv_pricing_input", "total_kW_6",true)],
             ["Panel Type", makeSelectBox(panel_type,"panel_type_1 solar_pv_pricing_input", "panel_type_1"), makeSelectBox(panel_type,"panel_type_2 solar_pv_pricing_input", "panel_type_2"), makeSelectBox(panel_type,"panel_type_3 solar_pv_pricing_input", "panel_type_3"), makeSelectBox(panel_type,"panel_type_4 solar_pv_pricing_input", "panel_type_4"), makeSelectBox(panel_type,"panel_type_5 solar_pv_pricing_input", "panel_type_5"), makeSelectBox(panel_type,"panel_type_6 solar_pv_pricing_input", "panel_type_6")],

@@ -1,3 +1,90 @@
+/** PRODUCT MAPPER */
+const productMapper = [{
+    name: "Solar PV Supply and Install",
+    nameDb: "Solar PV Supply and Install",
+    id: "24049a0d-6338-4b87-195e-602b0e92eb62",
+},{
+    name: "STCs",
+    nameDb: "STCs",
+    id: "4efbea92-c52f-d147-3308-569776823b19",
+},{
+    name: "Sunpower P3 325 BLACK",
+    nameDb: "Sunpower P3 325W BLACK",
+    id: "ddccc2e2-8673-167a-486d-5ea65e73b911",
+},{
+    name: "Sunpower Maxeon 3 400W",
+    nameDb: "Sunpower Maxeon 3 400W",
+    id: "94ad880e-feee-bf20-54ca-5ccfe9e7a0de",
+},{
+    name: "Q CELLS Q.MAXX-G2 350W",
+    nameDb: "",
+    id: "",
+},{
+    name: "Jinko 370W Cheetah Plus JKM370M-66H",
+    nameDb: "",
+    id: "",
+},{
+    name: "Sungrow 5",
+    nameDb: "",
+    id: "",
+},{
+    name: "Sungrow 8",
+    nameDb: "",
+    id: "",
+},{
+    name: "Primo 5",
+    nameDb: "Fronius Primo 5kW Inverter",
+    id: "2b6dd740-ab28-1cde-012e-5d2e89ed82cd",
+},{
+    name: "S Edge 5",
+    nameDb: "Solaredge HDWave 5kW 1P",
+    id: "e76b3404-3b16-6e43-0560-5d3ee1b7e0d5",
+},{
+    name: "S Edge 6",
+    nameDb: "SolarEdge 6kW Genesis HD-Wave 1Ph Inverter",
+    id: "",
+},{
+    name: "S Edge 10",
+    nameDb: "Solaredge HDWave 10kW 1P",
+    id: "e8450cf9-13d9-f85d-5436-5d3ee1e39a4b",
+},{
+    name: "Sungrow 10 3P",
+    nameDb: "",
+    id: "",
+},{
+    name: "Primo 8.2",
+    nameDb: "Fronius Primo 8.2 SCERT Inverter",
+    id: "2b6dd740-ab28-1cde-012e-5d2e89ed82cd",
+},{
+    name: "Symo 10",
+    nameDb: "",
+    id: "",
+},{
+    name: "Primo 6",
+    nameDb: "",
+    id: "",
+},{
+    name: "Sungrow Smart Meter (1P)",
+    nameDb: "",
+    id: "",
+},{
+    name: "Fro. Smart Meter (1P)",
+    nameDb: "",
+    id: "",
+},{
+    name: "SE Wifi",
+    nameDb: "",
+    id: "",
+},{
+    name: "Fro. Smart Meter (3P)",
+    nameDb: "Fronius Smart Meter 3P 50kA--3",
+    id: "5d53735c-a394-2bd5-8032-5d42d1e93929",
+},{
+    name: "SE Smart Meter",
+    nameDb: "",
+    id: "",
+}]
+
 /** JS LOAD CUSTOM QUOTE INPUT  */
     $(function () {
         'use strict';
@@ -36,6 +123,7 @@
         $("#generate_quote").on('click',function(){
             if($("#quote_type_c").val() == "quote_type_solar"){
                 // generate_quote_by_input('quote_type_solar');
+                generateLineItem();
                 generateJSONForInput();
             }else{
                 generateJSONForInput();
@@ -48,7 +136,161 @@
         });
 
         hideSolarPanel();
+
+        // .:nhantv:. Grand Total on change
+        var old_total_amount = 0;
+        $(document).on('focusin', "#total_amount", function(){
+            old_total_amount = get_value('total_amount');
+        }).on('change', "#total_amount", function(){
+            let new_total_amount = get_value('total_amount');
+            let product0 = $('.product_group').find('tbody[id*=product_body]:visible')[0];
+            let list0 = $(product0).find('input[id*=product_product_list_price]');
+            let qty = get_value($(product0).find('input[id*=product_product_qty]').attr('id'));
+            let old_price = get_value($(product0).find('input[id*=product_product_list_price]').attr('id'));
+            set_value(list0.attr('id'), old_price - (((old_total_amount - new_total_amount) / 1.1)/qty));
+            list0.trigger("blur");
+        });
     });
+
+    // .:nhantv:. Generate Line Item from Quote Options
+    async function generateLineItem() {
+        // Get Option Quote
+        let optSelected = $('input[id*=own][name="sl_quote_option"]:checked').attr('data-attr');
+        if (!optSelected){
+            return;
+        }
+        // Show loading
+        SUGAR.ajaxUI.showLoadingPanel();
+        // Mark line deleted
+        for (var i = 0; i < prodln; i++){
+            markLineDeleted(i,"product_");
+        }
+        // Check exist any line item
+        if ($("#lineItems").find(".group_body").length == 0){
+            insertGroup(0);
+            $("#group0name").val("Solar");
+        } else {
+            $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
+        }
+        // Get value
+        let panelSelected = $('#own_panelType_' + optSelected).val();
+        let panelTotal = $('#own_totalPanels_' + optSelected).val();
+        let inverterSelected = $('#own_inverterType_' + optSelected).val();
+        let extra1Selected = $('#extra_1_' + optSelected).val();
+        let extra2Selected = $('#extra_2_' + optSelected).val();
+        let extra3Selected = $('#extra_3_' + optSelected).val();
+        let stcTotal = $('#number_of_stcs_' + optSelected).val();
+        // Create line item
+        // Alway add this product: Solar PV Supply and Install
+        await autoCreateLineItem(getProductInfoFromName("Solar PV Supply and Install"), 1, 1);
+        panelSelected && await autoCreateLineItem(getProductInfoFromName(panelSelected), panelTotal, 2);
+        inverterSelected && await autoCreateLineItem(getProductInfoFromName(inverterSelected), 1, 3);
+        extra1Selected && await autoCreateLineItem(getProductInfoFromName(extra1Selected), 1, 4);
+        extra2Selected && await autoCreateLineItem(getProductInfoFromName(extra2Selected), 1, 5);
+        extra3Selected && await autoCreateLineItem(getProductInfoFromName(extra3Selected), 1, 5);
+        // Alway add this product: STCs
+        await autoCreateLineItem(getProductInfoFromName("STCs"), stcTotal, 6);
+        // Calculate
+        await calculatePrice(7);
+        // Hide loading
+        setTimeout(function (){
+            SUGAR.ajaxUI.hideLoadingPanel();
+        }, 300);
+    }
+    // .:nhantv:. Calculate total price
+    async function calculatePrice(ms){
+        await wait(200 * ms);
+        let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
+        var totalList = 0, totalDiscount = 0, totalAmount = 0;
+        var list, dis, amount;
+        // For each
+        productVisible.each((index, el) => {
+            // get target
+            list = $(el).find('input[id*=product_product_list_price]');
+            dis = $(el).find('input[id*=product_product_discount]');
+            amount = $(el).find('input[id*=product_product_total_price]');
+
+            if(index !== 0 && index < productVisible.length - 1){
+                totalList += get_value(list.attr('id'));
+                totalDiscount += get_value(dis.attr('id'));
+                totalAmount += get_value(amount.attr('id'));
+                set_value(list.attr('id'), "");
+            }
+            // blur
+            list.trigger("blur")
+        });
+        // Set value to grand total
+        list = $(productVisible[0]).find('input[id*=product_product_list_price]');
+        set_value(list.attr('id'), totalAmount);
+        list.trigger("blur")
+    }
+    // .:nhantv:. Get Product Line Item info 
+    async function autoCreateLineItem(productInfo, total_item, ms){
+        await wait(200 * ms);
+        // Case: id = ""
+        if(productInfo && productInfo.id === ""){
+            insertProductLine('product_group0', '0');
+            lineno  = prodln-1;  
+            var popupReplyData = {};
+            popupReplyData.form_name = "EditView";
+            var name_to_value_array = {};
+            name_to_value_array["product_currency"+lineno] = "-99";
+            name_to_value_array["product_item_description"+lineno] = "";
+            name_to_value_array["product_name"+lineno] = productInfo.name;
+            name_to_value_array["product_part_number"+lineno] = "";
+            name_to_value_array["product_product_cost_price"+lineno] = "";
+
+            name_to_value_array["product_product_id"+lineno] = "";
+            name_to_value_array["product_product_list_price"+lineno] = "0";
+            name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
+            popupReplyData["name_to_value_array"] = name_to_value_array;            
+            $('#product_product_list_price'+lineno).focus();
+            setProductReturn(popupReplyData);
+            return;
+        }
+        // Case: id !== ""
+        $.ajax({
+            url: "/index.php?entryPoint=getInfoProduct&product_id=" + productInfo.id,
+            type: 'GET',
+            success: function(data)
+            {   
+                var info_pro = JSON.parse(data);
+                insertProductLine('product_group0', '0');
+                lineno  = prodln-1;  
+                var popupReplyData = {};
+                popupReplyData.form_name = "EditView";
+                var name_to_value_array = {};
+                name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
+                name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
+                name_to_value_array["product_name"+lineno] = info_pro['product_name'];
+                name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
+                name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
+    
+                name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
+                name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
+                name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
+                popupReplyData["name_to_value_array"] = name_to_value_array;            
+                $('#product_product_list_price'+lineno).focus();
+                $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ productInfo.id +'">Link</a></div>');
+                setProductReturn(popupReplyData);
+            },
+            error: function(response){console.log("Fail");},
+        });
+    }
+    // .:nhantv:. Get product id from Option selected
+    function getProductInfoFromName(name){
+        let result = {};
+        productMapper.forEach(element => {
+            if(element.name === name){
+                result = element;
+            }
+        });
+        return result;
+    }
+    // .:nhantv:. Wait function
+    const wait = ms => {
+        return new Promise(res => setTimeout(res, ms));
+    };
 
     // .:nhantv:. If Product Type is not Solar -> hide all solar panels: "SOLARGAIN INFORMATION" / "PRICING PV SECTION" / "SOLAR VICTORIA PROVIDER STATEMENT"
     function hideSolarPanel(){
