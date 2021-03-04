@@ -64,6 +64,7 @@ $(function () {
 
         $("#geo_type_of_wh_replaced_c").val(installType);
     }
+    change_type_of_water_with_old_tank_fuel();
     YAHOO.util.Event.addListener(["old_tank_fuel_c"], "change", change_type_of_water_with_old_tank_fuel);
 
     function display_link_PE_order_methven(){
@@ -200,8 +201,7 @@ $(function () {
                var percentage_off_promotion =  $('#percentage_off_promotion').val();
                var invoice_id = $("input[name='record']").val();
                var invoice_number = $("div[field='number']").text().trim(); 
-               var name_promotion = $("#name_promotion").text().trim(); 
-               
+               var name_promotion = $("#name_promotion").val().trim(); 
                if(amount_off_promotion == '' && percentage_off_promotion == '' ){
                    alert('Please fill out fields!');
                    return false;
@@ -217,6 +217,7 @@ $(function () {
                        'amount_off_promotion': amount_off_promotion,
                        'percentage_off_promotion': percentage_off_promotion
                    } ;  
+                   var data_in = data_post;
                    $.ajax({
                        url:"?entryPoint=APIGeneratePromoCode",
                        type: 'POST',
@@ -228,7 +229,9 @@ $(function () {
                                var html_result = "";
                                if(json.code_customize != ''){
                                    html_result += "Your Promo Code is <strong>" + json.code_customize + "</strong>";
-                                   
+                                   data_in.promo_code = json.code_customize;
+                                    GenerateJsonPromoCodeCustom (data_in);
+                                    RenderHTMLPromoCodeCustom();
                                }else{
                                    html_result += "Can't Create Promo Code";
                                }
@@ -250,6 +253,9 @@ $(function () {
                    return false;
                }
            };
+           
+        $("#json_promo_code_custom_c").closest('.edit-view-field').parent().hide();
+        RenderHTMLPromoCodeCustom();
         $("#generate_promo_code").click(function(){
 
             SUGAR.ajaxUI.showLoadingPanel(); 
@@ -8379,4 +8385,51 @@ function Ajax_Generate_File_PDF_REPS(action=''){
         $('#alert_modal').find('.modal-body').append('Could you saving Invoice before, please?'); 
         $('#alert_modal').modal('show'); 
     }
+}
+
+function GenerateJsonPromoCodeCustom (data_in){
+    var json_promo_code_custom_c = $("#json_promo_code_custom_c").val();
+    if(json_promo_code_custom_c == ''){
+         json_promo_code_custom_c = [];
+    }else{
+         json_promo_code_custom_c = $.parseJSON(json_promo_code_custom_c);
+    }
+    
+    var data_insert = {    
+        'offer_type_promotion':data_in.offer_type_promotion,
+        'name_promotion': data_in.name_promotion,
+        'amount_off_promotion': data_in.amount_off_promotion,
+        'percentage_off_promotion': data_in.percentage_off_promotion,
+        'promo_code': data_in.promo_code
+    } ;
+    json_promo_code_custom_c.push(data_insert);
+    $("#json_promo_code_custom_c").val(JSON.stringify(json_promo_code_custom_c));
+};
+
+function RenderHTMLPromoCodeCustom(){
+    var json_promo_code_custom_c = $("#json_promo_code_custom_c").val();
+    if(json_promo_code_custom_c == ''){
+         json_promo_code_custom_c = [];
+    }else{
+         json_promo_code_custom_c = $.parseJSON(json_promo_code_custom_c);
+    }
+    var html = "<div class='group_list_promo_code_customize'><ul>";
+    if(json_promo_code_custom_c.length != 0 ){
+        $.each(json_promo_code_custom_c,function(key,value){
+            if(value.promo_code !== '' ){
+                html += '<li>';
+                    html +=  '<span>'+ value.name_promotion + '</span>'; 
+                if(value.offer_type_promotion == 'order_fixed_grand_total_off'){
+                    html +=  '<span>- Discount ($ '+value.amount_off_promotion + ') - </span>'; 
+                }else {
+                    html +=  '<span>- Discount ( '+value.percentage_off_promotion + ' %) - </span>';  
+                }
+                    html +=  '<strong>'+value.promo_code + '</strong>'; 
+                html += '</li>';
+            }
+        });
+    }
+    html += "</ul></div'>";
+    $('.group_list_promo_code_customize').remove();
+    $('#custom_generate_promo_code').after(html);
 }
