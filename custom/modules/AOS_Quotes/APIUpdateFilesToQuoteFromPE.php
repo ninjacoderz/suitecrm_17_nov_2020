@@ -1,5 +1,6 @@
 <?php
 require_once('include/SugarPHPMailer.php');
+// include 'E:/2021Xampp_7/htdocs/suitecrm_17_nov_2020/custom/modules/AOS_Quotes/var_def_test.php';
 $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
 $dirName        = $_POST['pre_install_photos_c'];
 $folderName     = $path . $dirName . '/';
@@ -700,7 +701,12 @@ if($_POST['to_module'] == "aos_invoice"){
 
     $installer=  new Account();
     $installer->retrieve($installer_id);
-
+    $send_install_link ='';
+    if ($worker_type == "Plumber") {
+        $send_install_link = "<p>Send Installer link: <a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=APISendPhotoInstallToInstaller&invoice_id=".$invoice->id."&billing_account_id=".$invoice->billing_account_id."&installer_id=".$installer_id."&installer_name=Plumber&generateUUID=".$invoice->installation_pictures_c."' target='_blank'>Mail to ".$installer->name."</a></p>";
+    } else if ($worker_type == "Electrician") {
+        $send_install_link = "<p>Send Installer link: <a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=APISendPhotoInstallToInstaller&invoice_id=".$invoice->id."&billing_account_id=".$invoice->billing_account_id."&installer_id=".$installer_id."&installer_name=Electrician&generateUUID=".$invoice->installation_pictures_c."' target='_blank'>Mail to ".$installer->name."</a></p>";
+    }
     $client = new Account();
     $client->retrieve($invoice->billing_account_id);
 
@@ -725,7 +731,8 @@ if($_POST['to_module'] == "aos_invoice"){
         if ( $worker_type != "Customer" ){
             $mail->Body .= "<p>Email ".$worker_type.": <a href='https://mail.google.com/#search/".$installer->email1."'>".$installer->email1." GSearch</a></p>";
         }
-        $mail->Body .= "<p>Email Client: <a href='https://mail.google.com/#search/".$client->email1."'>".$client->email1." GSearch</a></p>";    
+        $mail->Body .= "<p>Email Client: <a href='https://mail.google.com/#search/".$client->email1."'>".$client->email1." GSearch</a></p>";
+        $mail->Body .= $send_install_link;    
     }
     $mail->Body .= $list_photos;
     // $mail->Body = "<a href='http://new.suitecrm-pure.com/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote->id."' target='_blank'>Link Quote: ".$quote->name."</a>";

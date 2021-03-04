@@ -35,7 +35,37 @@ $(function () {
         }
         
     }
-    
+
+    function change_type_of_water_with_old_tank_fuel(){
+        var old_tank_fuel_c = $("#old_tank_fuel_c").val();
+        var installType = old_tank_fuel_c;
+        switch (old_tank_fuel_c) {
+            case "electric_storage":  case "gravity_feed_electric": case "instant_electric":
+                installType = "replacedElectricHeater";
+                break;
+            case "gas_storage": case "gas_instant":
+                installType = "replaceGasWh";
+                break;
+            case "heatpump": 
+                installType = "replacedHeatPump";
+                break;
+             case "solar": 
+                installType = "replacedSolarWaterHeater";
+                break;
+            case "wood": case "other": 
+                installType = "other";
+                break;
+            case "newBuilding":
+                installType = "newBuilding";
+                break;
+            default:
+                break;
+        }
+
+        $("#geo_type_of_wh_replaced_c").val(installType);
+    }
+    YAHOO.util.Event.addListener(["old_tank_fuel_c"], "change", change_type_of_water_with_old_tank_fuel);
+
     function display_link_PE_order_methven(){
         if( $("#order_number_c").val() != "" ){
             $("#order_number_c").parent().append("<p id='link_order'><a  href='https://pure-electric.com.au/admin/commerce/orders/"+$('#order_number_c').val()+"' target='_blank'>Open Methven Order</a></p>");
@@ -1646,24 +1676,6 @@ $(function () {
             ' <button type="button" id="save_and_edit" class="button saveAndEdit" title="Save and Edit" onClick="SUGAR.saveAndEdit(this);">Save and Edit</button>'
         )
         SUGAR.saveAndEdit = function (elem) {
-            if($("input[name='record']").val() == ''){
-                var record_id_patt = /"record" value="(.*)"/g;
-                var records = record_id_patt.exec(data);
-                if(records !== null && typeof records === 'object'){
-                    if(records[1] !='')  {
-                        window.onbeforeunload = null;
-                        window.onunload = null;
-                        window.addEventListener('beforeunload', function(e) {
-                            window.onbeforeunload = null;
-                            window.onunload = null;
-                        });
-                        var url = 'https://suitecrm.pure-electric.com.au';
-                        // var url = 'http://loc.suitecrm.com/';
-                        window.location.href = url+"index.php?module=AOS_Quotes&action=EditView&record="+records[1];
-                    }
-                }
-                return false;
-            }
             SUGAR.ajaxUI.showLoadingPanel();
             $("#EditView input[name='action']").val('Save');
             $.ajax({
@@ -1671,6 +1683,24 @@ $(function () {
                 url: $("#EditView").attr('action'),
                 data: $("#EditView").serialize(),
                 success: function (data) {
+                    if($("input[name='record']").val() == ''){
+                        var record_id_patt = /"record" value="(.*)"/g;
+                        var records = record_id_patt.exec(data);
+                        if(records !== null && typeof records === 'object'){
+                            if(records[1] !='')  {
+                                window.onbeforeunload = null;
+                                window.onunload = null;
+                                window.addEventListener('beforeunload', function(e) {
+                                    window.onbeforeunload = null;
+                                    window.onunload = null;
+                                });
+                                var url = 'https://suitecrm.pure-electric.com.au';
+                                // var url = 'http://locsuitecrm.com/';
+                                window.location.href = url+"index.php?module="+module_sugar_grp1+"&action=EditView&record="+records[1];
+                            }
+                        }
+                        return false;
+                    }
                     $(".reload_after_rename").trigger("click");
                     loadSelect_CES_Template();
                     SUGAR.ajaxUI.hideLoadingPanel();
@@ -6561,7 +6591,16 @@ $(function () {
                 var  plumber_firstname  = $("#plumber_c").val().split(/\s(.+)/)[0];
                 var  plumber_lastname   = $("#plumber_c").val().split(/\s(.+)/)[1];
                 var  created_by         = $("#user_id_c").val();
+                var getDaysArray = function(start, end) {
+                    for(var arr=[],dt=new Date(start); dt.getDate()<=end.getDate(); dt.setDate(dt.getDate()+1)){
+                        arr.push(new Date(dt));
+                    }
+                    return arr;
+                };
 
+                var today = new Date();
+                var pe_available_date = JSON.stringify(getDaysArray(today,new Date(today.getFullYear(), today.getMonth(), today.getDate()+21)));
+                
                 $.ajax({
                     type: "POST",
                     url : "https://calendar.pure-electric.com.au/api/API.php/saveInstallation",
@@ -6578,7 +6617,11 @@ $(function () {
                             "plumber_id"        : (plumber_id         != 'undefined') ? plumber_id         : '',
                             "plumber_firstname" : (plumber_firstname  != 'undefined') ? plumber_firstname  : '',
                             "plumber_lastname"  : (plumber_lastname   != 'undefined') ? plumber_lastname   : '',
-                            "created_by"        : (created_by         != 'undefined') ? created_by         : ''
+                            "created_by"        : (created_by         != 'undefined') ? created_by         : '',
+                            "pe_available_date"        : pe_available_date,
+                            "electric_available_date"  : [],
+                            "plumber_available_date"   : [],
+                            "client_available_date"    : [],
                         },
                     success : function(data){
                         if(data['success']){

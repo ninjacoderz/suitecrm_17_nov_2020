@@ -92,10 +92,11 @@ function generatePDF($Invoice){
 
     $pdf->Write($pdf->SetXY(37,99.2), html_entity_decode($contact_bean->first_name,ENT_QUOTES)); // first name
     $pdf->Write($pdf->SetXY(118,99.2), html_entity_decode($contact_bean->last_name,ENT_QUOTES)); // last name
-    $pdf->Write($pdf->SetXY(37,103.7), html_entity_decode($contact_bean->primary_address_street,ENT_QUOTES)); // install address
-    $pdf->Write($pdf->SetXY(37,108.5), html_entity_decode($contact_bean->primary_address_city,ENT_QUOTES)); // suburd
-    $pdf->Write($pdf->SetXY(118,108.5), html_entity_decode($contact_bean->primary_address_state,ENT_QUOTES)); // state
-    $pdf->Write($pdf->SetXY(170,108.5), html_entity_decode($contact_bean->primary_address_postalcode,ENT_QUOTES)); // postcode
+    // install address
+    $pdf->Write($pdf->SetXY(37,103.7), html_entity_decode($Invoice->install_address_c,ENT_QUOTES)); // install address
+    $pdf->Write($pdf->SetXY(37,108.5), html_entity_decode($Invoice->install_address_city_c,ENT_QUOTES)); // suburd
+    $pdf->Write($pdf->SetXY(118,108.5), html_entity_decode($Invoice->install_address_state_c,ENT_QUOTES)); // state
+    $pdf->Write($pdf->SetXY(170,108.5), html_entity_decode($Invoice->install_address_postalcode_c,ENT_QUOTES)); // postcode
     $pdf->Write($pdf->SetXY(37,113), html_entity_decode($contact_bean->phone_mobile,ENT_QUOTES)); // phone
     $pdf->Write($pdf->SetXY(118,112.8), html_entity_decode($contact_bean->email1,ENT_QUOTES)); // email
 
@@ -120,10 +121,12 @@ function generatePDF($Invoice){
     $pdf->Write($pdf->SetXY(36.5,203.5), html_entity_decode($Invoice->plumber_c,ENT_QUOTES)); // Installer Name
     $pdf->Write($pdf->SetXY(36.5,208), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
     $pdf->Write($pdf->SetXY(125,208), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
+    
+    $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name));
 
-    $fp = fopen($ds_dir.'/REPS_WH1_Hot_Water_Replacement.pdf', 'wb');
+    $fp = fopen($ds_dir.'/'.$pre_file.'_REPS_WH1_Hot_Water_Replacement.pdf', 'wb');
     fclose($fp);
-    $pdf->Output($ds_dir.'/REPS_WH1_Hot_Water_Replacement.pdf', 'F');
+    $pdf->Output($ds_dir.'/'.$pre_file.'_REPS_WH1_Hot_Water_Replacement.pdf', 'F');
    
     return 'Finish';
     
@@ -158,7 +161,7 @@ function Generate_REPS_Information_Statement($Invoice){
         $dateInfos = '';
     }
   
-    $pdf->Write($pdf->SetXY(137, 29.5), html_entity_decode($dateInfos,ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(109, 26), html_entity_decode($dateInfos,ENT_QUOTES));
    
     //REPS ACTIVITY 
     $pdf->Image(__DIR__.'/text/icon.jpg' ,13,41.5,3,2.8); //WH1 - REPLACE OR UPGRADE WATER HEATER
@@ -169,10 +172,11 @@ function Generate_REPS_Information_Statement($Invoice){
 
     $pdf->Write($pdf->SetXY(37,59.5), html_entity_decode($contact_bean->first_name,ENT_QUOTES)); // first name
     $pdf->Write($pdf->SetXY(118,59.5), html_entity_decode($contact_bean->last_name,ENT_QUOTES)); // last name
-    $pdf->Write($pdf->SetXY(37,64), html_entity_decode($contact_bean->primary_address_street,ENT_QUOTES)); // install address
-    $pdf->Write($pdf->SetXY(37,69), html_entity_decode($contact_bean->primary_address_city,ENT_QUOTES)); // suburd
-    $pdf->Write($pdf->SetXY(118,69), html_entity_decode($contact_bean->primary_address_state,ENT_QUOTES)); // state
-    $pdf->Write($pdf->SetXY(170,69), html_entity_decode($contact_bean->primary_address_postalcode,ENT_QUOTES)); // postcode
+    // install address
+    $pdf->Write($pdf->SetXY(37,64), html_entity_decode($Invoice->install_address_c,ENT_QUOTES)); // install address
+    $pdf->Write($pdf->SetXY(37,69), html_entity_decode($Invoice->install_address_city_c,ENT_QUOTES)); // suburd
+    $pdf->Write($pdf->SetXY(118,69), html_entity_decode($Invoice->install_address_state_c,ENT_QUOTES)); // state
+    $pdf->Write($pdf->SetXY(170,69), html_entity_decode($Invoice->install_address_postalcode_c,ENT_QUOTES)); // postcode
     $pdf->Write($pdf->SetXY(37,73), html_entity_decode($contact_bean->phone_mobile,ENT_QUOTES)); // phone
     $pdf->Write($pdf->SetXY(118,73), html_entity_decode($contact_bean->email1,ENT_QUOTES)); // email
 
@@ -197,10 +201,11 @@ function Generate_REPS_Information_Statement($Invoice){
 
         $pdf->Write($pdf->SetXY(34.5,244), html_entity_decode($contact_bean->first_name .' ' .$contact_bean->last_name ,ENT_QUOTES)); // Customer Name
 
+    $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name));
 
-    $fp = fopen($ds_dir.'/SA_REP_Information_Statement.pdf', 'wb');
+    $fp = fopen($ds_dir.'/'.$pre_file.'_SA_REP_Information_Statement.pdf', 'wb');
     fclose($fp);
-    $pdf->Output($ds_dir.'/SA_REP_Information_Statement.pdf', 'F');
+    $pdf->Output($ds_dir.'/'.$pre_file.'_SA_REP_Information_Statement.pdf', 'F');
    
     return 'Finish';
 }
