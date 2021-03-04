@@ -1642,13 +1642,15 @@ $(function () {
             }
         });
         // Logic for total_amount
-        var old_total_amount = $("#total_amount").val().replace(',','');
-        var old_first_product_price = 0;
-        if(typeof old_total_amount === "undefined") old_total_amount = 0;
-        if(typeof $("#product_product_list_price0") !== "undefined" &&  typeof $("#product_product_list_price0").val() !== "undefined"){
+        if(module_sugar_grp1 == 'AOS_Invoices'){
+            var old_total_amount = $("#total_amount").val().replace(',','');
+            var old_first_product_price = 0;
+            if(typeof old_total_amount === "undefined") old_total_amount = 0;
+            if(typeof $("#product_product_list_price0") !== "undefined" &&  typeof $("#product_product_list_price0").val() !== "undefined"){
 
-            old_first_product_price = $("#product_product_list_price0").val().replace(',','');
+                old_first_product_price = $("#product_product_list_price0").val().replace(',','');
 
+            }
         }
         //dung fix run Quote or Invoice
         // var select_detailpanel = "#detailpanel_2";
@@ -1658,14 +1660,16 @@ $(function () {
         $(document).on('focusin', "#total_amount", function(){
             old_total_amount = $("#total_amount").val().replace(',','');
         }).on('change', "#total_amount", function(){
-            //$("#total_amount").change(function(){
-            if(typeof $("#product_product_list_price0") !== "undefined" &&  typeof $("#product_product_list_price0").val() !== "undefined"){
-                old_first_product_price = $("#product_product_list_price0").val().replace(',','');
+            if(module_sugar_grp1 == 'AOS_Invoices'){
+                //$("#total_amount").change(function(){
+                if(typeof $("#product_product_list_price0") !== "undefined" &&  typeof $("#product_product_list_price0").val() !== "undefined"){
+                    old_first_product_price = $("#product_product_list_price0").val().replace(',','');
+                }
+                var delta = (old_total_amount - $("#total_amount").val().replace(',','') )/1.1;
+                var qty = $('#product_product_qty0').val();
+                $("#product_product_list_price0").val(old_first_product_price - (delta/qty));
+                $("#product_product_list_price0").trigger("blur");
             }
-            var delta = (old_total_amount - $("#total_amount").val().replace(',','') )/1.1;
-            var qty = $('#product_product_qty0').val();
-            $("#product_product_list_price0").val(old_first_product_price - (delta/qty));
-            $("#product_product_list_price0").trigger("blur");
         });
 
         $("#CANCEL").after(

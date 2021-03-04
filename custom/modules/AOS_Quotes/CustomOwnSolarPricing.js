@@ -26,6 +26,29 @@ $(function () {
         }
     }
 
+    // .:nhantv:. Add a checkbox to Itemise in LINE ITEMS
+    $('input[name="sl_quote_option"]').on('change', function() {
+        // Set change
+        let dataAttr = $(this).attr('data-attr');
+        let propVal = $(this).prop('checked');
+        if(propVal){
+            $('input[name="sl_quote_option"]').each(function(){
+                $(this).attr('data-attr') && $(this).attr('data-attr') === dataAttr
+                ? $(this).prop('checked', propVal) 
+                : $(this).prop('checked', !propVal);
+            })
+        } else {
+            // Mark line deleted
+            for (var i = 0; i < prodln; i++){
+                markLineDeleted(i,"product_");
+            };
+            // Delete group
+            $("#lineItems").find(".group_body").each((index) => {
+                markGroupDeleted(index);
+            });
+        }
+    });
+
 });
 
 
@@ -172,6 +195,13 @@ function init_table_own_solar() {
     
     let data = [
         ["", 'Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'],
+        ["Selected Quote Option"
+            , "<input data-attr='1' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='own_sl_option_1' style='margin-bottom:5px'>"
+            ,"<input data-attr='2' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='own_sl_option_2' style='margin-bottom:5px'>"
+            ,"<input data-attr='3' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='own_sl_option_3' style='margin-bottom:5px'>"
+            ,"<input data-attr='4' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='own_sl_option_4' style='margin-bottom:5px'>"
+            ,"<input data-attr='5' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='own_sl_option_5' style='margin-bottom:5px'>"
+            ,"<input data-attr='6' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='own_sl_option_6' style='margin-bottom:5px'>"],
         ["Total kW:", makeInputBox("own_totalkW_1 own_solar_pv_pricing", "own_totalkW_1", true), makeInputBox("own_totalkW_2 own_solar_pv_pricing", "own_totalkW_2", true), makeInputBox("own_totalkW_3 own_solar_pv_pricing", "own_totalkW_3",true), makeInputBox("own_totalkW_4 own_solar_pv_pricing", "own_totalkW_4",true), makeInputBox("own_totalkW_5 own_solar_pv_pricing", "own_totalkW_5",true), makeInputBox("own_totalkW_6 own_solar_pv_pricing", "own_totalkW_6",true)],
         ["Panel Type:", makeInputBox("own_panelType_1 own_solar_pv_pricing", "own_panelType_1", true), makeInputBox("own_panelType_2 own_solar_pv_pricing", "own_panelType_2", true), makeInputBox("own_panelType_3 own_solar_pv_pricing", "own_panelType_3", true), makeInputBox("own_panelType_4 own_solar_pv_pricing", "own_panelType_4", true), makeInputBox("own_panelType_5 own_solar_pv_pricing", "own_panelType_5", true), makeInputBox("own_panelType_6 own_solar_pv_pricing", "own_panelType_6", true)],
         ["Inverter Type:", makeInputBox("own_inverterType_1 own_solar_pv_pricing", "own_inverterType_1", true), makeInputBox("own_inverterType_2 own_solar_pv_pricing", "own_inverterType_2", true), makeInputBox("own_inverterType_3 own_solar_pv_pricing", "own_inverterType_3", true), makeInputBox("own_inverterType_4 own_solar_pv_pricing", "own_inverterType_4", true), makeInputBox("own_inverterType_5 own_solar_pv_pricing", "own_inverterType_5", true), makeInputBox("own_inverterType_6 own_solar_pv_pricing", "own_inverterType_6", true)],
