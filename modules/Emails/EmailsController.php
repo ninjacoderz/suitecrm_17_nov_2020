@@ -1196,6 +1196,12 @@ class EmailsController extends SugarController
             }
             // tuan reupload customer 
             if($_REQUEST['email_type'] == 'client_reuploads_photo'){ 
+                $record_id = trim($_REQUEST['record_id']);
+                $macro_nv = array();
+                $focusName = "AOS_Invoices";
+                $focus = BeanFactory::getBean($focusName, $record_id);
+                if(!$focus->id) return;
+
                 $emailTemplateID = '95cb7a0c-5386-b18d-5fd9-601a676c3e7b';// 'e69a39b1-f128-16c0-3693-601a5c0f52ea'; 
 
                 $emailTemplate = BeanFactory::getBean(
