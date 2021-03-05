@@ -464,6 +464,26 @@ $(function () {
             $("#contact_id3_c").val($("#billing_contact_id").val());
             //
         }
+        if($("#lineItems").length){
+            $("#lineItems").click(function () {
+                if(!($('.product_group').hasClass('ui-sortable'))){
+                    $('.product_group').sortable({
+                        cancel: ".product_group0_head",
+                        axis :"y",	
+                        handle: '.handle',	
+                        update: function(event, ui) {
+                            if($("input[name='record']").val() !== ""){
+                                var line_item_orders = {}
+                                $("input[name^='product_product_id']").each(function(){
+                                    line_item_orders.push($(this).val());
+                                });
+                            }
+                        }
+                    });
+                }
+
+            })
+        }
         if(module_sugar_grp1 != "AOS_Quotes")  
         $('#plumber_c').parent().siblings('.label').append('<br> <button class="button primary" id="seekInstallationDate"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Seek Install Date</button>');
 
