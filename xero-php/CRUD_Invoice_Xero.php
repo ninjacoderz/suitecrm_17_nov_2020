@@ -245,8 +245,8 @@
                                     $info_invoice_xero_SHWR['due_date'] = $date_for_rebate;
                                     $info_invoice_xero_SHWR['LineItems'][] = $lineitem_xero_SV_SHWR;
                              
-                                    if($InvoiceCRM->xero_veec_rebate_invoice_c != ''){
-                                        $xeroInvoiceSV_SHWR = $API_Custom_Xero->Get_Invoice_By_ID(trim($InvoiceCRM->xero_veec_rebate_invoice_c));
+                                    if($InvoiceCRM->xero_shw_rebate_invoice_c != ''){
+                                        $xeroInvoiceSV_SHWR = $API_Custom_Xero->Get_Invoice_By_ID(trim($InvoiceCRM->xero_shw_rebate_invoice_c));
                                         $xeroInvoiceSV_SHWR = $API_Custom_Xero->Update_Invoice($info_invoice_xero_SHWR,$xeroInvoiceSV_SHWR);
                                     }else{
                                         $xeroInvoiceSV_SHWR = $API_Custom_Xero->Create_Invoice($info_invoice_xero_SHWR);

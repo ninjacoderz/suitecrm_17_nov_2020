@@ -64,6 +64,7 @@ $(function () {
 
         $("#geo_type_of_wh_replaced_c").val(installType);
     }
+    change_type_of_water_with_old_tank_fuel();
     YAHOO.util.Event.addListener(["old_tank_fuel_c"], "change", change_type_of_water_with_old_tank_fuel);
 
     function display_link_PE_order_methven(){
@@ -200,8 +201,7 @@ $(function () {
                var percentage_off_promotion =  $('#percentage_off_promotion').val();
                var invoice_id = $("input[name='record']").val();
                var invoice_number = $("div[field='number']").text().trim(); 
-               var name_promotion = $("#name_promotion").text().trim(); 
-               
+               var name_promotion = $("#name_promotion").val().trim(); 
                if(amount_off_promotion == '' && percentage_off_promotion == '' ){
                    alert('Please fill out fields!');
                    return false;
@@ -217,6 +217,7 @@ $(function () {
                        'amount_off_promotion': amount_off_promotion,
                        'percentage_off_promotion': percentage_off_promotion
                    } ;  
+                   var data_in = data_post;
                    $.ajax({
                        url:"?entryPoint=APIGeneratePromoCode",
                        type: 'POST',
@@ -228,7 +229,9 @@ $(function () {
                                var html_result = "";
                                if(json.code_customize != ''){
                                    html_result += "Your Promo Code is <strong>" + json.code_customize + "</strong>";
-                                   
+                                   data_in.promo_code = json.code_customize;
+                                    GenerateJsonPromoCodeCustom (data_in);
+                                    RenderHTMLPromoCodeCustom();
                                }else{
                                    html_result += "Can't Create Promo Code";
                                }
@@ -250,6 +253,9 @@ $(function () {
                    return false;
                }
            };
+           
+        $("#json_promo_code_custom_c").closest('.edit-view-field').parent().hide();
+        RenderHTMLPromoCodeCustom();
         $("#generate_promo_code").click(function(){
 
             SUGAR.ajaxUI.showLoadingPanel(); 
@@ -6677,6 +6683,39 @@ $(function () {
 //VUT-S-Create button new Service Case
         if (module_sugar_grp1 == 'AOS_Invoices' && action_sugar_grp1 == 'EditView') {
             $("#new_cancel").after("&nbsp;<button type='button' class='button primary' id='create_service_case'><span class='glyphicon hidden glyphicon-refresh glyphicon-refresh-animate'></span>Create Service Case</button>")
+            //VUT - S - add button TODAY / TODAY +1 TODAY+7 onClick="getDate_Inv(this);"
+            var array_datefield = 'div[field="quote_date"], div[field="invoice_date"], div[field="due_date"], div[field="next_action_date_c"], div[field="dispatch_date_c"]';
+            var html_button_date = '<button type="button" class="button get_date_inv"  title="Get Today+7" data-type="7" >TODAY +7</button>'
+                                +   '<button type="button" class="button get_date_inv" title="Get Today+1" data-type="1" >TODAY +1</button>'
+                                +    '<button type="button" class="button get_date_inv" title="Get Today" data-type="today" >TODAY</button>';
+            $(array_datefield).append(html_button_date);
+            $('.get_date_inv').click(function(){
+                // debugger
+                var field_date = $(this).parent().attr('field');
+                var type_field = $(this).parent().attr('type');
+                var type_button = $(this).attr('data-type');
+                var date_click = getDate_Inv(type_button);
+                if (type_field == 'date') {
+                    $('#'+field_date).val(date_click);
+                } else {
+                    var today_date = new Date();
+                    var hour_date = ((today_date.getHours() < 10) ? '0' : '') + today_date.getHours();
+                    var minutes_date = today_date.getMinutes();
+                    if(minutes_date<15){
+                        minutes_date = $("#"+field_date+"_minutes option:eq(1)").val();
+                    }else if(minutes_date>=15 && minutes_date < 30){
+                        minutes_date = $("#"+field_date+"_minutes option:eq(2)").val();
+                    }else if(minutes_date>=30 && minutes_date < 45){
+                        minutes_date = $("#"+field_date+"_minutes option:eq(3)").val();
+                    }else{
+                        minutes_date = $("#"+field_date+"_minutes option:eq(4)").val();      
+                    }
+                    $('#'+field_date+'_date').val(date_click);
+                    $('#'+field_date+'_hours').val(hour_date);
+                    $('#'+field_date+'_minutes').val(minutes_date);
+                }
+            });     
+            //VUT - E - add button TODAY / TODAY +1 TODAY+7   
         }
         $('#create_service_case').click(function() {
             // debugger;
@@ -8379,4 +8418,101 @@ function Ajax_Generate_File_PDF_REPS(action=''){
         $('#alert_modal').find('.modal-body').append('Could you saving Invoice before, please?'); 
         $('#alert_modal').modal('show'); 
     }
+}
+
+function GenerateJsonPromoCodeCustom (data_in){
+    var json_promo_code_custom_c = $("#json_promo_code_custom_c").val();
+    if(json_promo_code_custom_c == ''){
+         json_promo_code_custom_c = [];
+    }else{
+         json_promo_code_custom_c = $.parseJSON(json_promo_code_custom_c);
+    }
+    
+    var data_insert = {    
+        'offer_type_promotion':data_in.offer_type_promotion,
+        'name_promotion': data_in.name_promotion,
+        'amount_off_promotion': data_in.amount_off_promotion,
+        'percentage_off_promotion': data_in.percentage_off_promotion,
+        'promo_code': data_in.promo_code
+    } ;
+    json_promo_code_custom_c.push(data_insert);
+    $("#json_promo_code_custom_c").val(JSON.stringify(json_promo_code_custom_c));
+};
+
+function RenderHTMLPromoCodeCustom(){
+    var json_promo_code_custom_c = $("#json_promo_code_custom_c").val();
+    if(json_promo_code_custom_c == ''){
+         json_promo_code_custom_c = [];
+    }else{
+         json_promo_code_custom_c = $.parseJSON(json_promo_code_custom_c);
+    }
+    var html = "<div class='group_list_promo_code_customize'><ul>";
+    if(json_promo_code_custom_c.length != 0 ){
+        $.each(json_promo_code_custom_c,function(key,value){
+            if(value.promo_code !== '' ){
+                html += '<li>';
+                    html +=  '<span>'+ value.name_promotion + '</span>'; 
+                if(value.offer_type_promotion == 'order_fixed_grand_total_off'){
+                    html +=  '<span>- Discount ($ '+value.amount_off_promotion + ') - </span>'; 
+                }else {
+                    html +=  '<span>- Discount ( '+value.percentage_off_promotion + ' %) - </span>';  
+                }
+                    html +=  '<strong>'+value.promo_code + '</strong>'; 
+                html += '</li>';
+            }
+        });
+    }
+    html += "</ul></div'>";
+    $('.group_list_promo_code_customize').remove();
+    $('#custom_generate_promo_code').after(html);
+}
+
+/**
+ * 3 button TODAY +7 , TODAY +1, TODAY
+ * @param {STRING} type  'data-type' of element
+ */
+function getDate_Inv(type) {
+    var date_return = '';
+    var date = new Date();
+    switch(type){
+        case 'today':
+            var data = defaultDateTime_Inv(new Date());
+            if(data['day'] < 10) {
+                data['day'] = '0'+data['day'];
+            }
+            if(data['month'] < 10) {
+                data['month'] = '0' + data['month'];
+            }
+            date_return = data['day']+'/'+data['month']+'/'+data['year']; 
+            break;
+        case '1':
+            var data = defaultDateTime_Inv(new Date(date.getTime() + (24*60*60*1000)));
+            if(data['day'] < 10) {
+                data['day'] = '0'+data['day'];
+            }
+            if(data['month'] < 10) {
+                data['month'] = '0' + data['month'];
+            }
+            date_return = data['day']+'/'+data['month']+'/'+data['year']; 
+            break;
+        case '7':
+            var data = defaultDateTime_Inv(new Date(date.getTime() + 7*(24*60*60*1000)));
+            if(data['day'] < 10) {
+                data['day'] = '0'+data['day'];
+            }
+            if(data['month'] < 10) {
+                data['month'] = '0' + data['month'];
+            }
+            date_return = data['day']+'/'+data['month']+'/'+data['year']; 
+            break;
+    }
+    return date_return;
+}
+
+function defaultDateTime_Inv(date){
+    var now     = date;
+    var year    = now.getFullYear();
+    var month   = now.getMonth()+1; 
+    var day     = now.getDate();
+    return {'day':day,'month':month,'year':year,}
 }
