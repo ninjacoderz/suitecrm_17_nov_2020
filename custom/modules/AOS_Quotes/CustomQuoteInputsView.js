@@ -36,15 +36,19 @@ const productMapper = [{
     nameDb: "Fronius Primo 5kW Inverter",
     id: "2b6dd740-ab28-1cde-012e-5d2e89ed82cd",
 },{
-    name: "S Edge 5",
+    name: "S Edge 5G",
     nameDb: "Solaredge HDWave 5kW 1P",
     id: "e76b3404-3b16-6e43-0560-5d3ee1b7e0d5",
 },{
-    name: "S Edge 6",
+    name: "S Edge 6G",
+    nameDb: "SolarEdge 6kW Genesis HD-Wave 1Ph Inverter",
+    id: "f02c1d4b-2d97-fb32-c9c0-602b6ac5da42",
+},{
+    name: "S Edge 8G",
     nameDb: "SolarEdge 6kW Genesis HD-Wave 1Ph Inverter",
     id: "",
 },{
-    name: "S Edge 10",
+    name: "S Edge 10G",
     nameDb: "Solaredge HDWave 10kW 1P",
     id: "e8450cf9-13d9-f85d-5436-5d3ee1e39a4b",
 },{
@@ -59,6 +63,10 @@ const productMapper = [{
     name: "Symo 10",
     nameDb: "",
     id: "",
+},{
+    name: "Symo 15",
+    nameDb: "",
+    id: "d051d35d-7a84-e4f1-b39f-5d42c9358989",
 },{
     name: "Primo 6",
     nameDb: "",
@@ -135,6 +143,7 @@ const productMapper = [{
             generateJSONForInput();
         });
 
+        // .:nhantv:. Hide solar panel when Product Type !== Solar
         hideSolarPanel();
 
         // .:nhantv:. Grand Total on change
@@ -151,6 +160,22 @@ const productMapper = [{
             list0.trigger("blur");
         });
     });
+    // .:nhantv:. Init select Option checkbox and line item
+    function initOptionAndGenLineItem(){
+        // init Options
+        let quote_note_inputs_c = $('#quote_note_inputs_c').text();
+        let ownSolarPvJSON = quote_note_inputs_c ? JSON.parse(quote_note_inputs_c) : {};
+        var data;
+        for (let key in ownSolarPvJSON) {  
+            if(key.indexOf('own_sl_option') !== -1) {
+                // Set Own Select Option
+                $('#'+key).prop('checked', ownSolarPvJSON[key]);
+                // Set PV Pricing Section
+                data = $('#'+key).attr('data-attr');
+                $('#sl_option_'+data).prop('checked', ownSolarPvJSON[key]);
+            }
+        }
+    }
 
     // .:nhantv:. Generate Line Item from Quote Options
     async function generateLineItem() {
@@ -175,7 +200,7 @@ const productMapper = [{
         // Get value
         let panelSelected = $('#own_panelType_' + optSelected).val();
         let panelTotal = $('#own_totalPanels_' + optSelected).val();
-        let inverterSelected = $('#own_inverterType_' + optSelected).val();
+        let inverterSelected = $('#inverter_type_' + optSelected).val();
         let extra1Selected = $('#extra_1_' + optSelected).val();
         let extra2Selected = $('#extra_2_' + optSelected).val();
         let extra3Selected = $('#extra_3_' + optSelected).val();
@@ -228,24 +253,7 @@ const productMapper = [{
     async function autoCreateLineItem(productInfo, total_item, ms){
         await wait(200 * ms);
         // Case: id = ""
-        if(productInfo && productInfo.id === ""){
-            insertProductLine('product_group0', '0');
-            lineno  = prodln-1;  
-            var popupReplyData = {};
-            popupReplyData.form_name = "EditView";
-            var name_to_value_array = {};
-            name_to_value_array["product_currency"+lineno] = "-99";
-            name_to_value_array["product_item_description"+lineno] = "";
-            name_to_value_array["product_name"+lineno] = productInfo.name;
-            name_to_value_array["product_part_number"+lineno] = "";
-            name_to_value_array["product_product_cost_price"+lineno] = "";
-
-            name_to_value_array["product_product_id"+lineno] = "";
-            name_to_value_array["product_product_list_price"+lineno] = "0";
-            name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
-            popupReplyData["name_to_value_array"] = name_to_value_array;            
-            $('#product_product_list_price'+lineno).focus();
-            setProductReturn(popupReplyData);
+        if(productInfo === undefined || productInfo.id === ""){
             return;
         }
         // Case: id !== ""
@@ -279,7 +287,7 @@ const productMapper = [{
     }
     // .:nhantv:. Get product id from Option selected
     function getProductInfoFromName(name){
-        let result = {};
+        let result = undefined;
         productMapper.forEach(element => {
             if(element.name === name){
                 result = element;
@@ -354,8 +362,12 @@ const productMapper = [{
     function parseJSONValueToFields(){
         if ($("#quote_note_inputs_c").val() == '')  return;
         var dataJSON = JSON.parse($("#quote_note_inputs_c").val());
-        for (let key in dataJSON) {  
-            $("#"+key).val(dataJSON[key]);
+        for (let key in dataJSON) {
+            if(typeof(dataJSON[key]) === Boolean){
+                $("#"+key).prop('checked', dataJSON[key]);
+            } else {
+                $("#"+key).val(dataJSON[key]);
+            }
         }
     }
 
@@ -364,6 +376,11 @@ const productMapper = [{
         $("#group_custom_quote_inputs_checklist .custom_fields").each(function (){
             var id_name = $(this).attr("id");
             values[id_name] = $(this).val();
+        });
+        // .:nhantv:. Generate Select Options
+        $('input[id*=own][name="sl_quote_option"]').each((index, el) => {
+            let id = $(el).attr('id');
+            values[id] = $(el).prop('checked');
         });
         $("#quote_note_inputs_c").val(JSON.stringify(values));
     }

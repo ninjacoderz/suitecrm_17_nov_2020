@@ -47,6 +47,7 @@ $(function () {
                 markGroupDeleted(index);
             });
         }
+        generateJSONForInput();
     });
 
 });
@@ -225,6 +226,8 @@ function init_table_own_solar() {
     //css Table
     $(".Own-Solar-PV-Pricing td").css({"padding":"0px 5px"});
     $(".Own-Solar-PV-Pricing th").css({"text-align":"center"});
+    // .:nhantv:. Init Options and gen Line Items
+    initOptionAndGenLineItem();
 } //end function init_table_own_solar
 
 /**
