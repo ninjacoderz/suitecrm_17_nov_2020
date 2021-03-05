@@ -234,17 +234,18 @@ $(document).ready(function(){
         var check_module_use = array_module_use_fucntion.includes(module_sugar_grp1);
         if(!check_module_use) return;
         if(action_sugar_grp1 == 'EditView'){
-            $('.module-title-text a').text('');
             switch (module_sugar_grp1) {
                 case 'Leads':
                     $('.module-title-text a').text('Lead #'+$('div[field="number"]').text().trim()+' '+$('.module-title-text a').text().trim());
                     $('.module-title-text').append('<span>('+$("#status option:selected").text()+')</span>');
                     break;
                 case 'AOS_Quotes':
+                    $('.module-title-text a').text('');
                     $('.module-title-text a').text('Quote #'+$('div[field="number"]').text().trim()+' '+$(document).find('#name').val());
                     $('.module-title-text').append('<span>('+$("#stage option:selected").text()+')</span>');
                     break;            
                 case 'AOS_Invoices':
+                    $('.module-title-text a').text('');
                     $('.module-title-text a').text('Invoice #'+$('div[field="number"]').text().trim()+' '+$(document).find('#name').val());
                     $('.module-title-text').append('<span>('+$("#status option:selected").text()+')</span>');
                     break; 
@@ -260,12 +261,14 @@ $(document).ready(function(){
                     }
                     break;         
                 case 'pe_service_case':
+                    $('.module-title-text a').text('');
                     $('.module-title-text a').text('Service Case #'+$('div[field="number"]').text().trim()+' '+$(document).find('#name').val());
                     break;  
                 case 'Calls':
                     $('.module-title-text a').text('Calls #'+$('div[field="number"]').text().trim()+' '+$('.module-title-text a').text().trim());
                     break;  
                 case 'PO_purchase_order':
+                    $('.module-title-text a').text('');
                     $('.module-title-text a').text($(document).find('#name').val());
                     break;  
                 default:
