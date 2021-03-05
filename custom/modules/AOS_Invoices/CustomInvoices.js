@@ -64,7 +64,9 @@ $(function () {
 
         $("#geo_type_of_wh_replaced_c").val(installType);
     }
-    change_type_of_water_with_old_tank_fuel();
+    if(module_sugar_grp1 == 'AOS_Invoices'){
+        change_type_of_water_with_old_tank_fuel();
+    }  
     YAHOO.util.Event.addListener(["old_tank_fuel_c"], "change", change_type_of_water_with_old_tank_fuel);
 
     function display_link_PE_order_methven(){
@@ -255,7 +257,9 @@ $(function () {
            };
            
         $("#json_promo_code_custom_c").closest('.edit-view-field').parent().hide();
-        RenderHTMLPromoCodeCustom();
+        if(module_sugar_grp1 == 'AOS_Invoices'){
+            RenderHTMLPromoCodeCustom();
+        }     
         $("#generate_promo_code").click(function(){
 
             SUGAR.ajaxUI.showLoadingPanel(); 
