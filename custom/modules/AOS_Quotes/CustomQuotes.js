@@ -879,81 +879,66 @@ function genExtraDaikinItemFunc(elem){
          }
      });
      function ajax_get_number_meter(){
-         nmi_number_meter =  $("#nmi_c").val();
-         distributor_meter =  $("#distributor_c").val();
-         var record_id = $("input[name='record']").val();
-         var customer_name = $("#first_name").val() +' ' + $('#last_name').val();
-         if($("#phases").val() == ''){
-            alert("Please select Meter Pharse");
-            $("html, body").animate({
-                scrollTop: $("#phases").offset().top - 300
-            }, 1000);
-             return;
-         }
-         var meter_phase_c = (($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))) ;
- 
-         $('#getMeter span.glyphicon-refresh').removeClass('hidden');
+        nmi_number_meter =  $("#nmi_c").val();
+        distributor_meter =  $("#distributor_c").val();
+        var record_id = $("input[name='record']").val();
+        var customer_name = $("#first_name").val() +' ' + $('#last_name').val();
+        if($("#phases").val() == ''){
+           alert("Please select Meter Pharse");
+           $("html, body").animate({
+               scrollTop: $("#phases").offset().top - 300
+           }, 1000);
+            return;
+        }
+        var meter_phase_c = (($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))) ;
          if(distributor_meter == 4 ||  distributor_meter == 6){
-             $.ajax({
-                 url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&record="+record_id+"&meter_phase_c="+meter_phase_c,
-                 type: 'GET',
-                 success: function(data)
-                 {
-                     if(data != ''){
-                         $("#meter_number_c").val(data);
-                         $('#getMeter span.glyphicon-refresh').addClass('hidden');
- 
-                         //load file after get Meter
-                         $(".files").empty();                
-                         $.ajax({
-                             url: $('#fileupload').fileupload('option', 'url'),
-                             dataType: 'json',
-                             context: $('#fileupload')[0]
-                         }).always(function () {
-                             $(this).removeClass('fileupload-processing');
-                 
-                         }).done(function (result) {
-                             $(this).fileupload('option', 'done')
-                                 .call(this, $.Event('done'), {result: result});
-                         });
-                     }else{
-                     //tuan cope thien code ===================
-                         $(".modal_meter_number").remove();
-                         var html = '<div class="modal fade modal_meter_number" tabindex="-1" role="dialog">'+
-                                         '<div class="modal-dialog">'+
-                                             '<div class="modal-content">'+
-                                                 '<div class="modal-header">'+
-                                                     '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'+
-                                                     '<h5 class="modal-title" id="title-generic"><center>The address you have nominated cannot be found in our system. Please check your address and Search again.</center></h5>'+
-                                                 '</div>'+
-                                                 '<div class="modal-body">'+
-                                                     '<div class="container-fluid" style="margin-left:30px;font-size:13px;text-align:center;"><a target="_blank" href="https://econnect.portal.powercor.com.au/customer/solarpreapprovalrequestpage"> Citipower Powercor\'s Link</a>'
-                                                     '</div>'+
-                                                 '</div>'+
-                                             '</div>'+
-                                         '</div>'+
-                                     '</div>';
-                         $("body").append(html);
-                         $(".modal_meter_number").modal('show');
-                     // tuan and ==============================
-                         //alert ("The address you have nominated cannot be found in our system. Please check your address and Search again.");
-                         $('#getMeter span.glyphicon-refresh').addClass('hidden');
-                         $("#meter_number_c").val('');
-                     }
-                 },
-                 error: function(response){
-                     alert('Get Meter Number Fail! Please check NMI Number and try again.');
-                     $('#getMeter span.glyphicon-refresh').addClass('hidden');
-                     $("#meter_number_c").val('');
-                 }
-             })
-         }else{
-             alert("Please sure Distributor option is 'Citipower' OR 'Powercor'");
-             $('#getMeter span.glyphicon-refresh').addClass('hidden');
-             $("#meter_number_c").val('');
-         }
-         
-     }
+           SUGAR.ajaxUI.showLoadingPanel();
+           $.ajax({
+               url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&record="+record_id+"&meter_phase_c="+meter_phase_c+"&type=GET_METER",
+               type: 'GET',
+                success: function(data)
+                {
+                    if(data != ''){
+                       SUGAR.ajaxUI.hideLoadingPanel();
+                        $("#meter_number_c").val(data);
+                    }else{
+                    //tuan cope thien code ===================
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                    $(".modal_meter_number").remove();
+                        var html = '<div class="modal fade modal_meter_number" tabindex="-1" role="dialog">'+
+                                        '<div class="modal-dialog">'+
+                                            '<div class="modal-content">'+
+                                                '<div class="modal-header">'+
+                                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'+
+                                                    '<h5 class="modal-title" id="title-generic"><center>The address you have nominated cannot be found in our system. Please check your address and Search again.</center></h5>'+
+                                                '</div>'+
+                                                '<div class="modal-body">'+
+                                                    '<div class="container-fluid" style="margin-left:30px;font-size:13px;text-align:center;"><a target="_blank" href="https://econnect.portal.powercor.com.au/customer/solarpreapprovalrequestpage"> Citipower Powercor\'s Link</a>'
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>';
+                        $("body").append(html);
+                        $(".modal_meter_number").modal('show');
+                    // tuan and ==============================
+                        //alert ("The address you have nominated cannot be found in our system. Please check your address and Search again.");
+                        $("#meter_number_c").val('');
+                    }
+                },
+                error: function(response){
+                    alert('Get Meter Number Fail! Please check NMI Number and try again.');
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                    $("#meter_number_c").val('');
+                }
+            })
+        }else{
+            alert("Please sure Distributor option is 'Citipower' OR 'Powercor'");
+            SUGAR.ajaxUI.hideLoadingPanel();
+            $("#meter_number_c").val('');
+        }
+        
+    }
      $("#getMeter").after('<button type="button" class="button primary" id="checkMeter"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Check Meter </button>');
      $('#checkMeter').after('<div id="text_check_meter"></div>');
      $('#checkMeter').on('click',function(){
@@ -2183,6 +2168,23 @@ function genExtraDaikinItemFunc(elem){
     return sanden_groups;
 } 
  function convertToInvoice(){ /////
+    //VUT - S - check VEEC && Old HWS Subpanel >> https://trello.com/c/92TactmT/2881-quote-converting-to-invoice-old-hws-information-fields-when-convert-and-if-they-are-not-filled-in-create-warning-box 
+    if (checkLineItem('Veecs')) {
+        var warning_oldHWS = [];
+        $('#old_tank_serial_c, #old_tank_model_c, #old_tank_make_c').each(function(){
+            if ($(this).val() == '') {
+                warning_oldHWS.push($(this).parent().siblings('div.label').text().trim().replace(":","")+ " isn't filled! \n");
+            }
+        });
+        if (warning_oldHWS.length > 0) {
+            // alert(warning_oldHWS + 'are you sure to continue?');
+            var question = confirm('VEECs are included in the line item \nBUT: \n'+warning_oldHWS.join('') + 'ARE YOU SURE TO CONTINUE?');
+            if (!question) {
+                return false;
+            }
+        }
+    }
+    //VUT - E - check VEEC && Old HWS Subpanel >> https://trello.com/c/92TactmT/2881-quote-converting-to-invoice-old-hws-information-fields-when-convert-and-if-they-are-not-filled-in-create-warning-box 
     var check = isSandenSupply();
     if ($('#quote_type_c').val() == "quote_type_sanden") {
         // dispatch date  and install date require for sanden 
@@ -5244,7 +5246,74 @@ function genExtraDaikinItemFunc(elem){
      //thienpb - code button get dnsp approval_number_c
      $("body").find("#dnsp_approval_number_c").after("<button type='button' class='button' id='get_dnsp_approval' name='get_dnsp_approval'>GET DNSP Approval</button>")
      $("body").on("click","#get_dnsp_approval", function(e){
-         
+        var nmi_number_meter =  $("#nmi_c").val();
+        var distributor_meter =  $("#distributor_c").val();
+        var dnsp_number = $("#dnsp_approval_number_c").val();
+        var record_id = $("input[name='record']").val();
+
+        if($("#phases").val() == ''){
+           alert("Please select Meter Pharse");
+           $("html, body").animate({
+               scrollTop: $("#phases").offset().top - 300
+           }, 1000);
+            return;
+        }
+        var meter_phase_c = (($("#phases").val() == 'Three Phases' && $("#phases").val() != 'Unsure') ? 3 : (($("#phases").val() == 'Single Phase') ? 1 : (($("#phases").val() != 'Unsure') ? 2 : ''))) ;
+
+        if(distributor_meter == 4 ||  distributor_meter == 6){
+           SUGAR.ajaxUI.showLoadingPanel();
+           $.ajax({
+               url: "/index.php?entryPoint=customGetMeter&dnsp="+dnsp_number+"&nmi_number=" + nmi_number_meter +"&record="+record_id+"&meter_phase_c="+meter_phase_c+"&type=GET_DNSP",
+               type: 'GET',
+                success: function(data)
+                {
+                    if(data != '' && typeof data !== "undefined"){
+                        SUGAR.ajaxUI.hideLoadingPanel();
+                        $("#dnsp_approval_number_c").val(data);
+                        $(".files").empty();
+                         $.ajax({
+                             url: $('#fileupload').fileupload('option', 'url'),
+                             dataType: 'json',
+                             context: $('#fileupload')[0]
+                         }).always(function () {
+                             $(this).removeClass('fileupload-processing');
+                 
+                         }).done(function (result) {
+                             $('button[type="resize_all"]').trigger('click');
+                         });
+                    }else{
+                        //tuan cope thien code ===================
+                        SUGAR.ajaxUI.hideLoadingPanel();
+                        $(".modal_meter_number").remove();
+                        var html = '<div class="modal fade modal_meter_number" tabindex="-1" role="dialog">'+
+                                        '<div class="modal-dialog">'+
+                                            '<div class="modal-content">'+
+                                                '<div class="modal-header">'+
+                                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'+
+                                                    '<h5 class="modal-title" id="title-generic"><center>The address you have nominated cannot be found in our system. Please check your address and Search again.</center></h5>'+
+                                                '</div>'+
+                                                '<div class="modal-body">'+
+                                                    '<div class="container-fluid" style="margin-left:30px;font-size:13px;text-align:center;"><a target="_blank" href="https://econnect.portal.powercor.com.au/customer/solarpreapprovalrequestpage"> Citipower Powercor\'s Link</a>'
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>';
+                        $("body").append(html);
+                        $(".modal_meter_number").modal('show');
+                        // tuan and ==============================
+                        //alert ("The address you have nominated cannot be found in our system. Please check your address and Search again.");
+                    }
+                },
+                error: function(response){
+                    alert('Get DNSP Number Fail! Please check NMI Number OR METER Number and try to get it again.');
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                }
+            })
+        }else{
+            alert("Please sure Distributor option is 'Citipower' OR 'Powercor'");
+            SUGAR.ajaxUI.hideLoadingPanel();
+        }
      })
  });
  $( window ).load(function() {
@@ -6036,4 +6105,19 @@ Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) 
     return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
 };
 //E - ONLY FOR GP CALCULATION --
+
+/**
+ * VUT - check product has/hasn't in line item
+ * @param {STRING} product  full name product
+ */
+function checkLineItem(product) {
+    let products = $('#lineItems').find('.product_group').children('tbody');
+    let i; 
+    for (i=0;i< products.length; i++) {
+        if ($(`#product_name${i}`).val().toLowerCase() == product.toLowerCase() && products[i].getAttribute('style') != "display: none;") {
+            return true;
+        }
+    }
+    return false;
+}
 

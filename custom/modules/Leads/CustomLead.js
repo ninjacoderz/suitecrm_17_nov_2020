@@ -1265,33 +1265,19 @@ $(function () {
             var record_id = $("input[name='record']").val();
             var customer_name = $("#first_name").val() +' ' + $('#last_name').val();
             var meter_phase_c = $("#meter_phase_c").val();
-
-            $('#getMeter span.glyphicon-refresh').removeClass('hidden');
             if(distributor_meter == 4 ||  distributor_meter == 6){
+                SUGAR.ajaxUI.showLoadingPanel();
                 $.ajax({
-                    url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&lead_id="+record_id+"&meter_phase_c="+meter_phase_c,
+                    url: "/index.php?entryPoint=customGetMeter&nmi_number=" + nmi_number_meter +"&lead_id="+record_id+"&meter_phase_c="+meter_phase_c+"&type=GET_METER",
                     type: 'GET',
                     success: function(data)
                     {
-                        if(data != ''){
+                        if(data != '' && typeof data !== "undefined"){
                             $("#meter_number_c").val(data);
-                            $('#getMeter span.glyphicon-refresh').addClass('hidden');
-
-                            //load file after get Meter
-                            $(".files").empty();                
-                            $.ajax({
-                                url: $('#fileupload').fileupload('option', 'url'),
-                                dataType: 'json',
-                                context: $('#fileupload')[0]
-                            }).always(function () {
-                                $(this).removeClass('fileupload-processing');
-                    
-                            }).done(function (result) {
-                                $(this).fileupload('option', 'done')
-                                    .call(this, $.Event('done'), {result: result});
-                            });
+                            SUGAR.ajaxUI.hideLoadingPanel();
                         }else{
-                        //tuan cope thien code ===================
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                            //tuan cope thien code ===================
                             $(".modal_meter_number").remove();
                             var html = '<div class="modal fade modal_meter_number" tabindex="-1" role="dialog">'+
                                             '<div class="modal-dialog">'+
@@ -1311,19 +1297,18 @@ $(function () {
                             $(".modal_meter_number").modal('show');
                         // tuan and ==============================
                             //alert ("The address you have nominated cannot be found in our system. Please check your address and Search again.");
-                            $('#getMeter span.glyphicon-refresh').addClass('hidden');
                             $("#meter_number_c").val('');
                         }
                     },
                     error: function(response){
                         alert('Get Meter Number Fail! Please check NMI Number and try again.');
-                        $('#getMeter span.glyphicon-refresh').addClass('hidden');
+                        SUGAR.ajaxUI.hideLoadingPanel();
                         $("#meter_number_c").val('');
                     }
                 })
             }else{
                 alert("Please sure Distributor option is 'Citipower' OR 'Powercor'");
-                $('#getMeter span.glyphicon-refresh').addClass('hidden');
+                SUGAR.ajaxUI.hideLoadingPanel();
                 $("#meter_number_c").val('');
             }
             
