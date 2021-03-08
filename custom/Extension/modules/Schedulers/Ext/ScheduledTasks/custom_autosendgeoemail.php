@@ -469,7 +469,8 @@ function config_sendGeoEmail($invoice_id,$email_type){
     $emailToSend = clone $emailBean;
     $emailToSend->mailbox_id = "b4fc56e6-6985-f126-af5f-5aa8c594e7fd";
     $emailToSend->to_addrs_arr = array(array("email"=>"info@pure-electric.com.au"));
-
+    $emailToSend->From = "info@pure-electric.com.au";
+    $emailToSend->FromName = "Pure Electric Info";
     if ( $emailToSend->send()) {
         $emailBean->status = 'sent';
         $emailBean->description_html = preg_replace("/<a href=[^>]+Edit Email Link</a><br/>", "", $emailBean->description_html);
@@ -663,7 +664,8 @@ function config_sendGeoEmail_type_is_installer($invoice_id,$email_type){
     $emailToSend = clone $emailBean;
     $emailToSend->mailbox_id = "b4fc56e6-6985-f126-af5f-5aa8c594e7fd";
     $emailToSend->to_addrs_arr = array(array("email"=>"info@pure-electric.com.au"));
-
+    $emailToSend->From = "info@pure-electric.com.au";
+    $emailToSend->FromName = "Pure Electric Info";
     if ( $emailToSend->send()) {
         $emailBean->status = 'sent';
         $emailBean->to_addrs = $installer->name . "  <".$primary.">";
