@@ -415,6 +415,7 @@ function config_sendGeoEmail($invoice_id,$email_type){
         "productType" => $product_type,
         
     );
+    global $current_user;
     $emailBean = new Email();
     $emailBean = $emailBean->populateBeanFromRequest($emailBean, $temp_request);
     $inboundEmailAccount = new InboundEmail();
@@ -614,7 +615,7 @@ function config_sendGeoEmail_type_is_installer($invoice_id,$email_type){
     $emailTemplate->body = str_replace("\$client_name", $request['client_name'] , $emailTemplate->body);
     $emailTemplate->body_html = str_replace("\$client_name", $request['client_name'] , $emailTemplate->body_html);
     // parse and replace bean variables
-
+    global $current_user;
     $emailBean = new Email();
     $emailBean->name = $emailTemplate->subject;
     $emailBean->description_html = $emailTemplate->body_html;

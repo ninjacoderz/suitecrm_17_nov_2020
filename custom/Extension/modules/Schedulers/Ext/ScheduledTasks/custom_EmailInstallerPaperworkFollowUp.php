@@ -169,6 +169,7 @@ function send_email_report_paperwork_follow_up($data_inv){
     $today = date('d/m/Y', time());
     $subject = "<div><h1 'text-align:center;'>Pure-Electric Email Installer Paperwork Follow UP - Daily Report - Date " . $today .'</h1></div>';
     //config mail
+    global $current_user;
     $emailObj = new Email();
     $defaults = $emailObj->getSystemDefaultEmail();
     $mail = new SugarPHPMailer();
