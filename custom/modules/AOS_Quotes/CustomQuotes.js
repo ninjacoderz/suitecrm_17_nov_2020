@@ -2173,7 +2173,7 @@ function genExtraDaikinItemFunc(elem){
         var warning_oldHWS = [];
         $('#old_tank_serial_c, #old_tank_model_c, #old_tank_make_c').each(function(){
             if ($(this).val() == '') {
-                warning_oldHWS.push($(this).parent().siblings('div.label').text().trim().replace(":","")+ "isn't filled! \n");
+                warning_oldHWS.push($(this).parent().siblings('div.label').text().trim().replace(":","")+ " isn't filled! \n");
             }
         });
         if (warning_oldHWS.length > 0) {
