@@ -2183,6 +2183,23 @@ function genExtraDaikinItemFunc(elem){
     return sanden_groups;
 } 
  function convertToInvoice(){ /////
+    //VUT - S - check VEEC && Old HWS Subpanel >> https://trello.com/c/92TactmT/2881-quote-converting-to-invoice-old-hws-information-fields-when-convert-and-if-they-are-not-filled-in-create-warning-box 
+    if (checkLineItem('Veecs')) {
+        var warning_oldHWS = [];
+        $('#old_tank_serial_c, #old_tank_model_c, #old_tank_make_c').each(function(){
+            if ($(this).val() == '') {
+                warning_oldHWS.push($(this).parent().siblings('div.label').text().trim().replace(":","")+ "isn't filled! \n");
+            }
+        });
+        if (warning_oldHWS.length > 0) {
+            // alert(warning_oldHWS + 'are you sure to continue?');
+            var question = confirm('VEECs are included in the line item \nBUT: \n'+warning_oldHWS.join('') + 'ARE YOU SURE TO CONTINUE?');
+            if (!question) {
+                return false;
+            }
+        }
+    }
+    //VUT - E - check VEEC && Old HWS Subpanel >> https://trello.com/c/92TactmT/2881-quote-converting-to-invoice-old-hws-information-fields-when-convert-and-if-they-are-not-filled-in-create-warning-box 
     var check = isSandenSupply();
     if ($('#quote_type_c').val() == "quote_type_sanden") {
         // dispatch date  and install date require for sanden 
@@ -6036,4 +6053,19 @@ Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) 
     return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
 };
 //E - ONLY FOR GP CALCULATION --
+
+/**
+ * VUT - check product has/hasn't in line item
+ * @param {STRING} product  full name product
+ */
+function checkLineItem(product) {
+    let products = $('#lineItems').find('.product_group').children('tbody');
+    let i; 
+    for (i=0;i< products.length; i++) {
+        if ($(`#product_name${i}`).val().toLowerCase() == product.toLowerCase() && products[i].getAttribute('style') != "display: none;") {
+            return true;
+        }
+    }
+    return false;
+}
 
