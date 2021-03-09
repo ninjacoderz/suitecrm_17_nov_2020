@@ -1,7 +1,7 @@
 <?php
     $fields = ["orderNumber" => $_REQUEST['order_number']];
 
-    $url = "hhttps://pure-electric.com.au/pe_commerce/getOrder";
+    $url = "https://pure-electric.com.au/pe_commerce/getOrder";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -42,7 +42,11 @@
     $products_title = [];
 
     foreach($products as $product){
-        array_push($products_title,$product['title']);
+        if($product['title'] == 'ValveCosy'){
+            array_push($products_title,'Valvecosy Insulator');
+        }else{
+            array_push($products_title,$product['title']);
+        }
     }
     if( $ship_method_id == "1"){
         array_push($products_title,"Methven Shipping and Handling Standard");

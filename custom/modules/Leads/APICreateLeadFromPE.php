@@ -239,7 +239,14 @@
         $type_shipping = "";
         $products_title = array();
         foreach($products as $product){
-            array_push($products_title,$product['title']);
+            if($product['title'] == 'ValveCosy'){
+                array_push($products_title,'Valvecosy Insulator');
+                $new_quote->name = $bean->first_name .' ' .$bean->last_name .' ' .$bean->primary_address_city.' ' .$bean->primary_address_state.' ValveCosy' ;
+                $new_quote->quote_type_c = 'ValveCosy';
+                $new_quote->save();
+            }else{
+                array_push($products_title,$product['title']);
+            }
         }
         if( $ship_method_id == "1"){
             array_push($products_title,"Methven Shipping and Handling Standard");
