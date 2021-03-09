@@ -6709,9 +6709,9 @@ $(function () {
             $("#new_cancel").after("&nbsp;<button type='button' class='button primary' id='create_service_case'><span class='glyphicon hidden glyphicon-refresh glyphicon-refresh-animate'></span>Create Service Case</button>")
             //VUT - S - add button TODAY / TODAY +1 TODAY+7 onClick="getDate_Inv(this);"
             var array_datefield = 'div[field="quote_date"], div[field="invoice_date"], div[field="due_date"], div[field="next_action_date_c"], div[field="dispatch_date_c"]';
-            var html_button_date = '<button type="button" class="button get_date_inv"  title="Get Today+7" data-type="7" >TODAY +7</button>'
-                                +   '<button type="button" class="button get_date_inv" title="Get Today+1" data-type="1" >TODAY +1</button>'
-                                +    '<button type="button" class="button get_date_inv" title="Get Today" data-type="today" >TODAY</button>';
+            var html_button_date = '<button style="padding: 0px 10px;margin: 0px 1px;" type="button" class="button get_date_inv"  title="Get Today+7" data-type="7" >T+7</button>'
+                                +   '<button style="padding: 0px 10px;margin: 0px 1px;" type="button" class="button get_date_inv" title="Get Today+1" data-type="1" >T+1</button>'
+                                +    '<button style="padding: 0px 10px;margin: 0px 1px;" type="button" class="button get_date_inv" title="Get Today" data-type="today" >T</button>';
             $(array_datefield).append(html_button_date);
             $('.get_date_inv').click(function(){
                 // debugger
@@ -6737,6 +6737,7 @@ $(function () {
                     $('#'+field_date+'_date').val(date_click);
                     $('#'+field_date+'_hours').val(hour_date);
                     $('#'+field_date+'_minutes').val(minutes_date);
+                    $('#'+field_date).val(date_click+' '+hour_date+':'+minutes_date);
                 }
             });     
             //VUT - E - add button TODAY / TODAY +1 TODAY+7   
