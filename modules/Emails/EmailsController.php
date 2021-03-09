@@ -4750,10 +4750,25 @@ class EmailsController extends SugarController
             /**
              * @var EmailTemplate $emailTemplate
              */
-
+            $emailTemplateID = '';
+            switch ($sanden_product) {
+                case 'G2':
+                    $emailTemplateID = 'b2390382-d938-c0fc-2259-6046c1cbb7ee';
+                    break;
+                case 'G3':
+                    $emailTemplateID = 'a33d4e37-15f5-5f1c-bd20-6046cb724766';
+                    break;    
+                case 'G4':
+                    $emailTemplateID = 'bd902f3b-e281-6764-ac50-5d50bea88378';
+                    break;        
+                default:
+                    $emailTemplateID = 'bd902f3b-e281-6764-ac50-5d50bea88378';
+                    break;
+            }
+            
             $emailTemplate = BeanFactory::getBean(
                 'EmailTemplates',
-                'bd902f3b-e281-6764-ac50-5d50bea88378'
+                 $emailTemplateID
             );
 
             $name = $emailTemplate->subject;
@@ -4777,11 +4792,11 @@ class EmailsController extends SugarController
                 $this->bean->save();
                 foreach($attachmentBeans as $attachmentBean) {
                     /**Select sanden product */
-                    if (strpos($attachmentBean->filename, $sanden_product) === false && ($attachmentBean->file_mime_type == 'image/jpeg' || $attachmentBean->file_mime_type == 'application/pdf')) {
-                        if (strpos($attachmentBean->filename, "Sanden Maintenance") === false) {
-                            continue;
-                        }
-                    }
+                    // if (strpos($attachmentBean->filename, $sanden_product) === false && ($attachmentBean->file_mime_type == 'image/jpeg' || $attachmentBean->file_mime_type == 'application/pdf')) {
+                    //     if (strpos($attachmentBean->filename, "Sanden Maintenance") === false) {
+                    //         continue;
+                    //     }
+                    // }
                     /**Select sanden product */
                     $noteTemplate = clone $attachmentBean;
                     $noteTemplate->id = create_guid();
