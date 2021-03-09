@@ -1,7 +1,9 @@
 <?php
+global $timedate, $current_user;
 $record_id =$_REQUEST['record_id'];
 $bean =  new Lead();
 $bean->retrieve($record_id); 
+$user_timezone = TimeDate::userTimezone($current_user);
 if($bean->id == '') {
     echo date("d-m-Y");
 }else{
@@ -13,7 +15,7 @@ if($bean->id == '') {
     //VUT-S-Calculate date_create to change status converted date
     /**Lead - date_entered */
     $date_start = $bean->date_entered;
-    $date = DateTime::createFromFormat('d/m/Y H:i',$date_start, new DateTimeZone('UTC'));
+    $date = DateTime::createFromFormat('d/m/Y H:i',$date_start, new DateTimeZone($user_timezone));
     $gr_status = ['Converted','Dead','Spam','Test'];
     $calculator = false;
     if (in_array($bean->status,$gr_status)) { 
@@ -24,7 +26,8 @@ if($bean->id == '') {
     if (!$calculator) {
         $check = strtolower($bean->age_days_c);
         if (!(strpos($check,'days') !== false && strpos($check,'hours') !== false && strpos($check, 'minutes') !== false)) {
-            $date_converted = DateTime::createFromFormat('U', time(), new DateTimeZone('UTC'));
+            // $date_converted = DateTime::createFromFormat('U', time(), new DateTimeZone($user_timezone));
+            $date_converted = DateTime::createFromFormat('d/m/Y H:i', $timedate->now(), new DateTimeZone($user_timezone));
             $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
             echo $date_diff;
         }
@@ -40,7 +43,7 @@ if($bean->id == '') {
                 $note = new pe_internal_note();
                 $note->retrieve($note_id);
                 $date_last = $note->date_entered;
-                $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone('UTC'));
+                $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone($user_timezone));
                 $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
                 $bean->age_days_c = $date_diff;
                 $bean->save();
@@ -51,7 +54,7 @@ if($bean->id == '') {
                     $note = new pe_internal_note();
                     $note->retrieve($note_id_new);
                     $date_last = $note->date_entered;
-                    $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone('UTC'));
+                    $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone($user_timezone));
                     $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
                     // $bean->age_days_c = $date_diff;
                     // $bean->save();
