@@ -274,10 +274,12 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
         array_push($part_numbers,'SV_SHWR');
     };
     if($_REQUEST['choice_type_install'] == 'Replace Hot Water System') {
-        if($_REQUEST['connected_to_reticulated_gas'] == 'No') {
-            array_push($part_numbers,'SA_REPS_Cl1_No_Gas_Cl2');
-        } else if($_REQUEST['connected_to_reticulated_gas'] == 'Yes') {
-            array_push($part_numbers,'SA_REPS_Cl1_Reti_Gas_Conn');
+        if($_REQUEST['quote_apply_reps_rebate'] == 'Yes') {
+            if($_REQUEST['connected_to_reticulated_gas'] == 'No') {
+                array_push($part_numbers,'SA_REPS_Cl1_No_Gas_Cl2');
+            } else if($_REQUEST['connected_to_reticulated_gas'] == 'Yes') {
+                array_push($part_numbers,'SA_REPS_Cl1_Reti_Gas_Conn');
+            } 
         } 
     } 
     
