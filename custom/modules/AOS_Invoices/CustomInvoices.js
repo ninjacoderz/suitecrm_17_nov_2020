@@ -6707,16 +6707,18 @@ $(function () {
 //VUT-S-Create button new Service Case
         if (module_sugar_grp1 == 'AOS_Invoices' && action_sugar_grp1 == 'EditView') {
             $("#new_cancel").after("&nbsp;<button type='button' class='button primary' id='create_service_case'><span class='glyphicon hidden glyphicon-refresh glyphicon-refresh-animate'></span>Create Service Case</button>")
-            //VUT - S - add button TODAY / TODAY +1 TODAY+7 onClick="getDate_Inv(this);"
-            var array_datefield = 'div[field="quote_date"], div[field="invoice_date"], div[field="due_date"], div[field="next_action_date_c"], div[field="dispatch_date_c"]';
-            var html_button_date = '<button style="padding: 0px 10px;margin: 0px 1px;" type="button" class="button get_date_inv"  title="Get Today+7" data-type="7" >T+7</button>'
-                                +   '<button style="padding: 0px 10px;margin: 0px 1px;" type="button" class="button get_date_inv" title="Get Today+1" data-type="1" >T+1</button>'
+            //VUT - S - add button TODAY / TODAY +1 TODAY+7  >> https://trello.com/c/42nirRdb/3048-invoice-add-date-shortcut-buttons
+            var array_datefield = 'div[field="quote_date"], div[field="invoice_date"], div[field="due_date"]';
+            var array_dateTimefield = 'div[field="next_action_date_c"], div[field="dispatch_date_c"]';
+            var html_button_date = '<button style="padding: 0px 5px;margin: 0px 1px;" type="button" class="button get_date_inv"  title="Get Today+7" data-type="7" >T+7</button>'
+                                +   '<button style="padding: 0px 5px;margin: 0px 1px;" type="button" class="button get_date_inv" title="Get Today+1" data-type="1" >T+1</button>'
                                 +    '<button style="padding: 0px 10px;margin: 0px 1px;" type="button" class="button get_date_inv" title="Get Today" data-type="today" >T</button>';
             $(array_datefield).append(html_button_date);
+            $(array_dateTimefield).find('tr[valign="middle"]').append('<td>'+html_button_date+'</td>');
             $('.get_date_inv').click(function(){
                 // debugger
-                var field_date = $(this).parent().attr('field');
-                var type_field = $(this).parent().attr('type');
+                var field_date = $(this).closest('.edit-view-field').attr('field');
+                var type_field = $(this).closest('.edit-view-field').attr('type');
                 var type_button = $(this).attr('data-type');
                 var date_click = getDate_Inv(type_button);
                 if (type_field == 'date') {
@@ -6740,7 +6742,7 @@ $(function () {
                     $('#'+field_date).val(date_click+' '+hour_date+':'+minutes_date);
                 }
             });     
-            //VUT - E - add button TODAY / TODAY +1 TODAY+7   
+            //VUT - E - add button TODAY / TODAY +1 TODAY+7  >> https://trello.com/c/42nirRdb/3048-invoice-add-date-shortcut-buttons
         }
         $('#create_service_case').click(function() {
             // debugger;
