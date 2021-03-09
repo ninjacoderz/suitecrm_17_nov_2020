@@ -77,7 +77,7 @@
 
     while($row = $db->fetchByAssoc($ret)){
         foreach ($products as $key => $value) {
-            if($value['title'] == $row['name']){
+            if($value['title'] == $row['name'] || $row['name'] == 'Valvecosy Insulator'){
                 $check_qty = (int) $products[$key]['quantity'] ;
             }
         }

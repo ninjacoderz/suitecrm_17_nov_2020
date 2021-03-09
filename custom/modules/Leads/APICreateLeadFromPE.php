@@ -306,7 +306,7 @@
                 $product_line->product_qty = 1; 
             }else{
                 foreach ($products as $key => $value) {
-                    if($value['title'] == $row['name']){
+                    if($value['title'] == $row['name'] || $value['title'] == 'ValveCosy'){
                         $product_line->product_qty = (int) $products[$key]['quantity'] ; 
                         $check_qty = (int) $products[$key]['quantity'] ;
                     }
