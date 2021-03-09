@@ -743,27 +743,7 @@ function genExtraDaikinItemFunc(elem){
              var billing_contact_id = $("#billing_contact_id").val();
              var opportunity_id = $("#opportunity_id").val();
              var pre_install_photos_c = $("input[name='pre_install_photos_c']").val();
-             $.ajax({
-                 url: "?entryPoint=getAllFilesAttachments&billing_account_id="+billing_account_id+"&billing_contact_id="+billing_contact_id+"&opportunity_id="+opportunity_id+"&pre_install_photos_c="+pre_install_photos_c,
-                 success: function(data)
-                 {
-                     $(".files").empty();
-                     $.ajax({
-                         url: $('#fileupload').fileupload('option', 'url'),
-                         dataType: 'json',
-                         context: $('#fileupload')[0]
-                     }).always(function () {
-                         $(this).removeClass('fileupload-processing');
              
-                     }).done(function (result) {
-                         $('button[type="resize_all"]').trigger('click');
-                         // $(this).fileupload('option', 'done')
-                         //     .call(this, $.Event('done'), {result: result});
-                         $('#get_all_files span.glyphicon-refresh').addClass('hidden');
-                     });
-                 },
-                 error: function(response){},
-             });
  
              $.ajax({
                  url: "?entryPoint=getAllFilesMessageApp&quote_id="+$("input[name='record']").val()+"&pre_install_photos_c="+pre_install_photos_c,
@@ -2123,7 +2103,7 @@ function genExtraDaikinItemFunc(elem){
          }
          var pre_install_photos_c = $("input[name='pre_install_photos_c']").val();
  
-         var url_download = "?entryPoint=APIUploadImageToAWS&folderRoot=files&stage=download&folder="+pre_install_photos_c+"&file=";
+         var url_download = "https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/s3.php?myDirectoryName="+pre_install_photos_c;
          $.ajax({
              url: url_download,
              async:false,
