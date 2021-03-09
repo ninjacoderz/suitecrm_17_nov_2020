@@ -5337,7 +5337,7 @@ $(document).ready(function(){
             }
             var pre_install_photos_c = $("input[name='installation_pictures_c']").val();
 
-            var url_download = "?entryPoint=APIUploadImageToAWS&folderRoot=files&stage=download&folder="+pre_install_photos_c+"&file=";
+            var url_download = "https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/s3.php?myDirectoryName="+pre_install_photos_c;
             $.ajax({
                 url: url_download,
                 async:false,
