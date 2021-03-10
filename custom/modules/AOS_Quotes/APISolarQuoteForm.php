@@ -573,22 +573,22 @@
                             $inverter = "Enphase IQ7+ 290W Micro Inverter";
                             break;
                         case "S Edge 3G": 
-                            $inverter = "SolarEdge 3kW Genesis HD-Wave 1Ph Inverter";
+                            $inverter = "SolarEdge 3G";
                             break; 
                         case "S Edge 5G": 
-                             $inverter = "SolarEdge 5kW Genesis HD-Wave 1Ph Inverter";
+                            $inverter = "SolarEdge 5G";
                             break; 
                         case "S Edge 6G":
-                            $inverter = "SolarEdge 6kW Genesis HD-Wave 1Ph Inverter" ;
+                            $inverter = "SolarEdge 6G" ;
                             break; 
                         case "S Edge 8G":
-                            $inverter = "SolarEdge 8.25kW Genesis HD-Wave 1Ph Inverter"; 
+                            $inverter = "SolarEdge 8G"; 
                             break;
                         case "S Edge 8 3P":
-                            $inverter = "SolarEdge 8kW Three Phases Inverter"; 
+                            $inverter = "SolarEdge 8 3P"; 
                             break;
                         case "S Edge 10G":
-                            $inverter = "SolarEdge 10kW Genesis HD Wave 1Ph Inverter";
+                            $inverter = "SolarEdge 10G";
                             break;
                         // case "Growatt 5":
                         //  $inverter = "Growatt 5000TL-X Dual MPPT 5kW"; 
@@ -809,7 +809,21 @@
             mkdir($path . $dirName, 0777, true);
             $folderName = $path . $dirName.'/';
         }
+        //thienpb - code - add watermark
+        $pricing_options = $quote->solar_pv_pricing_input_c;
+        $pricings = json_decode(html_entity_decode($pricing_options));
+
+        $data_option = [];
+        $data_option['blank'] = false;
+        $data_option['customer_name'] = $quote->account_firstname_c.' '.$quote->account_lastname_c;
+        $data_option['address_1'] = $quote->install_address_c;
+        $data_option['address_2'] = $quote->install_address_city_c.' '.$quote->install_address_state_c.' '.$quote->install_address_postalcode_c;
         for( $j = 1; $j <= 6; $j++){
+            $data_option['Option_number'] = $j;
+            $data_option['Inverter'] = (!empty($pricings->{'inverter_type_'.($j)}) ? $pricings->{'inverter_type_'.($j)} : '');
+            $data_option['Panel'] = (!empty($pricings->{'panel_type_'.($j)}) ? $pricings->{'panel_type_'.($j)} : '');
+            $data_option['NumberOfPanels'] = ( ((int)$pricings->{'total_panels_'.($j)} > 0) ? $pricings->{'total_panels_'.($j)} : '0').' Panels';
+
             if(count($_POST['files']['data-design-upload-'.$j]['tmp_name']) > 0) {
                 for($i = 0; $i < count($_POST['files']['data-design-upload-'.$j]['tmp_name']); $i++) {
                     if($_POST['files']['data-design-upload-'.$j]['name'][$i] != ""){
@@ -820,6 +834,7 @@
                         // $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Solar Design'.$j.'_'.$i.'</a>';
                         addToNotes($file_type,$folderName,$parent_id,$parent_type);
                         $file_to_attach[] = array('folderName' => $_POST['files']['data-design-upload-'.$j]['tmp_name'][$i], 'fileName' => $file_type);
+                        create_img_option($folderName,$file_type,$data_option);
                     };
                 }
             };
@@ -912,5 +927,144 @@
                 imagedestroy($new_img);
                 imagedestroy($src);
             }
+        } 
+    }
+    function create_img_option($path,$fullname,$data_option){
+        
+        //create image png
+        $source = $path.$fullname;
+
+        $file_ = explode(".",$fullname);
+        
+        $type = end($file_);
+        unset($file_[count($file_)-1]);
+        $filename = implode('.', $file_);
+
+        $new_name='';
+        $type ='';
+        if (exif_imagetype($source) == 2) {
+            $type = 'jpeg';
+            $new_name = $path.$filename.'.jpg';
+            rename( $source,$new_name);
+        }else if(exif_imagetype($source) == 3){
+            $type = 'png';
+            $new_name = $path.$filename.'.png';
+            rename( $source,$new_name);
+        }else if(exif_imagetype($source) == 1){
+            $type = 'gif';
+            $new_name = $path.$filename.'.gif';
+            rename( $source,$new_name);
+        } else {
+            return;
+        }
+
+        //append image info
+        $source = $new_name;
+
+        // get size of image source
+        list($w_source, $h_source) = getimagesize($source);
+
+        $font = $path.'../arial.ttf';
+        // add text for image info
+        if($w_source >= 500){
+            list($w_info, $h_info) = getimagesize($path.'../dessign-image_full.jpeg');
+            $img_info = imagecreatefromjpeg($path.'../dessign-image_full.jpeg');
+            $black = imagecolorallocate($img_info, 0, 0, 0);
+            $orange = imagecolorallocate($img_info,243, 143, 42);
+
+            if($data_option['blank'] == true){
+                imagettftext($img_info,24,0,315,65,$black,$font,'Blank');
+            }
+            imagettftext($img_info,30,0,145,90,$orange,$font,$data_option['Option_number']);
+            imagettftext($img_info,22,0,560,40,$black,$font,$data_option['customer_name']);
+            imagettftext($img_info,16,0,560,70,$black,$font,$data_option['address_1']);
+            imagettftext($img_info,16,0,560,95,$black,$font,$data_option['address_2']);
+            imagettftext($img_info,22,0,215,40,$black,$font,$data_option['NumberOfPanels']);
+            imagettftext($img_info,16,0,215,70,$black,$font,$data_option['Panel']);
+            imagettftext($img_info,16,0,215,95,$black,$font,$data_option['Inverter']);
+        }else{
+            $black = imagecolorallocate($img_info, 0, 0, 0);
+            $orange = imagecolorallocate($img_info,243, 143, 42);
+            list($w_info, $h_info) = getimagesize($path.'../dessign-image_500.png');
+            $img_info = imagecreatefrompng($path.'../dessign-image_500.png');
+            if($data_option['blank'] == true){
+                imagettftext($img_info,14,0,170,35,$orange,$font,'Blank');
+            }
+            imagettftext($img_info,20,0,72,50,$orange,$font,$data_option['Option_number']);
+            imagettftext($img_info,14,0,305,22,$black,$font,$data_option['customer_name']);
+            imagettftext($img_info,9,0,305,40,$black,$font,$data_option['address_1']);
+            imagettftext($img_info,9,0,305,55,$black,$font,$data_option['address_2']);
+            imagettftext($img_info,14,0,110,22,$black,$font,$data_option['NumberOfPanels']);
+            imagettftext($img_info,9,0,110,40,$black,$font,$data_option['Panel']);
+            imagettftext($img_info,9,0,110,55,$black,$font,$data_option['Inverter']);
+        }
+
+        $scale = ($h_info/$w_info);
+        $new_w_info = $w_source;
+        $new_h_info = intval($w_source*$scale);
+
+        $img_info_resize = imagecreatetruecolor($new_w_info, $new_h_info);
+        imagecopyresampled($img_info_resize,$img_info,0,0,0,0,$new_w_info,$new_h_info,$w_info,$h_info);
+
+        // create outputImage
+        $outputImage = imagecreatetruecolor($w_source, ($h_source + $new_h_info));
+        $white = imagecolorallocate($outputImage, 255, 255, 255);
+        imagefill($outputImage, 0, 0, $white);
+
+        $src_function = 'imagecreatefrom'.$type;
+        $write_function = 'image'.$type;
+        $img_source = $src_function($source);
+        
+        // merge img_info and img_source to outputImage
+        imagecopyresized($outputImage,$img_source,0,0,0,0, $w_source,$h_source,$w_source,$h_source);
+        imagecopyresized($outputImage,$img_info_resize,0,$h_source,0,0, $new_w_info,$new_h_info,$new_w_info,$new_h_info);
+        header('Content-Type: image/'+$type);
+        $write_function($outputImage,$source);
+
+        imagedestroy($img_info);
+        imagedestroy($img_source);
+        imagedestroy($outputImage);
+
+        //create thumbnail
+        if($type == 'gif' || $type == 'jpeg' || $type == 'png') {
+            //create thumbnail
+            if(!file_exists ($path."thumbnail/")) {
+                mkdir($path."thumbnail/");
+            }
+            $typeok = TRUE;
+            $thumb =  $path."thumbnail/".$filename.'.'.$type;
+            switch ($type) {
+                case 'jpeg':
+                    $src_func = 'imagecreatefromjpeg';
+                    $write_func = 'imagejpeg';
+                    $thumb =  $path."thumbnail/".$filename.'.jpg';
+                    $image_quality = isset($options['jpeg_quality']) ?
+                        $options['jpeg_quality'] : 75;
+                    break;
+                case 'png':
+                    $src_func = 'imagecreatefrompng';
+                    $write_func = 'imagepng';
+                    $image_quality = isset($options['png_quality']) ?
+                        $options['png_quality'] : 9;
+                    break;
+                case 'gif':
+                    $src_func = 'imagecreatefromgif';
+                    $write_func = 'imagegif';
+                    $image_quality = null;
+                    break;
+                default: $typeok = FALSE; break;
+            }
+            if($typeok){
+                list($w, $h) = getimagesize($new_name);
+
+                $src = $src_func($new_name);
+                $new_img = imagecreatetruecolor(80,80);
+                imagecopyresampled($new_img,$src,0,0,0,0,80,80,$w,$h);
+                $write_func($new_img,$thumb, $image_quality);
+                
+                imagedestroy($new_img);
+                imagedestroy($src);
+            }
+            
         } 
     }
