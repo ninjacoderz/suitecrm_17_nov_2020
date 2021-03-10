@@ -1064,7 +1064,7 @@ $(function () {
         if(module_sugar_grp1 == 'AOS_Invoices'){
             $('#electrician_c').parent().siblings('.label').append('<br> <button class="button primary" id="distanceElectrictoSuite"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DISTANCE</button>');
             $('#electrician_c').parent().siblings('.label').append('<button style="margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedElectrician"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
-            $('#installation_date_c').parent().siblings('.label').append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
+            // $('#installation_date_c').parent().siblings('.label').append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
 
             //Get Distance Selected Electrician
             $('#getDistance_selectedElectrician').click(function(){
@@ -5191,6 +5191,8 @@ $(document).ready(function(){
                 class="button email_sa_reps_to_yess" title="email_sa_reps_to_yess" ><span class="glyphicon glyphicon-envelope"></span>SA REPS to YES<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
         );     
 
+        $("#CANCEL").parent().append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');     
+           
     }else if(module_sugar_grp1 == 'AOS_Quotes'){
         $("#CANCEL").after(
             ' <button type="button" id="Advise_Install_Date" \
