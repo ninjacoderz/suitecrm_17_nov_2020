@@ -832,9 +832,13 @@
                         $file_type =  'Q'.$quote->number.'_Solar_Design'.$j.'_'.$count.'.'.pathinfo( basename($_POST['files']['data-design-upload-'.$j]['name'][$i]), PATHINFO_EXTENSION );
                         copy($_POST['files']['data-design-upload-'.$j]['tmp_name'][$i], $folderName.$file_type);
                         // $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Solar Design'.$j.'_'.$i.'</a>';
-                        addToNotes($file_type,$folderName,$parent_id,$parent_type);
-                        $file_to_attach[] = array('folderName' => $_POST['files']['data-design-upload-'.$j]['tmp_name'][$i], 'fileName' => $file_type);
                         create_img_option($folderName,$file_type,$data_option);
+                        $note = addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                        
+                        $file_name =  $note->filename;
+                        $file_location = "upload/".$note->id;
+
+                        $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_type);
                     };
                 }
             };
@@ -886,6 +890,7 @@
         $noteTemplate->filename = $file;
         $noteTemplate->name = $file;
         $noteTemplate->save();
+        return $noteTemplate;
     }
     function resize_image($file, $current_file_path) {
         $type = strtolower(substr(strrchr($file, '.'), 1));
