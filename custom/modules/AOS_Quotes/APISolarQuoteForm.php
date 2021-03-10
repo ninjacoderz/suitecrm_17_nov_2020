@@ -776,7 +776,7 @@
         //     $mail->AddAttachment($file_location, $file_name, 'base64', $mime_type);
         // }
         foreach($file_to_attach as $file_attach) {
-            $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
+            $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', $file_attach['file_mime_type']);
         }
         $mail->AddCC($email_assigigned);
         $mail->AddCC('info@pure-electric.com.au');
@@ -837,8 +837,9 @@
                         
                         $file_name =  $note->filename;
                         $file_location = "upload/".$note->id;
+                        $mime_type = $note->file_mime_type;
 
-                        $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_type);
+                        $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_type , 'file_mime_type'=> $mime_type);
                     };
                 }
             };
