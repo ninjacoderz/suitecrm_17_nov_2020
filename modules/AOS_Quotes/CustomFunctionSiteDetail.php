@@ -149,7 +149,7 @@ function image_site_details($focus, $field, $value, $view)
                 //check exist files image site map
                 $url_image_site_details =  $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' . $focus->pre_install_photos_c .'/Image_Site_Detail.jpg' ;
                 if (file_exists($url_image_site_details) &&  $focus->pre_install_photos_c != '') {   
-                    $result_data = '<img id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;height:auto;width:100%;max-width:220px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/905cd90a-ad69-39de-a630-5a6b1f7d1e74/Image_Site_Detail.jpg?1615339640442">
+                    $result_data = '<img id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;height:auto;width:100%;max-width:220px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$focus->pre_install_photos_c.'/Image_Site_Detail.jpg?'.time().'">
                     <canvas hidden="" id="clipboard"></canvas>';
                 }else{
                     $result_data = '<div id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;margin-bottom:5px;text-align:center;">Map Template Image</div>
