@@ -1342,37 +1342,6 @@ $(function () {
             return false
         });
                        //-------------------------------
-        YAHOO.util.Event.addListener("account_id_c", "change", function(){
-            var record_id = $("#account_id_c").val();
-            $.ajax({
-                url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
-                context: document.body,
-                //async: true
-            }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
-                var json = $.parseJSON(data);
-                $("#electrician_contact_c").val(json.name);
-                $("#contact_id_c").val(json.record_id);
-                //dung code - trigger event get phone for electrican
-                populatePhoneNumberElectricianContact();
-            });
-            return false;
-        });
-        YAHOO.util.Event.addListener("account_id1_c", "change", function(){
-            var record_id = $("#account_id1_c").val();
-            $.ajax({
-                url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
-                context: document.body,
-                async: false
-            }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
-                var json = $.parseJSON(data);
-                $("#plumber_contact_c").val(json.name);
-                $("#contact_id4_c").val(json.record_id);
-                //dung code - trigger event get phone for Plumber
-                    populatePhoneNumberPlumberContact();
-            });
-        });
         var previous_note;
         $(".product_description").on('focus', function(){
             previous_note = $(this).val();
@@ -4051,6 +4020,38 @@ $(function () {
             populatePhoneNumberPlumberContact();
             YAHOO.util.Event.addListener("contact_id4_c", "change", populatePhoneNumberPlumberContact);
 
+            YAHOO.util.Event.addListener("account_id_c", "change", function(){
+                var record_id = $("#account_id_c").val();
+                $.ajax({
+                    url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
+                    context: document.body,
+                    //async: true
+                }).done(function (data) {
+                    if(data == '' && typeof data == undefined)return;
+                    var json = $.parseJSON(data);
+                    $("#electrician_contact_c").val(json.name);
+                    $("#contact_id_c").val(json.record_id);
+                    //dung code - trigger event get phone for electrican
+                    populatePhoneNumberElectricianContact();
+                });
+                return false;
+            });
+            YAHOO.util.Event.addListener("account_id1_c", "change", function(){
+                var record_id = $("#account_id1_c").val();
+                $.ajax({
+                    url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
+                    context: document.body,
+                    async: false
+                }).done(function (data) {
+                    if(data == '' && typeof data == undefined)return;
+                    var json = $.parseJSON(data);
+                    $("#plumber_contact_c").val(json.name);
+                    $("#contact_id4_c").val(json.record_id);
+                    //dung code - trigger event get phone for Plumber
+                        populatePhoneNumberPlumberContact();
+                });
+            });
+    
             function populatePhoneNumberSiteBackupContact() {
                 $.ajax({
                     url: "?entryPoint=getContactPhoneNumber&module_name=Contacts&record_id=" + $("#contact_id1_c").val(),
