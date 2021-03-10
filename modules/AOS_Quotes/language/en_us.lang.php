@@ -220,4 +220,10 @@ $mod_strings = array(
     'LBL_SA_REPS_REVENUE' => 'SA Reps Revenue',
     'LBL_GP_MANUAL' => 'GP MANUAL',
     //VUT-E- Label for Sanden profit fields
+    'LBL_ACCOUNT_SITE_DETAILS' => 'Account',
+    'LBL_CONTACT_SITE_DETAILS' => 'Contact',
+    'LBL_MOBILE_PHONE_SITE_DETAILS' => 'Mobile',
+    'LBL_EMAIL_SITE_DETAILS' => 'Email',
+    'LBL_ADDRESS_SITE_DETAILS' => 'Site Address',
+    'LBL_IMAGE_SITE_DETAILS' => 'Image Site Address',
 );
