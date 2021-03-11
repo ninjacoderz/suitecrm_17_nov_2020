@@ -386,6 +386,175 @@ const productMapper = [{
     }
 
 /** END LOAD */
+
+/** START JS LOAD REBATE PROVIDED */
+$(function() {
+    'use strict';
+    
+    //Hide field textArea Json
+    $("#quote_cl_rebate_c").closest('.edit-view-field').parent().parent().hide();
+
+    var html_checklist_rebate_provided = 
+    '<div id="group_custom_checklist_rebate_provided" class="row detail-view-row"></div>';
+    $("#quote_cl_rebate_c").closest('.tab-content').append(html_checklist_rebate_provided);
+    var btn_generate_quote = '<button type="button" id="generate_quote_from_rebate" class="button primary">Generate Line Item</button>';
+    $("#quote_cl_rebate_c").closest('.tab-content').append(btn_generate_quote);
+    renderRebateProvidedHTML($("#quote_type_c").val());
+
+    $("#generate_quote_from_rebate").on('click',function(){
+        SUGAR.ajaxUI.showLoadingPanel();
+        generateJSONForRebateProvided();
+        let dataJSON = JSON.parse($("#quote_cl_rebate_c").val());
+        for (let key in dataJSON) { 
+            processLineItemRebate(key,dataJSON[key]);
+        }
+        setTimeout(function (){
+            SUGAR.ajaxUI.hideLoadingPanel();
+        },5000)
+    });
+    $(document).on("change","#group_custom_checklist_rebate_provided .custom_rebate_fields",function(){
+        generateJSONForRebateProvided();
+    });
+
+
+
+});
+/** END JS LOAD REBATE PROVIDED */
+/** START - DECLARE FUNCTION FOR REBATE PROVIDED */
+
+function processLineItemRebate(id, status) {
+    let id_product = '';
+    switch (id) {
+        case 'cl_stcs':
+            id_product = '4efbea92-c52f-d147-3308-569776823b19';
+            break;
+        case 'cl_veecs':
+            id_product = 'cbfafe6b-5e84-d976-8e32-574fc106b13f';
+            break;
+        case 'cl_sl_hotwater_rebate': 
+            id_product = '431a9064-7cbb-6a44-e7ba-5d5b794137c7';
+            break;
+        case 'cl_sl_pv_rebate': 
+            id_product = '709310c8-c214-599b-d1e8-5f21061b0928';
+            break;
+        case 'cl_sa_reps_cl1_reti_gas_conn': 
+            id_product = '7a745194-689f-8896-64d7-6033347a1e17';
+            break;
+        case 'cl_sa_reps_cl1_no_gas_cl2': 
+            id_product = 'b054e7d4-8c42-b544-e37d-60333c268459';
+            break;
+        case 'cl_sl_battery_store_rebate':
+            // id_product = ''; //don't know
+            break;
+        default:
+            break;
+    }
+    let ln_index = deleteLineItemRebate(id_product);
+    if (id_product != '') {
+        if (status) {
+            if (ln_index == 'no') {
+                autoCreateLineItem_Rebate(id_product,1);
+            }
+        } else {
+            if (ln_index != 'no') {
+                markLineDeleted(ln_index,"product_");
+            }
+        }
+    }
+}
+
+function deleteLineItemRebate(id_item) {
+    let products = $('#lineItems').find('.product_group').children('tbody');
+    let i; 
+    for (i=0;i< products.length; i++) {
+        if ($(`#product_product_id${i}`).val() == id_item && products[i].getAttribute('style') != "display: none;") {
+            // markLineDeleted(i,"product_");
+            return i;
+        }
+    }
+    return 'no';
+}
+
+/**
+ * Render HTML for Rebate Provided subpanel
+ * @param {String} type quote_type_c
+ * @param {String} state state
+ */
+function renderRebateProvidedHTML(type){
+    $.ajax({
+        url: '/index.php?entryPoint=APIRenderRebateProvided&type='+type,
+        success: function (result) {
+            try {
+                var json_data = JSON.parse(result);
+                $("#group_custom_checklist_rebate_provided").empty().append(json_data['template_html_rebate']);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }).done(function (data) {
+        parseJSONValueToFields_RebateProvided();
+        SUGAR.ajaxUI.hideLoadingPanel();
+    });
+}
+/**
+ * parse value into subpanel rebate provided
+ */
+function parseJSONValueToFields_RebateProvided(){
+    if ($("#quote_cl_rebate_c").val() == '')  return;
+    var dataJSON = JSON.parse($("#quote_cl_rebate_c").val());
+    for (let key in dataJSON) {  
+        $("#"+key).val(dataJSON[key]);
+        $("#"+key).attr('checked', dataJSON[key]);
+    }
+}
+
+/**
+ * Create Json
+ */
+function generateJSONForRebateProvided(){
+    var values = {};
+    $("#group_custom_checklist_rebate_provided .custom_rebate_fields").each(function (){
+        var id_name = $(this).attr("id");
+        values[id_name] = $(this).is(":checked");
+    });
+    $("#quote_cl_rebate_c").val(JSON.stringify(values));
+}
+
+function autoCreateLineItem_Rebate(id,total_item){
+    $.ajax({
+        url: "/index.php?entryPoint=getInfoProduct&product_id="+id,
+        type: 'GET',
+        // async: false,
+        success: function(data)
+        {   
+            var info_pro = JSON.parse(data);
+            insertProductLine('product_group0', '0');
+            lineno  = prodln-1;  
+            var popupReplyData = {}; //
+            popupReplyData.form_name = "EditView";
+            var name_to_value_array = {};
+            name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
+            name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
+            name_to_value_array["product_name"+lineno] = info_pro['product_name'];
+            name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
+            name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
+
+            name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
+            name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
+            name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
+            name_to_value_array["product_vat"+lineno] = '0%';
+
+            popupReplyData["name_to_value_array"] = name_to_value_array;            
+            $('#product_product_list_price'+lineno).focus();
+            $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ id +'">Link</a></div>');
+            setProductReturn(popupReplyData);
+        },
+        error: function(response){console.log("Fail");},
+    });
+}
+/** END - DECLARE FUNCTION FOR REBATE PROVIDED */
+
+
 // $(document).ready(function() {
 //     var dataType = "Sanden";
 //     $("#quote_note_inputs_c").closest('.edit-view-field').parent().parent().hide();
