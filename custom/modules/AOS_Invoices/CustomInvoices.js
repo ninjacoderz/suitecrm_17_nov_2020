@@ -5193,6 +5193,7 @@ $(document).ready(function(){
         );     
 
         $("#CANCEL").parent().append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');     
+        $("#CANCEL").parent().append('<input type="button" id="client_reuploads_photo" value="Email Client Reuploads Photo" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
            
     }else if(module_sugar_grp1 == 'AOS_Quotes'){
         $("#CANCEL").after(
@@ -5361,7 +5362,7 @@ $(document).ready(function(){
         });
          // get case study
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_case_study_photos" class="button primary" title="get case study photos">GET SG PV CASE STUDY PHOTOS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
-         $("#get_files_from_s3_invoice").after('<input type="button" id="client_reuploads_photo" value="Email Client Reuploads Photo" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
+        //  $("#get_files_from_s3_invoice").after('<input type="button" id="client_reuploads_photo" value="Email Client Reuploads Photo" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
          $("#get_files_from_s3_invoice").after('<button type="button" id="send_photo_to_electrician" class="button primary send_photo_to_installer" data-installer="electrician" title="send photo to installer">SEND MAIL PHOTOS TO ELECTRICIAN<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
          $("#get_files_from_s3_invoice").after('<button type="button" id="send_photo_to_plumber" class="button primary send_photo_to_installer" data-installer="plumber" title="send photo to installer">SEND MAIL PHOTOS TO PLUMBER<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
 
