@@ -7681,6 +7681,7 @@ class EmailsController extends SugarController
         //field missing when preg_replace
         $solar_input ='';
         foreach ($quotes_input as $key => $value) {
+            if ($vardefs_array[$key] === null) continue;
             $solar_input .= '<tr>';
             $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">'.$vardefs_array[$key]['display_label'].'</td>';
             $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">'.$value.'</td>';                

@@ -128,7 +128,12 @@
             alert('Please Save before !');
             return;
         }
-
+        if (typeof $('#address_site_details_span').text().trim() == undefined || $('#address_site_details_span').text().trim() == '') {
+            var question = confirm("No install address detected, still want to proceed?");
+            if (!question) {
+                return;
+            }
+        }
         var self = this;
 
         self.emailComposeView = null;
@@ -140,7 +145,7 @@
         var record_id= $(source).attr('data-record-id') ;
         var email_type = $(source).attr('data-email-type');
         var  email_module  =  $(source).attr('data-module');
-        var address = $('#address').html();
+        var address = typeof $('#address_site_details_span').text() == 'string' ? $('#address_site_details_span').text().trim() : '';
         if( $('#vic_rebate_c').prop('checked') == true ){
             var vic_rebate = "Yes";
         }else {
