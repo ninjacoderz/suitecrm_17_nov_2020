@@ -444,7 +444,7 @@ function processLineItemRebate(id, status) {
             id_product = 'b054e7d4-8c42-b544-e37d-60333c268459';
             break;
         case 'cl_sl_battery_store_rebate':
-            // id_product = ''; //don't know
+            id_product = '4837bd0e-bfb4-56e0-0c2d-6049db9a8cb8';
             break;
         default:
             break;
