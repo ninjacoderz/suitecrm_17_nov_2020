@@ -79,7 +79,7 @@ function mobile_phone_site_details($focus, $field, $value, $view)
         }
         $phone_number = preg_replace("/^0/", "#61", preg_replace('/\D/', '', $account->mobile_phone_c));
         $phone_number = preg_replace("/^61/", "#61", $phone_number);
-        $result_data = '<span class="sugar_field" id="'.$phone_number.'">'.$phone_number.'</span>
+        $result_data = '<span class="sugar_field" id="'.$phone_number.'">'.$account->mobile_phone_c.'</span>
             <img class="sms_icon" src="themes/SuiteR/images/sms.png" alt="icon-sms" height="14" width="14">';
         $result_data .='&nbsp;<a target="_blank" href="http://message.pure-electric.com.au/'.$phone_number.'" title="Message Portal">
         <img class="mess_portal" data-source="account"  src="themes/SuiteR/images/mess_portal.png" alt="mess_portal" height="14" width="14"></a>';
