@@ -263,41 +263,41 @@ $(function () {
             var json_data = JSON.parse(data);
             window.data_invoice = json_data;
             console.log(json_data);
-            //Account 
-            $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.billing_account),json_data);
-            $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.mobile_phone_c),json_data);
-            $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.billing_account_email),json_data);
-            $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.address),json_data);
-            //Solar gain
-            $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.solargain_quote_number_c),json_data);
-            $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.solargain_invoices_number_c),json_data);
-            //add link xero invoice 
-            var html_group_link_xero = '';
-            (json_data.xero_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_invoice_c[1]+'" target="_blank">'+json_data.xero_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
-            (json_data.xero_stc_rebate_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_stc_rebate_invoice_c[1]+'" target="_blank">'+json_data.xero_stc_rebate_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
-            (json_data.xero_shw_rebate_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_shw_rebate_invoice_c[1]+'" target="_blank">'+json_data.xero_shw_rebate_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
-            (json_data.xero_veec_rebate_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_veec_rebate_invoice_c[1]+'" target="_blank">'+json_data.xero_veec_rebate_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
-            $("#description").closest('.detail-view-row-item').append(html_group_link_xero);
+        //     //Account 
+        //     $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.billing_account),json_data);
+        //     $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.mobile_phone_c),json_data);
+        //     $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.billing_account_email),json_data);
+        //     $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.address),json_data);
+        //     //Solar gain
+        //     $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.solargain_quote_number_c),json_data);
+        //     $("body").find('#group_custom_invoice_template_col_1').append(render_field_data(json_data.solargain_invoices_number_c),json_data);
+        //     //add link xero invoice 
+        //     var html_group_link_xero = '';
+        //     (json_data.xero_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_invoice_c[1]+'" target="_blank">'+json_data.xero_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
+        //     (json_data.xero_stc_rebate_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_stc_rebate_invoice_c[1]+'" target="_blank">'+json_data.xero_stc_rebate_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
+        //     (json_data.xero_shw_rebate_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_shw_rebate_invoice_c[1]+'" target="_blank">'+json_data.xero_shw_rebate_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
+        //     (json_data.xero_veec_rebate_invoice_c[1] != '')? html_group_link_xero += '<a href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID='+json_data.xero_veec_rebate_invoice_c[1]+'" target="_blank">'+json_data.xero_veec_rebate_invoice_c[2]+'</a><br>' :html_group_link_xero +='';
+        //     $("#description").closest('.detail-view-row-item').append(html_group_link_xero);
 
-            //site details
-            $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.address_site_details),json_data);
-            $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.roof_type_c),json_data);
-            $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.nmi_c),json_data);
-            $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.distributor_c),json_data);
+        //     //site details
+        //     $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.address_site_details),json_data);
+        //     $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.roof_type_c),json_data);
+        //     $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.nmi_c),json_data);
+        //     $("body").find('#group_custom_invoice_template_col_2_1').append(render_field_data(json_data.distributor_c),json_data);
          
-           if(json_data.installation_pictures_c[2]) {
-            var html_image_site_detail = '<img id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;height:auto;width:100%;max-width:220px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+ json_data.installation_pictures_c[1]+'/Image_Site_Detail.jpg?'+Date.now()+'">';
-           }else{
-            var html_image_site_detail = '<div id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;margin-bottom:5px;text-align:center;">Map Template Image</div>';
-           }
-           if (json_data.file_design[2]) {
-                var html_img_design = '<img style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;" src="'+json_data.file_design[1]+'">';
-           } else {
-               var html_img_design ='';
-           }
-           $("body").find('#group_custom_invoice_template_col_2_2').append(html_image_site_detail+html_img_design);
-           //Auto loading image detail 
-           $("body").find('#group_custom_invoice_template_col_2_2').append('<canvas hidden="" id="clipboard"></canvas>');
+        //    if(json_data.installation_pictures_c[2]) {
+        //     var html_image_site_detail = '<img id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;height:auto;width:100%;max-width:220px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+ json_data.installation_pictures_c[1]+'/Image_Site_Detail.jpg?'+Date.now()+'">';
+        //    }else{
+        //     var html_image_site_detail = '<div id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;margin-bottom:5px;text-align:center;">Map Template Image</div>';
+        //    }
+        //    if (json_data.file_design[2]) {
+        //         var html_img_design = '<img style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;" src="'+json_data.file_design[1]+'">';
+        //    } else {
+        //        var html_img_design ='';
+        //    }
+        //    $("body").find('#group_custom_invoice_template_col_2_2').append(html_image_site_detail+html_img_design);
+        //    //Auto loading image detail 
+        //    $("body").find('#group_custom_invoice_template_col_2_2').append('<canvas hidden="" id="clipboard"></canvas>');
            var generateUUID = json_data.installation_pictures_c[1];
            if(generateUUID == '') {
                generateUUID = create_generateUUID();
@@ -832,7 +832,7 @@ function CopyToClipboard(generateUUID){
                         $('body').find("#Map_Template_Image").remove();
                         $('body').find("#google_map").remove();
                         var html_image_site_detail = '<img id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;height:auto;width:100%;max-width:220px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+ generateUUID +'/Image_Site_Detail.jpg?'+Date.now()+'">';
-                        $('body').find("#group_custom_invoice_template_col_2_2").append(html_image_site_detail);
+                        $('body').find("#image_site_details_span").append(html_image_site_detail);
                         SUGAR.ajaxUI.hideLoadingPanel();                 
                     });
                 document.body.removeChild(canvas);
