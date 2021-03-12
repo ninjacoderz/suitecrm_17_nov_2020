@@ -1081,7 +1081,10 @@
 
       //thienpb custom set schedule time
       if($(this).find("#datetimepicker").val() != ''){
-        formData.append('schedule_time',(new Date($(this).find("#datetimepicker").val()).getTime())/1000);
+        var datetimepicker = $("#datetimepicker").data("kendoDateTimePicker");
+        var datepicker = datetimepicker.value();
+        var schedule_time = datepicker.getTime()/1000;
+        formData.append('schedule_time',schedule_time);
         formData.append('from_phone_number',$("#from_phone_number").val());
       }
       $.ajax({

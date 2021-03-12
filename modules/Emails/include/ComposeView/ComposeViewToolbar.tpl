@@ -237,14 +237,18 @@
             var datetime_stamp = $("#schedule_timestamp_c").val();
             if(datetime_stamp != '') {
                $("#datetimepicker").kendoDateTimePicker({
+                  format: "dd/MM/yyyy hh:mm tt",
                   value : new Date($("#schedule_timestamp_c").val() * 1000)
                });
             }
          })
-         $("#datetimepicker").kendoDateTimePicker();
+          $("#datetimepicker").kendoDateTimePicker({
+               format: "dd/MM/yyyy hh:mm tt"
+            });
          var datepicker = $("#datetimepicker").data("kendoDatePicker");
          var setScheduleTime = function (date_schedule) {
             $("#datetimepicker").kendoDateTimePicker({
+               format: "dd/MM/yyyy hh:mm tt",
                value : new Date(date_schedule)
             })
          };
