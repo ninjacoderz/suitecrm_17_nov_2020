@@ -555,11 +555,15 @@ $('body').on('click','#button_reset_sms_template',function(){
         $('#btnSendLater').click(function(){
         $('.popup-sendMail').toggleClass('active-popup-sms');
         })
-        $("#datetimepicker").kendoDateTimePicker();
+        $("#datetimepicker").kendoDateTimePicker({
+            format: "dd/MM/yyyy hh:mm tt"
+        });
         var datepicker = $("#datetimepicker").data("kendoDatePicker");
         var setScheduleTime = function (date_schedule) {
            $("#datetimepicker").kendoDateTimePicker({
+              format: "dd/MM/yyyy hh:mm tt",
               value : new Date(date_schedule)
+              
            })
         };
 
@@ -618,19 +622,22 @@ $('body').on('click','#button_reset_sms_template',function(){
            setScheduleTime(getDateTime(option));
         });
         $('.btnSuccess').click(function() {
-            var datepicker = $("#datetimepicker").kendoDateTimePicker().val();
-            var today = new Date();
+
+        var datetimepicker = $("#datetimepicker").data("kendoDateTimePicker");
+        var datepicker = datetimepicker.value();
+        var datestring = kendo.toString(datepicker, "dd/MM/yyyy h:mm tt");
+        var today = new Date();
             if (toTimestamp(datepicker) < toTimestamp(today)) {
                 $('#datetimepicker').css('color','red');
             } else {
                 $('#datetimepicker').css('color','green');
                 $('#dataTimestamp').val(toTimestamp(datepicker));
                 $('.popup-sendMail').removeClass('active-popup-sms');
-                $('.result-schedule').text(datepicker);
+                $('.result-schedule').text(datestring);
             }
         })
         function toTimestamp(strDate){
-            var datum = new Date(strDate).getTime()/1000;
+            var datum = strDate.getTime()/1000;
             return datum;
         }
     });

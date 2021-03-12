@@ -4949,7 +4949,7 @@ class EmailsController extends SugarController
             $this->bean->emails_email_templates_name = $emailTemplate->name;
             $this->bean->emails_email_templates_idb = $emailTemplate->id;
         }
-        //overide to address email for email installation calendar
+        //overide to address email for email installation calendar >> 12/03/2021 VUT - comment to render
         if($_GET['return_module'] == "AOS_Invoices" && isset($_REQUEST['changedSubject']) && isset($_REQUEST['installation_id'])){
             $role_user = $_REQUEST['role'];
             $return_id = $_REQUEST["return_id"];
@@ -4976,12 +4976,11 @@ class EmailsController extends SugarController
                     $sea = new SugarEmailAddress; 
                     $primary = $sea->getPrimaryAddress($account);
                     $this->bean->to_addrs_names =  $account->name . "  <".$primary.">";
-                    $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $account->mobile_phone_c));
-                    $phone_number = preg_replace("/^61/", "+61", $phone_number);
-                    $this->bean->number_client = $phone_number  ;
+                    // $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $account->mobile_phone_c));
+                    // $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                    // $this->bean->number_client = $phone_number  ;
                 }
             }
-            
         }
 
         //start - code render sms_template
@@ -7681,6 +7680,7 @@ class EmailsController extends SugarController
         //field missing when preg_replace
         $solar_input ='';
         foreach ($quotes_input as $key => $value) {
+            if ($vardefs_array[$key] === null) continue;
             $solar_input .= '<tr>';
             $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 379px; height: 13px;">'.$vardefs_array[$key]['display_label'].'</td>';
             $solar_input .= '<td style="padding: 5px; border: 0.5px solid #8a8a8a; width: 334px; height: 13px;">'.$value.'</td>';                

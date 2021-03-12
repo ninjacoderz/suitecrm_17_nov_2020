@@ -1064,7 +1064,7 @@ $(function () {
         if(module_sugar_grp1 == 'AOS_Invoices'){
             $('#electrician_c').parent().siblings('.label').append('<br> <button class="button primary" id="distanceElectrictoSuite"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DISTANCE</button>');
             $('#electrician_c').parent().siblings('.label').append('<button style="margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedElectrician"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
-            $('#installation_date_c').parent().siblings('.label').append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
+            // $('#installation_date_c').parent().siblings('.label').append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
 
             //Get Distance Selected Electrician
             $('#getDistance_selectedElectrician').click(function(){
@@ -1342,37 +1342,6 @@ $(function () {
             return false
         });
                        //-------------------------------
-        YAHOO.util.Event.addListener("account_id_c", "change", function(){
-            var record_id = $("#account_id_c").val();
-            $.ajax({
-                url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
-                context: document.body,
-                //async: true
-            }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
-                var json = $.parseJSON(data);
-                $("#electrician_contact_c").val(json.name);
-                $("#contact_id_c").val(json.record_id);
-                //dung code - trigger event get phone for electrican
-                populatePhoneNumberElectricianContact();
-            });
-            return false;
-        });
-        YAHOO.util.Event.addListener("account_id1_c", "change", function(){
-            var record_id = $("#account_id1_c").val();
-            $.ajax({
-                url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
-                context: document.body,
-                async: false
-            }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
-                var json = $.parseJSON(data);
-                $("#plumber_contact_c").val(json.name);
-                $("#contact_id4_c").val(json.record_id);
-                //dung code - trigger event get phone for Plumber
-                    populatePhoneNumberPlumberContact();
-            });
-        });
         var previous_note;
         $(".product_description").on('focus', function(){
             previous_note = $(this).val();
@@ -4051,6 +4020,38 @@ $(function () {
             populatePhoneNumberPlumberContact();
             YAHOO.util.Event.addListener("contact_id4_c", "change", populatePhoneNumberPlumberContact);
 
+            YAHOO.util.Event.addListener("account_id_c", "change", function(){
+                var record_id = $("#account_id_c").val();
+                $.ajax({
+                    url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
+                    context: document.body,
+                    //async: true
+                }).done(function (data) {
+                    if(data == '' && typeof data == undefined)return;
+                    var json = $.parseJSON(data);
+                    $("#electrician_contact_c").val(json.name);
+                    $("#contact_id_c").val(json.record_id);
+                    //dung code - trigger event get phone for electrican
+                    populatePhoneNumberElectricianContact();
+                });
+                return false;
+            });
+            YAHOO.util.Event.addListener("account_id1_c", "change", function(){
+                var record_id = $("#account_id1_c").val();
+                $.ajax({
+                    url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
+                    context: document.body,
+                    async: false
+                }).done(function (data) {
+                    if(data == '' && typeof data == undefined)return;
+                    var json = $.parseJSON(data);
+                    $("#plumber_contact_c").val(json.name);
+                    $("#contact_id4_c").val(json.record_id);
+                    //dung code - trigger event get phone for Plumber
+                        populatePhoneNumberPlumberContact();
+                });
+            });
+    
             function populatePhoneNumberSiteBackupContact() {
                 $.ajax({
                     url: "?entryPoint=getContactPhoneNumber&module_name=Contacts&record_id=" + $("#contact_id1_c").val(),
@@ -5191,6 +5192,9 @@ $(document).ready(function(){
                 class="button email_sa_reps_to_yess" title="email_sa_reps_to_yess" ><span class="glyphicon glyphicon-envelope"></span>SA REPS to YES<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
         );     
 
+        $("#CANCEL").parent().append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');     
+        $("#CANCEL").parent().append('<input type="button" id="client_reuploads_photo" value="Email Client Reuploads Photo" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
+           
     }else if(module_sugar_grp1 == 'AOS_Quotes'){
         $("#CANCEL").after(
             ' <button type="button" id="Advise_Install_Date" \
@@ -5358,7 +5362,7 @@ $(document).ready(function(){
         });
          // get case study
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_case_study_photos" class="button primary" title="get case study photos">GET SG PV CASE STUDY PHOTOS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
-         $("#get_files_from_s3_invoice").after('<input type="button" id="client_reuploads_photo" value="Email Client Reuploads Photo" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
+        //  $("#get_files_from_s3_invoice").after('<input type="button" id="client_reuploads_photo" value="Email Client Reuploads Photo" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
          $("#get_files_from_s3_invoice").after('<button type="button" id="send_photo_to_electrician" class="button primary send_photo_to_installer" data-installer="electrician" title="send photo to installer">SEND MAIL PHOTOS TO ELECTRICIAN<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
          $("#get_files_from_s3_invoice").after('<button type="button" id="send_photo_to_plumber" class="button primary send_photo_to_installer" data-installer="plumber" title="send photo to installer">SEND MAIL PHOTOS TO PLUMBER<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
 

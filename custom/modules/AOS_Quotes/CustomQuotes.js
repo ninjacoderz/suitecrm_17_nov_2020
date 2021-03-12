@@ -2735,8 +2735,9 @@ function genExtraDaikinItemFunc(elem){
      var hours   = addZero(today.getHours());
      var minutes = today.getMinutes();
      newdate     = day + "/" + month + "/" + year;   
-     var dialogBody = '<button type="button" id="get_today" class="button" title="Get Today" >Today</button>';
+     var dialogBody = '<button style="padding: 0px 10px;margin: 0px 1px;" type="button" id="get_today" class="button" title="Get Today" >T</button>';
      $('input[name="quote_date_c"]').after(dialogBody);
+    //  $('div[field="quote_date_c"]').find('tr[valign="middle"]').append('<td>'+dialogBody+'</td>')
      $("#get_today").click(function(){
          if(minutes<15){
              minutes = $("#quote_date_c_minutes option:eq(1)").val();
@@ -2779,9 +2780,9 @@ function genExtraDaikinItemFunc(elem){
         //  )
      }
      //TriTruong Add Button Get Today, Get 7 Days
-     $('div[field="expiration"]').append('<button type="button" id="get_today_valid_until" class="button button-get-day" title="Get Today" data-type="today" >ToDay</button>');
+     $('div[field="expiration"]').append('<button style="padding: 0px 10px;margin: 0px 1px;" type="button" id="get_today_valid_until" class="button button-get-day" title="Get Today" data-type="today" >T</button>');
      $('#get_today_valid_until').before(
-         '&nbsp;<button style="margin-right: 2px;" type="button" id="get_seven_days" class="button-get-day button get-seven-days" title="" data-type="7"> TODAY +7 </button>'
+         '&nbsp;<button style="padding: 0px 5px;margin: 0px 1px;" type="button" id="get_seven_days" class="button-get-day button get-seven-days" title="" data-type="7">T+7</button>'
      );
      $('.button-get-day').click(function() {
          var type  = $(this).attr('data-type');
@@ -2833,7 +2834,7 @@ function genExtraDaikinItemFunc(elem){
      //     $('#solargain_tesla_quote_number_c').show();
      //     $('div[data-label="LBL_SOLARGAIN_TESLA_QUOTE_NUMBER"]').show()
      // }
-     $('div[field="next_action_date_c"]').append('<button type="button" id="get_today_action_date" class="button" title="Get Today" data-type="7" >TODAY +7</button>');
+     $('div[field="next_action_date_c"]').append('<button style="padding: 0px 5px;margin: 0px 1px;" type="button" id="get_today_action_date" class="button" title="Get Today" data-type="7" >T+7</button>');
      $('#get_today_action_date').after(
          '&nbsp;<button type="button" id="push_action_date_toSG" class="button push_action_date_toSG" title="" onClick="SUGAR.pushactiondatetoSG_quote(this);" > PUSH TO SG <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
      )  

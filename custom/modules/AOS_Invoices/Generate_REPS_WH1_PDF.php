@@ -72,6 +72,8 @@ function generatePDF($Invoice){
     $pdf->Write($pdf->SetXY(130,52), html_entity_decode('Sanden',ENT_QUOTES));
     //New Water Heater Model
     $pdf->Write($pdf->SetXY(130,59), html_entity_decode($Invoice->sanden_model_c,ENT_QUOTES));
+    //Spec Sheet Attached
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,194,59,3,2.8);
     //Has a new gas connection been made to this property?
     $pdf->Image(__DIR__.'/text/icon.jpg' ,77.4,68,3,2.8);
 
@@ -100,6 +102,8 @@ function generatePDF($Invoice){
     $pdf->Write($pdf->SetXY(37,113), html_entity_decode($contact_bean->phone_mobile,ENT_QUOTES)); // phone
     $pdf->Write($pdf->SetXY(118,112.8), html_entity_decode($contact_bean->email1,ENT_QUOTES)); // email
 
+    // PROPERTY TYPE    
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,13,120,3,2.8);
     //Have you resided in the premises for more than 3 years?
     if($Invoice->resided_in_the_premises_c == '1'){
         $pdf->Image(__DIR__.'/text/icon.jpg' ,168.5,120,3,2.8);
@@ -122,11 +126,18 @@ function generatePDF($Invoice){
     $pdf->Write($pdf->SetXY(36.5,208), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
     $pdf->Write($pdf->SetXY(125,208), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
     
+    //For YESS Pty Ltd terms and conditions please visit: www.yess.net.au/terms-conditions.html
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,13,246,3,2.8);
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,13,250.7,3,2.8);
+    $pdf->Image(__DIR__.'/text/icon.jpg' ,13,255.7,3,2.8);
+    
+    //Customer Name
     $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name));
+    $pdf->Write($pdf->SetXY(36.5,261.3), html_entity_decode(trim($contact_bean->first_name .' '. $contact_bean->last_name),ENT_QUOTES));
 
-    $fp = fopen($ds_dir.'/'.$pre_file.'_REPS_WH1_Hot_Water_Replacement.pdf', 'wb');
+    $fp = fopen($ds_dir.'/'.$pre_file.'_SA_REPS_Activity_Record_WH1_Hot_Replacement.pdf', 'wb');
     fclose($fp);
-    $pdf->Output($ds_dir.'/'.$pre_file.'_REPS_WH1_Hot_Water_Replacement.pdf', 'F');
+    $pdf->Output($ds_dir.'/'.$pre_file.'_SA_REPS_Activity_Record_WH1_Hot_Replacement.pdf', 'F');
    
     return 'Finish';
     

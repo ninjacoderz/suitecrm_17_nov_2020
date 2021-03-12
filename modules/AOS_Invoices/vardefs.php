@@ -744,7 +744,201 @@ $dictionary['AOS_Invoices'] = array(
                 'reportable' => true,
                 'disable_num_format' => true,
             ),
+            'account_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'account_site_details',
+                'vname' => 'LBL_ACCOUNT_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'display_account_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),
 
+        'mobile_phone_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'mobile_phone_site_details',
+                'vname' => 'LBL_MOBILE_PHONE_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'mobile_phone_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),
+        
+        'email_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'email_site_details',
+                'vname' => 'LBL_EMAIL_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'email_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),
+
+        'address_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'address_site_details',
+                'vname' => 'LBL_ADDRESS_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'address_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),
+
+        'image_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'image_site_details',
+                'vname' => 'LBL_IMAGE_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'image_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),
+        'solargain_quote_number_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'solargain_quote_number_site_details',
+                'vname' => 'LBL_SOLARGAIN_QUOTE_NUMBER_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'solargain_quote_number_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),    
+        'roof_type_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'roof_type_site_details',
+                'vname' => 'LBL_ROOF_TYPE_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'roof_type_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),
+
+        'nmi_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'nmi_site_details',
+                'vname' => 'LBL_NMI_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'nmi_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),   
+
+        'distributor_site_details' =>
+            array(
+                'required' => false,
+                'name' => 'distributor_site_details',
+                'vname' => 'LBL_DISTRIBUTOR_SITE_DETAILS',
+                'type' => 'function',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+                'function' =>
+                array(
+                    'name' => 'distributor_site_details',
+                    'returns' => 'html',
+                    'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
+                ),
+            ),   
     ),
 
     'relationships' => array(

@@ -210,26 +210,26 @@ $(function () {
                 var json_data = JSON.parse(data);
                 console.log(json_data);
                 //Account 
-                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.account_name),json_data);
-                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.mobile_phone_c),json_data);
-                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.billing_account_email),json_data);
-                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.address),json_data);
-                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_quote_number_c),json_data);
-                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_lead_number_c),json_data);
-                $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_tesla_quote_number_c),json_data);
+            //     $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.account_name),json_data);
+            //     $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.mobile_phone_c),json_data);
+            //     $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.billing_account_email),json_data);
+            //     $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.address),json_data);
+            //     $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_quote_number_c),json_data);
+            //     $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_lead_number_c),json_data);
+            //     $("body").find('#group_custom_template_col_1').append(render_field_data(json_data.solargain_tesla_quote_number_c),json_data);
             
-                //site details
-                $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.address_site_details),json_data);
-                $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.roof_type_c),json_data);
-                $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.nmi_c),json_data);
-                $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.distributor_c),json_data);
+            //     //site details
+            //     $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.address_site_details),json_data);
+            //     $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.roof_type_c),json_data);
+            //     $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.nmi_c),json_data);
+            //     $("body").find('#group_custom_template_col_2_1').append(render_field_data(json_data.distributor_c),json_data);
              
-               if(json_data.installation_pictures_c[2]) {
-                var html_image_site_detail = '<img id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;height:auto;width:100%;max-width:220px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+ json_data.installation_pictures_c[1]+'/Image_Site_Detail.jpg?'+Date.now()+'">';
-               }else{
-                var html_image_site_detail = '<div id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;margin-bottom:5px;text-align:center;">Map Template Image</div>';
-               }
-               $("body").find('#group_custom_template_col_2_2').append(html_image_site_detail);
+            //    if(json_data.installation_pictures_c[2]) {
+            //     var html_image_site_detail = '<img id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;height:auto;width:100%;max-width:220px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+ json_data.installation_pictures_c[1]+'/Image_Site_Detail.jpg?'+Date.now()+'">';
+            //    }else{
+            //     var html_image_site_detail = '<div id="Map_Template_Image" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:198px;height:auto;margin-bottom:5px;text-align:center;">Map Template Image</div>';
+            //    }
+            //    $("body").find('#group_custom_template_col_2_2').append(html_image_site_detail);
             }
         })
         //dung code- function button send email Request Design

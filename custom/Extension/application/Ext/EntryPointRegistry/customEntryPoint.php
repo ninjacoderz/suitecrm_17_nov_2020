@@ -1445,3 +1445,9 @@ $entry_point_registry['CRUD_Bill_Xero'] = array(
     'file' => 'xero-php/CRUD_Bill_Xero.php',
     'auth' => false
 );
+
+//VUT - Render Sub panel Rebate Provided
+$entry_point_registry['APIRenderRebateProvided'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIRenderRebateProvided.php',
+    'auth' => false
+);
