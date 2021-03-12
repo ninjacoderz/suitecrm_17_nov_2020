@@ -147,7 +147,7 @@
             $body_sms =  $smsTemplate->body_c;
             $body_sms = str_replace('$installation_calendar_url',$installation_calendar_url,str_replace("\$first_name", explode(" ", $AccountClient->name,2)[0], $body_sms));
             $body_sms = str_replace('$aos_invoices_quote_type_c', $quote_type,$body_sms);
-            $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $AccountClient->phone_mobile));
+            $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $AccountClient->mobile_phone_c));
             $phone_number = preg_replace("/^61/", "+61", $phone_number);
             $email->emails_pe_smstemplate_idb = $smsTemplate->id;
             $email->emails_pe_smstemplate_name =  $smsTemplate->name; 
