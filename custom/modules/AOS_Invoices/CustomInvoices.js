@@ -6621,15 +6621,17 @@ $(function () {
                 var  plumber_firstname  = $("#plumber_c").val().split(/\s(.+)/)[0];
                 var  plumber_lastname   = $("#plumber_c").val().split(/\s(.+)/)[1];
                 var  created_by         = $("#user_id_c").val();
-                var getDaysArray = function(start, end) {
-                    for(var arr=[],dt=new Date(start); dt.getDate()<=end.getDate(); dt.setDate(dt.getDate()+1)){
+                var getDaysArray = function(start) {
+                    var dt = new Date(start);
+                    var arr=[];
+                    for(var i = 0; i < 21 ; i++){ 
+                        dt.setDate(dt.getDate()+1);
                         arr.push(new Date(dt));
                     }
-                    return arr;
-                };
-
-                var today = new Date();
-                var pe_available_date = JSON.stringify(getDaysArray(today,new Date(today.getFullYear(), today.getMonth(), today.getDate()+21)));
+                     return arr;
+                 };
+                 var today = new Date();
+                 var pe_available_date = JSON.stringify(getDaysArray(today));
                 
                 $.ajax({
                     type: "POST",
