@@ -769,24 +769,6 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $purchaseOrder->name .= $quantity.'x'.$name.' ';
         }
                 
-        // $daikin_product_infomation = $_REQUEST['daikin_product'];
-        // $daikin_products = html_entity_decode($daikin_product_infomation);
-        // $daikin_product = json_decode($daikin_products);
-        // $product_names = array();
-        // foreach ($daikin_product as $key => $value) {
-        //     if (strpos(strtolower($value->product_name), 'small') !== false) { $value->product_name = str_ireplace('small','', $value->product_name);} 
-        //     if (strpos(strtolower($value->product_name), 'medium') !== false) { $value->product_name = str_ireplace('medium','', $value->product_name);} 
-        //     if (strpos(strtolower($value->product_name), 'large') !== false) { $value->product_name = str_ireplace('large','', $value->product_name);} 
-        //     array_push($product_names, trim($value->product_name));
-        // }
-        // $array_product = array_count_values($product_names);        
-        // foreach ($array_product as $name => $quantity) {
-        //     $purchaseOrder->name .= $quantity.'x'.$name.' ';
-        // }
-        //**address + time */
-        // $invoice->delivery_contact_suburb_c = $_REQUEST["delivery_contact_suburb"];
-        // $invoice->delivery_contact_state_c = $_REQUEST["delivery_contact_state"];
-        // $invoice->delivery_date_time_c = $_REQUEST["delivery_date"];
         if (isset($_REQUEST["delivery_date"])) {
             $invoice->delivery_date_time_c = $_REQUEST["delivery_date"];
         }
@@ -804,9 +786,15 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     if($invoice_installation != ""){
         $purchase = new PO_purchase_order();
         $purchase->retrieve($purchaseOrder->id);
+        if( empty($purchase->installation_pdf_c)){
+            $purchase->installation_pdf_c =  create_guid();
+            $purchase->save();
+        }
         $installation_pdf = $purchase->installation_pdf_c;
-        $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
-        get_all_file_invoice_to_po($path,$invoice_installation,$installation_pdf);
+        if($installation_pdf != ''){
+            $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
+            get_all_file_invoice_to_po($path,$invoice_installation,$installation_pdf);
+        }
     }
 
 
@@ -853,39 +841,17 @@ function get_all_file_invoice_to_po($path,$invoice_installation,$installation_pd
     $get_all_photo = dirToArray_fromInvoice($path.$invoice_installation);
     foreach ($get_all_photo as $key => $value) 
     { 
-    $ch = curl_init();
+        $file_name = $value;
 
-    curl_setopt($ch, CURLOPT_URL, 'https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$invoice_installation.'/'.$value);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-
-    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-
-    $headers = array();
-    $headers[] = 'Authority: i2.au.reastatic.net';
-    $headers[] = 'Cache-Control: max-age=0';
-    $headers[] = 'Upgrade-Insecure-Requests: 1';
-    $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36';
-    $headers[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9';
-    $headers[] = 'Sec-Fetch-Site: none';
-    $headers[] = 'Sec-Fetch-Mode: navigate';
-    $headers[] = 'Sec-Fetch-User: ?1';
-    $headers[] = 'Sec-Fetch-Dest: document';
-    $headers[] = 'Accept-Language: en-US,en;q=0.9,vi;q=0.8';
-    $headers[] = 'If-None-Match: ^^2b9ca-VKLgmK5DW5KYN32ORw3+mwobYhU^^\"\"';
-    $headers[] = 'If-Modified-Since: Sat, 25 May 2013 08:01:21 GMT';
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-    $result = curl_exec($ch);
-    curl_close($ch);
-    $path_save_file = $_SERVER['DOCUMENT_ROOT']."/custom/include/SugarFields/Fields/Multiupload/server/php/files/".$installation_pdf;
-    $path_save_file_new_file = $path_save_file .'/'.$value;
-
-    if(!file_exists ($path_save_file)) {
-        mkdir($path_save_file);
-    }
-    file_put_contents($path_save_file_new_file ,$result);
-    create_thumbnail($path_save_file_new_file,$value,$path_save_file);
+        $folderName_old  = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$invoice_installation.'/'. $file_name ;
+        $folderName_new  = $_SERVER["DOCUMENT_ROOT"] .'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$installation_pdf.'/';
+      
+        //check exists folder
+        if(!file_exists ($folderName_new)) {
+            mkdir($folderName_new);
+        }
+        copy($folderName_old, $folderName_new.$file_name);
+        create_thumbnail($folderName_old,$file_name,$folderName_new);
     }
 }
 function dirToArray_fromInvoice($dir) { 
