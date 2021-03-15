@@ -72,10 +72,10 @@ if($invoice->id != "" ){
             $old_hws_date = $bean->old_tank_date_c; //dd-mm-yyyy  str_replace('/', '-',$bean->old_tank_date_c)       
         }
         $old_hws_string = $old_hws_fuel . ' ' . $old_hws_make . ' ' . $old_hws_model . ' ' . $old_hws_serial . ' ' . $old_hws_new_date;
-        $plumber = new Account();
-        $plumber->retrieve($invoice->billing_account_id);
-        $electrician = new Account();
-        $electrician->retrieve($invoice->billing_account_id);
+        $plumber = new Contact();
+        $plumber->retrieve($invoice->contact_id4_c);
+        $electrician = new Contact();
+        $electrician->retrieve($invoice->contact_id_c);
         $data_return = array (
             'invoice_id' => $invoice->id,
             'pre_install_photos_c' => $invoice->installation_pictures_c,
@@ -97,8 +97,8 @@ if($invoice->id != "" ){
             'pcoc_note' => $invoice->pcoc_cert_wording_c,
             'plumber' => $invoice->plumber_c,
             'electrician' => $invoice->electrician_c,
-            'plumbing_contact' => $invoice->plumber_contact_c,'plumbing_contact_phone' => $plumber->mobile_phone_c,'plumbing_contact_mail' => $plumber->email1,
-            'electrician_contact' => $invoice->electrician_contact_c,'electrician_contact_phone' => $electrician->mobile_phone_c,'electrician_contact_mail' => $electrician->email1,
+            'plumbing_contact' =>  ($invoice->plumber_contact_c)? $invoice->plumber_contact_c ." | M:". $plumber->phone_mobile ." | ". $plumber->email1: "",
+            'electrician_contact' => ($invoice->electrician_contact_c)? $invoice->electrician_contact_c ." | M:". $electrician->phone_mobile ." | ". $electrician->email1: "",
             'data_photo_exist' => $data_photo_exist,
         );
     }
@@ -230,9 +230,9 @@ function checkCountExistPhoto($dir) {
     foreach ($cdir as $key => $value) 
     { 
        if (!in_array($value,array(".",".."))) 
-       { 
-          if (!is_dir($dir . DIRECTORY_SEPARATOR . $value))  
-          { 
+       {    
+        $type = strtolower(substr(strrchr($value, '.'), 1));
+        if( $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
              $result[] = $value; 
           } 
        } 
