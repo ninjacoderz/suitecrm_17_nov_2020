@@ -30,7 +30,8 @@ if ($PO_purchase_order->id != "") {
         }
     }
 }
-
+//add related
+$Bill->po_purchase_order_id_c = $PO_purchase_order->id;
 
 //Setting Group Line Items
 $db = DBManagerFactory::getInstance();
