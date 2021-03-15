@@ -49,10 +49,57 @@ if($invoice->id != "" ){
             'state_address' => $invoice->billing_address_state,
             'phone_number' => $account->mobile_phone_c,
             'email' => $account->email1,
-            'plumber_date' => $invoice->plumber_install_date_c,
-            'electrician_date' => $invoice->electrician_install_date_c,
+            'plumber_date' =>   ($invoice->plumber_install_date_c)? date("d/m/Y",strtotime($invoice->plumber_install_date_c)): "",
+            'electrician_date' =>  ($invoice->electrician_install_date_c)? date("d/m/Y",strtotime($invoice->electrician_install_date_c)): "",
             'suburb_address' => $invoice->billing_address_city,
             // 'photos_return' => json_encode($photos_return),
+        );
+    }else {
+        $account = new Account();
+        $account->retrieve($invoice->billing_account_id);
+        $purchase = new PO_purchase_order();
+        $purchase->retrieve($invoice->plumber_po_c);
+        // $data_photo_exist = array();
+        $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
+        $dirName        = $invoice->installation_pictures_c;
+        $folderName     = $path . $dirName . '/';
+        $data_photo_exist = checkCountExistPhoto($folderName);
+        $old_hws_fuel = ucwords(str_replace('_',' ',$invoice->old_tank_fuel_c));
+        $old_hws_make = $invoice->old_tank_make_c;
+        $old_hws_model = $invoice->old_tank_model_c;
+        $old_hws_serial = $invoice->old_tank_serial_c;
+        if ($invoice->old_tank_date_c != '') {
+            $old_hws_date = $bean->old_tank_date_c; //dd-mm-yyyy  str_replace('/', '-',$bean->old_tank_date_c)       
+        }
+        $old_hws_string = $old_hws_fuel . ' ' . $old_hws_make . ' ' . $old_hws_model . ' ' . $old_hws_serial . ' ' . $old_hws_new_date;
+        $plumber = new Account();
+        $plumber->retrieve($invoice->billing_account_id);
+        $electrician = new Account();
+        $electrician->retrieve($invoice->billing_account_id);
+        $data_return = array (
+            'invoice_id' => $invoice->id,
+            'pre_install_photos_c' => $invoice->installation_pictures_c,
+            'invoice_number' => $invoice->number,
+            'purchase_number'=>$purchase->number,
+            'full_name' => $invoice->billing_account,
+            'title' => $invoice->name,
+            'street_address' => $invoice->billing_address_street,
+            'postcode_address' => $invoice->billing_address_postalcode,
+            'state_address' => $invoice->billing_address_state,
+            'suburb_address' => $invoice->billing_address_city,
+            'phone_number' => $account->mobile_phone_c,
+            'email' => $account->email1,
+            'system' => $invoice->sanden_model_c,
+            'old_hws' => $old_hws_string,
+            'plumber_date' =>  ($invoice->plumber_install_date_c)? date("d/m/Y",strtotime($invoice->plumber_install_date_c)): "",
+            'electrician_date' =>  ($invoice->electrician_install_date_c)? date("d/m/Y",strtotime($invoice->electrician_install_date_c)): "",
+            'installer_note' => $invoice->plumbing_notes_c,
+            'pcoc_note' => $invoice->pcoc_cert_wording_c,
+            'plumber' => $invoice->plumber_c,
+            'electrician' => $invoice->electrician_c,
+            'plumbing_contact' => $invoice->plumber_contact_c,'plumbing_contact_phone' => $plumber->mobile_phone_c,'plumbing_contact_mail' => $plumber->email1,
+            'electrician_contact' => $invoice->electrician_contact_c,'electrician_contact_phone' => $electrician->mobile_phone_c,'electrician_contact_mail' => $electrician->email1,
+            'data_photo_exist' => $data_photo_exist,
         );
     }
     echo json_encode($data_return);
@@ -164,3 +211,31 @@ if($_REQUEST['form_type'] == "solar-form"){
 }
 
 echo json_encode($data_return);
+
+// function checkCountExistPhoto($file_type,$folderName,$new_name){
+//     $data_exist= [];
+//     $get_all_photo = dirToArray($folderName);
+//     foreach ($get_all_photo as $photo_exist) {
+//         if( strpos($photo_exist, $new_name) == true){
+//             $data_exist[] = $photo_exist;
+//         }
+//     }
+//     $count =  count($data_exist);
+//     return $count;   
+// }
+function checkCountExistPhoto($dir) { 
+   
+    $result = array();
+    $cdir = scandir($dir); 
+    foreach ($cdir as $key => $value) 
+    { 
+       if (!in_array($value,array(".",".."))) 
+       { 
+          if (!is_dir($dir . DIRECTORY_SEPARATOR . $value))  
+          { 
+             $result[] = $value; 
+          } 
+       } 
+    }
+    return $result; 
+}
