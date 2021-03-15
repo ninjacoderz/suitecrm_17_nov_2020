@@ -1,5 +1,4 @@
 {php}
-
 {/php}
 
 {assign var="value" value={{sugarvar key='value' string=true}}}
@@ -26,7 +25,6 @@
         if(payment_description === undefined) payment_description ="";
         if(payment_date === undefined) payment_date ="";
         if(payment_brankref === undefined) payment_brankref ="";
-
         var table = document.getElementById("multipayment");
         var rowCount = table.rows.length;
 
@@ -42,7 +40,24 @@
 
         var descriptionTD = document.createElement('td');
         descriptionTD.align='center';
-        descriptionTD.innerHTML = '<input placeholder="Payment Description" type="text" name="payment_description" size="45" value="'+ payment_description +'">';
+        {literal}
+            //VUT - S - create dropdown Payment Description  https://trello.com/c/pn3AfT9q/3070-invoice-payments-please-get-a-pull-down-for-payment-descriptions
+            var payment_options = SUGAR.language.languages.app_list_strings['payment_options_list'];
+            //var payment_options = {""  : "","deposit" : "Deposit","part_payment" : "Part Payment","balance_of_payment" : "Balance of Payment","partial_payment" : "Partial Payment","full_payment" : "Full Payment"};
+            var option_render = '';
+            //debugger
+            for (var key in payment_options) {
+                var opt_value = payment_options[key]; 
+                if (opt_value.toLowerCase() == payment_description.toLowerCase()) {
+                    option_render += '<option selected="selected" name="'+key+'" label="'+opt_value+'" value="'+opt_value+'">'+opt_value+'</option>';
+                } else {
+                    option_render += '<option label="'+opt_value+'" name="'+key+'" value="'+opt_value+'">'+opt_value+'</option>';
+                }
+            }
+            //VUT - E - create dropdown Payment Description  https://trello.com/c/pn3AfT9q/3070-invoice-payments-please-get-a-pull-down-for-payment-descriptions
+        {/literal}
+        descriptionTD.innerHTML = '<select class="payment_description" name="payment_description">'+option_render+'</select>';
+        //descriptionTD.innerHTML = '<input placeholder="Payment Description" type="text" name="payment_description" size="45" value="'+ payment_description +'">';
         newRow.appendChild (descriptionTD);
 
         var dateTD = document.createElement('td');
