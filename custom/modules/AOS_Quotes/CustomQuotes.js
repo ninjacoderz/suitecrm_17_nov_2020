@@ -744,7 +744,28 @@ function genExtraDaikinItemFunc(elem){
              var opportunity_id = $("#opportunity_id").val();
              var pre_install_photos_c = $("input[name='pre_install_photos_c']").val();
              
- 
+             $.ajax({
+                url: "?entryPoint=getAllFilesAttachments&billing_account_id="+billing_account_id+"&billing_contact_id="+billing_contact_id+"&opportunity_id="+opportunity_id+"&pre_install_photos_c="+pre_install_photos_c,
+                success: function(data)
+                {
+                    $(".files").empty();
+                    $.ajax({
+                        url: $('#fileupload').fileupload('option', 'url'),
+                        dataType: 'json',
+                        context: $('#fileupload')[0]
+                    }).always(function () {
+                        $(this).removeClass('fileupload-processing');
+            
+                    }).done(function (result) {
+                        $('button[type="resize_all"]').trigger('click');
+                        // $(this).fileupload('option', 'done')
+                        //     .call(this, $.Event('done'), {result: result});
+                        $('#get_all_files span.glyphicon-refresh').addClass('hidden');
+                    });
+                },
+                error: function(response){},
+            });
+            
              $.ajax({
                  url: "?entryPoint=getAllFilesMessageApp&quote_id="+$("input[name='record']").val()+"&pre_install_photos_c="+pre_install_photos_c,
                  success: function(data)
