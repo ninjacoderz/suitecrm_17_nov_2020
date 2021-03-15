@@ -53,6 +53,13 @@ function autoLookupAddress(field){
     });
 }
 
+function showLinkPO(){
+    $("#POLink").remove();
+    if($('#po_purchase_order_id_c').val() != ''){
+        $('#po_purchase_order_id_c').parent().append("<div id='POLink'><a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record="+$('#po_purchase_order_id_c').val()+"'>Open PO</a></div>");
+    }
+}
+
 (function ($) {
     $.fn.openComposeViewModal = function (source) {
         "use strict";
@@ -290,7 +297,13 @@ $(document).ready(function(){
     autoLookupAddress('billing');
     autoLookupAddress('shipping');
     showLinkXero();
+    showLinkPO();
     createLinkProduct();
+
+    YAHOO.util.Event.addListener("po_purchase_order_id_c", "change", function(){
+        showLinkPO();
+        return false;
+    });
 
     $('#line_items_span').on('change', '.product_name', function (e) {
         setTimeout(function() {
