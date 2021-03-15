@@ -38,7 +38,7 @@ function updatePaymentInfo(){
 
             var payment = new Object();
             payment.payment_amount = $(this).find("input[name='payment_amount']").val();
-            payment.payment_description = $(this).find("input[name='payment_description']").val();
+            payment.payment_description = $(this).find("select[name='payment_description']").val();
             payment.payment_date = $(this).find("input[name='payment_date']").val();
             payment.payment_brankref = $(this).find("input[name='payment_brankref']").val();
 
