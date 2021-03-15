@@ -194,12 +194,11 @@
                                     $InvoiceCRM->save();         
                                 }
                                 //STC Rebate
-                                if($row["product_id"] == "4efbea92-c52f-d147-3308-569776823b19"  &&((strpos($InvoiceCRM->name, 'PV') !== 0) || (strpos($InvoiceCRM->name, 'WH') !== 0))){
+                                if($row["product_id"] == "4efbea92-c52f-d147-3308-569776823b19"  &&((strpos($InvoiceCRM->name, 'PV') !== 0) && (strpos($InvoiceCRM->name, 'WH') !== 0))){
                                     $date_for_rebate =  strtotime($inv_due_str) + 30*24*60*60;
                                     $date_for_rebate = date("Y-m-d", $date_for_rebate);
                                     $date_for_rebate       = new DateTime($date_for_rebate); 
                                     $date_for_stc       = $info_invoice_xero['due_date']; 
-                                    
                                     $lineitem_info_STC = $lineitem_info;
                                     $lineitem_info_STC['unit_amount'] = (-$row["product_unit_price"]);
                                     $trackingCategoryItem_STC = new \XeroPHP\Models\Accounting\TrackingCategory($xero);
@@ -259,7 +258,6 @@
                         
                                 if(isset($product_mapping[$row["product_id"]])){
                                     $lineitem_xero_origin_xero = $API_Custom_Xero->Create_Line_Items($lineitem_info);
-                                    
                                     // if profudct = STCs &  name inv start 'WH' or 'PV' & Account = Green Energy Trading Pty Ltd
                                     if($row["product_id"] == "4efbea92-c52f-d147-3308-569776823b19"  && ((strpos($InvoiceCRM->name, 'PV') === 0) || (strpos($InvoiceCRM->name, 'WH') === 0)) && $InvoiceCRM->billing_account_id == 'a0291eb6-5326-460f-f5fe-5aaa0d7c830d' ){
                                         $lineitem_xero_origin_xero->setTaxType('OUTPUT'); 
