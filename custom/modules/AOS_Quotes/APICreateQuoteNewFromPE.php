@@ -317,12 +317,16 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
         array_push($part_numbers,'Travel');
     }
 
-    if ($_REQUEST['state_customer'] == 'WA' || $_REQUEST['state_customer'] == 'TAS') {
+    if ($_REQUEST['state_customer'] == 'WA') {
+        $price_state = 370;
+    } else if($_REQUEST['state_customer'] == 'TAS') {
         $price_state = 360;
-    } elseif($_REQUEST['state_customer'] == 'SA' || $_REQUEST['state_customer'] == 'VIC' || $_REQUEST['state_customer'] == 'ACT' || $_REQUEST['state_customer'] == 'QLD') {
+    } else if($_REQUEST['state_customer'] == 'SA') {
+        $price_state = 200;
+    } else if($_REQUEST['state_customer'] == 'ACT' || $_REQUEST['state_customer'] == 'QLD') {
         $price_state = 160;
-    } else {
-        $price_state = 50;
+    } else if($_REQUEST['state_customer'] == 'VIC') {
+        $price_state = 100;
     }
 
 }
