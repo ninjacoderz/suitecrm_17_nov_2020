@@ -1144,16 +1144,18 @@ function getInfoProductSanden() {
     let i; 
     let sanden_groups = {};
     for (i=0;i< products.length; i++) {
-        if (parseFloat($(`#product_product_list_price${i}`).val()) !== 0 && products[i].getAttribute('style') != "display: none;") {
+        if (products[i].getAttribute('style') != "display: none;") {
             let qty = $(`#product_product_qty${i}`).val();
             let product_id = $(`#product_product_id${i}`).val();
             let partNumber = $(`#product_part_number${i}`).val();
-            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1) {
+            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1 || partNumber.indexOf("SAN-315") != -1) {
                 if (sanden_groups.hasOwnProperty(product_id)) {
                     sanden_groups[product_id].qty += parseInt(qty);
                 } else {
                     partNumber = partNumber.replace("GAUS-", "");
                     partNumber = partNumber.replace("−HPUMP", "");
+                    partNumber = partNumber.replace(" ", "-"); //part number include white space  
+
                     sanden_groups[product_id] = {
                         'partNumber': partNumber,
                         'qty': parseInt(qty),

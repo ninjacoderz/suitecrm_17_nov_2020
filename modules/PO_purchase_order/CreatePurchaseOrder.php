@@ -437,8 +437,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoice->id."' AND deleted = 0";
         $result = $db->query($sql);
         while ($row = $db->fetchByAssoc($result)) {
-            if(strpos($row['part_number'], "GAUS-") !== false  || strpos($row['part_number'], "QIK15−HPUMP") !== false ){
-                $purchaseOrder->name .= ' '.(int)$row['product_qty'].'x' .$row['part_number'];
+            if(strpos($row['part_number'], "GAUS-") !== false  || strpos($row['part_number'], "QIK15−HPUMP") !== false || strpos($row['part_number'], "SAN-315") !== false ){
+                $purchaseOrder->name .= ' '.(int)$row['product_qty'].'x' .str_replace(" ","-",$row['part_number']);
                 if(strpos($row['part_number'], "GAUS-") !== false ){
                     $row['number'] = '1';
                 }
@@ -556,6 +556,10 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $purchaseOrder->subtotal_amount = format_number($group_total);
         $purchaseOrder->tax_amount = format_number($group_total/10);
         $purchaseOrder->total_amount = format_number($group_total*1.1);
+
+        //VUT - fix name $PO when create PO1-2-3 (delete GAUS- & -HPUMP)
+        $purchaseOrder->name = str_replace("GAUS-","",$purchaseOrder->name);
+        $purchaseOrder->name = str_replace("−HPUMP","",$purchaseOrder->name);
 
         $purchaseOrder->name .= ' ' .$purchaseOrder->shipping_address_city 
         . ' ' .$purchaseOrder->shipping_address_state .' '.$string_dispatch_date;
