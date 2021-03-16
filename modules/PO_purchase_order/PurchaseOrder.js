@@ -1070,7 +1070,7 @@ function generatePOname() {
             let productSanden = getInfoProductSanden();
             let infoSanden='';
             $.each(productSanden,function(k,v){
-                infoSanden += `${v['qty']}x ${v['partNumber']} `;
+                infoSanden += `${v['qty']}x ${k} `;
             });
             namePO = `Sanden ${infoSanden} to ${shipping_city} ${shipping_state} ${dispatch_date} ${order_number}`;
             break;
@@ -1143,21 +1143,22 @@ function getInfoProductSanden() {
     let products = $('#lineItems').find('.product_group').children('tbody');
     let i; 
     let sanden_groups = {};
+    let tank_array=[ "SAN-315SAQA", "SAN-315 VE", "SAN-250SAQA", "SAN-160SAQA", "SAN-300SAQA"];
     for (i=0;i< products.length; i++) {
         if (products[i].getAttribute('style') != "display: none;") {
             let qty = $(`#product_product_qty${i}`).val();
-            let product_id = $(`#product_product_id${i}`).val();
+            // let product_id = $(`#product_product_id${i}`).val();
             let partNumber = $(`#product_part_number${i}`).val();
-            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1 || partNumber.indexOf("SAN-315") != -1) {
-                if (sanden_groups.hasOwnProperty(product_id)) {
-                    sanden_groups[product_id].qty += parseInt(qty);
+            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1 || tank_array.includes(partNumber)) {
+                if (sanden_groups.hasOwnProperty(partNumber)) {
+                    sanden_groups[partNumber].qty += parseInt(qty);
                 } else {
                     partNumber = partNumber.replace("GAUS-", "");
                     partNumber = partNumber.replace("−HPUMP", "");
-                    partNumber = partNumber.replace(" ", "-"); //part number include white space  
+                    partNumber = partNumber.replace(" ", ""); //part number include white space  
 
-                    sanden_groups[product_id] = {
-                        'partNumber': partNumber,
+                    sanden_groups[partNumber] = {
+                        // 'partNumber': partNumber,
                         'qty': parseInt(qty),
                     };
                 }
