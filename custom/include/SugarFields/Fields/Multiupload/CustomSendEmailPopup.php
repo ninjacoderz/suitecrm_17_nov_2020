@@ -950,8 +950,14 @@ $html_photo = 'Attachments';
 
 $html_photo .= ' <a href="https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id.'">Link Upload Install Photos</a>' ;
 $link_upload_file =  '<a href="https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id.'">Link Upload Install Photos</a>' ;
-$link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'">Link Review And Approve PO</a>' ;
 $link_upload_file_for_sms = 'https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id;
+
+if($mail_format == "plumber") {
+    $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=plumber">Link Review And Approve PO</a>' ;
+} else if($mail_format == "electrical") {
+    $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=electrical">Link Review And Approve PO</a>' ;
+}
+
 // fill body template
 
 $body = str_replace('$installer_name',$say_hi,$emailTemplate->body);
