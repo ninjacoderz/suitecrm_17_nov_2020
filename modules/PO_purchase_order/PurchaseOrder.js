@@ -370,6 +370,7 @@ $(function () {
         <span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-name="315FQS" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option>'+options_quatity+'</select>\
         <span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-name="300FQS" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option>'+options_quatity+'</select>\
         <span>250FQS</span> <select name="GAUS-250FQS" id="sanden_fqs_250" data-name="250FQS" data-id="67605168-6b72-5504-282c-5cc8e1492ec9" ><option value="0"></option>'+options_quatity+'</select>\
+        <span>160FQS</span> <select name="GAUS-160FQS" id="sanden_fqs_160" data-name="160FQS" data-id="7add0a17-c12e-7b70-ccb1-5d5a5db14d37" ><option value="0"></option>'+options_quatity+'</select>\
         <span>QIK15</span>  <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-name="QIK15" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option>'+options_quatity+'</select>\
         <span>QIK20</span>  <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-name="QIK20" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option>'+options_quatity+'</select>\
         <div style="padding-top:10px"><button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
@@ -1143,16 +1144,18 @@ function getInfoProductSanden() {
     let i; 
     let sanden_groups = {};
     for (i=0;i< products.length; i++) {
-        if (parseFloat($(`#product_product_list_price${i}`).val()) !== 0 && products[i].getAttribute('style') != "display: none;") {
+        if (products[i].getAttribute('style') != "display: none;") {
             let qty = $(`#product_product_qty${i}`).val();
             let product_id = $(`#product_product_id${i}`).val();
             let partNumber = $(`#product_part_number${i}`).val();
-            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1) {
+            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1 || partNumber.indexOf("SAN-315") != -1) {
                 if (sanden_groups.hasOwnProperty(product_id)) {
                     sanden_groups[product_id].qty += parseInt(qty);
                 } else {
                     partNumber = partNumber.replace("GAUS-", "");
                     partNumber = partNumber.replace("−HPUMP", "");
+                    partNumber = partNumber.replace(" ", "-"); //part number include white space  
+
                     sanden_groups[product_id] = {
                         'partNumber': partNumber,
                         'qty': parseInt(qty),
@@ -1252,7 +1255,7 @@ function generatePOLineItem(){
         $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
     }
     var new_name = "Sanden ";
-    var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) +parseInt($("#sanden_fqs_250").val()) ;
+    var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
     $("#po_sanden_supply_input").find("select").each(function(index, e){
         if(parseInt( $(this).val()) > 0){
             (function($this,index) {
@@ -1280,6 +1283,11 @@ function generatePOLineItem(){
                         setTimeout(function (){
                             autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($this.val()));//SAN-250SAQA
                         },100)  
+                        break;
+                    case '160FQS':
+                        setTimeout(function (){
+                            autoCreateLineItem('30eb1628-9f73-272d-5e0a-604ffd855450',parseInt($this.val()));//SAN-250SAQA
+                        },120)  
                         break;
                 }
               

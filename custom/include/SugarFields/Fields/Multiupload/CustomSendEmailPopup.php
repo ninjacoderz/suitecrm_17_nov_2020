@@ -950,6 +950,7 @@ $html_photo = 'Attachments';
 
 $html_photo .= ' <a href="https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id.'">Link Upload Install Photos</a>' ;
 $link_upload_file =  '<a href="https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id.'">Link Upload Install Photos</a>' ;
+$link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'">Link Review And Approve PO</a>' ;
 $link_upload_file_for_sms = 'https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id;
 // fill body template
 
@@ -974,6 +975,7 @@ $body = str_replace('$main_contact',$pe_contact.' '.$pe_contact_number,$body);
 $body = str_replace('$backup_contact',$pe_backup_contact.' '.$pe_backup_contact_number,$body);
 $body = str_replace('$attachments',$html_photo,$body);
 $body = str_replace('$link_upload_files',$link_upload_file,$body);
+$body = str_replace('$link_review_approve',$link_review_approve,$body);
 $body = str_replace('$cert_note',$cert_notes,$body);
 $body = str_replace('$old_hws',$old_hws,$body);
 
@@ -1000,6 +1002,7 @@ $body_html = str_replace('$main_contact',$pe_contact.' '.$pe_contact_number,$bod
 $body_html = str_replace('$backup_contact',$pe_backup_contact.' '.$pe_backup_contact_number,$body_html);
 $body_html = str_replace('$attachments',$html_photo,$body_html);
 $body_html = str_replace('$link_upload_files',$link_upload_file,$body_html);
+$body_html = str_replace('$link_review_approve',$link_review_approve,$body_html);
 $body_html = str_replace('$cert_note',$cert_notes,$body_html);
 $body_html = str_replace('$old_hws',$old_hws,$body_html);
 
