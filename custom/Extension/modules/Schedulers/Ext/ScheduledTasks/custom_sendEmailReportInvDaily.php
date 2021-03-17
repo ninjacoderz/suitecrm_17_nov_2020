@@ -11,12 +11,12 @@ function Report_InvNeedSendEmail()
 {
     date_default_timezone_set('UTC');
     set_time_limit(0);
-    ini_set('memory_limit', '-1');
+
     $array_invoice_ID = [];
 
     $db = DBManagerFactory::getInstance();
     $date_end = date('Y-m-d',  strtotime('+1 days',time()));
-    $date_start = date('Y-m-d',  strtotime('-7 days',time()));
+    $date_start = date('Y-m-d',  strtotime('-31 days',time()));
 
     $query = "SELECT aos_invoices.id as id ,
         aos_invoices_cstm.installation_pictures_c as installation_pictures_c,
