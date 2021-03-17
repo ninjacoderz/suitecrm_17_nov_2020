@@ -232,8 +232,8 @@ function checkCountExistPhoto($dir) {
        if (!in_array($value,array(".",".."))) 
        {    
         $type = strtolower(substr(strrchr($value, '.'), 1));
-        if( $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
-             $result[] = $value; 
+        if( $type == 'pdf' || $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
+             $result[] = array("url" =>$value, "type" => $type); 
           } 
        } 
     }
