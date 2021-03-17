@@ -1,5 +1,5 @@
 <?php
-
+    echo  $destination; die;
     require_once('include/SugarPHPMailer.php');
 
     /// Data Request
@@ -799,9 +799,10 @@
 
     }
     function upload_file_form_solar($quote_id){
+        $file_to_attach = [];
         $quote = new AOS_Quotes();
         $quote->retrieve($quote_id);
-        $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
+        $path           = realpath(dirname(__FILE__) . '/../../../') . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
         $dirName        = $quote->pre_install_photos_c;
         $folderName     = $path . $dirName . '/';
         $thumbnail      = $path . $dirName . '/thumbnail' . '/';
@@ -891,6 +892,14 @@
         $noteTemplate->filename = $file;
         $noteTemplate->name = $file;
         $noteTemplate->save();
+
+        $source =  $folderName.$file ;
+        $destination = realpath(dirname(__FILE__) . '/../../../').'/upload/'.$noteTemplate->id;
+        if(is_file($source)){
+            if (!symlink($source, $destination)) {
+                $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+            }
+        }
         return $noteTemplate;
     }
     function resize_image($file, $current_file_path) {
