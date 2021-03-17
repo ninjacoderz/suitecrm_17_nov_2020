@@ -1,5 +1,4 @@
 <?php
-    echo  $destination; die;
     require_once('include/SugarPHPMailer.php');
 
     /// Data Request
