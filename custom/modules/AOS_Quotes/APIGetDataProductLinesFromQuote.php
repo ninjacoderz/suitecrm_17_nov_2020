@@ -265,10 +265,21 @@ function checkCountExistPhoto($dir) {
     { 
        if (!in_array($value,array(".",".."))) 
        {    
-        $type = strtolower(substr(strrchr($value, '.'), 1));
-        if( ($type == 'pdf' && strpos($value,'_Plumbing.') > 0 ) || $type == 'jpg' || $type == 'jpeg' || $type == 'png') { //strpos($value,'Invoice_2068') !== false
-             $result[] = array("url" =>$value, "type" => $type); 
-          } 
+            $type = strtolower(substr(strrchr($value, '.'), 1));
+            if( $type == 'jpg' || $type == 'jpeg' || $type == 'png') { //strpos($value,'Invoice_2068') !== false
+                if( strpos( $value,'New_Install_Photo') || 
+                strpos( $value,'_Existing_HWS') ||
+                strpos( $value,'Measure_Water_Pressure_NRIPRV0') ||
+                strpos( $value,'New_Install_Water_Pressure_Property') ||
+                strpos( $value,'Tank_Serial_Number') ||
+                strpos( $value,'HP_Serial_Number') ||
+                strpos( $value,'Decommission_HWS') ||
+                strpos( $value,'Proposed_Install') ){
+                    $result[] = array("url" =>$value, "type" => $type); 
+                }
+            }elseif ($type == 'pdf' && strpos($value,'_Plumbing.') > 0 ){
+                $result[] = array("url" =>$value, "type" => $type); 
+            }
        } 
     }
     return $result; 
