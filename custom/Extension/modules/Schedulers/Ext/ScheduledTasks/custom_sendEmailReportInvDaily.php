@@ -40,7 +40,7 @@ function Report_InvNeedSendEmail()
 
 function RIV_check_exist_filename($id_folder, $string)
 {
-    $path   = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
+    $path   = realpath(dirname(__FILE__) . '/../../../../'). '/include/SugarFields/Fields/Multiupload/server/php/files/';
     $source = $path . $id_folder;
     $file_array = scandir($source);
     $file_array = array_diff($file_array, array('.', '..'));
