@@ -55,6 +55,38 @@ if($invoice->id != "" ){
             // 'photos_return' => json_encode($photos_return),
         );
     }else {
+        $groupProducts = array();
+        $db = DBManagerFactory::getInstance();
+        $sql = "SELECT * FROM aos_products_quotes pg
+                WHERE pg.parent_type = 'PO_purchase_order' AND pg.parent_id = '" . $invoice->plumber_po_c . "' AND pg.deleted = 0 GROUP BY pg.part_number";
+        $res = $db->query($sql);
+
+        while ($row = $db->fetchByAssoc($res)) {
+            $products_return[$row['part_number']] = array (
+                'Quantity' => number_format($row['product_qty'], 0),
+                'Product' =>  $row['name'],
+                'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$row['item_description']),
+                'List' =>  number_format($row['product_cost_price'], 2),
+                'Sale_Price' => number_format($row['product_list_price'], 2),
+                'Tax_Amount' => $row['vat_amt'],
+                'Discount' => 0,
+                'Total' => number_format($row['product_total_price'], 2)
+            );
+        }
+        $sql_group = "SELECT * FROM  aos_line_item_groups lig
+        WHERE lig.parent_type = 'PO_purchase_order' AND lig.parent_id = '" . $invoice->plumber_po_c . "' AND lig.deleted = 0";
+        $ret = $db->query($sql_group);
+        while ($row = $db->fetchByAssoc($ret)) {
+            $groupProducts = array(
+                    'Group_Name' => $row['name'],
+                    'Total' => number_format($row['total_amount'],2),
+                    'Discount' => 0,
+                    'Subtotal' => number_format($row['subtotal_amount'],2),
+                    'GST' => number_format($row['tax_amount'],2),
+                    'Tax' =>  number_format($row['tax_amount'],2),
+                    'Group_Total' => number_format($row['total_amount'],2)
+            );
+        }
         $account = new Account();
         $account->retrieve($invoice->billing_account_id);
         $purchase = new PO_purchase_order();
@@ -100,6 +132,8 @@ if($invoice->id != "" ){
             'plumbing_contact' =>  ($invoice->plumber_contact_c)? $invoice->plumber_contact_c ." | M:". $plumber->phone_mobile ." | ". $plumber->email1: "",
             'electrician_contact' => ($invoice->electrician_contact_c)? $invoice->electrician_contact_c ." | M:". $electrician->phone_mobile ." | ". $electrician->email1: "",
             'data_photo_exist' => $data_photo_exist,
+            'products' => $products_return,
+            'groupProducts' => $groupProducts,
         );
     }
     echo json_encode($data_return);
@@ -232,7 +266,7 @@ function checkCountExistPhoto($dir) {
        if (!in_array($value,array(".",".."))) 
        {    
         $type = strtolower(substr(strrchr($value, '.'), 1));
-        if( $type == 'pdf' || $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
+        if( ($type == 'pdf' && strpos($value,'_Plumbing.') > 0 ) || $type == 'jpg' || $type == 'jpeg' || $type == 'png') { //strpos($value,'Invoice_2068') !== false
              $result[] = array("url" =>$value, "type" => $type); 
           } 
        } 
