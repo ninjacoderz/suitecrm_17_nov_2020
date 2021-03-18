@@ -52,6 +52,49 @@ try {
             'address' => $address_customer,
         );
 
+         //Logic Generate Reference - copy from Create PO Xero
+         
+        $poBean = new PO_purchase_order();
+        $poBean->retrieve($Bill->po_purchase_order_id_c);
+        $poTitle = strtolower($poBean->name);
+        $supTitle  =  explode(" ",$poTitle);
+        $reference ='';
+
+        if($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida != ""){
+            $customerInvoice = new AOS_Invoices();
+            $customerInvoice->retrieve($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida);
+            
+            $customerAccount = new Account();
+            $customerAccount->retrieve($customerInvoice->billing_account_id);
+        }
+
+        if((strpos($poTitle,"sanden") !== false || strpos($poTitle,"daikin") !== false) && strpos($poTitle,"plumbing") === false && strpos($poTitle,"electrical") === false){
+            // Po supplier
+            if(strpos($poTitle,"sanden") !== false){
+                if($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida == ""){
+                    $reference = 'Inv-'.$supTitle[count($supTitle)-1].' PE PO '.$poBean->number.' Sanden';
+                }else{
+                    $reference = 'Inv-'.$supTitle[count($supTitle)-1].' PE PO '.$poBean->number.' '.$customerAccount->name;
+                }
+            }else{
+                if($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida == ""){
+                    $reference = 'Inv-'.' PE PO '.$poBean->number.' Daikin';
+                }else{
+                    $reference = 'Inv-'.' PE PO '.$poBean->number.' '.$customerAccount->name;
+                }
+            }
+
+            
+        }else if((strpos($poTitle,"sanden") !== false || strpos($poTitle,"daikin") !== false) && (strpos($poTitle,"plumbing") !== false || strpos($poTitle,"electrical") !== false)){
+            // PO 
+            if($poBean->aos_invoices_po_purchase_order_1aos_invoices_ida == ""){
+                $reference = 'Inv-'.' PE PO '.$poBean->number;
+            }else{
+                $reference = 'Inv-'.' PE PO '.$poBean->number.' '.$customerAccount->name;
+            }
+            
+        }
+
         //get or create contact on xero
         $Contact_xero = null;
 
@@ -74,8 +117,8 @@ try {
         //information for origin bill
         $info_bill_xero = array(
             'attachment_link' => '',
-            'bill_number' => $Bill->number,
-            'bill_name' => $Bill->name,
+            'bill_number' =>$reference, // It displays referance in Xero
+            'bill_name' => $reference,
             'date' => $date,
             'due_date' => $due_date,
             'LineItems' => array(),

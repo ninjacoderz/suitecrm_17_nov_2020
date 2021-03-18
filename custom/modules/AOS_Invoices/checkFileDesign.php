@@ -10,7 +10,7 @@ $array_files = [];
 foreach ($files as $key=>$value) {
     $fullname = '';
     $fullname = $_SERVER['DOCUMENT_ROOT'].$url.$value;
-    if (mime_content_type($fullname) == "image/jpeg") {
+    if (mime_content_type($fullname) == "image/jpeg" || mime_content_type($fullname) == "image/png" ) {
         $array_files[$url.$value] = filectime($fullname);
     }
 }

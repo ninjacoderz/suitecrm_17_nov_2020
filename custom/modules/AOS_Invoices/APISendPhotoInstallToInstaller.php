@@ -1,5 +1,46 @@
 <?php
 require_once('include/SugarPHPMailer.php');
+    if( isset($_REQUEST['type_api'])  && $_REQUEST['type_api'] == "Sanden-Review-Approve") {
+        $invoice = new AOS_Invoices();
+        $invoice->retrieve($_REQUEST['invoice_id']);
+
+        $account_customer = new Account();
+        $account_customer->retrieve($invoice->billing_account_id);
+
+        $installer =  new Contact();
+        $installer->retrieve($invoice->contact_id4_c);
+
+        $mail = new SugarPHPMailer();  
+        $mail->setMailerForSystem();  
+        $mail->From = 'info@pure-electric.com.au';  
+        $mail->FromName = 'Pure Electric';  
+        // $mail->Subject = "All photo installs ".$installer->name." have sent to Pure Electric";
+        $mail->Subject = "Installer - ".$installer->name." - Review and approve PO - Invoice#".$invoice->number ." - ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c;
+        $mail->Body = "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
+        $mail->Body .= "<p>Address install: ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c."</p>";
+        $mail->Body .= "<p>Client Name: ".$account_customer->name."</p>";
+        $mail->Body .= "<p>Client Phone number: ".$account_customer->mobile_phone_c."</p>";
+        $mail->Body .= "<p>Installer Name: ".$installer->name."</p>";
+        $mail->Body .= "<p>Installer Phone: ".$installer->phone_mobile."</p>";
+        $mail->Body .= "<p>Installer Email: <a href='https://mail.google.com/#search/".$installer->email1."'>".$installer->email1." GSearch</p>";
+        $mail->Body .= "<p>APPROVE?: ".$_REQUEST['confirmreview']."</p>";
+        $mail->Body .= "<p>Notes:</p>";
+        $mail->Body .= "<p>".$_REQUEST['add_note_review']."</p>";
+        $mail->IsHTML(true);
+        $mail->AddAddress('info@pure-electric.com.au');
+        // $mail->AddAddress('ngoanhtuan2510@gmail.com');
+        // $mail->AddCC('info@pure-electric.com.au');
+        $mail->prepForOutbound();
+        $mail->setMailerForSystem();  
+        // $mail->Send();
+
+        if(!$mail->Send()) {
+            echo "Mailer Error";
+            } else {
+            echo "Message sent!";
+        }
+        die;
+    }
 
     $installer_id = $_REQUEST['installer_id'];
     $generateUUID = $_REQUEST['generateUUID'];

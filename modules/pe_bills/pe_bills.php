@@ -101,6 +101,9 @@ class pe_bills extends Basic
             if( empty($this->number)) {
                 $this->number = 1;
             }
+            if(empty($this->installation_pdf_c)){
+                $this->installation_pdf_c = create_guid();
+            }
         }
 
 		parent::save($check_notify);

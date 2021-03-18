@@ -830,6 +830,13 @@ if($_POST['to_module'] == "aos_invoice"){
     if($quote->id != '') {
         // echo json_encode(array('msg'=>'error'));
         // die();
+        if( isset($_POST['type_api']) && $_POST['type_api'] == "sanden_type"){
+            $quote->old_tank_serial_c = $_POST['old_tank_serial'];
+            $quote->old_tank_model_c = $_POST['old_tank_model'];
+            $quote->old_tank_make_c = $_POST['old_tank_make'];
+            $quote->old_tank_date_c = $_POST['old_tank_date'];
+            $quote->save();
+        }
         $account = new Contact();
         $account->retrieve($quote->billing_contact_id);
 

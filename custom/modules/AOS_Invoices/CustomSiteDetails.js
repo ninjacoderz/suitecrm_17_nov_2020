@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("#data_json_site_details_c").closest('.edit-view-field').parent().parent().hide();
+    $("#data_json_site_details_c").closest('.panel.panel-default').hide();
     function render_json_data_sitedetails(){
         var data = new Object();
         data.pe_site_details_no_c = $('#pe_site_details_no_c').val();
@@ -57,18 +57,19 @@ $(document).ready(function(){
 
     //start --- site details custom code
     if(module_sugar_grp1 == 'AOS_Invoices'){ 
-        var seletor_panel_pricing_pv = '';
-        $('.panel-content .panel-default').each(function(){
-            var title_panel_default = $(this).find('.panel-heading a div').text().toLowerCase().trim();
-            if(title_panel_default == 'site details'){
-                seletor_panel_pricing_pv = '#' + $(this).find('.panel-body').attr('id');
-            }
-        });
+        // var seletor_panel_pricing_pv = '';
+        // $('.panel-content .panel-default').each(function(){
+        //     var title_panel_default = $(this).find('.panel-heading a div').text().toLowerCase().trim();
+        //     if(title_panel_default == 'site details'){
+        //         seletor_panel_pricing_pv = '#' + $(this).find('.panel-body').attr('id');
+        //     }
+        // });
         $.ajax({
             url:"?entryPoint=gettempalte_sitedetails_invoices&action=render",
             async: false,
             success : function(result){
-                $(seletor_panel_pricing_pv).find(".tab-content").after(result);   
+                // $(seletor_panel_pricing_pv).find(".tab-content").after(result);   
+                $('div[field="image_site_details"]').parent().empty().append(result);
                 var data = $("#data_json_site_details_c").val();
                 render_data_sitedetails(data);
                 var group_address_install = '<div id="group_address_install" class="col-xs-12 edit-view-row-item col-sm-6"><fieldset> <legend> Install Address </legend></fieldset>';
@@ -126,7 +127,8 @@ $(document).ready(function(){
                 $("#data_json_site_details_c").val(render_json_data_sitedetails());
             }
         })  
-        
+        //VUT - Add id for section site details
+        $('#block_image_site_detail').parent().parent().attr('id', 'section_sitedetails');
         $('body').on('change','#section_sitedetails',function(){
             data = render_json_data_sitedetails();
            

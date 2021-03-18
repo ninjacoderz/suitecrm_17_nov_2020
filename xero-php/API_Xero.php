@@ -159,7 +159,7 @@
             if(strlen($info_product['name']) > 49 ) {
                 $info_product['name'] = substr($info_product['name'],0,49);
             }
-            echo $info_product['name'];
+
 
             $Item->setName($info_product['name']);
             $Item->setCode($info_product['item_code'])
@@ -234,7 +234,7 @@
         public function Create_Bill($bill_info){
          
             $xeroBill = new \XeroPHP\Models\Accounting\Invoice($this->xero);
-            $xeroBill->setStatus('AUTHORISED');
+            $xeroBill->setStatus('DRAFT');
             $xeroBill = $this->Set_Bill($bill_info,$xeroBill);
             return  $xeroBill;    
         }
@@ -252,7 +252,7 @@
             $xeroBill->setReference($bill_info['bill_name'])
                         ->setDate($bill_info['date'])
                         ->setDueDate($bill_info['due_date'] )
-                        ->setStatus(\XeroPHP\Models\Accounting\Invoice::INVOICE_STATUS_SUBMITTED)
+                        ->setStatus(\XeroPHP\Models\Accounting\Invoice::INVOICE_STATUS_DRAFT)
                         ->setType(\XeroPHP\Models\Accounting\Invoice::INVOICE_TYPE_ACCPAY)
                         ->setLineAmountType('Exclusive')
                         ->setContact($bill_info['contact']);
