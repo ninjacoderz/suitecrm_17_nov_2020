@@ -774,6 +774,7 @@
 
         //     $mail->AddAttachment($file_location, $file_name, 'base64', $mime_type);
         // }
+        // print_r($file_to_attach);
         foreach($file_to_attach as $file_attach) {
             $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', $file_attach['file_mime_type']);
         }
@@ -797,11 +798,12 @@
         exec("cd " . $message_dir . "; php send-message.php sms " . $phone . ' "' . $body_sms . '"');
 
     }
-    function upload_file_form_solar($quote_id){
-        $file_to_attach = [];
+    function upload_file_form_solar($quote_id){    
+        global $sugar_config;
+
         $quote = new AOS_Quotes();
         $quote->retrieve($quote_id);
-        $path           = realpath(dirname(__FILE__) . '/../../../') . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
+        $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
         $dirName        = $quote->pre_install_photos_c;
         $folderName     = $path . $dirName . '/';
         $thumbnail      = $path . $dirName . '/thumbnail' . '/';
@@ -836,14 +838,14 @@
                         $note = addToNotes($file_type,$folderName,$parent_id,$parent_type);
                         
                         $file_name =  $note->filename;
-                        $file_location = "upload/".$note->id;
+                        $file_location = $sugar_config['upload_dir'].$note->id;
                         $mime_type = $note->file_mime_type;
-
-                        $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_type , 'file_mime_type'=> $mime_type);
+                        $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_name , 'file_mime_type'=> $mime_type);
                     };
                 }
             };
         }
+        // print_r($file_to_attach);
         return $file_to_attach;
     }
     function checkCountExistPhoto($file_type,$folderName,$new_name){
@@ -894,11 +896,10 @@
 
         $source =  $folderName.$file ;
         $destination = realpath(dirname(__FILE__) . '/../../../').'/upload/'.$noteTemplate->id;
-        if(is_file($source)){
-            if (!symlink($source, $destination)) {
-                $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
-            }
+        if (!symlink($source, $destination)) {
+            $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
         }
+        
         return $noteTemplate;
     }
     function resize_image($file, $current_file_path) {
