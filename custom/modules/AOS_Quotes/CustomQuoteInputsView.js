@@ -1,3 +1,5 @@
+const { type } = require("jquery");
+
 /** PRODUCT MAPPER */
 const productMapper = [{
     name: "Solar PV Supply and Install",
@@ -500,7 +502,7 @@ function renderRebateProvidedHTML(type){
  * parse value into subpanel rebate provided
  */
 function parseJSONValueToFields_RebateProvided(){
-    if ($("#quote_cl_rebate_c").val() == '')  return;
+    if ($("#quote_cl_rebate_c").val() == '' || typeof $("#quote_cl_rebate_c").val() == 'undefined')  return;
     var dataJSON = JSON.parse($("#quote_cl_rebate_c").val());
     for (let key in dataJSON) {  
         $("#"+key).val(dataJSON[key]);
