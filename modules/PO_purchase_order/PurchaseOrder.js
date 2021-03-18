@@ -1109,34 +1109,35 @@ function generatePOname() {
 
 //     $('#product_product_list_price'+item_old).val(total_pr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).trigger('blur');
 // }
-function autoCreateLineItem(id,total_item){
-    $.ajax({
-        url: "/index.php?entryPoint=getInfoProduct&product_id="+id,
-        type: 'GET',
-        success: function(data)
-        {   
-            var info_pro = JSON.parse(data);
-            insertProductLine('product_group0', '0');
-            lineno  = prodln-1;  
-            var popupReplyData = {}; //
-            popupReplyData.form_name = "EditView";
-            var name_to_value_array = {};
-            name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
-            name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
-            name_to_value_array["product_name"+lineno] = info_pro['product_name'];
-            name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
-            name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
 
-            name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
-            name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
-            name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
-            popupReplyData["name_to_value_array"] = name_to_value_array;            
-            $('#product_product_list_price'+lineno).focus();
-            $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ id +'">Link</a></div>');
-            setProductReturn(popupReplyData);
-        },
-        error: function(response){console.log("Fail");},
-    });
+// .:nhantv:. Update "LINE ITEM" with the correct order
+function autoCreateLineItem(id,total_item){
+    return $.ajax({
+        url: "/index.php?entryPoint=getInfoProduct&product_id="+id,
+        type: 'GET',})
+        .then(function(data){
+            if(data) {
+                var info_pro = JSON.parse(data);
+                insertProductLine('product_group0', '0');
+                lineno  = prodln-1;  
+                var popupReplyData = {}; //
+                popupReplyData.form_name = "EditView";
+                var name_to_value_array = {};
+                name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
+                name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
+                name_to_value_array["product_name"+lineno] = info_pro['product_name'];
+                name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
+                name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
+
+                name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
+                name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
+                name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
+                popupReplyData["name_to_value_array"] = name_to_value_array;            
+                $('#product_product_list_price'+lineno).focus();
+                $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ id +'">Link</a></div>');
+                setProductReturn(popupReplyData);
+            }
+        });
 }
 //VUT- Get info Product Sanden to create PO's name
 function getInfoProductSanden() {
@@ -1217,7 +1218,7 @@ function getInfoProductDaikin() {
     return obj;
 }
 
-function generatePOLineItem(){
+async function generatePOLineItem(){
     saveJSONPOInput();
     SUGAR.ajaxUI.showLoadingPanel();
     switch ($('#shipping_address_state').val()) {
@@ -1257,56 +1258,48 @@ function generatePOLineItem(){
     }
     var new_name = "Sanden ";
     var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
-    $("#po_sanden_supply_input").find("select").each(function(index, e){
-        if(parseInt( $(this).val()) > 0){
-            (function($this,index) {
-                let i = index+1;
-                setTimeout(function (){
-                    autoCreateLineItem($this.attr('data-id'),parseInt($this.val()));
-                },10*i);
-                switch ($this.attr("data-name")) {
+    // .:nhantv:. Update "LINE ITEM" with the correct order
+    var select_inputs = $("#po_sanden_supply_input").find("select");
+    try {
+        for (el of select_inputs){
+            if(parseInt($(el).val()) > 0){
+                console.log('Start ' + $(el).attr('data-name'));
+                await autoCreateLineItem($(el).attr('data-id'),parseInt($(el).val()));
+                
+                switch ($(el).attr("data-name")) {
                     case '315FQV':
-                        setTimeout(function (){
-                            autoCreateLineItem('d2548387-59da-2980-cdd5-5cff2e43f980',parseInt($this.val()));
-                        },70)
+                            await autoCreateLineItem('d2548387-59da-2980-cdd5-5cff2e43f980',parseInt($(el).val()));
                         break;
                     case '315FQS':
-                        setTimeout(function (){
-                            autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',parseInt($this.val()));//SAN-315SAQA
-                        },80)
+                            await autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',parseInt($(el).val()));//SAN-315SAQA
                         break;
                     case '300FQS':
-                        setTimeout(function (){
-                            autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',parseInt($this.val()));//SAN-300SAQA
-                        },90)
+                            await autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',parseInt($(el).val()));//SAN-300SAQA
                         break;
                     case '250FQS':
-                        setTimeout(function (){
-                            autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($this.val()));//SAN-250SAQA
-                        },100)  
+                            await autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($(el).val()));//SAN-250SAQA
                         break;
                     case '160FQS':
-                        setTimeout(function (){
-                            autoCreateLineItem('30eb1628-9f73-272d-5e0a-604ffd855450',parseInt($this.val()));//SAN-250SAQA
-                        },120)  
+                            await autoCreateLineItem('30eb1628-9f73-272d-5e0a-604ffd855450',parseInt($(el).val()));//SAN-250SAQA
                         break;
                 }
-              
-            }($(this),index));
-            new_name += $(this).val()+"x "+$(this).attr("data-name")+" ";
+            }
         }
-    });
-    setTimeout(function (){
         if(total_item > 0){
-            autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
-            autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+            await autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
+            await autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
         }
-    },200)
+    } catch(err) {
+        console.log(err);
+    }
     new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#dispatch_date_c").val() != '') ? formatTimeforPOname($("#dispatch_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
     $('#name').val(new_name);
     setTimeout(function (){
         SUGAR.ajaxUI.hideLoadingPanel();
-    },500)
+        $('html, body').animate({
+            scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
+        }, 800);
+    },500);
 }
 
 function saveJSONPOInput(){
