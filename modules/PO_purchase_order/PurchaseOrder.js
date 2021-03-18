@@ -1261,7 +1261,8 @@ async function generatePOLineItem(){
     // .:nhantv:. Update "LINE ITEM" with the correct order
     var select_inputs = $("#po_sanden_supply_input").find("select");
     try {
-        for (el of select_inputs){
+        for (i = 0; i < select_inputs.length; i++){
+            var el = select_inputs[i];
             if(parseInt($(el).val()) > 0){
                 console.log('Start ' + $(el).attr('data-name'));
                 await autoCreateLineItem($(el).attr('data-id'),parseInt($(el).val()));
