@@ -1150,13 +1150,13 @@ function getInfoProductSanden() {
             let qty = $(`#product_product_qty${i}`).val();
             // let product_id = $(`#product_product_id${i}`).val();
             let partNumber = $(`#product_part_number${i}`).val();
-            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1 || tank_array.includes(partNumber)) {
+            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1 /**|| tank_array.includes(partNumber)*/) {
                 if (sanden_groups.hasOwnProperty(partNumber)) {
                     sanden_groups[partNumber].qty += parseInt(qty);
                 } else {
                     partNumber = partNumber.replace("GAUS-", "");
                     partNumber = partNumber.replace("−HPUMP", "");
-                    partNumber = partNumber.replace(" ", ""); //part number include white space  
+                    // partNumber = partNumber.replace(" ", ""); //part number include white space  
 
                     sanden_groups[partNumber] = {
                         // 'partNumber': partNumber,
