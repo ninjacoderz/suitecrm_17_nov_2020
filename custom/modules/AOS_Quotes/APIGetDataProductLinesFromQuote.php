@@ -114,6 +114,7 @@ if($invoice->id != "" ){
         $electrician->retrieve($invoice->contact_id_c);
         $data_return = array (
             'invoice_id' => $invoice->id,
+            'installer' => $_POST['install'],
             'pre_install_photos_c' => $invoice->installation_pictures_c,
             'invoice_number' => $invoice->number,
             'purchase_number'=>$purchase->number,

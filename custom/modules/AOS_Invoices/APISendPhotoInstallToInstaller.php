@@ -3,26 +3,33 @@ require_once('include/SugarPHPMailer.php');
     if( isset($_REQUEST['type_api'])  && $_REQUEST['type_api'] == "Sanden-Review-Approve") {
         $invoice = new AOS_Invoices();
         $invoice->retrieve($_REQUEST['invoice_id']);
-
         $account_customer = new Account();
         $account_customer->retrieve($invoice->billing_account_id);
-
-        $installer =  new Contact();
-        $installer->retrieve($invoice->contact_id4_c);
-
+        if( $_REQUEST['installer'] == "plumber" ){
+            $worker =  new Contact();
+            $worker->retrieve($invoice->contact_id4_c);
+            $purchase = new PO_purchase_order();
+            $purchase->retrieve($invoice->plumber_po_c);
+        }else {
+            $worker =  new Contact();
+            $worker->retrieve($invoice->contact_id_c);
+            $purchase = new PO_purchase_order();
+            $purchase->retrieve($invoice->electrical_po_c);
+        }
         $mail = new SugarPHPMailer();  
         $mail->setMailerForSystem();  
         $mail->From = 'info@pure-electric.com.au';  
         $mail->FromName = 'Pure Electric';  
         // $mail->Subject = "All photo installs ".$installer->name." have sent to Pure Electric";
-        $mail->Subject = "Installer - ".$installer->name." - Review and approve PO - Invoice#".$invoice->number ." - ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c;
-        $mail->Body = "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
+        $mail->Subject = ucwords($_REQUEST['installer'])." - Review and approve PO - PO#".$purchase->number ." - ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c;
+        $mail->Body = "<p>Link PO: <a href='https://suitecrm.pure-electric.com.au/index.php?module=PO_purchase_order&action=EditView&record=".$purchase->id."' target='_blank'>".$purchase->name."</a></p>";
+        $mail->Body .= "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
         $mail->Body .= "<p>Address install: ".$invoice->install_address_c." ".$invoice->install_address_city_c." ".$invoice->install_address_state_c." ".$invoice->install_address_postalcode_c."</p>";
         $mail->Body .= "<p>Client Name: ".$account_customer->name."</p>";
         $mail->Body .= "<p>Client Phone number: ".$account_customer->mobile_phone_c."</p>";
-        $mail->Body .= "<p>Installer Name: ".$installer->name."</p>";
-        $mail->Body .= "<p>Installer Phone: ".$installer->phone_mobile."</p>";
-        $mail->Body .= "<p>Installer Email: <a href='https://mail.google.com/#search/".$installer->email1."'>".$installer->email1." GSearch</p>";
+        $mail->Body .= "<p>Installer Name: ".$worker->first_name." ".$worker->last_name."</p>";
+        $mail->Body .= "<p>Installer Phone: ".$worker->phone_mobile."</p>";
+        $mail->Body .= "<p>Installer Email: <a href='https://mail.google.com/#search/".$worker->email1."'>".$worker->email1." GSearch</p>";
         $mail->Body .= "<p>APPROVE?: ".$_REQUEST['confirmreview']."</p>";
         $mail->Body .= "<p>Notes:</p>";
         $mail->Body .= "<p>".$_REQUEST['add_note_review']."</p>";
@@ -40,7 +47,7 @@ require_once('include/SugarPHPMailer.php');
             echo "Message sent!";
         }
         die;
-    }
+    }else {
 
     $installer_id = $_REQUEST['installer_id'];
     $generateUUID = $_REQUEST['generateUUID'];
@@ -99,12 +106,12 @@ require_once('include/SugarPHPMailer.php');
     $mail->setMailerForSystem();  
     // $mail->Send();
 
-    if(!$mail->Send()) {
-        echo "Mailer Error";
-      } else {
-        echo "Message sent!";
+        if(!$mail->Send()) {
+            echo "Mailer Error";
+        } else {
+            echo "Message sent!";
+        }
     }
-
     function dirToArray($dir) { 
    
         $result = array();
