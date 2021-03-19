@@ -1070,7 +1070,7 @@ function generatePOname() {
             let productSanden = getInfoProductSanden();
             let infoSanden='';
             $.each(productSanden,function(k,v){
-                infoSanden += `${v['qty']}x ${k} `;
+                infoSanden += `${v['qty']}x${k} `;
             });
             namePO = `Sanden ${infoSanden} to ${shipping_city} ${shipping_state} ${dispatch_date} ${order_number}`;
             break;
@@ -1079,7 +1079,7 @@ function generatePOname() {
             let productdaikin = getInfoProductDaikin();
             let infoDaikin='';
             $.each(productdaikin,function(k,v){
-                infoDaikin += `${v['qty']}x ${v['product_name']} `;
+                infoDaikin += `${v['qty']}x${v['product_name']} `;
             });
             namePO = `Daikin ${infoDaikin} to ${shipping_city} ${shipping_state} ${delivery_date} ${order_number}`;
             break;
