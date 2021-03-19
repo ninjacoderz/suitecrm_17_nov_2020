@@ -34,7 +34,8 @@
                 $bodytext .= '<p>Message Content : '.$mes_arr['message_body'].'</p>';
             }
             $bodytext .= "<p>Message Link : <a href='http://message.pure-electric.com.au/#".trim($phone,"+")."'>".$phone."</a></p>" ;
-            $bodytext .= "<p>Contact Name : <b>".$row["first_name"]." ".$row["last_name"]."</b></p>";
+            // $bodytext .= "<p>Contact Name : <b>".$row["first_name"]." ".$row["last_name"]."</b></p>";
+            $bodytext .= "<p>Contact Name :<a href='https://suitecrm.pure-electric.com.au/index.php?module=Contacts&action=EditView&record=".$row['id']. "' target='_blank'><b>".$row["first_name"]." ".$row["last_name"]."</b></a></p>";
             $mail->Body = $bodytext;
             $mail->AddBCC('thienpb89@gmail.com');
             $mail->AddAddress('info@pure-electric.com.au');
