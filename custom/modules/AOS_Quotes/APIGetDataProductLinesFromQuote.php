@@ -55,42 +55,46 @@ if($invoice->id != "" ){
             // 'photos_return' => json_encode($photos_return),
         );
     }else {
-        $groupProducts = array();
+        if( $_POST['install'] == "plumber"){
+            $purchase = new PO_purchase_order();
+            $purchase->retrieve($invoice->plumber_po_c);
+            $intaller_id = $invoice->plumber_po_c;
+        }elseif( $_POST['install'] == "electrical"){
+            $purchase = new PO_purchase_order();
+            $purchase->retrieve($invoice->electrical_po_c);
+            $intaller_id = $invoice->electrical_po_c;
+        }
+        // $groupProducts = array();
         $db = DBManagerFactory::getInstance();
         $sql = "SELECT * FROM aos_products_quotes pg
-                WHERE pg.parent_type = 'PO_purchase_order' AND pg.parent_id = '" . $invoice->plumber_po_c . "' AND pg.deleted = 0 GROUP BY pg.part_number";
+                WHERE pg.parent_type = 'PO_purchase_order' AND pg.parent_id = '" . $intaller_id . "' AND pg.deleted = 0 GROUP BY pg.part_number";
         $res = $db->query($sql);
-
+        $subtotal;
         while ($row = $db->fetchByAssoc($res)) {
             $products_return[$row['part_number']] = array (
                 'Quantity' => number_format($row['product_qty'], 0),
                 'Product' =>  $row['name'],
                 'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$row['item_description']),
-                'List' =>  number_format($row['product_cost_price'], 2),
-                'Sale_Price' => number_format($row['product_list_price'], 2),
+                'List' =>  number_format($row['product_list_price'], 2),
+                'Sale_Price' => number_format($row['product_unit_price'], 2),
                 'Tax_Amount' => $row['vat_amt'],
                 'Discount' => 0,
-                'Total' => number_format($row['product_total_price'], 2)
+                'Total' => number_format( ((int) $row['product_qty']* (float)$row['product_list_price']) , 2)
             );
+            $subtotal += (float) $products_return[$row['part_number']]['Total'];
         }
-        $sql_group = "SELECT * FROM  aos_line_item_groups lig
-        WHERE lig.parent_type = 'PO_purchase_order' AND lig.parent_id = '" . $invoice->plumber_po_c . "' AND lig.deleted = 0";
-        $ret = $db->query($sql_group);
-        while ($row = $db->fetchByAssoc($ret)) {
-            $groupProducts = array(
-                    'Group_Name' => $row['name'],
-                    'Total' => number_format($row['total_amount'],2),
-                    'Discount' => 0,
-                    'Subtotal' => number_format($row['subtotal_amount'],2),
-                    'GST' => number_format($row['tax_amount'],2),
-                    'Tax' =>  number_format($row['tax_amount'],2),
-                    'Group_Total' => number_format($row['total_amount'],2)
-            );
-        }
+        $gst = $subtotal/10;
+        $total = $subtotal + $gst;
+        $groupProducts = array(
+            'Total' => number_format($total,2),
+            'Discount' => 0,
+            'Subtotal' => number_format($subtotal,2),
+            'GST' => number_format($gst,2),
+            'Group_Total' => number_format($total,2)
+        );
         $account = new Account();
         $account->retrieve($invoice->billing_account_id);
-        $purchase = new PO_purchase_order();
-        $purchase->retrieve($invoice->plumber_po_c);
+
         // $data_photo_exist = array();
         $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
         $dirName        = $invoice->installation_pictures_c;
