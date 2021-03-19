@@ -59,10 +59,14 @@ if($invoice->id != "" ){
             $purchase = new PO_purchase_order();
             $purchase->retrieve($invoice->plumber_po_c);
             $intaller_id = $invoice->plumber_po_c;
+            $cert_notes = $invoice->pcoc_cert_wording_c;
+            $installer_note = $invoice->plumbing_notes_c;
         }elseif( $_POST['install'] == "electrical"){
             $purchase = new PO_purchase_order();
             $purchase->retrieve($invoice->electrical_po_c);
             $intaller_id = $invoice->electrical_po_c;
+            $cert_notes = $invoice->ces_cert_wording_c;
+            $installer_note = $invoice->electrical_notes_c;
         }
         // $groupProducts = array();
         $db = DBManagerFactory::getInstance();
@@ -130,8 +134,8 @@ if($invoice->id != "" ){
             'old_hws' => $old_hws_string,
             'plumber_date' =>  ($invoice->plumber_install_date_c)? date("d/m/Y",strtotime($invoice->plumber_install_date_c)): "",
             'electrician_date' =>  ($invoice->electrician_install_date_c)? date("d/m/Y",strtotime($invoice->electrician_install_date_c)): "",
-            'installer_note' => $invoice->plumbing_notes_c,
-            'pcoc_note' => $invoice->pcoc_cert_wording_c,
+            'installer_note' => $installer_note,
+            'pcoc_note' => $cert_notes,
             'plumber' => $invoice->plumber_c,
             'electrician' => $invoice->electrician_c,
             'plumbing_contact' =>  ($invoice->plumber_contact_c)? $invoice->plumber_contact_c ." | M:". $plumber->phone_mobile ." | ". $plumber->email1: "",
