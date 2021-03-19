@@ -1284,7 +1284,9 @@ async function generatePOLineItem(){
                             await autoCreateLineItem('30eb1628-9f73-272d-5e0a-604ffd855450',parseInt($(el).val()));//SAN-250SAQA
                         break;
                 }
+                new_name += $(el).val()+"x "+$(el).attr("data-name")+" ";
             }
+            
         }
         if(total_item > 0){
             await autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
