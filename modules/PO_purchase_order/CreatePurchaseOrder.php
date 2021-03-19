@@ -143,10 +143,10 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
 
         $part_numners = array(
             "Sanden_Plb_Install_Std",
-            "PB",
             "Sanden_Tank_Slab",
             "Sanden_HP_Pavers",
-            
+            "PB",
+            "Photo_Upload_Bonus",
         );
         $part_numners_implode = implode("','", $part_numners);
         $db = DBManagerFactory::getInstance();
@@ -244,6 +244,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $part_numners = array(
             "STANDARD_AC_INSTALL",
             "PB",
+            "Photo_Upload_Bonus",
         );
         $part_numners_implode = implode("','", $part_numners);
         $db = DBManagerFactory::getInstance();
@@ -335,6 +336,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $part_numners = array(
             "Sanden_Elec_Install_Std",
             "PB",
+            "Photo_Upload_Bonus",
         );
 
         $part_numners_implode = implode("','", $part_numners);
