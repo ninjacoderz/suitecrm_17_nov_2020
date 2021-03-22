@@ -601,22 +601,23 @@ $dateQuote = new DateTime();
 $quote->quote_date_c = date('Y-m-d H:i:s', time());
 $dateAction = new DateTime('+7 day');
 $quote->next_action_date_c = $dateAction->format('Y-m-d');
+$quote->quote_type_c = 'quote_type_daikin';
 
-if($type_product == 'Daikin US7') {
-    $quote->quote_type_c = 'quote_type_daikin';
-} else if($type_product == 'Daikin Nexura') {
-    $quote->quote_type_c = 'quote_type_nexura';
-} else {
-    $quote->quote_type_c = 'quote_type_cora';
-}
+// if($type_product == 'Daikin US7') {
+//     $quote->quote_type_c = 'quote_type_daikin';
+// } else if($type_product == 'Daikin Nexura') {
+//     $quote->quote_type_c = 'quote_type_nexura';
+// } else {
+//     $quote->quote_type_c = 'quote_type_cora';
+// }
 
-if($product['typeOfProduct'] == 'US7 2.5kW' || $product['typeOfProduct'] == 'US7 3.5kW' || $product['typeOfProduct'] == 'US7 5.0kW') {
-    $quote->quote_type_c = 'quote_type_daikin';
-} else if($product['typeOfProduct'] == 'Nexura 2.5kW' || $product['typeOfProduct'] == 'Nexura 3.5kW' || $product['typeOfProduct'] == 'Nexura 4.8kW') {
-    $quote->quote_type_c = 'quote_type_nexura';
-} else if($product['typeOfProduct'] == 'Alira 2.0kW' || $product['typeOfProduct'] == 'Alira 2.5kW' || $product['typeOfProduct'] == 'Alira 3.5kW' || $product['typeOfProduct'] == 'Alira 4.6kW' || $product['typeOfProduct'] == 'Alira 5.0kW' || $product['typeOfProduct'] == 'Alira 6.0kW' || $product['typeOfProduct'] == 'Alira 7.1kW') {
-    $quote->quote_type_c = 'quote_type_alira';
-} 
+// if($product['typeOfProduct'] == 'US7 2.5kW' || $product['typeOfProduct'] == 'US7 3.5kW' || $product['typeOfProduct'] == 'US7 5.0kW') {
+//     $quote->quote_type_c = 'quote_type_daikin';
+// } else if($product['typeOfProduct'] == 'Nexura 2.5kW' || $product['typeOfProduct'] == 'Nexura 3.5kW' || $product['typeOfProduct'] == 'Nexura 4.8kW') {
+//     $quote->quote_type_c = 'quote_type_nexura';
+// } else if($product['typeOfProduct'] == 'Alira 2.0kW' || $product['typeOfProduct'] == 'Alira 2.5kW' || $product['typeOfProduct'] == 'Alira 3.5kW' || $product['typeOfProduct'] == 'Alira 4.6kW' || $product['typeOfProduct'] == 'Alira 5.0kW' || $product['typeOfProduct'] == 'Alira 6.0kW' || $product['typeOfProduct'] == 'Alira 7.1kW') {
+//     $quote->quote_type_c = 'quote_type_alira';
+// } 
 $quote->stage = 'Guest';
 $quote->save();
 
