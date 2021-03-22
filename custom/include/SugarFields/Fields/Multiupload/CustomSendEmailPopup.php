@@ -952,11 +952,6 @@ $html_photo .= ' <a href="https://pure-electric.com.au/upload_file_'.$type.'/'.$
 $link_upload_file =  '<a href="https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id.'">Link Upload Install Photos</a>' ;
 $link_upload_file_for_sms = 'https://pure-electric.com.au/upload_file_'.$type.'/'.$link_pe.'?invoice_id='.$invoice_id;
 
-if($mail_format == "plumber") {
-    $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=plumber">Link Review And Approve PO</a>' ;
-} else if($mail_format == "electrical") {
-    $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=electrical">Link Review And Approve PO</a>' ;
-}
 
 // fill body template
 
@@ -981,7 +976,6 @@ $body = str_replace('$main_contact',$pe_contact.' '.$pe_contact_number,$body);
 $body = str_replace('$backup_contact',$pe_backup_contact.' '.$pe_backup_contact_number,$body);
 $body = str_replace('$attachments',$html_photo,$body);
 $body = str_replace('$link_upload_files',$link_upload_file,$body);
-$body = str_replace('$link_review_approve',$link_review_approve,$body);
 $body = str_replace('$cert_note',$cert_notes,$body);
 $body = str_replace('$old_hws',$old_hws,$body);
 
@@ -1008,14 +1002,10 @@ $body_html = str_replace('$main_contact',$pe_contact.' '.$pe_contact_number,$bod
 $body_html = str_replace('$backup_contact',$pe_backup_contact.' '.$pe_backup_contact_number,$body_html);
 $body_html = str_replace('$attachments',$html_photo,$body_html);
 $body_html = str_replace('$link_upload_files',$link_upload_file,$body_html);
-$body_html = str_replace('$link_review_approve',$link_review_approve,$body_html);
 $body_html = str_replace('$cert_note',$cert_notes,$body_html);
 $body_html = str_replace('$old_hws',$old_hws,$body_html);
 
 
-$email->name = $subject;
-$email->description = $body;
-$email->description_html = $body_html;
 
 // render sms template 
 $sms_template_id = 'e420e071-4fa4-6916-720d-5efaa38444a2';
@@ -1089,7 +1079,14 @@ if(isset($_REQUEST['po_record']) && $_REQUEST['po_record'] !== ""){
     $note->file_mime_type = mime_content_type ( $sugar_config['upload_dir'] . $attached_file_name );
     $note->filename = $attached_file_name; 
     $noteId = $note->save();
-
+    // get attach file to PE
+    if($mail_format == "plumber") {
+        $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=plumber&note_id='.$noteId.'">Link Review And Approve PO</a>' ;
+    } else if($mail_format == "electrical") {
+        $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=electrical">Link Review And Approve PO</a>' ;
+    }
+    $body = str_replace('$link_review_approve',$link_review_approve,$body);
+    $body_html = str_replace('$link_review_approve',$link_review_approve,$body_html);
     if($noteID !== false && !empty($noteId)) {
         rename($sugar_config['upload_dir'] . $attached_file_name, $sugar_config['upload_dir'] . $note->id);
         $email->attachNote($note);
@@ -1098,6 +1095,9 @@ if(isset($_REQUEST['po_record']) && $_REQUEST['po_record'] !== ""){
     }
     
 }
+$email->name = $subject;
+$email->description = $body;
+$email->description_html = $body_html;
 /*
 */
 /*

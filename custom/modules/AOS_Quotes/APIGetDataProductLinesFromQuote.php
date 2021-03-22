@@ -99,6 +99,9 @@ if($invoice->id != "" ){
         $account = new Account();
         $account->retrieve($invoice->billing_account_id);
 
+        $note = new Note();
+        $note->retrieve($_POST['note_id']);
+        $filenamepdf = $note->filename;
         // $data_photo_exist = array();
         $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
         $dirName        = $invoice->installation_pictures_c;
@@ -141,6 +144,7 @@ if($invoice->id != "" ){
             'plumbing_contact' =>  ($invoice->plumber_contact_c)? $invoice->plumber_contact_c ." | M:". $plumber->phone_mobile ." | ". $plumber->email1: "",
             'electrician_contact' => ($invoice->electrician_contact_c)? $invoice->electrician_contact_c ." | M:". $electrician->phone_mobile ." | ". $electrician->email1: "",
             'data_photo_exist' => $data_photo_exist,
+            'filenamepdf' => $filenamepdf,
             'products' => $products_return,
             'groupProducts' => $groupProducts,
         );
@@ -286,8 +290,6 @@ function checkCountExistPhoto($dir) {
                 strpos( $value,'Proposed_Install') ){
                     $result[] = array("url" =>$value, "type" => $type); 
                 }
-            }elseif ($type == 'pdf' && strpos($value,'_Plumbing.') > 0 ){
-                $result[] = array("url" =>$value, "type" => $type); 
             }
        } 
     }
