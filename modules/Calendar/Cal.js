@@ -1092,22 +1092,7 @@ $($.fullCalendar).ready(function() {
                     });
                 }
             },
-        }).ready(function() {
-            $(window).resize();
-            //dung code--custom code header title display error
-            var start_date_title = '';
-            var end_date_title = '';
-            $(".fc-day-header").each(function(index,element){
-               if(index == 0) {
-                start_date_title = moment($(this).attr('data-date'), 'YYYY-MM-DD').format("DD MMMM YYYY");
-               }
-               if(index == 6) {
-                end_date_title = moment( $(this).attr('data-date'), 'YYYY-MM-DD').format("DD MMMM YYYY");
-               }
-            });
-            $(".custom-title-header").text(start_date_title + '-' +end_date_title);
-       
-        });
+        })
         if ($('#calendar_title_' + user_id).length == 0) {
             var calendar = $("#calendar" + user_id + " > .fc-view-container");
             var calendarTitle = "<div class='monthCalBody'><h5 class='calSharedUser' id='calendar_title_" + user_id + "'></h5></div><div id='calendar" + user_id + "'></div>";
