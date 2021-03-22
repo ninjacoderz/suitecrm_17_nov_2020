@@ -570,6 +570,6 @@
                 document.getElementById('dashletsDialog_c').style.display = 'none';
             }
         };
-        
+        $(window).resize();
     }();
 };
