@@ -110,7 +110,11 @@
                     $inv_due_str = "$dateInfos[2]-$dateInfos[0]-$dateInfos[1]T00:00:00";
                     $timestamp_inv_due = date("Y-m-d", strtotime($inv_due_str));
                     $due_date   = new DateTime($timestamp_inv_due); 
-    
+                    if(!$InvoiceCRM->due_date){
+                        $due_date = new DateTime();
+                        $due_date->setTimestamp(time()+ 24*60*60*7);
+                        $inv_due_str =date_format($due_date,'Y-m-d')."T00:00:00";
+                    }
                     //information for origin invoice
                     $info_invoice_xero  =array(
                         'attachment_link' => '',

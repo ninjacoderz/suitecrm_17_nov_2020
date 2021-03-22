@@ -79,9 +79,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = $number_module.'_Existing_Hws_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION);
-                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_');
-                $file_type = $number_module.'_Existing_Hws_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION );
+                $file_type = $number_module.'_Existing_HWS_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_');
+                $file_type = $number_module.'_Existing_HWS_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION );
                 copy($_POST['files']['data-pe-files-hws']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -98,9 +98,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = $number_module.'_Existing_Hws_(Centre)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-centre']['name'][$i]), PATHINFO_EXTENSION);
-                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(Centre)');
-                $file_type = $number_module.'_Existing_Hws_(Centre)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-centre']['name'][$i]), PATHINFO_EXTENSION );
+                $file_type = $number_module.'_Existing_HWS_Centre_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-centre']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_Centre');
+                $file_type = $number_module.'_Existing_HWS_Centre_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-centre']['name'][$i]), PATHINFO_EXTENSION );
                 copy($_POST['files']['data-pe-files-hws-centre']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (centre) '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -117,9 +117,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = $number_module.'_Existing_Hws_(right)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-right']['name'][$i]), PATHINFO_EXTENSION);
-                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(right)');
-                $file_type = $number_module.'_Existing_Hws_(right)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-right']['name'][$i]), PATHINFO_EXTENSION );
+                $file_type = $number_module.'_Existing_HWS_right_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-right']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_right');
+                $file_type = $number_module.'_Existing_HWS_right_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-right']['name'][$i]), PATHINFO_EXTENSION );
                 copy($_POST['files']['data-pe-files-hws-right']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (right)'.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -136,9 +136,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = $number_module.'_Existing_Hws_(left)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-left']['name'][$i]), PATHINFO_EXTENSION);
-                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(left)');
-                $file_type = $number_module.'_Existing_Hws_(left)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-left']['name'][$i]), PATHINFO_EXTENSION );
+                $file_type = $number_module.'_Existing_HWS_left_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-left']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_left');
+                $file_type = $number_module.'_Existing_HWS_left_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-left']['name'][$i]), PATHINFO_EXTENSION );
                 copy($_POST['files']['data-pe-files-hws-left']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (left)'.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -155,9 +155,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = $number_module.'_Existing_Hws_(serial)'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-serial']['name'][$i]), PATHINFO_EXTENSION);
-                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_(serial)');
-                $file_type = $number_module.'_Existing_Hws_(serial)'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-serial']['name'][$i]), PATHINFO_EXTENSION );
+                $file_type = $number_module.'_Existing_HWS_serial_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-serial']['name'][$i]), PATHINFO_EXTENSION);
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_serial');
+                $file_type = $number_module.'_Existing_HWS_serial_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-serial']['name'][$i]), PATHINFO_EXTENSION );
                 copy($_POST['files']['data-pe-files-hws-serial']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Existing HWS (serial)'.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -212,9 +212,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = $number_module.'_existing_HWS_serial_number'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-HWS-serial-number']['name'][$i]), PATHINFO_EXTENSION );
-                $count = checkCountExistPhoto($file_type,$folderName,'_existing_HWS_serial_number');
-                $file_type = $number_module.'_existing_HWS_serial_number'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-HWS-serial-number']['name'][$i]), PATHINFO_EXTENSION );
+                $file_type = $number_module.'_Existing_HWS_serial_number'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-HWS-serial-number']['name'][$i]), PATHINFO_EXTENSION );
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_serial_number');
+                $file_type = $number_module.'_Existing_HWS_serial_number'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-HWS-serial-number']['name'][$i]), PATHINFO_EXTENSION );
                 copy($_POST['files']['data-pe-files-existing-HWS-serial-number']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">New Sanden '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -347,9 +347,9 @@ if( $lead_id != ""){
                 }else {
                     $checkgeo = "( GEOTAGGED )";
                 }
-                $file_type = basename($number_module.'_Existing_Hws_Brand_Model'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i], PATHINFO_EXTENSION));
-                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws_Brand_Model');
-                $file_type = $number_module.'_Existing_Hws_Brand_Model'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i]), PATHINFO_EXTENSION);
+                $file_type = basename($number_module.'_Existing_HWS_Brand_Model'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_Brand_Model');
+                $file_type = $number_module.'_Existing_HWS_Brand_Model'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i]), PATHINFO_EXTENSION);
                 copy($_POST['files']['data-pe-files-existing-hws-brand-model']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Old Existing HWS Brand/Model/Serial Number '.$i.' '.$checkgeo.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -639,9 +639,9 @@ if( $lead_id != ""){
     if(count($_POST['files']['data-pe-files-indoor-unit-client']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-indoor-unit-client']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-indoor-unit-client']['name'][$i] != ""){
-                $file_type = basename($number_module.'_Indoor_Unit_Proposed_Location(Client)_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-indoor-unit-client']['name'][$i], PATHINFO_EXTENSION));
-                $count = checkCountExistPhoto($file_type,$folderName,'_Indoor_Unit_Proposed_Location(Client)');
-                $file_type = $number_module.'_Indoor_Unit_Proposed_Location(Client)_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-indoor-unit-client']['name'][$i]), PATHINFO_EXTENSION);
+                $file_type = basename($number_module.'_Indoor_Unit_Proposed_Location_Client_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-indoor-unit-client']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'_Indoor_Unit_Proposed_Location_Client');
+                $file_type = $number_module.'_Indoor_Unit_Proposed_Location_Client_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-indoor-unit-client']['name'][$i]), PATHINFO_EXTENSION);
                 copy($_POST['files']['data-pe-files-indoor-unit-client']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">(Client)Indoor Unit Proposed Location DAIKIN '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -652,9 +652,9 @@ if( $lead_id != ""){
     if(count($_POST['files']['data-pe-files-outdoor-unit-client']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-outdoor-unit-client']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-outdoor-unit-client']['name'][$i] != ""){
-                $file_type = basename($number_module.'_Outdoor_Unit_Proposed_Location(Client)_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-outdoor-unit-client']['name'][$i], PATHINFO_EXTENSION));
-                $count = checkCountExistPhoto($file_type,$folderName,'_Outdoor_Unit_Proposed_Location(Client)');
-                $file_type = $number_module.'_Outdoor_Unit_Proposed_Location(Client)_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-outdoor-unit-client']['name'][$i]), PATHINFO_EXTENSION);
+                $file_type = basename($number_module.'_Outdoor_Unit_Proposed_Location_Client_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-outdoor-unit-client']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'_Outdoor_Unit_Proposed_Location_Client');
+                $file_type = $number_module.'_Outdoor_Unit_Proposed_Location_Client_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-outdoor-unit-client']['name'][$i]), PATHINFO_EXTENSION);
                 copy($_POST['files']['data-pe-files-outdoor-unit-client']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">(Client)Outdoor Unit Proposed Location DAIKIN  '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);
@@ -665,9 +665,9 @@ if( $lead_id != ""){
     if(count($_POST['files']['data-pe-files-switchboard-daikin-client']['tmp_name']) > 0) {
         for($i = 0; $i < count($_POST['files']['data-pe-files-switchboard-daikin-client']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-switchboard-daikin-client']['name'][$i] != ""){
-                $file_type = basename($number_module.'_Switchboard(Client)_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-switchboard-daikin-client']['name'][$i], PATHINFO_EXTENSION));
-                $count = checkCountExistPhoto($file_type,$folderName,'_Switchboard(Client)');
-                $file_type = $number_module.'_Switchboard(Client)_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-switchboard-daikin-client']['name'][$i]), PATHINFO_EXTENSION);
+                $file_type = basename($number_module.'_Switchboard_Client_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-switchboard-daikin-client']['name'][$i], PATHINFO_EXTENSION));
+                $count = checkCountExistPhoto($file_type,$folderName,'_Switchboard_Client');
+                $file_type = $number_module.'_Switchboard_Client_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-switchboard-daikin-client']['name'][$i]), PATHINFO_EXTENSION);
                 copy($_POST['files']['data-pe-files-switchboard-daikin-client']['tmp_name'][$i], $folderName.$file_type);
                 $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">(Client)Switchboard '.$i.'</a>';
                 addToNotes($file_type,$folderName,$parent_id,$parent_type);

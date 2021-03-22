@@ -370,6 +370,7 @@ $(function () {
         <span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-name="315FQS" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option>'+options_quatity+'</select>\
         <span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-name="300FQS" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option>'+options_quatity+'</select>\
         <span>250FQS</span> <select name="GAUS-250FQS" id="sanden_fqs_250" data-name="250FQS" data-id="67605168-6b72-5504-282c-5cc8e1492ec9" ><option value="0"></option>'+options_quatity+'</select>\
+        <span>160FQS</span> <select name="GAUS-160FQS" id="sanden_fqs_160" data-name="160FQS" data-id="7add0a17-c12e-7b70-ccb1-5d5a5db14d37" ><option value="0"></option>'+options_quatity+'</select>\
         <span>QIK15</span>  <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-name="QIK15" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option>'+options_quatity+'</select>\
         <span>QIK20</span>  <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-name="QIK20" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option>'+options_quatity+'</select>\
         <div style="padding-top:10px"><button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
@@ -1069,7 +1070,7 @@ function generatePOname() {
             let productSanden = getInfoProductSanden();
             let infoSanden='';
             $.each(productSanden,function(k,v){
-                infoSanden += `${v['qty']}x ${v['partNumber']} `;
+                infoSanden += `${v['qty']}x${k} `;
             });
             namePO = `Sanden ${infoSanden} to ${shipping_city} ${shipping_state} ${dispatch_date} ${order_number}`;
             break;
@@ -1078,7 +1079,7 @@ function generatePOname() {
             let productdaikin = getInfoProductDaikin();
             let infoDaikin='';
             $.each(productdaikin,function(k,v){
-                infoDaikin += `${v['qty']}x ${v['product_name']} `;
+                infoDaikin += `${v['qty']}x${v['product_name']} `;
             });
             namePO = `Daikin ${infoDaikin} to ${shipping_city} ${shipping_state} ${delivery_date} ${order_number}`;
             break;
@@ -1108,53 +1109,57 @@ function generatePOname() {
 
 //     $('#product_product_list_price'+item_old).val(total_pr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).trigger('blur');
 // }
-function autoCreateLineItem(id,total_item){
-    $.ajax({
-        url: "/index.php?entryPoint=getInfoProduct&product_id="+id,
-        type: 'GET',
-        success: function(data)
-        {   
-            var info_pro = JSON.parse(data);
-            insertProductLine('product_group0', '0');
-            lineno  = prodln-1;  
-            var popupReplyData = {}; //
-            popupReplyData.form_name = "EditView";
-            var name_to_value_array = {};
-            name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
-            name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
-            name_to_value_array["product_name"+lineno] = info_pro['product_name'];
-            name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
-            name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
 
-            name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
-            name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
-            name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
-            popupReplyData["name_to_value_array"] = name_to_value_array;            
-            $('#product_product_list_price'+lineno).focus();
-            $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ id +'">Link</a></div>');
-            setProductReturn(popupReplyData);
-        },
-        error: function(response){console.log("Fail");},
-    });
+// .:nhantv:. Update "LINE ITEM" with the correct order
+function autoCreateLineItem(id,total_item){
+    return $.ajax({
+        url: "/index.php?entryPoint=getInfoProduct&product_id="+id,
+        type: 'GET',})
+        .then(function(data){
+            if(data) {
+                var info_pro = JSON.parse(data);
+                insertProductLine('product_group0', '0');
+                lineno  = prodln-1;  
+                var popupReplyData = {}; //
+                popupReplyData.form_name = "EditView";
+                var name_to_value_array = {};
+                name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
+                name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
+                name_to_value_array["product_name"+lineno] = info_pro['product_name'];
+                name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
+                name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
+
+                name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
+                name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
+                name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
+                popupReplyData["name_to_value_array"] = name_to_value_array;            
+                $('#product_product_list_price'+lineno).focus();
+                $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ id +'">Link</a></div>');
+                setProductReturn(popupReplyData);
+            }
+        });
 }
 //VUT- Get info Product Sanden to create PO's name
 function getInfoProductSanden() {
     let products = $('#lineItems').find('.product_group').children('tbody');
     let i; 
     let sanden_groups = {};
+    let tank_array=[ "SAN-315SAQA", "SAN-315 VE", "SAN-250SAQA", "SAN-160SAQA", "SAN-300SAQA"];
     for (i=0;i< products.length; i++) {
-        if (parseFloat($(`#product_product_list_price${i}`).val()) !== 0 && products[i].getAttribute('style') != "display: none;") {
+        if (products[i].getAttribute('style') != "display: none;") {
             let qty = $(`#product_product_qty${i}`).val();
-            let product_id = $(`#product_product_id${i}`).val();
+            // let product_id = $(`#product_product_id${i}`).val();
             let partNumber = $(`#product_part_number${i}`).val();
-            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1) {
-                if (sanden_groups.hasOwnProperty(product_id)) {
-                    sanden_groups[product_id].qty += parseInt(qty);
+            if (partNumber.indexOf("GAUS-") != -1 || partNumber.indexOf("−HPUMP") != -1 /**|| tank_array.includes(partNumber)*/) {
+                if (sanden_groups.hasOwnProperty(partNumber)) {
+                    sanden_groups[partNumber].qty += parseInt(qty);
                 } else {
                     partNumber = partNumber.replace("GAUS-", "");
                     partNumber = partNumber.replace("−HPUMP", "");
-                    sanden_groups[product_id] = {
-                        'partNumber': partNumber,
+                    // partNumber = partNumber.replace(" ", ""); //part number include white space  
+
+                    sanden_groups[partNumber] = {
+                        // 'partNumber': partNumber,
                         'qty': parseInt(qty),
                     };
                 }
@@ -1213,7 +1218,7 @@ function getInfoProductDaikin() {
     return obj;
 }
 
-function generatePOLineItem(){
+async function generatePOLineItem(){
     saveJSONPOInput();
     SUGAR.ajaxUI.showLoadingPanel();
     switch ($('#shipping_address_state').val()) {
@@ -1252,52 +1257,52 @@ function generatePOLineItem(){
         $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
     }
     var new_name = "Sanden ";
-    var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) +parseInt($("#sanden_fqs_250").val()) ;
-    $("#po_sanden_supply_input").find("select").each(function(index, e){
-        if(parseInt( $(this).val()) > 0){
-            (function($this,index) {
-                let i = index+1;
-                setTimeout(function (){
-                    autoCreateLineItem($this.attr('data-id'),parseInt($this.val()));
-                },10*i);
-                switch ($this.attr("data-name")) {
+    var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
+    // .:nhantv:. Update "LINE ITEM" with the correct order
+    var select_inputs = $("#po_sanden_supply_input").find("select");
+    try {
+        for (i = 0; i < select_inputs.length; i++){
+            var el = select_inputs[i];
+            if(parseInt($(el).val()) > 0){
+                console.log('Start ' + $(el).attr('data-name'));
+                await autoCreateLineItem($(el).attr('data-id'),parseInt($(el).val()));
+                
+                switch ($(el).attr("data-name")) {
                     case '315FQV':
-                        setTimeout(function (){
-                            autoCreateLineItem('d2548387-59da-2980-cdd5-5cff2e43f980',parseInt($this.val()));
-                        },70)
+                            await autoCreateLineItem('d2548387-59da-2980-cdd5-5cff2e43f980',parseInt($(el).val()));
                         break;
                     case '315FQS':
-                        setTimeout(function (){
-                            autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',parseInt($this.val()));//SAN-315SAQA
-                        },80)
+                            await autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',parseInt($(el).val()));//SAN-315SAQA
                         break;
                     case '300FQS':
-                        setTimeout(function (){
-                            autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',parseInt($this.val()));//SAN-300SAQA
-                        },90)
+                            await autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',parseInt($(el).val()));//SAN-300SAQA
                         break;
                     case '250FQS':
-                        setTimeout(function (){
-                            autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($this.val()));//SAN-250SAQA
-                        },100)  
+                            await autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($(el).val()));//SAN-250SAQA
+                        break;
+                    case '160FQS':
+                            await autoCreateLineItem('30eb1628-9f73-272d-5e0a-604ffd855450',parseInt($(el).val()));//SAN-250SAQA
                         break;
                 }
-              
-            }($(this),index));
-            new_name += $(this).val()+"x "+$(this).attr("data-name")+" ";
+                new_name += $(el).val()+"x "+$(el).attr("data-name")+" ";
+            }
+            
         }
-    });
-    setTimeout(function (){
         if(total_item > 0){
-            autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
-            autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+            await autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
+            await autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
         }
-    },200)
+    } catch(err) {
+        console.log(err);
+    }
     new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#dispatch_date_c").val() != '') ? formatTimeforPOname($("#dispatch_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
     $('#name').val(new_name);
     setTimeout(function (){
         SUGAR.ajaxUI.hideLoadingPanel();
-    },500)
+        $('html, body').animate({
+            scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
+        }, 800);
+    },500);
 }
 
 function saveJSONPOInput(){

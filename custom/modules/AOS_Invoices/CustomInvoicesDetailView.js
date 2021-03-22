@@ -555,7 +555,8 @@ $(function () {
             var populateEmailAddress = $(source).attr('data-email-address');
             // get email address
             if(typeof(pulateEmailAddress) == 'undefined'){
-                populateEmailAddress = $("#group_custom_invoice_template_col_1").find(".email-link").attr('data-email-address');
+                // populateEmailAddress = $("#group_custom_invoice_template_col_1").find(".email-link").attr('data-email-address'); //old logic
+                populateEmailAddress = $('div[field="email_site_details"]').find(".email-link").attr('data-email-address');
             }
             
             if(typeof($(source).attr('data-contact-name')) != 'undefined'){

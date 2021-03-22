@@ -143,10 +143,10 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
 
         $part_numners = array(
             "Sanden_Plb_Install_Std",
-            "PB",
             "Sanden_Tank_Slab",
             "Sanden_HP_Pavers",
-            
+            "PB",
+            "Photo_Upload_Bonus",
         );
         $part_numners_implode = implode("','", $part_numners);
         $db = DBManagerFactory::getInstance();
@@ -244,6 +244,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $part_numners = array(
             "STANDARD_AC_INSTALL",
             "PB",
+            "Photo_Upload_Bonus",
         );
         $part_numners_implode = implode("','", $part_numners);
         $db = DBManagerFactory::getInstance();
@@ -335,6 +336,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $part_numners = array(
             "Sanden_Elec_Install_Std",
             "PB",
+            "Photo_Upload_Bonus",
         );
 
         $part_numners_implode = implode("','", $part_numners);
@@ -488,10 +490,16 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
                         $part_numbers[] = "SAN-315SAQA";
                         break;
                     case 'GAUS-315FQV':
-                        $part_numbers[] = "SAN-315VE";
+                        $part_numbers[] = "SAN-315 VE";
                         break;
                     case 'GAUS-250FQS':
                         $part_numbers[] = "SAN-250SAQA";
+                        break;
+                    case 'GAUS-160FQS':
+                        $part_numbers[] = "SAN-160SAQA";
+                        break;
+                    case 'GAUS-300FQS':
+                        $part_numbers[] = "SAN-300SAQA";
                         break;
                     default:
                         # code...
@@ -503,6 +511,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
                 $return_product = $db->query($sql_pruduct);
         
                 $products = array();
+                // $name_tank ='';
+                // $tank_array=[ "SAN-315SAQA", "SAN-315 VE", "SAN-250SAQA", "SAN-160SAQA", "SAN-300SAQA"];
                 while ($row_pruduct = $db->fetchByAssoc($return_product))
                 {
                     $row['id'] = '';
@@ -532,7 +542,11 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
                     $row['vat_amt'] = format_number($row['product_total_price']/10);
                     $row['vat'] = "0.0";
                     $row['product_qty'] = format_number($row['product_qty']);
-                    
+                    // //VUT - S >> https://trello.com/c/q2DSrioE/3111-please-delete-the-marked-part-in-the-automatical-po-name-when-converting-from-quote-to-invoice
+                    // if (in_array($row_pruduct['part_number'], $tank_array)) {
+                    //     $name_tank = (int)$row['product_qty'].'x'.preg_replace('/\s+/', '', $row_pruduct['part_number']);
+                    // }
+                    // //VUT - E >> https://trello.com/c/q2DSrioE/3111-please-delete-the-marked-part-in-the-automatical-po-name-when-converting-from-quote-to-invoice
                     $prod_invoice = new AOS_Products_Quotes();
                     $prod_invoice->populateFromRow($row);
                     $prod_invoice->save();
@@ -557,7 +571,16 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $purchaseOrder->tax_amount = format_number($group_total/10);
         $purchaseOrder->total_amount = format_number($group_total*1.1);
 
-        $purchaseOrder->name .= ' ' .$purchaseOrder->shipping_address_city 
+        //VUT - fix name $PO when create PO1-2-3 (delete GAUS- & -HPUMP)
+        // //VUT - S >> https://trello.com/c/q2DSrioE/3111-please-delete-the-marked-part-in-the-automatical-po-name-when-converting-from-quote-to-invoice
+        // if ($name_tank != '') {
+        //     $purchaseOrder->name .= ' '.$name_tank;
+        // }
+        // //VUT - E >> https://trello.com/c/q2DSrioE/3111-please-delete-the-marked-part-in-the-automatical-po-name-when-converting-from-quote-to-invoice
+        $purchaseOrder->name = str_replace("GAUS-","",$purchaseOrder->name);
+        $purchaseOrder->name = str_replace("−HPUMP","",$purchaseOrder->name);
+
+        $purchaseOrder->name .= ' to ' .$purchaseOrder->shipping_address_city 
         . ' ' .$purchaseOrder->shipping_address_state .' '.$string_dispatch_date;
 
         $purchaseOrder->save();

@@ -6,7 +6,7 @@
    switch ($action) {
       case 'render':
         $template = new Sugar_Smarty();
-        $a =  $template->fetch('custom/modules/AOS_Invoices/template_sitedetails.tpl');
+        $a =  $template->fetch('custom/modules/AOS_Invoices/template_sitedetails_new.tpl');
         echo $a;
         break;
       case 'update':

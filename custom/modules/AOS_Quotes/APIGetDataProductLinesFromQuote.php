@@ -55,10 +55,50 @@ if($invoice->id != "" ){
             // 'photos_return' => json_encode($photos_return),
         );
     }else {
+        if( $_POST['install'] == "plumber"){
+            $purchase = new PO_purchase_order();
+            $purchase->retrieve($invoice->plumber_po_c);
+            $intaller_id = $invoice->plumber_po_c;
+            $cert_notes = $invoice->pcoc_cert_wording_c;
+            $installer_note = $invoice->plumbing_notes_c;
+        }elseif( $_POST['install'] == "electrical"){
+            $purchase = new PO_purchase_order();
+            $purchase->retrieve($invoice->electrical_po_c);
+            $intaller_id = $invoice->electrical_po_c;
+            $cert_notes = $invoice->ces_cert_wording_c;
+            $installer_note = $invoice->electrical_notes_c;
+        }
+        // $groupProducts = array();
+        $db = DBManagerFactory::getInstance();
+        $sql = "SELECT * FROM aos_products_quotes pg
+                WHERE pg.parent_type = 'PO_purchase_order' AND pg.parent_id = '" . $intaller_id . "' AND pg.deleted = 0 GROUP BY pg.part_number";
+        $res = $db->query($sql);
+        $subtotal;
+        while ($row = $db->fetchByAssoc($res)) {
+            $products_return[$row['part_number']] = array (
+                'Quantity' => number_format($row['product_qty'], 0),
+                'Product' =>  $row['name'],
+                'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$row['item_description']),
+                'List' =>  number_format($row['product_list_price'], 2),
+                'Sale_Price' => number_format($row['product_unit_price'], 2),
+                'Tax_Amount' => $row['vat_amt'],
+                'Discount' => 0,
+                'Total' => number_format( ((int) $row['product_qty']* (float)$row['product_list_price']) , 2)
+            );
+            $subtotal += (float) $products_return[$row['part_number']]['Total'];
+        }
+        $gst = $subtotal/10;
+        $total = $subtotal + $gst;
+        $groupProducts = array(
+            'Total' => number_format($total,2),
+            'Discount' => 0,
+            'Subtotal' => number_format($subtotal,2),
+            'GST' => number_format($gst,2),
+            'Group_Total' => number_format($total,2)
+        );
         $account = new Account();
         $account->retrieve($invoice->billing_account_id);
-        $purchase = new PO_purchase_order();
-        $purchase->retrieve($invoice->plumber_po_c);
+
         // $data_photo_exist = array();
         $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
         $dirName        = $invoice->installation_pictures_c;
@@ -78,6 +118,7 @@ if($invoice->id != "" ){
         $electrician->retrieve($invoice->contact_id_c);
         $data_return = array (
             'invoice_id' => $invoice->id,
+            'installer' => $_POST['install'],
             'pre_install_photos_c' => $invoice->installation_pictures_c,
             'invoice_number' => $invoice->number,
             'purchase_number'=>$purchase->number,
@@ -93,13 +134,15 @@ if($invoice->id != "" ){
             'old_hws' => $old_hws_string,
             'plumber_date' =>  ($invoice->plumber_install_date_c)? date("d/m/Y",strtotime($invoice->plumber_install_date_c)): "",
             'electrician_date' =>  ($invoice->electrician_install_date_c)? date("d/m/Y",strtotime($invoice->electrician_install_date_c)): "",
-            'installer_note' => $invoice->plumbing_notes_c,
-            'pcoc_note' => $invoice->pcoc_cert_wording_c,
+            'installer_note' => $installer_note,
+            'pcoc_note' => $cert_notes,
             'plumber' => $invoice->plumber_c,
             'electrician' => $invoice->electrician_c,
             'plumbing_contact' =>  ($invoice->plumber_contact_c)? $invoice->plumber_contact_c ." | M:". $plumber->phone_mobile ." | ". $plumber->email1: "",
             'electrician_contact' => ($invoice->electrician_contact_c)? $invoice->electrician_contact_c ." | M:". $electrician->phone_mobile ." | ". $electrician->email1: "",
             'data_photo_exist' => $data_photo_exist,
+            'products' => $products_return,
+            'groupProducts' => $groupProducts,
         );
     }
     echo json_encode($data_return);
@@ -231,10 +274,21 @@ function checkCountExistPhoto($dir) {
     { 
        if (!in_array($value,array(".",".."))) 
        {    
-        $type = strtolower(substr(strrchr($value, '.'), 1));
-        if( $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
-             $result[] = $value; 
-          } 
+            $type = strtolower(substr(strrchr($value, '.'), 1));
+            if( $type == 'jpg' || $type == 'jpeg' || $type == 'png') { //strpos($value,'Invoice_2068') !== false
+                if( strpos( $value,'New_Install_Photo') || 
+                strpos( $value,'_Existing_HWS') ||
+                strpos( $value,'Measure_Water_Pressure_NRIPRV0') ||
+                strpos( $value,'New_Install_Water_Pressure_Property') ||
+                strpos( $value,'Tank_Serial_Number') ||
+                strpos( $value,'HP_Serial_Number') ||
+                strpos( $value,'Decommission_HWS') ||
+                strpos( $value,'Proposed_Install') ){
+                    $result[] = array("url" =>$value, "type" => $type); 
+                }
+            }elseif ($type == 'pdf' && strpos($value,'_Plumbing.') > 0 ){
+                $result[] = array("url" =>$value, "type" => $type); 
+            }
        } 
     }
     return $result; 
