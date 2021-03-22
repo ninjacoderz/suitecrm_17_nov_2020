@@ -209,6 +209,7 @@
                     }
                     $('#dashlet_entire_' + id).find('.bd-center').html(updateDashlet);
                     ajaxStatus.hideStatus();
+                    $(window).resize();
                 });
                 return false;
             },
@@ -571,5 +572,4 @@
         };
         
     }();
-    $(window).resize();
 };
