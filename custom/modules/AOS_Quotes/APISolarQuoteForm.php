@@ -5,10 +5,16 @@
     $file_to_attach = array();
     $solarOptions = json_encode(($_POST['products']), true);
     
+    // .:nhantv:. Add quote_id from form
+    $quote_id_form = $_POST['quote_id'];
+    // .:nhantv:. Add is_quick_save from form
+    $is_quick_save = $_POST['is_quick_save'];
     $type_form = $_POST['type_form'];
     $email_customer = $_POST['email_customer'];
     $first_name = $_POST['firstname'];
     $last_name = $_POST['lastname'];
+    // .:nhantv:. Add sms_send from form
+    $sms_send = $_POST['sms_send'];
 
     $primary_address_city = $_POST['suburb_customer'];
     $primary_address_state = $_POST['state_customer'];
@@ -152,6 +158,10 @@
         ///// Create Quote Solar
 
         $quote = new AOS_Quotes();
+        // .:nhantv:. If QuoteId exist then do update, not create
+        if($quote_id_form !== null || $quote_id_form !== ""){
+            $quote->retrieve($quote_id_form);
+        }
         $quote->name = $first_name.' '.$last_name.' '.$primary_address_city.' '.$primary_address_state." Solar";
         $quote->account_firstname_c = $first_name;
         $quote->account_lastname_c = $last_name;
@@ -279,6 +289,10 @@
 
         //get bean quote
         $quote = new AOS_Quotes();
+        // .:nhantv:. If QuoteId exist then do update, not create
+        if($quote_id_form !== null || $quote_id_form !== ""){
+            $quote->retrieve($quote_id_form);
+        }
         date_default_timezone_set('UTC');
         $quote->quote_date_c = date('Y-m-d H:i:s', time());
         $quote->name = $first_name.' '.$last_name.' '.$primary_address_city.' '.$primary_address_state." Solar";
@@ -366,8 +380,23 @@
     $workflow = new AOW_WorkFlow();
     $workflow->retrieve('5ac74a36-1248-6b28-85be-5c7f1832a865');
     $workflow->run_actions($quote, true);
+
+    // .:nhantv:. Add logic to check that "Quote via SMS?" is selected
+    if($sms_send === "Yes" && !$is_quick_save){
+        $phone = preg_replace("/^0/", "+61", preg_replace('/\D/', '',  $phone_number));
+
+        $message_dir = '/var/www/message';
+        $admin_name = "Paul";
+
+        $body_sms = "Hi ".$contact->first_name.", Thank you for your solar pricing request, we have sent your solar PV pricing options to your email inbox. Kind regards, Pure Electric";
+        $body_sms .= "To firm the quote, upload photos via this link : https://pure-electric.com.au/pesolarform/confirm?quote-id=".$quote_id;
+        $body_sms .= "To approve option of the quote via this link : https://pure-electric.com.au/confirm_option_acceptance?quote-id=".$quote_id;
+
+        exec("cd " . $message_dir . "; php send-message.php sms " . $phone . ' "' . $body_sms . '"');
+    }
     
-    if($solarOptions !=""){
+    // Send email function
+    if($solarOptions != "" && !$is_quick_save){
 
         global $current_user;
 
@@ -784,19 +813,6 @@
         $mail->prepForOutbound();
         $mail->setMailerForSystem();  
         $sent = $mail->Send();
-
-
-        $phone = preg_replace("/^0/", "+61", preg_replace('/\D/', '',  $phone_number));
-
-        $message_dir = '/var/www/message';
-        $admin_name = "Paul";
-
-        $body_sms = "Hi ".$contact->first_name.", Thank you for your solar pricing request, we have sent your solar PV pricing options to your email inbox. Kind regards, Pure Electric";
-        $body_sms .= "To firm the quote, upload photos via this link : https://pure-electric.com.au/pesolarform/confirm?quote-id=".$quote_id;
-        $body_sms .= "To approve option of the quote via this link : https://pure-electric.com.au/confirm_option_acceptance?quote-id=".$quote_id;
-
-        exec("cd " . $message_dir . "; php send-message.php sms " . $phone . ' "' . $body_sms . '"');
-
     }
     function upload_file_form_solar($quote_id){    
         global $sugar_config;
