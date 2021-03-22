@@ -1,5 +1,3 @@
-const { type } = require("jquery");
-
 /** PRODUCT MAPPER */
 const productMapper = [{
     name: "Solar PV Supply and Install",
