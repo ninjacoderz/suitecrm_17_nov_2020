@@ -891,6 +891,9 @@ $($.fullCalendar).ready(function() {
     $('#calendar' + global_current_user_id).prependTo(calendarContainer);
 
     function constructCalendar(user_id, all_events) {
+        console.log(user_id);
+        console.log(all_events);
+        
         var headerFormatDayWeek = 'dddd D';
         var headerFormatMonth = 'dddd';
         var headerFormat = headerFormatDayWeek;
