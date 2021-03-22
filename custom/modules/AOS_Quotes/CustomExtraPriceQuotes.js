@@ -1165,7 +1165,12 @@ $(function () {
             $("#extra_1_"+index).val('SE Wifi');
             $("#extra_2_"+index).val('SE Smart Meter');
         }else if($("#inverter_type_"+index).val().toLowerCase().indexOf('sungrow ') >= 0){
-            if($("#meter_phase_c").val() == '1'){
+            if($("#phases").val() == 'Three Phases'  ){
+                $("#extra_1_"+index).val('Sungrow Three Phase Smart Meter DTSU666');//'Sungrow Smart Meter (3P)');
+                $("#extra_2_"+index).val('');
+            }else if($("#phases").val() == 'Two Phases'){
+
+            }else {
                 if( $("#inverter_type_"+index).val().indexOf('3P') >= 0){
                     $("#extra_1_"+index).val('Sungrow Three Phase Smart Meter DTSU666');//'Sungrow Smart Meter (3P)');
                     $("#extra_2_"+index).val('');
@@ -1173,9 +1178,6 @@ $(function () {
                     $("#extra_1_"+index).val('Sungrow Smart Meter (1P)');
                     $("#extra_2_"+index).val('');
                 }   
-            }else if($("#meter_phase_c").val() == '3'  ){
-                $("#extra_1_"+index).val('Sungrow Three Phase Smart Meter DTSU666');//'Sungrow Smart Meter (3P)');
-                $("#extra_2_"+index).val('');
             }
         }else{
             $("#extra_1_"+index).val('');
