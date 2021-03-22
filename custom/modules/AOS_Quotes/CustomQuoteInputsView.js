@@ -304,7 +304,7 @@ const productMapper = [{
     function hideSolarPanel(){
         if ($("#quote_type_c").val() !== "quote_type_solar"){
             // "SOLARGAIN INFORMATION"
-            $('#special_notes_c').closest('.panel.panel-default').hide();
+            // $('#special_notes_c').closest('.panel.panel-default').hide();
             // "PRICING PV SECTION"
             $('#Terracotta_checkbox').closest('.panel.panel-default').hide();
             // "SOLAR VICTORIA PROVIDER STATEMENT"
