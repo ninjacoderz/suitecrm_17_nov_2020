@@ -6027,10 +6027,15 @@ $(function () {
             SUGAR.ajaxUI.showLoadingPanel();
             setTimeout(function () {
                 $(fields_auto_fill).attr('readonly', 'readonly').css('background', '#ffffff');
-                //get po plumb/elec total_amt
-                var po_total_amt = getPOforQuote($("input[name='record']").val());
-                $('#plumbing_bill').val(po_total_amt['plumb_po']);
-                $('#electrician_bill').val(po_total_amt['elec_po']);
+                if (checkLineItem("SSI", "part_number") && $('#quote_type_c').val() == 'quote_type_sanden') { //https://trello.com/c/Xof6OxHZ/3113-gp-calculation-quote-stage-if-product-type-sanden-and-if-ssi-plumbing-and-electrical-then-auto-populate-the-plumbing-install-and?menu=filter&filter=*
+                    $('#plumbing_bill').val(parseFloat(640)); 
+                    $('#electrician_bill').val(parseFloat(250));
+                } else {
+                    //get po plumb/elec total_amt
+                    var po_total_amt = getPOforQuote($("input[name='record']").val());
+                    $('#plumbing_bill').val(po_total_amt['plumb_po']);
+                    $('#electrician_bill').val(po_total_amt['elec_po']);
+                }
                 calculateGP();
                 SUGAR.ajaxUI.hideLoadingPanel();
             }, 100);
@@ -6137,14 +6142,23 @@ Number.prototype.formatMoney = function (decPlaces, thouSeparator, decSeparator)
 /**
  * VUT - check product has/hasn't in line item
  * @param {STRING} product  full name product
+ * @param {STRING} type null = name / "part_number"
  */
-function checkLineItem(product) {
+function checkLineItem(product, type='') {
     let products = $('#lineItems').find('.product_group').children('tbody');
     let i;
+    let first_line = 0;
     for (i = 0; i < products.length; i++) {
-        if ($(`#product_name${i}`).val().toLowerCase() == product.toLowerCase() && products[i].getAttribute('style') != "display: none;") {
+        // debugger
+        if (products[i].getAttribute('style') == "display: none;") continue;
+        if (type == "" && products[i].querySelector('.product_name').value.toLowerCase() == product.toLowerCase() && products[i].getAttribute('style') != "display: none;") {
             return true;
         }
+        //https://trello.com/c/Xof6OxHZ/3113-gp-calculation-quote-stage-if-product-type-sanden-and-if-ssi-plumbing-and-electrical-then-auto-populate-the-plumbing-install-and?menu=filter&filter=*
+        if (first_line == 0 && type == "part_number" && products[i].querySelector('.product_part_number').value.toLowerCase() == product.toLowerCase() && products[i].getAttribute('style') != "display: none;") {
+            return true;
+        }
+        first_line = 1; 
     }
     return false;
 }
