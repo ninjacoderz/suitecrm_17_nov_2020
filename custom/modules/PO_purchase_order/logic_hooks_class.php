@@ -116,5 +116,43 @@
             }
         }
     }
+     /** thienpb code */
+    class UpdateRelateToProduct {
+        function after_save_updateRelateToProduct ($bean, $event, $arguments) {
+            $old_fields = $bean->fetched_row;
+            $db = DBManagerFactory::getInstance();
+
+            $sql_relate = "SELECT po_purchase_order_aos_products_quotes_1aos_products_quotes_idb as id FROM po_purchase_order_aos_products_quotes_1_c WHERE deleted = 0 AND po_purchase_order_aos_products_quotes_1po_purchase_order_ida = '".$bean->id."'";
+            $result_relate = $db->query($sql_relate);
+            $relates = [];
+            while($row =  $db->fetchByAssoc($result_relate)){
+                $relates[] = $row['id'];
+            }
+
+            $sql = "SELECT id FROM aos_products_quotes WHERE parent_type = 'PO_purchase_order' AND parent_id = '".$bean->id."' AND deleted = 0";
+            $result = $db->query($sql);
+            $lineItems = [];
+            while($row =  $db->fetchByAssoc($result)){
+                $lineItems[] = $row['id'];
+                if(in_array($row["id"],$relates)) continue;
+                $id = $this->generateGUID();
+                $sql_insert = "INSERT INTO `po_purchase_order_aos_products_quotes_1_c` (`id`, `date_modified`, `deleted`, `po_purchase_order_aos_products_quotes_1po_purchase_order_ida`, `po_purchase_order_aos_products_quotes_1aos_products_quotes_idb`) VALUES (\"".$id."\", now() , '0',\"".$bean->id."\" ,\"".$row['id']."\" )";
+                $result1 = $db->query($sql_insert);
+            }
+
+            $string = implode("','",$lineItems);
+            $sql_update = "UPDATE po_purchase_order_aos_products_quotes_1_c SET deleted = 1 WHERE po_purchase_order_aos_products_quotes_1aos_products_quotes_idb NOT IN ('". $string ."') AND po_purchase_order_aos_products_quotes_1po_purchase_order_ida = \"".$bean->id."\"";
+            $result = $db->query($sql_update);
+        }
+        function generateGUID($prefix = '') {
+            $uuid = md5(uniqid(mt_rand(), true));
+            $guid =  $prefix.substr($uuid,0,8)."-".
+                    substr($uuid,8,4)."-".
+                    substr($uuid,12,4)."-".
+                    substr($uuid,16,4)."-".
+                    substr($uuid,20,12);
+            return $guid;
+        }
+    }
 
 ?>
