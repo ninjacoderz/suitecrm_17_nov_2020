@@ -11,9 +11,25 @@
     $design_json = html_entity_decode($_REQUEST['design_json']);
     $type = $_REQUEST['type'];
     $status = $_REQUEST['status'];
+    $tabActive = $_REQUEST['tabActive'];
     $dataURL = base64_decode($_REQUEST['dataURL']);
     $quote  = new AOS_Quotes();
     $quote->retrieve($quote_id);
+    $quoteType = '';
+    $designType ='';
+    if($quote->quote_type_c == 'quote_type_daikin' || $quote->quote_type_c == 'quote_type_nexura'){
+        $quoteType = 'Daikin';
+        if($tabActive == 'floor-plan-option') {
+            $designType = '_FloorPlan';
+        } else if ($tabActive == 'daikin-option-indoor') {
+            $designType = '_Indoor';
+        } else {
+            $designType = '_Outdoor';
+        }
+
+    }else if($quote->quote_type_c == 'quote_type_sanden'){
+        $quoteType = 'Sanden';
+    }
 
     if(empty($quote->id)) echo json_encode(array());
     $dataReturn = [];
@@ -29,7 +45,7 @@
         $filename = '';
         if($status == 'override'){
             foreach($files as $file){
-                if(is_file($path.'/'.$file) && strpos($file,"Sanden_Design_Proposed_Install_Location") !== false){
+                if(is_file($path.'/'.$file) && strpos($file,$quoteType.$designType."_Design_Proposed_Install_Location") !== false){
                     $filename = explode(".",$file)[0];
                     $source = $path.'/'.$file;
                     break;
@@ -37,14 +53,14 @@
             }
         }else{
             $time_string = strftime("%d%b%Y_%H%M",time());
-            $filename = 'Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string;
-            $source = $path.'/Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string.'.jpeg';
+            $filename = 'Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string;
+            $source = $path.'/Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string.'.jpeg';
         }
 
         if($filename == ''){
             $time_string = strftime("%d%b%Y_%H%M",time());
-            $filename = 'Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string;
-            $source = $path.'/Q'.$quote->number.'_Sanden_Design_Proposed_Install_Location'.$time_string.'.jpeg';
+            $filename = 'Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string;
+            $source = $path.'/Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string.'.jpeg';
         }
 
 
