@@ -127,11 +127,11 @@ $(function () {
             // product is VEEC
             var name_product = $(this).closest('tr').find('.product_name').val();
             var product_style = $(this).closest('tbody').attr('style');
-            console.log(name_product);
+            // console.log(name_product);
             if (typeof (name_product) != 'undefined' && name_product.toLowerCase().includes('veec') && product_style != 'display: none;') {
                 $('#old_tank_fuel_c').val('electric_storage');
             }
-            console.log(product_id);
+            // console.log(product_id);
         })
     }
     if ($("#opportunity").val() != "" && $("#name").val() == "") {

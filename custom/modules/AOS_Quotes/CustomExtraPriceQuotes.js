@@ -198,13 +198,13 @@ $(function () {
 
     //button max panels and event click
     $("#inverter_type_1").closest('tr').find("td").eq(0).append("</br><button class='button primary' type='button' id='max_panels' name='max_panels'>MAX</button>")
-    $('body').on("click","#max_panels",function(){
+    $('body').on("click","#max_panels", async function(){
         if(state == ''){
             state = convert_state();
             if(state == ''){
                 alert('Please filling full address.'); return;
             }
-            loadJSON(state);
+            await loadJSON(state);
             $("#table_pricing_state").val(state);
             if(state == 'VIC'){
                 installYear = 2021;
@@ -218,9 +218,11 @@ $(function () {
             var panel_type_ = $("#panel_type_"+i).val();
             var inverter_type_ = $("#inverter_type_"+i).val();
             if(inverter_type_ == 'IQ7 plus') inverter_type_ = 'IQ7+';
+            // .:nhantv:. Add event extra change
+            action_changed_extra(i);
             if(panel_type_ != '' && inverter_type_ != ""){
                 var suggested_val = getSuggestedPanel(panel_type_,inverter_type_,'');
-                console.log(suggested_val);
+                // console.log(suggested_val);
                 if(suggested_val === undefined) return;
                 $(".suggest_total_panel_"+i).remove();
                 for(var j = 0 ; j < suggested_val.length ; j++){
@@ -237,7 +239,6 @@ $(function () {
        // total_kw();
         save_values();
         getOwnSolarPricing($("#solar_pv_pricing_input_c").val(), 'solar_changed');
-
     })
 
     //trigger change caculate price when click Double Storey
@@ -531,19 +532,18 @@ $(function () {
         return primary_address_state;
     }
     
+    // .:nhantv:. convert to async function
     function loadJSON(state){
-        $.ajax({
+        return $.ajax({
             url: 'index.php?entryPoint=popularSolarBasePrice&state='+state,
-            type : 'GET',
-            success: function (data) {
+            type : 'GET'}).then(function (data) {
                 if(data === undefined){
                     localStorage.setItem('basePrice','');
                     return;
                 }else{
                     localStorage.setItem('basePrice',JSON.stringify($.parseJSON(data)));
                 }
-            }
-        });
+            });
     }
 
     function getBasePrice(panel_type,inverter_type,total_panel){
@@ -805,51 +805,61 @@ $(function () {
         $("#solar_pv_pricing_input_c").val(JSON.stringify(values));
     }
 
-    function loadOptionPricing(){
+    async function loadOptionPricing(){
         if($("#solar_pv_pricing_input_c")!=""){
             var json_val = JSON.parse(($("#solar_pv_pricing_input_c").val() != "")?$("#solar_pv_pricing_input_c").val():"{}");
-            for (let key in json_val) {  
-                if($("#"+key).attr('type') == 'checkbox'){
-                    $("#"+key).prop( "checked", json_val[key] );
-                    if(key == 'Vic_Rebate' && json_val[key]){
-                        var vic_html = '<tr>'
-                        +'<td>Vic Rebate</td>'
-                        +'<td><input class="vic_rebate_1 solar_pv_pricing_input" id="vic_rebate_1" value="-1850" disabled=""></td>'
-                        +'<td><input class="vic_rebate_2 solar_pv_pricing_input" id="vic_rebate_2" value="-1850" disabled=""></td>'
-                        +'<td><input class="vic_rebate_3 solar_pv_pricing_input" id="vic_rebate_3" value="-1850" disabled=""></td>'
-                        +'<td><input class="vic_rebate_4 solar_pv_pricing_input" id="vic_rebate_4" value="-1850" disabled=""></td>'
-                        +'<td><input class="vic_rebate_5 solar_pv_pricing_input" id="vic_rebate_5" value="-1850" disabled=""></td>'
-                        +'<td><input class="vic_rebate_6 solar_pv_pricing_input" id="vic_rebate_6" value="-1850" disabled=""></td>'
-                        +'</tr>';
-                        $('#Solar-PV-Pricing tbody').append(vic_html)
-                    }else if(key == 'Loan_Rebate' && json_val[key]){
-                        var loan_html = '<tr>'
-                        +'<td>Loan Rebate</td>'
-                        +'<td><input class="loan_rebate_1 solar_pv_pricing_input" id="loan_rebate_1" value="-1850" disabled=""></td>'
-                        +'<td><input class="loan_rebate_2 solar_pv_pricing_input" id="loan_rebate_2" value="-1850" disabled=""></td>'
-                        +'<td><input class="loan_rebate_3 solar_pv_pricing_input" id="loan_rebate_3" value="-1850" disabled=""></td>'
-                        +'<td><input class="loan_rebate_4 solar_pv_pricing_input" id="loan_rebate_4" value="-1850" disabled=""></td>'
-                        +'<td><input class="loan_rebate_5 solar_pv_pricing_input" id="loan_rebate_5" value="-1850" disabled=""></td>'
-                        +'<td><input class="loan_rebate_6 solar_pv_pricing_input" id="loan_rebate_6" value="-1850" disabled=""></td>'
-                        +'</tr>';
-                        $('#Solar-PV-Pricing tbody').append(loan_html)
-                    }
-                } else {
-                    let value_field = json_val[key];
-                    if(value_field !== undefined && value_field != ''){
-                        const regex = /S Edge [\d]{1,2}$/;
-                        let m;
-                        if(m = regex.exec(value_field) !== null){
-                            value_field = value_field+'G';
-                            $("#"+key).val(value_field);
-                        }else{
-                            $("#"+key).val(value_field);
+            // .:nhantv:. FOR block
+            const promise = new Promise((resolve, reject) => { 
+                setTimeout(()=>{
+                    for (let key in json_val) {
+                        if($("#"+key).attr('type') == 'checkbox'){
+                            $("#"+key).prop( "checked", json_val[key] );
+                            if(key == 'Vic_Rebate' && json_val[key]){
+                                var vic_html = '<tr>'
+                                +'<td>Vic Rebate</td>'
+                                +'<td><input class="vic_rebate_1 solar_pv_pricing_input" id="vic_rebate_1" value="-1850" disabled=""></td>'
+                                +'<td><input class="vic_rebate_2 solar_pv_pricing_input" id="vic_rebate_2" value="-1850" disabled=""></td>'
+                                +'<td><input class="vic_rebate_3 solar_pv_pricing_input" id="vic_rebate_3" value="-1850" disabled=""></td>'
+                                +'<td><input class="vic_rebate_4 solar_pv_pricing_input" id="vic_rebate_4" value="-1850" disabled=""></td>'
+                                +'<td><input class="vic_rebate_5 solar_pv_pricing_input" id="vic_rebate_5" value="-1850" disabled=""></td>'
+                                +'<td><input class="vic_rebate_6 solar_pv_pricing_input" id="vic_rebate_6" value="-1850" disabled=""></td>'
+                                +'</tr>';
+                                $('#Solar-PV-Pricing tbody').append(vic_html)
+                            }else if(key == 'Loan_Rebate' && json_val[key]){
+                                var loan_html = '<tr>'
+                                +'<td>Loan Rebate</td>'
+                                +'<td><input class="loan_rebate_1 solar_pv_pricing_input" id="loan_rebate_1" value="-1850" disabled=""></td>'
+                                +'<td><input class="loan_rebate_2 solar_pv_pricing_input" id="loan_rebate_2" value="-1850" disabled=""></td>'
+                                +'<td><input class="loan_rebate_3 solar_pv_pricing_input" id="loan_rebate_3" value="-1850" disabled=""></td>'
+                                +'<td><input class="loan_rebate_4 solar_pv_pricing_input" id="loan_rebate_4" value="-1850" disabled=""></td>'
+                                +'<td><input class="loan_rebate_5 solar_pv_pricing_input" id="loan_rebate_5" value="-1850" disabled=""></td>'
+                                +'<td><input class="loan_rebate_6 solar_pv_pricing_input" id="loan_rebate_6" value="-1850" disabled=""></td>'
+                                +'</tr>';
+                                $('#Solar-PV-Pricing tbody').append(loan_html)
+                            }
+                        } else {
+                            let value_field = json_val[key];
+                            if(value_field !== undefined && value_field != ''){
+                                const regex = /S Edge [\d]{1,2}$/;
+                                let m;
+                                if(m = regex.exec(value_field) !== null){
+                                    value_field = value_field+'G';
+                                    $("#"+key).val(value_field);
+                                }else{
+                                    $("#"+key).val(value_field);
+                                }
+                            }else{
+                                $("#"+key).val(value_field);
+                            }
                         }
-                    }else{
-                        $("#"+key).val(value_field);
                     }
-                }
-            }
+                    resolve();
+                }, 500);
+            });
+            // .:nhantv:. Tracking FOR block success and trigger max panel button
+            await promise.then(()=>{
+                $('#max_panels').trigger('click');
+            });
         }
     }
 
@@ -1104,7 +1114,7 @@ $(function () {
             var error_price = '';
             if(inverter_type == 'IQ7 plus') inverter_type = 'IQ7+';
             var data_return = getBasePrice(panel_type,inverter_type,total_panels);
-            console.log(data_return);
+            // console.log(data_return);
             if(data_return === undefined) return;
 
             data_return = data_return.toString().split('|').filter(function(e){return e});

@@ -8,6 +8,10 @@ const productMapper = [{
     nameDb: "STCs",
     id: "4efbea92-c52f-d147-3308-569776823b19",
 },{
+    name: "Sunpower P3 370 BLACK",
+    nameDb: "Sunpower P3 370W BLACK",
+    id: "7e01564f-6a43-560e-5d1c-604f0166b7c0",
+},{
     name: "Sunpower P3 325 BLACK",
     nameDb: "Sunpower P3 325W BLACK",
     id: "ddccc2e2-8673-167a-486d-5ea65e73b911",
@@ -25,8 +29,8 @@ const productMapper = [{
     id: "",
 },{
     name: "Sungrow 5",
-    nameDb: "",
-    id: "",
+    nameDb: "Sungrow 5kW Premium Inverter",
+    id: "327b088f-c395-c6fc-308b-6058620a615a",
 },{
     name: "Sungrow 8",
     nameDb: "",
@@ -65,16 +69,16 @@ const productMapper = [{
     id: "",
 },{
     name: "Symo 15",
-    nameDb: "",
+    nameDb: "Fronius Symo 15-0-3-M",
     id: "d051d35d-7a84-e4f1-b39f-5d42c9358989",
 },{
     name: "Primo 6",
-    nameDb: "",
-    id: "",
+    nameDb: "Fronius Primo 6.0 SCERT Inverter",
+    id: "abdbedba-c295-f28a-5657-6021ca28ada6",
 },{
     name: "Sungrow Smart Meter (1P)",
-    nameDb: "",
-    id: "",
+    nameDb: "Sungrow Single Phase Smart Meter",
+    id: "20b26f98-90d4-a7c2-cfe9-605863bd4435",
 },{
     name: "Fro. Smart Meter (1P)",
     nameDb: "",
@@ -206,21 +210,25 @@ const productMapper = [{
         let extra3Selected = $('#extra_3_' + optSelected).val();
         let stcTotal = $('#number_of_stcs_' + optSelected).val();
         // Create line item
-        // Alway add this product: Solar PV Supply and Install
-        await autoCreateLineItem(getProductInfoFromName("Solar PV Supply and Install"), 1, 1);
-        panelSelected && await autoCreateLineItem(getProductInfoFromName(panelSelected), panelTotal, 2);
-        inverterSelected && await autoCreateLineItem(getProductInfoFromName(inverterSelected), 1, 3);
-        extra1Selected && await autoCreateLineItem(getProductInfoFromName(extra1Selected), 1, 4);
-        extra2Selected && await autoCreateLineItem(getProductInfoFromName(extra2Selected), 1, 5);
-        extra3Selected && await autoCreateLineItem(getProductInfoFromName(extra3Selected), 1, 5);
-        // Alway add this product: STCs
-        await autoCreateLineItem(getProductInfoFromName("STCs"), stcTotal, 6);
-        // Calculate
-        await calculatePrice(7);
-        // Hide loading
-        setTimeout(function (){
-            SUGAR.ajaxUI.hideLoadingPanel();
-        }, 300);
+        try{
+            // Alway add this product: Solar PV Supply and Install
+            await autoCreateLineItem(getProductInfoFromName("Solar PV Supply and Install"), 1, 1);
+            panelSelected && await autoCreateLineItem(getProductInfoFromName(panelSelected), panelTotal, 2);
+            inverterSelected && await autoCreateLineItem(getProductInfoFromName(inverterSelected), 1, 3);
+            extra1Selected && await autoCreateLineItem(getProductInfoFromName(extra1Selected), 1, 4);
+            extra2Selected && await autoCreateLineItem(getProductInfoFromName(extra2Selected), 1, 5);
+            extra3Selected && await autoCreateLineItem(getProductInfoFromName(extra3Selected), 1, 5);
+            // Alway add this product: STCs
+            await autoCreateLineItem(getProductInfoFromName("STCs"), stcTotal, 6);
+            // Calculate
+            await calculatePrice(7);
+            // Hide loading
+            setTimeout(function (){
+                SUGAR.ajaxUI.hideLoadingPanel();
+            }, 300);
+        } catch(err) {
+            console.log(err);
+        }
     }
     // .:nhantv:. Calculate total price
     async function calculatePrice(ms){
@@ -257,33 +265,32 @@ const productMapper = [{
             return;
         }
         // Case: id !== ""
-        $.ajax({
+        await $.ajax({
             url: "/index.php?entryPoint=getInfoProduct&product_id=" + productInfo.id,
-            type: 'GET',
-            success: function(data)
-            {   
+            type: 'GET'})
+            .then(function(data) {
                 var info_pro = JSON.parse(data);
-                insertProductLine('product_group0', '0');
-                lineno  = prodln-1;  
-                var popupReplyData = {};
-                popupReplyData.form_name = "EditView";
-                var name_to_value_array = {};
-                name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
-                name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
-                name_to_value_array["product_name"+lineno] = info_pro['product_name'];
-                name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
-                name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
-    
-                name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
-                name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
-                name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
-                popupReplyData["name_to_value_array"] = name_to_value_array;            
-                $('#product_product_list_price'+lineno).focus();
-                $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ productInfo.id +'">Link</a></div>');
-                setProductReturn(popupReplyData);
-            },
-            error: function(response){console.log("Fail");},
-        });
+                if(info_pro['product_product_id'] !== undefined){
+                    insertProductLine('product_group0', '0');
+                    lineno  = prodln-1;  
+                    var popupReplyData = {};
+                    popupReplyData.form_name = "EditView";
+                    var name_to_value_array = {};
+                    name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
+                    name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
+                    name_to_value_array["product_name"+lineno] = info_pro['product_name'];
+                    name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
+                    name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
+        
+                    name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
+                    name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
+                    name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
+                    popupReplyData["name_to_value_array"] = name_to_value_array;            
+                    $('#product_product_list_price'+lineno).focus();
+                    $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ productInfo.id +'">Link</a></div>');
+                    setProductReturn(popupReplyData);
+                }
+            });
     }
     // .:nhantv:. Get product id from Option selected
     function getProductInfoFromName(name){
@@ -303,12 +310,13 @@ const productMapper = [{
     // .:nhantv:. If Product Type is not Solar -> hide all solar panels: "SOLARGAIN INFORMATION" / "PRICING PV SECTION" / "SOLAR VICTORIA PROVIDER STATEMENT"
     function hideSolarPanel(){
         if ($("#quote_type_c").val() !== "quote_type_solar"){
-            // "SOLARGAIN INFORMATION"
-            // $('#special_notes_c').closest('.panel.panel-default').hide();
-            // "PRICING PV SECTION"
-            $('#Terracotta_checkbox').closest('.panel.panel-default').hide();
-            // "SOLAR VICTORIA PROVIDER STATEMENT"
-            $('#slv_solar_vic_id_c').closest('.panel.panel-default').hide();
+            $('.panel-default a div:visible').each((index, item) =>{
+                var divText = item.innerText.toUpperCase();
+                if(divText == 'SOLARGAIN INFOMATION' || divText == 'PRICING PV SECTION' || divText == 'SOLAR VICTORIA PROVIDER STATEMENT'){
+                    // console.log('true', divText, jQuery(item).closest('.panel.panel-default'));
+                    $(item).closest('.panel.panel-default').hide();
+                }
+            });
         }
     }
 
