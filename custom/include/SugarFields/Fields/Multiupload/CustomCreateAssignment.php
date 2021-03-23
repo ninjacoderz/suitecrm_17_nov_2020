@@ -355,31 +355,32 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
 // UPDATE ASSIGNMENT
     // UPDATE ADDRESS
         $addressName  = urldecode($_GET['install_address']) ;
-        $addressName = str_replace(" ", "+", $addressName);
-        $url = "https://api.greenenergytrading.com.au/api/c1/addresses/address?name=&q=".$addressName;
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        curl_setopt($curl, CURLOPT_HTTPGET, true);
-        curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        $addressName = str_replace(" ", "%20", $addressName);
+        // $url = "https://geocreation.com.au/webapi/v1/totalcheck/address_search?formattedAddress=".$addressName;
+        // curl_setopt($curl, CURLOPT_URL, $url);
+        // curl_setopt($curl, CURLOPT_URL, 'https://geocreation.com.au/webapi/v1/totalcheck/address_search?formattedAddress=91^%^20Myrtle^%^20Road,^%^20SEACLIFF^%^20SA^%^205049');
+        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        // curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_HEADER, true);
+        // curl_setopt($curl, CURLOPT_HTTPGET, true);
+        // curl_setopt($curl, CURLOPT_USERAGENT,  $_SERVER['HTTP_USER_AGENT']);
+        // curl_setopt($curl, CURLOPT_HTTPHEADER, array(
 
-                "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
-                "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Accept-Language: en-US,en;q=0.5",
-                "Accept-Encoding:   gzip, deflate, br",
-                "Access-Control-Request-Method: GET",
-                "Access-Control-Request-Headers: authorization",
-                "Connection: keep-alive",
-                "Origin: https://geocreation.com.au",
-            )
-        );
-        $result = curl_exec($curl);
+        //         "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
+        //         "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        //         "Accept-Language: en-US,en;q=0.5",
+        //         "Accept-Encoding:   gzip, deflate, br",
+        //         "Access-Control-Request-Method: GET",
+        //         "Access-Control-Request-Headers: authorization",
+        //         "Connection: keep-alive",
+        //         "Origin: https://geocreation.com.au",
+        //     )
+        // );
+        // $result = curl_exec($curl);
 
-        $url = "https://api.greenenergytrading.com.au/api/c1/addresses/address?name=&q=".$addressName;
+        $url = "https://geocreation.com.au/webapi/v1/totalcheck/address_search?formattedAddress=".$addressName;
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
@@ -391,11 +392,11 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
         
                 "User-Agent: ". $_SERVER['HTTP_USER_AGENT'],
-                "Accept: */*",
+                "Accept: application/json, text/plain, */*",
                 "Accept-Language: en-US,en;q=0.5",
                 "Accept-Encoding:   gzip, deflate, br",
                 "Connection: keep-alive",
-                "Authorization: token ".$IdToken,
+                "Authorization: Bearer ".$IdToken,
                 "Referer: https://geocreation.com.au/assignments/".$reference."/edit",
                 "Origin: https://geocreation.com.au",
             )
@@ -404,8 +405,8 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
 
         $result_object = json_decode($result);
         $search_result_id = "";
-        if(count($result_object->results) >= 1){
-            $search_result_id = $result_object->results[0]->search_result_id;
+        if(count($result_object) >= 1){
+            $search_result_id = $result_object[0]->search_result_id;
         }
 
         if($search_result_id != ""){
