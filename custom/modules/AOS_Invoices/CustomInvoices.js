@@ -5470,14 +5470,14 @@ $(document).ready(function(){
          //VUT-S-Get all files sms
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_all_files_sms" class="button primary" title="Get all files from SMS">GET ALL FILES FROM SMS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
          $('#get_all_files_sms').click(function(){
-            debugger;
+            // debugger;
             var installation_pictures_c = $('input[name="installation_pictures_c"]').val();
             if (installation_pictures_c != '') {
                 $.ajax({
                     url: "?entryPoint=getAllFilesMessageApp&invoice_id="+$("input[name='record']").val()+"&installation_pictures_c="+installation_pictures_c,
                     success: function(data)
                     {
-                        debugger;
+                        // debugger;
                         $(".files").empty();                
                         $.ajax({
                             url: $('#fileupload').fileupload('option', 'url'),
@@ -6923,7 +6923,7 @@ $(function () {
                 });
         
                 function render_select_pcoc_template(result){
-                    debugger
+                    // debugger
                     try {
                         var data_result = JSON.parse(result);
                         window.data_pcoc_notes = data_result;
@@ -7923,7 +7923,7 @@ $(document).ready(function(){
         $("#status").on('focus', function () {
             previous = this.value;
         }).change(function() {
-            debugger;
+            // debugger;
             var xeroType = "";
             if(previous == 'STC_Unpaid' && $(this).val() == 'Paid'){
                 xeroType = "STC";
