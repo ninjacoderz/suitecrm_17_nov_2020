@@ -779,8 +779,8 @@
             $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', $file_attach['file_mime_type']);
         }
         $mail->AddCC($email_assigigned);
-        // $mail->AddCC('info@pure-electric.com.au');
-        $mail->AddCC('ngoanhtuan2510@gmail.com');
+        $mail->AddCC('info@pure-electric.com.au');
+        // $mail->AddCC('ngoanhtuan2510@gmail.com');
         $mail->prepForOutbound();
         $mail->setMailerForSystem();  
         $sent = $mail->Send();
