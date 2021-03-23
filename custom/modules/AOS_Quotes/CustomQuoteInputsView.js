@@ -100,11 +100,12 @@ const productMapper = [{
 /** JS LOAD CUSTOM QUOTE INPUT  */
     $(function () {
         'use strict';
-        
-        $("#quote_note_inputs_c").closest('.edit-view-field').parent().parent().hide();
+        // .:nhantv:. Update to show "Choose combination" field
+        $("#quote_note_inputs_c").closest('.edit-view-row-item').hide();
         var html_group_custom_quote_inputs = 
         '<div id="group_custom_quote_inputs_checklist" class="row detail-view-row"></div>';
-        $("#quote_note_inputs_c").closest('.tab-content').append(html_group_custom_quote_inputs);
+        // .:nhantv:. Update to set order before "Choose combination" field
+        $("#quote_note_inputs_c").closest('.tab-content').prepend(html_group_custom_quote_inputs);
         var btn_generate_quote = '<button type="button" id="generate_quote" class="button primary">Save and Generate Quote</button>';
         $("#quote_note_inputs_c").closest('.tab-content').append(btn_generate_quote);
         

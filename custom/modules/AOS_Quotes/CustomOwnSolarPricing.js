@@ -220,7 +220,9 @@ function init_table_own_solar() {
     //     } 
 
     // $(selector_panel_own_solar).find(".tab-content").html(own_solar_pv_pricing_table);
-    $('body').find("#group_custom_quote_inputs_checklist").after(own_solar_pv_pricing_table);
+    
+    // .:nhantv:. Update to set order before "Save and Generate Quote" field
+    $('body').find("#generate_quote").before(own_solar_pv_pricing_table);
 
     makeTable(own_solar_pv_pricing_table, data, "Own-Solar-PV-Pricing", "Own-Solar-PV-Pricing");
     //css Table
