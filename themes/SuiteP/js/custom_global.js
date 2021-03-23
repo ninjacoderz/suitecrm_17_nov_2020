@@ -207,11 +207,11 @@ $(document).ready(function(){
         render_nav_panel_left(module_sugar_grp1);
         display_status_title(module_sugar_grp1,action_sugar_grp1);
         //VUT-S-Add button assign user anywhere
-        button_assign_user = '<br/>'
-            +'<button style="margin: 0px 1px" type="button" name="Paul Szuster" class="button select_assign_user" value="61e04d4b-86ef-00f2-c669-579eb1bb58fa">PS</button>'
+        button_assign_user = '<button style="margin: 0px 1px" type="button" name="Paul Szuster" class="button select_assign_user" value="61e04d4b-86ef-00f2-c669-579eb1bb58fa">PS</button>'
             +'<button style="margin: 0px 1px" type="button" name="Matthew Wright" class="button select_assign_user" value="8d159972-b7ea-8cf9-c9d2-56958d05485e">MW</button>';
             // +'<button style="margin: 0px 1px" type="button" name="John Hooper" class="button select_assign_user" value="b33d5d2f-89fc-ce57-1df9-5e38d4d8e98d">JH</button>';
         $('#assigned_user_name').parent().append(button_assign_user);
+        $('#assigned_user_name').css("width", "150px")
         //VUT-E-Add button assign user anywhere
         //VUT - S - js change title
         $(document).on('change', '#name', function(){

@@ -6,7 +6,7 @@ $(function () {
 // Hide Subpanel Daikin Information 
     $('#detailpanel_1').parent().hide();
     
-    $("#btn_clr_assigned_user_name").after('<button type="button" style="width: 218px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
+    $("#btn_clr_assigned_user_name").after('<button type="button" style="width: 150px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
     var record = $("input[name='record']").val();
 
     if(typeof record !== "undefined" && record != ""){
@@ -542,7 +542,7 @@ $(function () {
         $.ajax({
             url: 'index.php?entryPoint=getdata_ABN&number_ABN='+$('#abn_c').val(),
             success: function(data){
-                debugger
+                // debugger
                 if(data !== '[]') {
                     var data_result =  $.parseJSON(data);
                     $('#entity_name_c').val(data_result['Entiny_name']);

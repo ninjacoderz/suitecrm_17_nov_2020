@@ -6588,7 +6588,7 @@ $(function () {
 
         // button Update Related
         if(module_sugar_grp1 == 'AOS_Invoices') {
-            $("#btn_clr_assigned_user_name").after('<button style="width: 218px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
+            $("#btn_clr_assigned_user_name").after('<button style="width: 150px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
         }
         
         if(typeof record !== "undefined" && record != ""){

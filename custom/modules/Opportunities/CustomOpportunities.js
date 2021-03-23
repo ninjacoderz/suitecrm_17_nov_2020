@@ -2,7 +2,7 @@
 $(function () {
     'use strict';
 // Generate uinique id
-    $("#btn_clr_assigned_user_name").after('<button style="width: 218px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
+    $("#btn_clr_assigned_user_name").after('<button style="width: 150px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
     var record = $("input[name='record']").val();
 
     if(typeof record !== "undefined" && record != ""){
