@@ -816,7 +816,7 @@ $(function () {
                     async: true,
                     success: function(result) {
                         // debugger;
-                        if(result == '' && typeof result == undefined)return;
+                        if(result == '' || typeof result === undefined)return;
                         var data = $.parseJSON(result);                      
                         $(".modal_preview_pdf").remove();
                         var html = '<div class="modal fade modal_preview_pdf" tabindex="-1" role="dialog">'+

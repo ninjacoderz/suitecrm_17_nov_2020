@@ -5137,9 +5137,9 @@ $(document).ready(function(){
         var stc_seri =  $('#stc_aggregator_serial_c').val();
         if(stc_seri == ''){
             stc_seri = $('#stc_aggregator_serial_2_c').val();
-            if(stc_seri == ''){
-                stc_seri = $('#stc_aggregator_c').val();
-            }
+            // if(stc_seri == ''){
+            //     stc_seri = $('#stc_aggregator_c').val();
+            // }
         }
         var url_getStatusGEO = '/index.php?entryPoint=getStatusGEO&stc_seri=' +stc_seri;
         $.ajax({
@@ -6923,29 +6923,34 @@ $(function () {
                 });
         
                 function render_select_pcoc_template(result){
-                    var data_result = $.parseJSON(result);
-                    window.data_pcoc_notes = data_result;
-                    $('#select_title_template_pcoc_notes').empty();
-                    $("#select_template_pcoc").empty();
-                    $('#select_title_template_pcoc_notes').append($('<option>', {
-                        value: '',
-                        text: ''
-                    }));
-                    $('#select_template_pcoc').append($('<option>', {
-                        value: '',
-                        text: 'Select Template PCOC'
-                    }));
-                    $.each(data_result,function(k,v){
+                    debugger
+                    try {
+                        var data_result = JSON.parse(result);
+                        window.data_pcoc_notes = data_result;
+                        $('#select_title_template_pcoc_notes').empty();
+                        $("#select_template_pcoc").empty();
                         $('#select_title_template_pcoc_notes').append($('<option>', {
-                            value: k,
-                            text: v.title
+                            value: '',
+                            text: ''
                         }));
                         $('#select_template_pcoc').append($('<option>', {
-                            value: k,
-                            text: v.title
+                            value: '',
+                            text: 'Select Template PCOC'
                         }));
-                    });
-                    autosize.update($("#pcoc_cert_wording_c")); 
+                        $.each(data_result,function(k,v){
+                            $('#select_title_template_pcoc_notes').append($('<option>', {
+                                value: k,
+                                text: v.title
+                            }));
+                            $('#select_template_pcoc').append($('<option>', {
+                                value: k,
+                                text: v.title
+                            }));
+                        });
+                        autosize.update($("#pcoc_cert_wording_c")); 
+                    } catch (err) {
+                        console.log('Invoice-Edit >> render_select_pcoc_template: '+err);
+                    }
                 }
                 // run first time
                 $.ajax({
@@ -6957,7 +6962,7 @@ $(function () {
                     },
                     async: true,
                     success: function(result) {   
-                        if(result == '' && typeof result == undefined)return;
+                        if(result == '' || typeof result === undefined)return;
                         render_select_pcoc_template(result);
                     }
                 }); 
@@ -7283,29 +7288,34 @@ $(function () {
         });
 
         function render_select_plumbing_template(result){
-            var data_result = $.parseJSON(result);
-            window.data_plumbing_notes = data_result;
-            $('#select_title_template_plumbing_notes').empty();
-            $("#select_template_plumbing").empty();
-            $('#select_title_template_plumbing_notes').append($('<option>', {
-                value: '',
-                text: ''
-            }));
-            $('#select_template_plumbing').append($('<option>', {
-                value: '',
-                text: 'Select Template Plumbing'
-            }));
-            $.each(data_result,function(k,v){
+            if(result == '' || typeof result === undefined ) return;
+            try {
+                var data_result = JSON.parse(result);
+                window.data_plumbing_notes = data_result;
+                $('#select_title_template_plumbing_notes').empty();
+                $("#select_template_plumbing").empty();
                 $('#select_title_template_plumbing_notes').append($('<option>', {
-                    value: k,
-                    text: v.title
+                    value: '',
+                    text: ''
                 }));
                 $('#select_template_plumbing').append($('<option>', {
-                    value: k,
-                    text: v.title
+                    value: '',
+                    text: 'Select Template Plumbing'
                 }));
-            });
-            autosize.update($("#plumbing_notes_c")); 
+                $.each(data_result,function(k,v){
+                    $('#select_title_template_plumbing_notes').append($('<option>', {
+                        value: k,
+                        text: v.title
+                    }));
+                    $('#select_template_plumbing').append($('<option>', {
+                        value: k,
+                        text: v.title
+                    }));
+                });
+                autosize.update($("#plumbing_notes_c")); 
+            } catch (err) {
+                console.log('Invoice-Edit >> render_select_plumbing_template: '+err);
+            }
         }
         // run first time
         $.ajax({
@@ -7317,7 +7327,7 @@ $(function () {
             },
             async: true,
             success: function(result) {   
-                if(result == '' && typeof result == undefined)return;
+                if(result == '' || typeof result === undefined)return;
                 render_select_plumbing_template(result);
             }
         }); 
@@ -7476,30 +7486,34 @@ $(function () {
         });
 
         function render_select_electrical_template(result){
-            if(result == '' && typeof result == undefined)return;
-            var data_result = $.parseJSON(result);
-            window.data_electrical_notes = data_result;
-            $('#select_title_template_electrical_notes').empty();
-            $("#select_template_electrical").empty();
-            $('#select_title_template_electrical_notes').append($('<option>', {
-                value: '',
-                text: ''
-            }));
-            $('#select_template_electrical').append($('<option>', {
-                value: '',
-                text: 'Select Template Electrical'
-            }));
-            $.each(data_result,function(k,v){
+            if(result == '' || typeof result === undefined)return;
+            try {
+                var data_result = $.parseJSON(result);
+                window.data_electrical_notes = data_result;
+                $('#select_title_template_electrical_notes').empty();
+                $("#select_template_electrical").empty();
                 $('#select_title_template_electrical_notes').append($('<option>', {
-                    value: k,
-                    text: v.title
+                    value: '',
+                    text: ''
                 }));
                 $('#select_template_electrical').append($('<option>', {
-                    value: k,
-                    text: v.title
+                    value: '',
+                    text: 'Select Template Electrical'
                 }));
-            });
-            autosize.update($("#electrical_notes_c")); 
+                $.each(data_result,function(k,v){
+                    $('#select_title_template_electrical_notes').append($('<option>', {
+                        value: k,
+                        text: v.title
+                    }));
+                    $('#select_template_electrical').append($('<option>', {
+                        value: k,
+                        text: v.title
+                    }));
+                });
+                autosize.update($("#electrical_notes_c")); 
+            } catch(err) {
+                console.log('Invoice-Edit >> render_select_electrical_template: '+err);
+            }
         }
 
         // run first time
@@ -7686,33 +7700,37 @@ $(document).ready(function() {
         });
 
         function render_select_template_quote(result){
-            if(result == '' && typeof result == undefined) return; //check Json
-            var data_result = $.parseJSON(result);
-            // debugger;
-            window.data_quote_comment = data_result;
-            $('#select_title_quote_note_pdf').empty();
-            $('#select_title_quote_note_pdf').append($('<option>', {
-                value: '',
-                text: ''
-            }));
-            $(document).find("#slb_quote_note").empty();
-            $('#slb_quote_note').append($('<option>', {
-                value: '',
-                text: ''
-            }));
-            $.each(data_result,function(k,v){
+            if(result == '' || typeof result === undefined) return; //check Json
+            try {
+                var data_result = JSON.parse(result);
                 // debugger;
+                window.data_quote_comment = data_result;
+                $('#select_title_quote_note_pdf').empty();
                 $('#select_title_quote_note_pdf').append($('<option>', {
-                    value: k,
-                    text: v.title
+                    value: '',
+                    text: ''
                 }));
-                $(document).find("#slb_quote_note").append($('<option>', {
-                    value: v.content,
-                    text: v.title,
-                    IdTemplate: k
+                $(document).find("#slb_quote_note").empty();
+                $('#slb_quote_note').append($('<option>', {
+                    value: '',
+                    text: ''
                 }));
-                });
-            autosize.update($('#quote_note_c'));
+                $.each(data_result,function(k,v){
+                    // debugger;
+                    $('#select_title_quote_note_pdf').append($('<option>', {
+                        value: k,
+                        text: v.title
+                    }));
+                    $(document).find("#slb_quote_note").append($('<option>', {
+                        value: v.content,
+                        text: v.title,
+                        IdTemplate: k
+                    }));
+                    });
+                autosize.update($('#quote_note_c'));
+            } catch (err) {
+                console.log('Invoice-Edit >> render_select_template_quote: '+err);
+            }
         }
     }
 });
@@ -8099,30 +8117,34 @@ $(document).ready(function() {
         });
 
         function render_select_customer_inv_template(result){
-            if(result == '' && typeof result == undefined)return;
-            var data_result = $.parseJSON(result);
-            window.data_custome_inv_notes = data_result;
-            $('#select_title_template_customer_inv_notes').empty();
-            $("#select_template_customer_inv").empty();
-            $('#select_title_template_customer_inv_notes').append($('<option>', {
-                value: '',
-                text: ''
-            }));
-            $('#select_template_customer_inv').append($('<option>', {
-                value: '',
-                text: 'Select Template Customer'
-            }));
-            $.each(data_result,function(k,v){
+            if(result == '' || typeof result === undefined)return;
+            try {
+                var data_result = JSON.parse(result);
+                window.data_custome_inv_notes = data_result;
+                $('#select_title_template_customer_inv_notes').empty();
+                $("#select_template_customer_inv").empty();
                 $('#select_title_template_customer_inv_notes').append($('<option>', {
-                    value: k,
-                    text: v.title
+                    value: '',
+                    text: ''
                 }));
                 $('#select_template_customer_inv').append($('<option>', {
-                    value: k,
-                    text: v.title
+                    value: '',
+                    text: 'Select Template Customer'
                 }));
-            });
-            autosize.update($("#invoice_note_c")); 
+                $.each(data_result,function(k,v){
+                    $('#select_title_template_customer_inv_notes').append($('<option>', {
+                        value: k,
+                        text: v.title
+                    }));
+                    $('#select_template_customer_inv').append($('<option>', {
+                        value: k,
+                        text: v.title
+                    }));
+                });
+                autosize.update($("#invoice_note_c")); 
+            } catch (err) {
+                console.log('Invoice-Edit >> select_customer_inv_template: '+err);
+            }
         }
 
         // run first time
@@ -8280,7 +8302,7 @@ function loadSelect_CES_Template() {
         },
         async: false,
         success: function(result) {   
-            if(result == '' && typeof result == undefined)return;
+            if(result == '' || typeof result === undefined)return;
             render_select_ces_template(result);
             SUGAR.ajaxUI.hideLoadingPanel();
         }
@@ -8292,29 +8314,33 @@ function loadSelect_CES_Template() {
  * @param {JSON_ENCODE} result 
  */
 function render_select_ces_template(result){
-    var data_result = $.parseJSON(result);
-    window.data_ces_notes = data_result;
-    $('#select_title_template_ces_notes').empty();
-    $("#select_template_ces").empty();
-    $('#select_title_template_ces_notes').append($('<option>', {
-        value: '',
-        text: ''
-    }));
-    $('#select_template_ces').append($('<option>', {
-        value: '',
-        text: 'Select Template CES'
-    }));
-    $.each(data_result,function(k,v){
+    try {
+        var data_result = JSON.parse(result);
+        window.data_ces_notes = data_result;
+        $('#select_title_template_ces_notes').empty();
+        $("#select_template_ces").empty();
         $('#select_title_template_ces_notes').append($('<option>', {
-            value: k,
-            text: v.title
+            value: '',
+            text: ''
         }));
         $('#select_template_ces').append($('<option>', {
-            value: k,
-            text: v.title
+            value: '',
+            text: 'Select Template CES'
         }));
-    });
-    autosize.update($("#ces_cert_wording_c")); 
+        $.each(data_result,function(k,v){
+            $('#select_title_template_ces_notes').append($('<option>', {
+                value: k,
+                text: v.title
+            }));
+            $('#select_template_ces').append($('<option>', {
+                value: k,
+                text: v.title
+            }));
+        });
+        autosize.update($("#ces_cert_wording_c")); 
+    } catch (err) {
+        console.log('Invoice-Edit >> render_select_ces_template: '+err);
+    }
 }
 
 /**

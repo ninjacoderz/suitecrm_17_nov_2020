@@ -1,29 +1,29 @@
 function  pushToXero(el){
-    if($("#bill_status_c").val() != 'Billed'){
-        $(el).find('span.glyphicon-refresh').removeClass('hidden');
-        $.ajax({
-            url: "/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method=create&record="+ encodeURIComponent($('input[name="record"]').val()),
-            success: function (data) {
-                if(typeof data !== undefined){
-                    var data_parse = $.parseJSON(data);
-                    $(el).find('span.glyphicon-refresh').addClass('hidden');
-                    setTimeout(() => {
-                        if(data_parse.status.trim("") == 'Ok'){
-                            alert('Push PO to XERO Successfully.');
-                            loadButton();
-                            $('#xero_po_id_c').val(data_parse.xeroID);
-                            showLinkXero(data_parse.xeroID);
-                        }else{
-                            alert('We can\'t push PO to XERO. Please check all fields.');
-                        }
-                    }, 1000);
-                }
-            }
-        });
-    }else{
-        alert('PO has been pushed to XERO one time');
-    }
-    return false;
+    // if($("#bill_status_c").val() != 'Billed'){
+    //     $(el).find('span.glyphicon-refresh').removeClass('hidden');
+    //     $.ajax({
+    //         url: "/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method=create&record="+ encodeURIComponent($('input[name="record"]').val()),
+    //         success: function (data) {
+    //             if(typeof data !== undefined){
+    //                 var data_parse = $.parseJSON(data);
+    //                 $(el).find('span.glyphicon-refresh').addClass('hidden');
+    //                 setTimeout(() => {
+    //                     if(data_parse.status.trim("") == 'Ok'){
+    //                         alert('Push PO to XERO Successfully.');
+    //                         loadButton();
+    //                         $('#xero_po_id_c').val(data_parse.xeroID);
+    //                         showLinkXero(data_parse.xeroID);
+    //                     }else{
+    //                         alert('We can\'t push PO to XERO. Please check all fields.');
+    //                     }
+    //                 }, 1000);
+    //             }
+    //         }
+    //     });
+    // }else{
+    //     alert('PO has been pushed to XERO one time');
+    // }
+    // return false;
 }
 
 function  updateToXero(el){
@@ -1093,8 +1093,14 @@ function generatePOname() {
             namePO = `Daikin ${infoDaikin} to ${shipping_city} ${shipping_state} ${delivery_date} ${order_number}`;
             break;
 
-        // case 'installer':
-        //     break;
+        case 'SPR_PV_Supply':
+            let productSunpower = getInfoProductSunPower();
+            let infoSunpower = '';
+            $.each(productSunpower, function(k,v){
+                infoSunpower+= `${v['qty']}x${k} `;
+            });
+            namePO = `Sunpower ${infoSunpower} to ${shipping_city} ${shipping_state} ${dispatch_date} ${order_number}`;
+            break;
         
         default:
             break;
@@ -1177,6 +1183,35 @@ function getInfoProductSanden() {
     }
     return sanden_groups;
 }
+
+/**
+ * VUT - get info Product Sunpower
+ */
+function getInfoProductSunPower() {
+    let products = $('#lineItems').find('.product_group').children('tbody');
+    let i; 
+    let sunpower = {};
+    for (i=0;i< products.length; i++) {
+        if (products[i].getAttribute('style') != "display: none;") {
+            let qty = parseInt($(`#product_product_qty${i}`).val());
+            let cost = parseInt($(`#product_product_unit_price${i}`).val());
+            // let product_id = $(`#product_product_id${i}`).val();
+            let partNumber = $(`#product_part_number${i}`).val();
+            if (partNumber.indexOf("SPR-") != -1 && cost > 0) {
+                if (sunpower.hasOwnProperty(partNumber)) {
+                    sunpower[partNumber].qty += qty;
+                } else {
+                    partNumber = partNumber.replace("SPR-", "");
+                    sunpower[partNumber] = {
+                        'qty': qty,
+                    };
+                }
+            }
+        }
+    }
+    return sunpower;
+}
+
 /**
  * VUT-Format Time
  * @param {String} date : dd/mm/yyyy

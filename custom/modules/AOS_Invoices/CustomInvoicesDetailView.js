@@ -142,7 +142,7 @@ $(function () {
                     url: 'index.php?entryPoint=CustomDownloadPDF&type='+quote_type+'&module=AOS_Invoices&record_id='+$("input[name='record']").val()+'&preview=true',
                     async: true,
                     success: function(result) {
-                        if(result == '' && typeof result == undefined)return;
+                        if(result == '' || typeof result === undefined)return;
                         var data = $.parseJSON(result);                      
                         $(".modal_preview_pdf").remove();
                         var html = '<div class="modal fade modal_preview_pdf" tabindex="-1" role="dialog">'+

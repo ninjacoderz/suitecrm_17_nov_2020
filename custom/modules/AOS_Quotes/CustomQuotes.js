@@ -1462,7 +1462,7 @@ $(document).ready(function () {
             action: 'read',
         },
         success: function (result) {
-            if (result == '' && typeof result == undefined) return;
+            if (result == '' || typeof result === undefined) return;
             var data_result = $.parseJSON(result);
             $.each(data_result, function (k, v) {
                 if (v.title == 'No Upgrade Options') {

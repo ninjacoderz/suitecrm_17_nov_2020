@@ -379,7 +379,7 @@ $(document).ready(function() {
             },
             success: function(result) {
                 // debugger;
-                if(result == '' || typeof result == undefined) {
+                if(result == '' || typeof result === undefined) {
                     SUGAR.ajaxUI.hideLoadingPanel();
                     return;
                 }
