@@ -311,6 +311,7 @@ const productMapper = [{
     // .:nhantv:. If Product Type is not Solar -> hide all solar panels: "SOLARGAIN INFORMATION" / "PRICING PV SECTION" / "SOLAR VICTORIA PROVIDER STATEMENT"
     function hideSolarPanel(){
         if ($("#quote_type_c").val() !== "quote_type_solar"){
+            // Hide panels
             $('.panel-default a div:visible').each((index, item) =>{
                 var divText = item.innerText.toUpperCase();
                 if(divText == 'SOLARGAIN INFOMATION' || divText == 'PRICING PV SECTION' || divText == 'SOLAR VICTORIA PROVIDER STATEMENT'){
@@ -318,6 +319,8 @@ const productMapper = [{
                     $(item).closest('.panel.panel-default').hide();
                 }
             });
+            // Hide field: "Choose Panel/Inverter Combination"
+            $("#pricing_option_type_c").closest('.edit-view-row-item').hide();
         }
     }
 
