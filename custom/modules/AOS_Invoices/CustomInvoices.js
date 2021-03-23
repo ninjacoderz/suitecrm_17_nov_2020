@@ -881,12 +881,13 @@ $(function () {
                 return false;
             });
         }
-
-        if ($('#meeting_plumber').val() != '') {
-            showLinkMeeting('meeting_plumber',$('#meeting_plumber').val());
-        }
-        if ($('#meeting_electrician').val() != '') {
-            showLinkMeeting('meeting_electrician',$('#meeting_electrician').val());
+        if (module_sugar_grp1 == 'AOS_Invoices') {
+            if ($('#meeting_plumber').val() != '') {
+                showLinkMeeting('meeting_plumber',$('#meeting_plumber').val());
+            }
+            if ($('#meeting_electrician').val() != '') {
+                showLinkMeeting('meeting_electrician',$('#meeting_electrician').val());
+            }
         }
 
         $('#line_items_span').on('change', 'input.product_part_number', function () {
