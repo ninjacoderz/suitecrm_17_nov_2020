@@ -779,8 +779,8 @@
             $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', $file_attach['file_mime_type']);
         }
         $mail->AddCC($email_assigigned);
-        $mail->AddCC('info@pure-electric.com.au');
-        // $mail->AddCC('ngoanhtuan2510@gmail.com');
+        // $mail->AddCC('info@pure-electric.com.au');
+        $mail->AddCC('ngoanhtuan2510@gmail.com');
         $mail->prepForOutbound();
         $mail->setMailerForSystem();  
         $sent = $mail->Send();
@@ -820,6 +820,70 @@
         $data_option['customer_name'] = $quote->account_firstname_c.' '.$quote->account_lastname_c;
         $data_option['address_1'] = $quote->install_address_c;
         $data_option['address_2'] = $quote->install_address_city_c.' '.$quote->install_address_state_c.' '.$quote->install_address_postalcode_c;
+        if(count($_POST['files']['data-pe-files-switchboard']['tmp_name']) > 0) {
+            for($i = 0; $i < count($_POST['files']['data-pe-files-switchboard']['tmp_name']); $i++) {
+                if($_POST['files']['data-pe-files-switchboard']['name'][$i] != ""){
+                    $file_type = 'Q'.$quote->number.'_Switchboard_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-switchboard']['name'][$i]), PATHINFO_EXTENSION);
+                    $count = checkCountExistPhoto($file_type,$folderName,'_Switchboard_');
+                    $file_type = 'Q'.$quote->number.'_Switchboard_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-switchboard']['name'][$i]), PATHINFO_EXTENSION );
+                    copy($_POST['files']['data-pe-files-switchboard']['tmp_name'][$i], $folderName.$file_type);
+                    // $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Switchboard '.$i.' '.$checkgeo.'</a>';
+                    $note = addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                        
+                    $file_name =  $note->filename;
+                    $file_location = $sugar_config['upload_dir'].$note->id;
+                    $mime_type = $note->file_mime_type;
+                    $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_name , 'file_mime_type'=> $mime_type);                };
+            };
+        };
+        if(count($_POST['files']['data-pe-files-upclose']['tmp_name']) > 0) {
+            for($i = 0; $i < count($_POST['files']['data-pe-files-upclose']['tmp_name']); $i++) {
+                if($_POST['files']['data-pe-files-upclose']['name'][$i] != ""){
+                    $file_type = 'Q'.$quote->number.'_Photo_upclose_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-upclose']['name'][$i]), PATHINFO_EXTENSION);
+                    $count = checkCountExistPhoto($file_type,$folderName,'_Photo_upclose_');
+                    $file_type = 'Q'.$quote->number.'_Photo_upclose_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-upclose']['name'][$i]), PATHINFO_EXTENSION );
+                    copy($_POST['files']['data-pe-files-upclose']['tmp_name'][$i], $folderName.$file_type);
+                    // $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Photo Upclose '.$i.' '.$checkgeo.'</a>';
+                    $note = addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                        
+                    $file_name =  $note->filename;
+                    $file_location = $sugar_config['upload_dir'].$note->id;
+                    $mime_type = $note->file_mime_type;
+                    $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_name , 'file_mime_type'=> $mime_type);                }
+            };
+        }
+        if(count($_POST['files']['data-pe-files-meterbox']['tmp_name']) > 0) {
+            for($i = 0; $i < count($_POST['files']['data-pe-files-meterbox']['tmp_name']); $i++) {
+                if($_POST['files']['data-pe-files-meterbox']['name'][$i] != ""){
+                    $file_type = 'Q'.$quote->number.'_Photo_meterbox_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-meterbox']['name'][$i]), PATHINFO_EXTENSION);
+                    $count = checkCountExistPhoto($file_type,$folderName,'_Photo_meterbox_');
+                    $file_type = 'Q'.$quote->number.'_Photo_meterbox_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-meterbox']['name'][$i]), PATHINFO_EXTENSION );
+                    copy($_POST['files']['data-pe-files-meterbox']['tmp_name'][$i], $folderName.$file_type);
+                    // $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Photo Meterbox '.$i.' '.$checkgeo.'</a>';
+                    $note = addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                        
+                    $file_name =  $note->filename;
+                    $file_location = $sugar_config['upload_dir'].$note->id;
+                    $mime_type = $note->file_mime_type;
+                    $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_name , 'file_mime_type'=> $mime_type);                }
+            };
+        }
+        if(count($_POST['files']['data-pe-files-electricity-bill']['tmp_name']) > 0) {
+            for($i = 0; $i < count($_POST['files']['data-pe-files-electricity-bill']['tmp_name']); $i++) {
+                if($_POST['files']['data-pe-files-electricity-bill']['name'][$i] != ""){
+                    $file_type ='Q'.$quote->number.'_Electricity_bill_'.$i.'.'.pathinfo(basename($_POST['files']['data-pe-files-electricity-bill']['name'][$i]), PATHINFO_EXTENSION);
+                    $count = checkCountExistPhoto($file_type,$folderName,'_Electricity_bill_');
+                    $file_type = 'Q'.$quote->number.'_Electricity_bill_'.$count.'.'.pathinfo( basename($_POST['files']['data-pe-files-electricity-bill']['name'][$i]), PATHINFO_EXTENSION );
+                    copy($_POST['files']['data-pe-files-electricity-bill']['tmp_name'][$i], $folderName.$file_type);
+                    // $list_photos .= '<br><a data-gallery="image" href="https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'.$dirName.'/'.$file_type.'">Electricity bill '.$i.' '.$checkgeo.'</a>';
+                    $note = addToNotes($file_type,$folderName,$parent_id,$parent_type);
+                        
+                    $file_name =  $note->filename;
+                    $file_location = $sugar_config['upload_dir'].$note->id;
+                    $mime_type = $note->file_mime_type;
+                    $file_to_attach[] = array('folderName' => $file_location, 'fileName' => $file_name , 'file_mime_type'=> $mime_type);                }
+            };
+        }
         for( $j = 1; $j <= 6; $j++){
             $data_option['Option_number'] = $j;
             $data_option['Inverter'] = (!empty($pricings->{'inverter_type_'.($j)}) ? $pricings->{'inverter_type_'.($j)} : '');
@@ -845,6 +909,7 @@
                 }
             };
         }
+
         // print_r($file_to_attach);
         return $file_to_attach;
     }
