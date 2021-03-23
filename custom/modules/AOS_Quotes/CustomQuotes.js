@@ -1736,7 +1736,7 @@ $(document).ready(function () {
     //thienpb code -- minimise sub panel
 
     function minimise() {
-        var panel_usually_open = ['overview', 'customer details', 'job site information', 'key fields'];
+        var panel_usually_open = ['overview', 'customer details', 'job site information', 'key fields', 'gp calculation'];
         //solar
         if ($('#name').val().toLowerCase().includes('solar')) {
             panel_usually_open.push('pricing pv section');

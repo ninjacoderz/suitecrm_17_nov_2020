@@ -429,6 +429,29 @@ $(document).ready(function(){
         $("input[name='return_action']").val('');
         $("input[name='relate_to']").val('');
     }
-
+    //collapsed subpanel >> https://trello.com/c/pwBJMLYB/3126-suite-panels-invoice-quote-lead-certain-sub-panels-are-expanded-with-no-data-information-but-other-panels-are-not-auto-expanded
+    if (action_sugar_grp1 == "EditView" && (module_sugar_grp1 == "AOS_Invoices" || module_sugar_grp1 == "Leads" || module_sugar_grp1 == "AOS_Quotes")) {
+        setTimeout(function () {
+            minimise_sub();
+        },500);
+    }
     
 })
+
+function minimise_sub(){
+    // debugger
+    let sub_panel = $('body').find('div[class="panel-content"] div[class="panel panel-default"]');
+    $.each(sub_panel,function(){
+        let check = false;
+        $(this).find("input[type='text']").each(function(){
+            if ($(this).val() != '') {
+                check = true;
+                return false;
+            }
+        });
+        if (check == false) {
+            $(this).find('a[data-toggle="collapse-edit"]').addClass('collapsed')
+            $(this).find('.panel-body.panel-collapse').removeClass('in')
+        }
+    });
+}

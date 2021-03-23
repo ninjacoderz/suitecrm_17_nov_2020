@@ -2492,24 +2492,42 @@ $(document).ready(function(){
     var parent_selected =  $('#LeadsemailAddressesTable0').parent();
     $('#LeadsemailAddressesTable0').detach().appendTo(parent_selected);
     //tu-code auto minimise sub panel
-    function minimise_sub(option){
-        var check;
-        $("#detailpanel_"+option).find("input[type='text']").each(function(){
-            if($(this).val() != ''){ 
-                check = true;
-                return false;  
-            }else{
-                check = false;   
-            }
-        });
-        if(check == false){
-            $('#detailpanel_'+option).removeClass('in');
-            $('#detailpanel_'+option).siblings().find('a[data-toggle="collapse-edit"]').addClass('collapsed');
-        }
-    }
-    for(var i = -1; i < 5;i++){
-        minimise_sub(i);
-    }
+    // function minimise_sub(){
+    //     let sub_panel = $('body').find('div[class="panel-content"] div[class="panel panel-default"]');
+    //     $.each(sub_panel,function(){
+    //         let check = false;
+    //         $(this).find("input[type='text']").each(function(){
+    //             if ($(this).val() != '') {
+    //                 check = true;
+    //                 return false;
+    //             }
+    //         });
+    //         if (check == false) {
+    //             $(this).find('a[data-toggle="collapse-edit"]').addClass('collapsed')
+    //             $(this).find('.panel-body.panel-collapse').removeClass('in')
+    //         }
+    //     });
+    //     // for (i=0;i< sub_panel.length; i++) {
+    //     //     if (sub_panel[i].getAttribute('style') != "display: none;") {
+
+    //     //     }
+    //     // }
+    //     // $("#detailpanel_"+option).find("input[type='text']").each(function(){
+    //     //     if($(this).val() != ''){ 
+    //     //         check = true;
+    //     //         return false;  
+    //     //     }else{
+    //     //         check = false;   
+    //     //     }
+    //     // });
+    //     // if(check == false){
+    //     //     $('#detailpanel_'+option).removeClass('in');
+    //     //     $('#detailpanel_'+option).siblings().find('a[data-toggle="collapse-edit"]').addClass('collapsed');
+    //     // }
+    // }
+    // for(var i = -1; i < 5;i++){
+        // minimise_sub();
+    // }
     //tu-code auto minimis solar PV pricing
     if($("#panel_type_1" ).val() == '' && $("#panel_type_1" ).val() == '' && $("#panel_type_1" ).val() == ''){
         if($("#panel_type_4" ).val() == '' && $("#panel_type_5" ).val() == '' && $("#panel_type_6" ).val() == ''){

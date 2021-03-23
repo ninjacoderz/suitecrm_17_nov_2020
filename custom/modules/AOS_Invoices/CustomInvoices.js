@@ -4491,7 +4491,7 @@ $(document).ready(function(){
 
     //dung code --- minimise section in invoice
     function minimise_invoice(){
-        var panel_usually_open = ['key fields','site details','installation details','invoice to', 'files and photos','supply purchase orders', 'bill','payments', 'internal notes'];
+        var panel_usually_open = ['key fields','site details','installation details','invoice to', 'files and photos','supply purchase orders', 'bill','payments', 'internal notes','gp calculation'];
         //solar
         if ($('#name').val().toLowerCase().includes('solar')) {
             // panel_usually_open.push('site details');
