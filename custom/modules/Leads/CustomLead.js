@@ -3959,6 +3959,7 @@ function hidePopup(){
     $('#popup_image_site_detail').hide();
 }
 function CopyToClipboard(){
+    if($(document).find('#map').length == 0)return;
     window.onbeforeunload = null;
     setTimeout(function(){
         html2canvas($(document).find('#map'), {

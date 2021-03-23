@@ -4312,6 +4312,7 @@ $( window ).load(function() {
 });
 
 function CopyToClipboard(generateUUID){
+    if($(document).find('#map').length == 0)return;
     window.onbeforeunload = null;
     setTimeout(function(){
         html2canvas($(document).find('#map'), {

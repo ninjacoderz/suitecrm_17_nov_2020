@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("#data_json_site_details_c").closest('.panel.panel-default').hide();
+    $("#data_json_site_details_c").closest('.edit-view-row-item').hide();
     function render_json_data_sitedetails(){
         var data = new Object();
         data.pe_site_details_no_c = $('#pe_site_details_no_c').val();
@@ -494,6 +494,7 @@ function hidePopup(){
     $('#popup_image_site_detail').hide();
 }
 function CopyToClipboard(){
+    if($(document).find('#map').length == 0)return;
     window.onbeforeunload = null;
     setTimeout(function(){
         html2canvas($(document).find('#map'), {
