@@ -434,6 +434,18 @@ $dictionary['PO_purchase_order'] = array(
                 'reportable' => true,
                 'enable_range_search' => true,
             ),
+            // //VUT - S - Save meeting id
+            'meeting_id' =>
+                array(
+                    'name' => 'meeting_id',
+                    'vname' => 'LBL_MEETING_ID',
+                    'type' => 'varchar',
+                    'len' => 36,
+                    'inline_edit' => true,
+                    'importable' => 'true',
+                    'duplicate_merge' => 'disabled',
+                ),
+            // //VUT - E - Save meeting id
             'acceptance_date' =>
             array(
                 'required' => false,

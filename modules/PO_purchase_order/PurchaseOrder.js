@@ -1,29 +1,29 @@
 function  pushToXero(el){
-    if($("#bill_status_c").val() != 'Billed'){
-        $(el).find('span.glyphicon-refresh').removeClass('hidden');
-        $.ajax({
-            url: "/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method=create&record="+ encodeURIComponent($('input[name="record"]').val()),
-            success: function (data) {
-                if(typeof data !== undefined){
-                    var data_parse = $.parseJSON(data);
-                    $(el).find('span.glyphicon-refresh').addClass('hidden');
-                    setTimeout(() => {
-                        if(data_parse.status.trim("") == 'Ok'){
-                            alert('Push PO to XERO Successfully.');
-                            loadButton();
-                            $('#xero_po_id_c').val(data_parse.xeroID);
-                            showLinkXero(data_parse.xeroID);
-                        }else{
-                            alert('We can\'t push PO to XERO. Please check all fields.');
-                        }
-                    }, 1000);
-                }
-            }
-        });
-    }else{
-        alert('PO has been pushed to XERO one time');
-    }
-    return false;
+    // if($("#bill_status_c").val() != 'Billed'){
+    //     $(el).find('span.glyphicon-refresh').removeClass('hidden');
+    //     $.ajax({
+    //         url: "/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method=create&record="+ encodeURIComponent($('input[name="record"]').val()),
+    //         success: function (data) {
+    //             if(typeof data !== undefined){
+    //                 var data_parse = $.parseJSON(data);
+    //                 $(el).find('span.glyphicon-refresh').addClass('hidden');
+    //                 setTimeout(() => {
+    //                     if(data_parse.status.trim("") == 'Ok'){
+    //                         alert('Push PO to XERO Successfully.');
+    //                         loadButton();
+    //                         $('#xero_po_id_c').val(data_parse.xeroID);
+    //                         showLinkXero(data_parse.xeroID);
+    //                     }else{
+    //                         alert('We can\'t push PO to XERO. Please check all fields.');
+    //                     }
+    //                 }, 1000);
+    //             }
+    //         }
+    //     });
+    // }else{
+    //     alert('PO has been pushed to XERO one time');
+    // }
+    // return false;
 }
 
 function  updateToXero(el){
@@ -53,6 +53,11 @@ function showLinkXero($xeroID){
     }
 }
 
+function showLinkMeeting(id, meeting_id) {
+    let link_meeting = "<div id='open_"+id+"'><a target='_blank' href='/index.php?module=Meetings&action=EditView&record=" + meeting_id.trim() + "'>" + "Open Meeting" + "</a></div>";
+    $(`#open_${id}`).remove();
+    $(`#${id}`).parent().append(link_meeting);
+}
 function get_supplier_order_number(){
     var supplier_order_number = '';
     var name = $("#name").val().trim();
@@ -980,6 +985,10 @@ $(document).ready(function(){
         var href = "<div class='show-link-invoices'>Link Invoices:<br/> <a target='_blank' href=' https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=" + $('#aos_invoices_po_purchase_order_1aos_invoices_ida').val()+"'> https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=" + $('#aos_invoices_po_purchase_order_1aos_invoices_ida').val() + "</a></div>";
         $('.show-link-invoices').remove();
         $('#aos_invoices_po_purchase_order_1_name').parent().append(href);
+    }
+
+    if ($('#meeting_id').val() != '') {
+        showLinkMeeting('meeting_id', $('#meeting_id').val());
     }
 
     function generateUUID() {

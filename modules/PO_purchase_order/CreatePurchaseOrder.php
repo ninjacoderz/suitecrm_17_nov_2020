@@ -125,7 +125,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $is_daikin = true;
         }
     }
-                
+    $meeting_installer = '';
     if($is_sanden && $po_type == "plumber"){
         // $purchaseOrder->po_type_c = 'installer';
         $purchaseOrder->po_type_c = 'sanden_plumber';
@@ -218,7 +218,9 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $row['tax_amount'] = format_number($total_price/10);
         $row['total_amount'] = format_number($total_price + $total_price/10);
         */
-
+        $meeting_installer = createMettingForPOInstaller($invoice, $purchaseOrder, 'plumber');
+        $invoice->meeting_plumber = $meeting_installer;
+        $purchaseOrder->meeting_id = $meeting_installer;
         $purchaseOrder->total_amt = format_number($total_price);
         $purchaseOrder->subtotal_amount = format_number($total_price);
         $purchaseOrder->tax_amount = format_number($total_price/10);
@@ -408,6 +410,9 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
             $number_items ++;
         }
 
+        $meeting_installer = createMettingForPOInstaller($invoice, $purchaseOrder, 'electrician');
+        $invoice->meeting_electrician = $meeting_installer;
+        $purchaseOrder->meeting_id = $meeting_installer;
         $purchaseOrder->total_amt = format_number($total_price);
         $purchaseOrder->subtotal_amount = format_number($total_price);
         $purchaseOrder->tax_amount = format_number($total_price/10);
@@ -831,7 +836,15 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
     $invoice->save();
     if ($_REQUEST["type"] != '') {
-        echo $purchaseOrder->id;
+        if ($_REQUEST["type"] == 'plumber' || $_REQUEST["type"] == 'electrical') {
+        $data_return = [
+            'po_id' => $purchaseOrder->id,
+            'meeting_id' => $meeting_installer,
+            ];
+          echo json_encode($data_return);
+        } else {
+            echo $purchaseOrder->id;
+        }
     }
 
 }
@@ -949,4 +962,82 @@ function create_thumbnail($source,$file_name,$path_save_file){
             imagedestroy($src);
         }
     }         
+}
+
+/**
+ * Create Meeting for PO Plumber/ELectrician Sanden
+ * https://trello.com/c/JuKi7r4J/3116-purchase-orders-auto-generate-a-meeting-notice-for-sanden-plumber-and-sanden-electrician?menu=filter&filter=*
+ */
+function createMettingForPOInstaller($invoice, $purchaseOrder, $type='') {
+    $meetings = new Meeting;
+    $meetings->name = $purchaseOrder->name;
+    $meetings->parent_type = "Accounts";
+    $meetings->parent_id = $purchaseOrder->billing_account_id;
+    $meetings->assigned_user_id = $invoice->assigned_user_id;
+    $meetings->aos_invoices_id_c = $invoice->id;
+    if ($type == 'plumber') {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s',$purchaseOrder->install_date.' 08:00:00', new DateTimeZone("Australia/Melbourne"));
+        $meetings->date_start = $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+        // $meetings->date_start = $purchaseOrder->install_date.' 08:00:00';
+    } else {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s',$purchaseOrder->install_date.' 12:00:00', new DateTimeZone("Australia/Melbourne"));
+        $meetings->date_start = $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+        // $meetings->date_start = $purchaseOrder->install_date.' 12:00:00';
+    } 
+    if(empty($meetings->duration_hours)){
+        $meetings->duration_hours  = 3;
+        $meetings->duration_minutes  = 0;
+    }
+    $meetings->save();
+    if ($type == 'plumber') {
+        $invoice->meeting_plumber = $meetings->id;
+    } else{
+        $invoice->meeting_electrician = $meetings->id;
+    } 
+
+    $invoice->save();
+    global $current_user;
+    
+    
+    $reminder_json = '[{"idx":0,"id":"","popup":false,"email":true,"timer_popup":"60","timer_email":"86400","invitees":[{"id":"","module":"Users","module_id":"'.$current_user->id.'"}]}]';
+    $meetings->saving_reminders_data = true;
+    $reminderData = json_encode(
+        $meetings->removeUnInvitedFromReminders(json_decode(html_entity_decode($reminder_json), true))
+    );
+    Reminder::saveRemindersDataJson('Meetings', $meetings->id, $reminderData);
+    $meetings->saving_reminders_data = false;
+    
+    
+    $relate_values = array('user_id'=>$current_user->id,'meeting_id'=>$meetings->id);
+    $data_values = array('accept_status'=>true);
+    $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
+    
+    if($current_user->id == '8d159972-b7ea-8cf9-c9d2-56958d05485e'){
+        $relate_values = array('user_id'=>'61e04d4b-86ef-00f2-c669-579eb1bb58fa','meeting_id'=>$meetings->id);
+        $data_values = array('accept_status'=>true);
+        $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
+    }else if($current_user->id == '61e04d4b-86ef-00f2-c669-579eb1bb58fa'){
+        $relate_values = array('user_id'=>'8d159972-b7ea-8cf9-c9d2-56958d05485e','meeting_id'=>$meetings->id);
+        $data_values = array('accept_status'=>true);
+        $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
+    }else{
+        $relate_values = array('user_id'=>'61e04d4b-86ef-00f2-c669-579eb1bb58fa','meeting_id'=>$meetings->id);
+        $data_values = array('accept_status'=>true);
+        $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
+    
+        $relate_values = array('user_id'=>'8d159972-b7ea-8cf9-c9d2-56958d05485e','meeting_id'=>$meetings->id);
+        $data_values = array('accept_status'=>true);
+        $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
+    }
+    
+    
+    $relate_values = array('user_id'=>'ad0d4940-e0ea-1dc1-7748-592b7b07d80f','meeting_id'=>$meetings->id);
+    $data_values = array('accept_status'=>true);
+    $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
+    
+    if($meetings->update_vcal)
+    {
+        vCal::cache_sugar_vcal($user);
+    }
+    return $meetings->id;
 }
