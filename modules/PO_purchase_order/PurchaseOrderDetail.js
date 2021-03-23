@@ -3,7 +3,7 @@ $(function () {
     // Generate uinique id
     $( document ).ready(function() {
         $('#tab-actions').after($('#tab-actions li:nth-child(6)').clone());
-        // $('#tab-actions').after($('#tab-actions li:first').clone());
+        $('#tab-actions').after($('#convert_to_bill_button').parent().clone());
         $('#tab-actions').after('<button type="button" class="button primary" id="convertToWareHouseLog"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Convert to WareHouseLog </button>');
         $('#tab-actions').after("<li><button type='button' class='button' id='detail_preview_pdf_purchase'>Preview Purchase PDF</button></li>");
         $('#tab-actions').parent().append('<li><input type="button" id="delivery_coming" value="Delivery coming" class="button primary" data-email-type="delivery_coming" onclick="$(document).openComposeViewModal(this);" data-module="PO_purchase_order" data-module-name="'+ $("#name").text() +'" data-contact-name="'+$('#contact_id_c').text()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');

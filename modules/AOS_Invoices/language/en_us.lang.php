@@ -233,5 +233,6 @@ $mod_strings = array(
     'LBL_ENERGY_RETAILER_C' => 'Energy Retailer',
     'LBL_POTENTIAL_ISSUES_C' => 'Potential Issues',
     'LBL_EXPORT_METER_C' => 'Export Meter',
-
+    'LBL_MEETING_PLUMBER' => 'Meeting Plumber',
+    'LBL_MEETING_ELECTRICIAN' => 'Meeting Electrician',
 );

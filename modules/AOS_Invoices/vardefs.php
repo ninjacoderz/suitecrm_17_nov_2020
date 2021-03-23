@@ -1299,7 +1299,28 @@ $dictionary['AOS_Invoices'] = array(
         ),
         /** E - Field Checkbox */
         //VUT - E - create field none db
-
+        //VUT - S - create field save id meeting for Plumber/Electrician
+        'meeting_plumber' =>
+            array(
+                'name' => 'meeting_plumber',
+                'vname' => 'LBL_MEETING_PLUMBER',
+                'type' => 'varchar',
+                'len' => 36,
+                'inline_edit' => true,
+                'importable' => 'true',
+                'duplicate_merge' => 'disabled',
+        ),
+        'meeting_electrician' =>
+            array(
+                'name' => 'meeting_electrician',
+                'vname' => 'LBL_MEETING_ELECTRICIAN',
+                'type' => 'varchar',
+                'len' => 36,
+                'inline_edit' => true,
+                'importable' => 'true',
+                'duplicate_merge' => 'disabled',
+            ),
+        //VUT - E - create field save id meeting for Plumber/Electrician
     ),
 
     'relationships' => array(

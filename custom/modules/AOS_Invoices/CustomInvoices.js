@@ -805,11 +805,17 @@ $(function () {
                             async: true
                         }).done(function (data) {
                             $('#createPlumberPO span.glyphicon-refresh').addClass('hidden');
-                            console.log(data);
-                            $("#plumber_po_c").val(data.trim());
-                            if (data.trim() == "") return false;
+                            console.log('createPOPlumber' + data);
+                            if(data == '') return;
+                            var id_link = $.parseJSON(data);
+                            $("#plumber_po_c").val(id_link.po_id.trim());
+                            if (id_link.meeting_id != '') {
+                                $('#meeting_plumber').val(id_link.meeting_id);
+                                showLinkMeeting('meeting_plumber',id_link.meeting_id);
+                            }
+                            // if (data.trim() == "") return false;
                             //?module=PO_purchase_order&offset=1&stamp=1517294972082855000&return_module=PO_purchase_order&action=EditView&record=3b056120-a5d4-ae50-8e32-5a7015aedb4a
-                            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + data.trim() + "'>" + "Open Purchase Order" + "</a></div>";
+                            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + id_link.po_id.trim() + "'>" + "Open Purchase Order" + "</a></div>";
                             if( $('#quote_type_c').val() =="quote_type_daikin" || $('#quote_type_c').val() =="quote_type_nexura"){
                                 href += "<div class='open-upload-install-photos'>Upload Install Photos: <a target='_blank' href='https://pure-electric.com.au/upload_file_daikin/for-daikin-plumbing?invoice_id="+$('input[name="record"]').val()+"'>Open Upload For Daikin Plumber</a></div>";
                             }else {
@@ -850,11 +856,18 @@ $(function () {
                             async: true
                         }).done(function (data) {
                             $('#createElectricalPO span.glyphicon-refresh').addClass('hidden');
-                            console.log(data);
-                            $("#electrical_po_c").val(data.trim());
-                            if (data.trim() == "") return false;
+                            console.log('createPOElectrician' + data);
+                            if(data == '') return;
+                            var id_link = $.parseJSON(data);
+                            $("#electrical_po_c").val(id_link.po_id.trim());
+                            if (id_link.meeting_id != '') {
+                                $('#meeting_electrician').val(id_link.meeting_id);
+                                showLinkMeeting('meeting_electrician',id_link.meeting_id);
+                            }
+                            // $("#electrical_po_c").val(data.trim());
+                            // if (data.trim() == "") return false;
                             //?module=PO_purchase_order&offset=1&stamp=1517294972082855000&return_module=PO_purchase_order&action=EditView&record=3b056120-a5d4-ae50-8e32-5a7015aedb4a
-                            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + data.trim() + "'>" + "Open Purchase Order" + "</a></div>";
+                            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + id_link.po_id.trim() + "'>" + "Open Purchase Order" + "</a></div>";
                                 href += "<div class='open-upload-install-photos'>Upload Install Photos: <a target='_blank' href='https://pure-electric.com.au/upload_file_sanden/for-electrician?invoice_id="+$('input[name="record"]').val()+"'>Open Upload For Electrician</a></div>";
                             $('#createElectricalPO').siblings().empty();
                             $('#createElectricalPO').parent().append(href);
@@ -867,6 +880,13 @@ $(function () {
                 });           
                 return false;
             });
+        }
+
+        if ($('#meeting_plumber').val() != '') {
+            showLinkMeeting('meeting_plumber',$('#meeting_plumber').val());
+        }
+        if ($('#meeting_electrician').val() != '') {
+            showLinkMeeting('meeting_electrician',$('#meeting_electrician').val());
         }
 
         $('#line_items_span').on('change', 'input.product_part_number', function () {
@@ -6568,7 +6588,7 @@ $(function () {
 
         // button Update Related
         if(module_sugar_grp1 == 'AOS_Invoices') {
-            $("#btn_clr_assigned_user_name").after('<button style="width: 218px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
+            $("#btn_clr_assigned_user_name").after('<button style="width: 150px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
         }
         
         if(typeof record !== "undefined" && record != ""){
@@ -8548,4 +8568,10 @@ function defaultDateTime_Inv(date){
     var month   = now.getMonth()+1; 
     var day     = now.getDate();
     return {'day':day,'month':month,'year':year,}
+}
+
+function showLinkMeeting(id, meeting_id) {
+    let link_meeting = "<div id='open_"+id+"'><a target='_blank' href='/index.php?module=Meetings&action=EditView&record=" + meeting_id.trim() + "'>" + "Open Meeting" + "</a></div>";
+    $(`#open_${id}`).remove();
+    $(`#${id}`).parent().append(link_meeting);
 }

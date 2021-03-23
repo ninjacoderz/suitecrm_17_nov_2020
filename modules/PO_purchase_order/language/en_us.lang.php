@@ -113,5 +113,6 @@ $mod_strings = array (
   'LBL_EMAIL_INVOICE' => 'Email Purchase Order',
   'LBL_EMAIL_PDF' => 'Email PDF',
   'LBL_PDF_NAME' => 'PurchaseOrder',
-  'LBL_DISTANCE_TO_TRAVEL' => 'Distance To Travel'
+  'LBL_DISTANCE_TO_TRAVEL' => 'Distance To Travel',
+  'LBL_MEETING_ID' => 'Meeting ID'
 );

@@ -53,6 +53,11 @@ function showLinkXero($xeroID){
     }
 }
 
+function showLinkMeeting(id, meeting_id) {
+    let link_meeting = "<div id='open_"+id+"'><a target='_blank' href='/index.php?module=Meetings&action=EditView&record=" + meeting_id.trim() + "'>" + "Open Meeting" + "</a></div>";
+    $(`#open_${id}`).remove();
+    $(`#${id}`).parent().append(link_meeting);
+}
 function get_supplier_order_number(){
     var supplier_order_number = '';
     var name = $("#name").val().trim();
@@ -980,6 +985,10 @@ $(document).ready(function(){
         var href = "<div class='show-link-invoices'>Link Invoices:<br/> <a target='_blank' href=' https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=" + $('#aos_invoices_po_purchase_order_1aos_invoices_ida').val()+"'> https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=" + $('#aos_invoices_po_purchase_order_1aos_invoices_ida').val() + "</a></div>";
         $('.show-link-invoices').remove();
         $('#aos_invoices_po_purchase_order_1_name').parent().append(href);
+    }
+
+    if ($('#meeting_id').val() != '') {
+        showLinkMeeting('meeting_id', $('#meeting_id').val());
     }
 
     function generateUUID() {
