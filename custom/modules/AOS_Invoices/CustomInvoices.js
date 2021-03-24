@@ -2152,13 +2152,14 @@ $(function () {
                         //processData: false,
 
                         success: function (data) {
-                            if(data == '' && typeof data == undefined) {
+                            if(data == '' || typeof data === undefined) {
                                 $('#create_assignment span.glyphicon-refresh').addClass('hidden');
                                 return;
                             }
                             var json_data = $.parseJSON(data);
                             $('#create_assignment span.glyphicon-refresh').addClass('hidden');
                             $("#stc_aggregator_serial_c").val(json_data['reference1']);
+                            createSTCAggregatorSerial();
                         },
                     });
                 }
