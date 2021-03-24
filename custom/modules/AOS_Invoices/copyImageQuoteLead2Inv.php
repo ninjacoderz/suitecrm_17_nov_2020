@@ -30,7 +30,22 @@ if ($invoice->id != '') {
             }
             echo 'Copied Quote and Lead';
         } else {
-            echo 'Copied Quote - No Lead';
+            $lead_id = $quote->leads_aos_quotes_1leads_ida;
+            if(!empty($lead_id)){
+                $lead = new Lead();
+                $lead->retrieve($lead_id);
+                if($lead->id){
+                    $folder_lead =  $folder.$lead->installation_pictures_c; //$source $lead->number
+                    $files_lead = dirToArray($folder_lead);
+                    $lead_inv = array_diff($files_lead,$files_inv);
+                    $file_lead2Invoice = checkHaveFile($lead_inv, $files_quote2Invoice['forCheck'], 'L'.$lead->number);
+                    if (count($file_lead2Invoice['forCopy']) > 0) {
+                        createFileSymLink($file_lead2Invoice['forCopy'], $folder_lead, $folder_inv);
+                    } 
+                }
+            }else{
+                echo 'Copied Quote - No Lead';
+            }
         }
     } else {
         echo 'Have Invoice - No Quote';
