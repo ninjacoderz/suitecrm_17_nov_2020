@@ -343,6 +343,8 @@ $sql_delele = "UPDATE aos_products_quotes pg
         WHERE pg.parent_type = 'AOS_Quotes' AND pg.parent_id = '" . $quote->id . "' AND pg.deleted = 0";
 $res = $db->query($sql_delele);
 
+$sql_delete_group = "UPDATE aos_line_item_groups lig SET lig.deleted = 1 WHERE lig.parent_type = 'AOS_Quotes' AND lig.parent_id = '" . $quote->id . "' AND lig.deleted = 0";
+$resdb = $db->query($sql_delete_group);
 // $quote_post_new_code = $quote->install_address_postalcode_c;
 $array_stc_veec = get_value_stc_veec($quote->install_address_postalcode_c,$partNumber);
 
