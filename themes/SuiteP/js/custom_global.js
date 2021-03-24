@@ -439,16 +439,24 @@ $(document).ready(function(){
 })
 
 function minimise_sub(){
-    // debugger
     let sub_panel = $('body').find('div[class="panel-content"] div[class="panel panel-default"]');
+    let subpanel_alway_open = [
+        'files and photos',
+        'gp calculation',
+    ];
     $.each(sub_panel,function(){
         let check = false;
-        $(this).find("input[type='text']").each(function(){
-            if ($(this).val() != '') {
-                check = true;
-                return false;
-            }
-        });
+        let title_subpanel = $(this).find('.panel-heading a div').text() != '' ? $(this).find('.panel-heading a div').text().toLowerCase().trim() : '';
+        if (subpanel_alway_open.includes(title_subpanel)) {
+            check = true;
+        } else {
+            $(this).find("input[type='text']").each(function(){
+                if ($(this).val() != '') {
+                    check = true;
+                    return false;
+                }
+            });
+        }
         if (check == false) {
             $(this).find('a[data-toggle="collapse-edit"]').addClass('collapsed')
             $(this).find('.panel-body.panel-collapse').removeClass('in')
