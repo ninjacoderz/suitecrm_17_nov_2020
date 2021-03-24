@@ -11,6 +11,23 @@ date_default_timezone_set("Australia/Melbourne");
  *   );
  */
 $vardefs_array = array(
+    "solar_aspiration" => array(
+        "name" => "solar_aspiration",
+        "display_label" => "What is your solar aspiration?",
+        "type" => "select",
+        "list_array" => array(
+            "",
+            "Grid independence",
+            "Zero Grid Imports",
+            "Switch to All Electric home",
+            "Future Electric home, Electric Vehicle and storage",
+            "Zoro Annual Energy Bills",
+            "Big Solar",
+            "Cover house in solar roof",
+            "Cut home energy bills",
+        ) ,
+        "parent" => "",
+    ) ,
     "electricity_distributor" => array(
         "name" => "electricity_distributor",
         "display_label" => "Who is your electricity distributor?",
