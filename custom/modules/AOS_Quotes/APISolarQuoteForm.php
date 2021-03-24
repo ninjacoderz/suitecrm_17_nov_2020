@@ -17,6 +17,7 @@
 
     $phone_number = $_POST['phonenumber'];
     // $strorey = $_POST['storeys'];
+    $solar_aspiration = $_POST['solar_aspiration'];
     $distributor = $_POST['distributor'];
     $option_distributor = $_POST['option_distributor'];
     $first_solar = $_POST['first_solar'];
@@ -37,6 +38,7 @@
     
     //VUT - S - Add data quote_note_inputs_c
     $data_solar_input = array(
+        "solar_aspiration" => $solar_aspiration,
         'electricity_distributor' => $distributor,
         'first_solar_pv_system' => $first_solar,
         'roof_type' => strtoupper($roof_type),
