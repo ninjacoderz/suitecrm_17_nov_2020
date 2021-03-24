@@ -5212,8 +5212,15 @@ $(document).ready(function(){
                 style="background:#090979;" \
                  data-email-type="email_sa_reps_to_yess" onclick="$(document).openComposeViewModalDefault(this);" data-module="AOS_Invoices" data-module-name="'+$('#name').val()+'" data-record-id="'+ record_id +'" \
                 class="button email_sa_reps_to_yess" title="email_sa_reps_to_yess" ><span class="glyphicon glyphicon-envelope"></span>SA REPS to YES<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
-        );     
+        );    
 
+        //Button SA REPS CUSTOMER EMAIL >> https://trello.com/c/ZoEBdHbg/3128-sa-reps-advise-customer-paperwork-ensure-email-parsing-is-working-sms-template-is-parsing-correctly?menu=filter&filter=*
+        $("#CANCEL").parent().append(
+            ' <button type="button" id="email_sa_reps_customer" \
+                style="background:#090979;" \
+                    data-email-type="email_sa_reps_customer" onclick="$(document).openComposeViewModalDefault(this);" data-module="AOS_Invoices" data-module-name="'+$('#name').val()+'" data-record-id="'+ record_id +'" \
+                class="button email_sa_reps_customer" title="email_sa_reps_customer" ><span class="glyphicon glyphicon-envelope"></span>SA REPS CUSTOMER EMAIL<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+        );     
         //$("#CANCEL").parent().append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');    
         $("#CANCEL").parent().append('<input type="button" id="client_reuploads_photo" value="EMAIL CLIENT WARRANTY + PHOTOS" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
            

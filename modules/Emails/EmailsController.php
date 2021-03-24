@@ -4651,6 +4651,75 @@ class EmailsController extends SugarController
             $this->bean->to_addrs_names = ($focus->email1) ? $focus->email1 : '';      
         }
 
+        //VUT - S - SA REPS CUSTOMER EMAIL
+        if (isset($_REQUEST['email_type']) && $_REQUEST['email_type']== 'email_sa_reps_customer') { 
+
+            $macro_nv = array();
+            $focusName = "AOS_Invoices";
+            $focus = BeanFactory::getBean($focusName, $_REQUEST['record_id']);
+
+            if(!$focus->id) return;
+            /**
+             * @var EmailTemplate $emailTemplate
+             */
+
+            $emailTemplate = BeanFactory::getBean(
+                'EmailTemplates',
+                '8737d65f-2da4-7e1a-6ad1-605966b7119c'
+            );
+
+            $name = $emailTemplate->subject;
+            $description_html = $emailTemplate->body_html;
+            $description = $emailTemplate->body;
+            $contact =  new Contact();
+            $contact->retrieve($focus->billing_contact_id);
+
+            //Change variable
+            $description = str_replace("\$contact_first_name",$contact->first_name , $description);
+
+            $description_html = str_replace("\$contact_first_name",$contact->first_name , $description_html);
+            //Change variable
+
+            $templateData = $emailTemplate->parse_email_template(
+                array(
+                    'subject' => $name,
+                    'body_html' => $description_html,
+                    'body' => $description,
+                ),
+                $focusName,
+                $focus,
+                $macro_nv
+            );
+            
+            $attachmentBeans = $emailTemplate->getAttachments();
+
+            if($attachmentBeans) {
+                $this->bean->status = "draft";
+                $this->bean->save();
+                foreach($attachmentBeans as $attachmentBean) {
+                
+                    $noteTemplate = clone $attachmentBean;
+                    $noteTemplate->id = create_guid();
+                    $noteTemplate->new_with_id = true; // duplicating the note with files
+                    $noteTemplate->parent_id = $this->bean->id;
+                    $noteTemplate->parent_type = 'Emails';
+
+
+                    $noteFile = new UploadFile();
+                    $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                    $noteTemplate->save();
+                    $this->bean->attachNote($noteTemplate);
+                }
+            }
+
+            $this->bean->name = $templateData['subject'];
+            $this->bean->description_html = $templateData['body_html'];
+            $this->bean->description = $templateData['body'];
+            $this->bean->to_addrs_names = ($focus->email1) ? $focus->email1 : '';      
+        }
+        //VUT - E - SA REPS CUSTOMER EMAIL
+
         //dung code - button US7 TIPS
         if (isset($_REQUEST['email_type']) && $_REQUEST['email_type']== 'us7_tips') { 
             $contact = new Contact();
