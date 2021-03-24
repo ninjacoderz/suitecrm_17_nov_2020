@@ -28,6 +28,7 @@ if($method == 'customize'){
 
     $result = curl_exec($ch);
     $data_json = json_decode($result,true);
+    GenerateJsonPromoCodeCustom ($data_json,$fields);
     curl_close ($ch);
     echo $result;
 }else{
@@ -63,3 +64,29 @@ if($method == 'customize'){
     curl_close ($ch);
     echo $result;
 }
+
+function GenerateJsonPromoCodeCustom ($data_in,$fields){
+    if($data_in['message'] == 'Generate Promo Code Success!') {
+        $invoice = new AOS_Invoices();
+        $invoice->retrieve($fields['invoiceID']);
+        if($invoice->id != ''){
+            $json_promo_code_custom_c = $invoice->json_promo_code_custom_c;
+            if($json_promo_code_custom_c == ''){
+                 $json_promo_code_custom_c = [];
+            }else{
+                 $json_promo_code_custom_c = json_decode(str_replace("&quot;",'"',$invoice->json_promo_code_custom_c),true);
+            }
+            
+            $data_insert = [   
+                'offer_type_promotion'=> $fields['offer_type_promotion'],
+                'name_promotion'=> $fields['name_promotion'],
+                'amount_off_promotion'=> $fields['amount_off_promotion'],
+                'percentage_off_promotion'=> $fields['percentage_off_promotion'],
+                'promo_code'=> $data_in['code_customize']
+             ] ;
+             $json_promo_code_custom_c[] = $data_insert;
+             $invoice->json_promo_code_custom_c = json_encode($json_promo_code_custom_c);
+             $invoice->save();
+        }
+    }
+};
