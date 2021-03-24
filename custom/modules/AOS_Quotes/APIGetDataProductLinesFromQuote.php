@@ -203,7 +203,7 @@ while ($row = $db->fetchByAssoc($res)) {
 }
 
 $sql_group = "SELECT * FROM  aos_line_item_groups lig
-        WHERE lig.parent_type = 'AOS_Quotes' AND lig.parent_id = '" . $quote->id . "' AND lig.deleted = 0";
+        WHERE lig.parent_type = 'AOS_Quotes' AND lig.parent_id = '" . $quote->id . "' AND lig.deleted = 0 ORDER BY date_modified DESC LIMIT 0,1";
 $ret = $db->query($sql_group);
 
 while ($row = $db->fetchByAssoc($ret)) {
