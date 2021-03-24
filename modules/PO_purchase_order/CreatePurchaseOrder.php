@@ -970,7 +970,7 @@ function create_thumbnail($source,$file_name,$path_save_file){
  */
 function createMettingForPOInstaller($invoice, $purchaseOrder, $type='') {
     $meetings = new Meeting;
-    $meetings->name = $purchaseOrder->name;
+    $meetings->name = 'Meeting '.$type.' '.$purchaseOrder->name;
     $meetings->parent_type = "Accounts";
     $meetings->parent_id = $purchaseOrder->billing_account_id;
     $meetings->assigned_user_id = $invoice->assigned_user_id;

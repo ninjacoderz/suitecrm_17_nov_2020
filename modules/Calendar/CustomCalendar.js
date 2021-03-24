@@ -56,6 +56,8 @@
             $(this).parent().parent().css({'background-color':'#8cfd67','color':'black'});
         }else if( meeting_delivery == "Arrival" ){
             $(this).parent().parent().css({'background-color':'#f95858','color':'black'})
+        } else if (meeting_delivery == "Meeting") { 
+            $(this).parent().parent().css({'background-color':'#15c9e6','color':'black'});
         }
     }) 
 }(jQuery));
