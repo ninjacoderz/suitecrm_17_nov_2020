@@ -768,7 +768,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                     $mail->AddCC('paul.szuster@pure-electric.com.au');
                     $mail->AddCC('info@pure-electric.com.au');
                 } else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
-                    // $mail->AddCC('john.hooper@pure-electric.com.au');
+                    $mail->AddCC('michael.golden@pure-electric.com.au');
                     $mail->AddCC('info@pure-electric.com.au');
                 } else if($_REQUEST['list_infomation']['prepared_by'] == 'PE Admin') {
                     $mail->AddCC('info@pure-electric.com.au');

@@ -758,7 +758,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                     $mail->AddCC('paul.szuster@pure-electric.com.au');
                     $mail->AddCC('info@pure-electric.com.au');
                 } else if($_REQUEST['prepared_by'] == 'Michael Golden') {
-                    // $mail->AddCC('john.hooper@pure-electric.com.au');
+                    $mail->AddCC('michael.golden@pure-electric.com.au');
                     $mail->AddCC('info@pure-electric.com.au');
                 } else if($_REQUEST['prepared_by'] == 'PE Admin') {
                     $mail->AddCC('info@pure-electric.com.au');
@@ -773,7 +773,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                 echo 'https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files'.'/'. $dirName. '/'.$name_file;
                 // echo 'http://new.suitecrm-pure.com/custom/include/SugarFields/Fields/Multiupload/server/php/files'.'/'. $dirName. '/'.$name_file;
 
-                if($_REQUEST['phonenumber'] != ''){
+                if($_REQUEST['phonenumber'] != '' && $_POST['send_sms']=="Yes"){
 
                     // $number_receive_sms = $request['number_receive_sms'];
                     $file_path = '';
