@@ -1451,3 +1451,9 @@ $entry_point_registry['APIRenderRebateProvided'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIRenderRebateProvided.php',
     'auth' => false
 );
+
+//Nhat -Test
+$entry_point_registry['PO_purchase_order_meeting'] = array(
+    'file' => 'custom/modules/NhatTest/PO_purchase_order_meeting.php',
+    'auth' => false
+);

@@ -11,6 +11,53 @@ $(function () {
         //VUT - Add button Email Freight Company
         $('#tab-actions').parent().append('<li><button type="button" class="button primary" id="email_freight_company" value="FREIGHT COMPANY" class="button primary" data-email-type="freight_company" onclick="$(document).openComposeViewModal_Freight_Company(this);" data-module="PO_purchase_order" data-module-name="'+ $("#name").text() +'" data-contact-name="COPE '+$('#shipping_address_state').val()+'"  data-record-id="'+ $("input[name='record']").val()  +'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>EMAIL FREIGHT COMPANY</button></li>');
 
+        //Nhat - Add button Create Meetings 
+        if ($("#po_type_c").val() == "daikin_supply" || $("#po_type_c").val() == "sanden_supply") {
+          $("#tab-actions")
+            .parent()
+            .append(
+              '<li><input type="button" id="create_meeting_PO" class="button primary" data-module="PO_purchase_order" value="CREATE MEETING"><span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></input></li>'
+            );
+
+          $("#create_meeting_PO").on("click", () => {
+            let record_id = $("#absolute_path")
+              .text()
+              .slice($("#absolute_path").text().indexOf("record=") + "record=".length, $("#absolute_path").text().length);
+            let dispatch_date = $("#dispatch_date_c").text();
+            let delivery_date = $("#delivery_date_c").text();
+            // let install_date = $("#install_date").text();
+            let assigned_user_name = $("#assigned_user_id").attr("data-id-value");
+            // let description = $("#description").html().replace(/<br>/g, "\n");
+            let name = $("#name").text();
+            let invoices = $("#aos_invoices_po_purchase_order_1aos_invoices_ida").attr("data-id-value");
+            let shipping_account = $("#shipping_account_id").val();
+
+            $.ajax({
+              url:
+                "?entryPoint=PO_purchase_order_meeting&module=PO_purchase_order" +
+                "&delivery_date=" +
+                delivery_date +
+                "&dispatch_date=" +
+                dispatch_date +
+                "&name=" +
+                name +
+                // "&install_date=" +
+                // install_date +
+                // "&description=" +
+                // description +
+                "&invoices=" +
+                invoices +
+                "&assigned_user_name=" +
+                assigned_user_name +
+                "&record=" +
+                record_id,
+              type: "GET",
+              context: document.body,
+            }).done(function (data) {
+              //step2: load new invoice
+            });
+          });
+        }
         $(document).on('click','#detail_preview_pdf_purchase',function(){
             // var quote_type = '' ;
             // if( $("#quote_type_c").val() == 'quote_type_solar'){
