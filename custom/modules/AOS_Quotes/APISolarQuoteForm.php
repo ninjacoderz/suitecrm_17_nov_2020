@@ -60,9 +60,9 @@
     } else if($prepared_by == 'Paul Szuster') {
         $assigned_user = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
         $email_assigigned = 'paul.szuster@pure-electric.com.au';
-    } else if($prepared_by == 'John Hooper') {
-        $assigned_user = 'b33d5d2f-89fc-ce57-1df9-5e38d4d8e98d';
-        $email_assigigned = 'john.hooper@pure-electric.com.au';
+    } else if($prepared_by == 'Michael Golden') {
+        $assigned_user = '71adfe6a-5e9e-1fc2-3b6c-6054c8e33dcb';
+        $email_assigigned = 'michael.golden@pure-electric.com.au';
     } else if($prepared_by == 'PE Admin') {
         $assigned_user = '1';
     } else {
