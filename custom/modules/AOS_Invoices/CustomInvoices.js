@@ -2728,13 +2728,21 @@ $(function () {
            // because reuse field from daikin supply PO => Sanden SupplyPO
            function createSupplyPO(id){
                $('#createSupplyPO'+id+' span.glyphicon-refresh').removeClass('hidden');
-               if($("#plumber_po_c").val == ""){
-                   alert("please click the link to edit PO");
-                   return false;
-               }
+               //VUT - create PO supply sunpower
+               var type = '';
+               if ($('#quote_type_c').val() == 'quote_type_solar') {
+                    type = 'solar_supply&button='+id;
+
+               } else {
+                    if($("#plumber_po_c").val == ""){
+                        alert("please click the link to edit PO");
+                        return false;
+                    }
+                    type = 'sanden_supply';
+                }
                var record_id = $("input[name='record']").val();
                $.ajax({
-                   url: "?entryPoint=createPurchaseOrder&type=sanden_supply&record_id=" + record_id ,
+                   url: "?entryPoint=createPurchaseOrder&type="+type+"&record_id=" + record_id ,
                    context: document.body,
                    async: true
                }).done(function (data) {
@@ -8607,7 +8615,8 @@ function defaultDateTime_Inv(date){
 }
 
 function showLinkMeeting(id, meeting_id) {
-    let link_meeting = "<div id='open_"+id+"'><a target='_blank' href='/index.php?module=Meetings&action=EditView&record=" + meeting_id.trim() + "'>" + "Open Meeting" + "</a></div>";
+    debugger
+    let link_meeting = "<div id='open_"+id+"'><a target='_blank' href='/index.php?module=Meetings&action=EditView&record=" + meeting_id + "'>" + "Open Meeting" + "</a></div>";
     $(`#open_${id}`).remove();
     $(`#${id}`).parent().append(link_meeting);
 }
