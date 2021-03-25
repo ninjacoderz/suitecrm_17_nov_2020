@@ -1060,11 +1060,12 @@ if(isset($_REQUEST['po_record']) && $_REQUEST['po_record'] !== ""){
     $bean = $bean->retrieve($_REQUEST['po_record']);
     generatePOPDF($_REQUEST['po_record'], $attached_file_name);
     $content_file_pdf_PO = result_pdf($_REQUEST['po_record'], $attached_file_name);
-    $body_ = $email->description_html;
+    
+    $body_ = $body;
+    $body_html_ = $body_html;
     // $body_ .= ('Content pdf :');
     $body_ .= $content_file_pdf_PO;
-    $email->description_html = $body_ ;
-    $email->description = $body_;
+    $body_html_ .= $content_file_pdf_PO;
     $email->email_return_module = 'PO_purchase_order';
     $email->email_return_id = $bean->id;
     
@@ -1096,8 +1097,8 @@ if(isset($_REQUEST['po_record']) && $_REQUEST['po_record'] !== ""){
     
 }
 $email->name = $subject;
-$email->description = $body;
-$email->description_html = $body_html;
+$email->description = $body_;
+$email->description_html = $body_html_;
 /*
 */
 /*
