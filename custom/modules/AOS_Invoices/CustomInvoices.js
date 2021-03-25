@@ -2505,8 +2505,15 @@ $(function () {
                 }
             } else {
                 //case2 : old invoice - it exist before
+                let meeting_installers = '';
+                if ($('#meeting_plumber').val() != '') {
+                    meeting_installers += '&meeting_plumber='+$('#meeting_plumber').val();
+                } 
+                if ($('#meeting_electrician').val() != '') {
+                    meeting_installers += '&meeting_electrician='+$('#meeting_electrician').val();
+                }
                 $.ajax({
-                    url: '?entryPoint=CustomUpdateMeetingFromInvoice&meeting_id='+ $("#meeting_c").val() + '&installation_date_c='+$("#installation_date_c").val(),
+                    url: '?entryPoint=CustomUpdateMeetingFromInvoice&meeting_id='+ $("#meeting_c").val() + '&installation_date_c='+$("#installation_date_c").val()+meeting_installers,
                     success: function(data){
                         console.log(data);
                         SUGAR.ajaxUI.hideLoadingPanel();
@@ -8615,7 +8622,7 @@ function defaultDateTime_Inv(date){
 }
 
 function showLinkMeeting(id, meeting_id) {
-    debugger
+    // debugger
     let link_meeting = "<div id='open_"+id+"'><a target='_blank' href='/index.php?module=Meetings&action=EditView&record=" + meeting_id + "'>" + "Open Meeting" + "</a></div>";
     $(`#open_${id}`).remove();
     $(`#${id}`).parent().append(link_meeting);
