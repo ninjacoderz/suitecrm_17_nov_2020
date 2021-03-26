@@ -4,6 +4,22 @@ const productMapper = [{
     nameDb: "Solar PV Supply and Install",
     id: "24049a0d-6338-4b87-195e-602b0e92eb62",
 },{
+    name: "Solar PV Balance of System",
+    nameDb: "Solar PV Balance of System",
+    id: "65190f36-b6b2-3f84-25f3-605ab400e57d",
+},{
+    name: "Solar PV Standard PV Module Installation",
+    nameDb: "Solar PV Standard PV Module Installation",
+    id: "a3dbdef8-0e1f-e598-bd25-605ab53c69d2",
+},{
+    name: "Single Phase 1Ph Inverter Installation",
+    nameDb: "Single Phase 1Ph Inverter Installation",
+    id: "a73c1dbb-a51c-fdf3-6df0-605ab51c41ae",
+},{
+    name: "Smart Meter Solar Monitoring Installation",
+    nameDb: "Smart Meter Solar Monitoring Installation",
+    id: "a8f2646f-c99b-40bc-562b-605ab65fa481",
+},{
     name: "STCs",
     nameDb: "STCs",
     id: "4efbea92-c52f-d147-3308-569776823b19",
@@ -96,6 +112,17 @@ const productMapper = [{
     nameDb: "",
     id: "",
 }]
+
+// .:nhantv:. Solar Products need to calculate on back-end
+const solarProductCal = {};
+solarProductCal["Solar_PV_Site_Visit_Module_Load_Up"] = "PV-SV-MLU";
+solarProductCal["Single_Phase_1Ph_Inverter_Installation"] = "PV-1Ph-Inverter_Install";
+solarProductCal["Standard_PV_Module_Installation"] = "PV-Module-Installation";
+solarProductCal["Solar_PV_Balance_of_System"] = "PV-BOS";
+solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Monitoring-In";
+
+// .:nhantv:. PE Admin %
+const PEAdminPercent = 0.3;
 
 /** JS LOAD CUSTOM QUOTE INPUT  */
     $(function () {
@@ -205,6 +232,7 @@ const productMapper = [{
         // Get value
         let panelSelected = $('#own_panelType_' + optSelected).val();
         let panelTotal = $('#own_totalPanels_' + optSelected).val();
+        let totalKw = $('#own_totalkW_' + optSelected).val();
         let inverterSelected = $('#inverter_type_' + optSelected).val();
         let extra1Selected = $('#extra_1_' + optSelected).val();
         let extra2Selected = $('#extra_2_' + optSelected).val();
@@ -213,16 +241,16 @@ const productMapper = [{
         // Create line item
         try{
             // Alway add this product: Solar PV Supply and Install
-            await autoCreateLineItem(getProductInfoFromName("Solar PV Supply and Install"), 1, 1);
-            panelSelected && await autoCreateLineItem(getProductInfoFromName(panelSelected), panelTotal, 2);
-            inverterSelected && await autoCreateLineItem(getProductInfoFromName(inverterSelected), 1, 3);
-            extra1Selected && await autoCreateLineItem(getProductInfoFromName(extra1Selected), 1, 4);
-            extra2Selected && await autoCreateLineItem(getProductInfoFromName(extra2Selected), 1, 5);
-            extra3Selected && await autoCreateLineItem(getProductInfoFromName(extra3Selected), 1, 5);
+            await autoCreateLineItem(getProductInfoFromName("Solar PV Supply and Install"), 1);
+            panelSelected && await autoCreateLineItem(getProductInfoFromName(panelSelected), panelTotal);
+            inverterSelected && await autoCreateLineItem(getProductInfoFromName(inverterSelected), 1);
+            extra1Selected && await autoCreateLineItem(getProductInfoFromName(extra1Selected), 1);
+            extra2Selected && await autoCreateLineItem(getProductInfoFromName(extra2Selected), 1);
+            extra3Selected && await autoCreateLineItem(getProductInfoFromName(extra3Selected), 1);
             // Alway add this product: STCs
-            await autoCreateLineItem(getProductInfoFromName("STCs"), stcTotal, 6);
+            await autoCreateLineItem(getProductInfoFromName("STCs"), stcTotal);
             // Calculate
-            await calculatePrice(7);
+            await calculatePrice(panelTotal, totalKw);
             // Hide loading
             setTimeout(function (){
                 SUGAR.ajaxUI.hideLoadingPanel();
@@ -232,35 +260,111 @@ const productMapper = [{
         }
     }
     // .:nhantv:. Calculate total price
-    async function calculatePrice(ms){
-        await wait(200 * ms);
+    async function calculatePrice(panelTotal, totalKw){
+        // await wait(200);
+        // Get solar product need to calculate
+        var solarProductCalData = {};
+        await $.ajax({
+            url: "/index.php?entryPoint=APIGetDataProduct",
+            data: solarProductCal,
+            type: 'POST'})
+            .then(function(data) {
+                if(data !== undefined || data !== ''){
+                    solarProductCalData = JSON.parse(data);
+                    // console.log(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"], data);
+                }
+            });
         let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
         var totalList = 0, totalDiscount = 0, totalAmount = 0;
-        var list, dis, amount;
+        var list, dis, amount, tax;
         // For each
         productVisible.each((index, el) => {
             // get target
             list = $(el).find('input[id*=product_product_list_price]');
             dis = $(el).find('input[id*=product_product_discount]');
             amount = $(el).find('input[id*=product_product_total_price]');
+            tax = $(el).find('select[id*=product_vat]');
 
             if(index !== 0 && index < productVisible.length - 1){
+                // calculate line item exclude first line and last line
                 totalList += get_value(list.attr('id'));
                 totalDiscount += get_value(dis.attr('id'));
                 totalAmount += get_value(amount.attr('id'));
                 set_value(list.attr('id'), "");
+                $(tax).val('0.0');
+            } else if (index == productVisible.length - 1){
+                // reset last line Tax to 0%
+                $(tax).val('0.0');
             }
             // blur
-            list.trigger("blur")
+            list.trigger("blur");
         });
-        // Set value to grand total
+        // console.log(totalAmount, totalKw, panelTotal);
+        // Solar product calculate: 
+        // Solar_PV_Site_Visit_Module_Load_Up
+        if(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"] !== undefined 
+            && solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"] != 0){
+            totalAmount += parseInt(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"]);
+        } else {
+            totalAmount += 180;
+        }
+        // Single_Phase_1Ph_Inverter_Installation
+        if(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"] !== undefined
+            && solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"] != 0){
+            totalAmount += parseInt(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"]);
+        } else {
+            totalAmount += 120;
+        }
+        // Standard_PV_Module_Installation
+        if(solarProductCalData["Standard_PV_Module_Installation"] !== undefined
+            && solarProductCalData["Standard_PV_Module_Installation"]["cost"] != 0){
+            totalAmount += parseInt(solarProductCalData["Standard_PV_Module_Installation"]["cost"]) * parseInt(panelTotal);
+        } else {
+            totalAmount += 50 * parseInt(panelTotal);
+        }
+        // Solar_PV_Balance_of_System
+        if(solarProductCalData["Solar_PV_Balance_of_System"] !== undefined
+            && solarProductCalData["Solar_PV_Balance_of_System"]["cost"] != 0){
+            totalAmount += parseFloat(solarProductCalData["Solar_PV_Balance_of_System"]["cost"]) * parseFloat(totalKw);
+        } else {
+            totalAmount += 120 * parseFloat(totalKw);
+        }
+        // Smart_Meter_Solar_Monitoring_Installation
+        if(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"] !== undefined
+            && solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"] != 0){
+            totalAmount += parseInt(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"]);
+        } else {
+            totalAmount += 50;
+        }
+        // PE Admin
+        // totalAmount += 1020.00;
+        totalAmount += totalAmount * PEAdminPercent;
+        // console.log(totalAmount);
+
+        // Set value to first line
         list = $(productVisible[0]).find('input[id*=product_product_list_price]');
         set_value(list.attr('id'), totalAmount);
-        list.trigger("blur")
+        list.trigger("blur");
+
+        // Set value to grand total
+        $("#total_amount").trigger("focusin");
+        let grandTotal = $("#total_amount").val();
+        $("#total_amount").val(roundTo90(grandTotal));
+        await wait(200);
+        $("#total_amount").trigger("change");
+
+        // Scroll top offset
+        jQuery('html,body').animate({scrollTop: jQuery('.panel-heading a div:contains(Line Items)').offset().top - 200}, 500);
+    }
+    // .:nhantv:. Round to 90
+    function roundTo90(val){
+        let strNum = typeof val == "String" ? val.split('.')[0] : val.toString().split('.')[0];
+        let first2Digit = strNum.substr(0, strNum.length - 2).replace(',','');
+        return parseFloat(first2Digit + "90.00").toFixed(2);
     }
     // .:nhantv:. Get Product Line Item info 
-    async function autoCreateLineItem(productInfo, total_item, ms){
-        await wait(200 * ms);
+    async function autoCreateLineItem(productInfo, total_item){
+        // await wait(200);
         // Case: id = ""
         if(productInfo === undefined || productInfo.id === ""){
             return;
