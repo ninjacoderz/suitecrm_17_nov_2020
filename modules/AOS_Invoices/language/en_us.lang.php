@@ -235,4 +235,5 @@ $mod_strings = array(
     'LBL_EXPORT_METER_C' => 'Export Meter',
     'LBL_MEETING_PLUMBER' => 'Meeting Plumber',
     'LBL_MEETING_ELECTRICIAN' => 'Meeting Electrician',
+    'LBL_STC_ACCOUNT' => 'STC Aggregator',
 );
