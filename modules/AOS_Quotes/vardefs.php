@@ -874,7 +874,7 @@ $dictionary['AOS_Quotes'] = array(
                 'duplicate_merge_dom_value' => 0,
                 'audited' => false,
                 'reportable' => false,
-                'studio' => true,
+                'studio' => false,
                 'function' =>
                 array(
                     'name' => 'display_account_site_details',
@@ -895,7 +895,7 @@ $dictionary['AOS_Quotes'] = array(
                 'duplicate_merge_dom_value' => 0,
                 'audited' => false,
                 'reportable' => false,
-                'studio' => true,
+                'studio' => false,
                 'function' =>
                 array(
                     'name' => 'display_contact_site_details',
@@ -917,7 +917,7 @@ $dictionary['AOS_Quotes'] = array(
                 'duplicate_merge_dom_value' => 0,
                 'audited' => false,
                 'reportable' => false,
-                'studio' => true,
+                'studio' => false,
                 'function' =>
                 array(
                     'name' => 'mobile_phone_site_details',
@@ -939,7 +939,7 @@ $dictionary['AOS_Quotes'] = array(
                 'duplicate_merge_dom_value' => 0,
                 'audited' => false,
                 'reportable' => false,
-                'studio' => true,
+                'studio' => false,
                 'function' =>
                 array(
                     'name' => 'email_site_details',
@@ -961,7 +961,7 @@ $dictionary['AOS_Quotes'] = array(
                 'duplicate_merge_dom_value' => 0,
                 'audited' => false,
                 'reportable' => false,
-                'studio' => true,
+                'studio' => false,
                 'function' =>
                 array(
                     'name' => 'address_site_details',
@@ -983,7 +983,7 @@ $dictionary['AOS_Quotes'] = array(
                 'duplicate_merge_dom_value' => 0,
                 'audited' => false,
                 'reportable' => false,
-                'studio' => true,
+                'studio' => false,
                 'function' =>
                 array(
                     'name' => 'image_site_details',

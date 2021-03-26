@@ -430,8 +430,8 @@ if($_REQUEST['list_infomation']['prepared_by'] == 'Matthew Wright') {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Matthew Wright',$text);
 } else if($_REQUEST['list_infomation']['prepared_by'] == 'Paul Szuster') {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Paul Szuster',$text);
-} else if($_REQUEST['list_infomation']['prepared_by'] == 'John Hooper') {
-    $text = str_replace('$aos_quotes_modified_by_name' ,'John Hooper',$text);
+} else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
+    $text = str_replace('$aos_quotes_modified_by_name' ,'Michael Golden',$text);
 } else if($_REQUEST['list_infomation']['prepared_by'] == 'PE Admin') {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Administrator',$text);
 } else {

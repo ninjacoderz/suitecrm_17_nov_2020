@@ -579,6 +579,13 @@
         );
 
         $GLOBALS['data_return']['quote_info'] = $data_result;
+        if ( $SGquote_ID !='') {
+            $record = urldecode($_GET['record']);
+            $bean = BeanFactory::getBean("AOS_Quotes", $record);
+            $bean -> solargain_quote_number_c = $SGquote_ID;
+            $bean ->sg_site_details_no_c = $data_result['SiteDetailNumber'];
+            $bean->save();
+        }
 
         //thienpb code here
         $suite_field = urldecode($_GET['suite_field']);

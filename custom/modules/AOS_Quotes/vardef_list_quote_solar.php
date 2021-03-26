@@ -14,7 +14,7 @@ $vardefs_array = array(
     "solar_aspiration" => array(
         "name" => "solar_aspiration",
         "display_label" => "What is your solar aspiration?",
-        "type" => "select",
+        "type" => "multiselect",
         "list_array" => array(
             "",
             "Grid independence",
