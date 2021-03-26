@@ -1,29 +1,81 @@
 <?php
     $fields = ["orderNumber" => $_REQUEST['order_number']];
+    $quote_number = isset($_REQUEST['quote_number']) ? $_REQUEST['quote_number'] : '';
 
-    $url = "https://pure-electric.com.au/pe_commerce/getOrder";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-    $headers = array();
-    $headers[] = "Pragma: no-cache";
-    $headers[] = "Accept-Encoding: gzip, deflate, br";
-    $headers[] = "Accept-Language: en-US,en;q=0.9";
-    $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
-    $headers[] = "Accept: application/json, text/plain, */*";
-    $headers[] = "Connection: keep-alive";
-    $headers[] = "Cache-Control: no-cache";
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    if ($quote_number == '') {
+        $url = "https://pure-electric.com.au/pe_commerce/getOrder";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+        $headers = array();
+        $headers[] = "Pragma: no-cache";
+        $headers[] = "Accept-Encoding: gzip, deflate, br";
+        $headers[] = "Accept-Language: en-US,en;q=0.9";
+        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+        $headers[] = "Accept: application/json, text/plain, */*";
+        $headers[] = "Connection: keep-alive";
+        $headers[] = "Cache-Control: no-cache";
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+        $result = curl_exec($ch);
+        $data_json = json_decode($result,true);
+    
+        curl_close ($ch);
+    } else {
+        $db = DBManagerFactory::getInstance();
+        $query =  " SELECT aos_quotes.id as quote_id
+                    FROM aos_quotes
+                    WHERE aos_quotes.number = '$quote_number' AND aos_quotes.deleted = 0 LIMIT 1";
+        $result = $db->query($query);
+        if ($row = $db->fetchByAssoc($result)) {
+            $quote = new AOS_Quotes();
+            $quote->retrieve($row['quote_id']);
+            $account_customer = new Account();
+            $account_customer->retrieve($quote->billing_account_id);
+            $array_products = [];
+            $ship_method_id_quote = '';
+            $couponCode_quote = '';
+            $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Quotes' AND parent_id = '".$quote->id."' AND deleted = 0";
+            $result = $db->query($sql);
+            while ($row = $db->fetchByAssoc($result)) {
+                if ($row['part_number'] == 'Australia_Post_Express') {
+                    $ship_method_id_quote = '2';
+                } elseif ($row['part_number'] == 'Australia_Post_Standard') {
+                    $ship_method_id_quote = '1';
+                } elseif ($row['part_number'] == 'Pure_Electric_Promo_Code') {
+                    $couponCode_quote = '1';
+                } else {
+                    array_push($array_products,[
+                        'title' => $row['name'],
+                        'quantity' => $row['product_qty'],
+                    ]);
+                }
+            }
+            //save $data_json
+            $data_json = [
+                'account_name' => $quote->billing_account,
+                'first_name' => $quote->account_firstname_c,
+                'last_name' => $quote->account_lastname_c,
+                'primary_address_street' => $quote->shipping_address_street != '' ? $quote->shipping_address_street: $quote->billing_address_postalcode,
+                'primary_address_city' => $quote->shipping_address_city != '' ? $quote->shipping_address_city: $quote->billing_address_city,
+                'primary_address_state' => $quote->shipping_address_state != '' ? $quote->shipping_address_state: $quote->billing_address_state,
+                'primary_address_postalcode' => $quote->shipping_address_postalcode != '' ? $quote->shipping_address_postalcode: $quote->billing_address_postalcode,
+                'primary_address_country' => $quote->shipping_address_country != '' ? $quote->shipping_address_country : 'Australia',
+                'email1' => $account_customer->email1,
+                'phone_mobile' => $account_customer->mobile_phone_c,
+                'products' => $array_products,
+                'couponCode' => $couponCode_quote,
+                'ship_method_id' => $ship_method_id_quote,
+                'orderID' => 'Q'.$quote_number,
+            ];
 
-    $result = curl_exec($ch);
-    $data_json = json_decode($result,true);
-
-    curl_close ($ch);
+        }
+    }
 
     $account_name =  $data_json['account_name'];
     $first_name = $data_json['first_name'];
@@ -42,7 +94,7 @@
     $products_title = [];
 
     foreach($products as $product){
-        if($product['title'] == 'ValveCosy'){
+        if($product['title'] == 'ValveCosy' || $product['title'] == 'Valvecosy Insulator'){
             array_push($products_title,'Valvecosy Insulator');
         }else{
             array_push($products_title,$product['title']);

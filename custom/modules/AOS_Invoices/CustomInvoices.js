@@ -8004,8 +8004,20 @@ $(document).ready(function(){
                         }   
                     }
                 })
-            }else{
-                alert("Order Number is not found!");
+            }else if($('#quote_number').val() != '') {
+                var url_getStatusSAM = '/index.php?entryPoint=ManuallyCreateLabel&quote_number=' + $("#quote_number").val();
+                $.ajax({
+                    url:url_getStatusSAM,
+                    success: function (data) {
+                        if(data.replace(/\s/g, '') != ''){
+                            alert("Successfully created Auspost Label.");
+                        }else{
+                            alert("We can not create label manually.");
+                        }   
+                    }
+                })
+            } else{
+                alert("Order Number and Quote number is not found!");
             }
             
         })
