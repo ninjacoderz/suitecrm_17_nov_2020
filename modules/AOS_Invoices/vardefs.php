@@ -1321,6 +1321,46 @@ $dictionary['AOS_Invoices'] = array(
                 'duplicate_merge' => 'disabled',
             ),
         //VUT - E - create field save id meeting for Plumber/Electrician
+        //VUT - S - create relate account relate STC Aggregator
+        'stc_account_id' =>
+        array(
+            'required' => false,
+            'name' => 'stc_account_id',
+            'vname' => '',
+            'type' => 'id',
+            'massupdate' => 0,
+            'comments' => '',
+            'help' => '',
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+            'duplicate_merge_dom_value' => 0,
+            'audited' => 0,
+            'reportable' => 0,
+            'len' => 36,
+        ),
+    'stc_account' =>
+        array(
+            'required' => false,
+            'source' => 'non-db',
+            'name' => 'stc_account',
+            'vname' => 'LBL_STC_ACCOUNT',
+            'type' => 'relate',
+            'massupdate' => 0,
+            'comments' => '',
+            'help' => '',
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+            'duplicate_merge_dom_value' => '0',
+            'audited' => 1,
+            'reportable' => 1,
+            'len' => '255',
+            'id_name' => 'stc_account_id',
+            'ext2' => 'Accounts',
+            'module' => 'Accounts',
+            'quicksearch' => 'enabled',
+            'studio' => 'visible',
+        ),
+        //VUT - E - create relate account relate STC Aggregator
     ),
 
     'relationships' => array(
