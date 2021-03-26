@@ -75,6 +75,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
     elseif ($po_type == "sanden_supply"){
         $purchaseOrder->billing_account_id       = '86516ff6-0cd7-9ccc-4373-58ad559a8e12'; //Sanden International (Australia) Pty Ltd
+    } elseif ($po_type == "solar_supply") {
+        $purchaseOrder->billing_account_id = '5e8c03d5-5879-f939-3eef-5ccfe7d3a5f3'; //Sunpower Australia
     }
     else {
         // Todo
@@ -93,6 +95,8 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     //End Dung code
     elseif ($po_type == "sanden_supply"){
         $supplier =  BeanFactory::getBean("Accounts", '86516ff6-0cd7-9ccc-4373-58ad559a8e12'); //Sanden International (Australia) Pty Ltd
+    } elseif ($po_type == "solar_supply") {
+        $supplier =  BeanFactory::getBean("Accounts", '5e8c03d5-5879-f939-3eef-5ccfe7d3a5f3');
     }
     else {
         // Todo
@@ -810,6 +814,103 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         //VUT-E-Create subject for Daikin PO
         $purchaseOrder->save();
     }
+    //VUT - Sunpower supply
+    if ($po_type == "solar_supply") {
+        $purchaseOrder->po_type_c = 'SPR_PV_Supply';
+        $purchaseOrder->name = 'Sunpower';
+        $group_total = 0;
+        // save Group
+        $row['id'] = '';
+        $row['name'] = 'Sunpower';
+        $row['currency_id'] = '-99';
+        $row['number'] = '2';
+        $row['assigned_user_id'] = $purchaseOrder->assigned_user_id;
+        $row['parent_id'] = $purchaseOrder->id;
+        $row['parent_type'] = 'PO_purchase_order';
+        $group_invoice = new AOS_Line_Item_Groups();
+        $group_invoice->populateFromRow($row);
+        $group_invoice->save();
+        $purchaseOrder->dispatch_date_c = explode(" ",$invoice->dispatch_date_c)[0];
+        $dateInfos = explode("/", explode(" ",$invoice->dispatch_date_c)[0]);
+        $inv_dispatch_date_str = "$dateInfos[2]-$dateInfos[1]-$dateInfos[0]T00:00:00";
+        $string_dispatch_date = date("d M Y", strtotime($inv_dispatch_date_str));
+        //Setting Group Line Items
+        $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoice->id."' AND deleted = 0";
+        $result = $db->query($sql);
+        while ($row = $db->fetchByAssoc($result)) {
+            if(strpos($row['part_number'], "SPR-") !== false ){
+                $purchaseOrder->name .= ' '.(int)$row['product_qty'].'x' .$row['part_number'];
+                // if(strpos($row['part_number'], "SPR-") !== false ){
+                //     $row['number'] = '1';
+                // }
+                $row['id'] = '';
+                $row['parent_id'] = $purchaseOrder->id;
+                $row['parent_type'] = 'PO_purchase_order';
+                $row['group_id'] = $group_invoice->id;
+                $part_number_product = $row['part_number'];
+                $sql_pruduct = "SELECT * FROM aos_products WHERE part_number IN ('".$part_number_product."') LIMIT 1";
+                $return_product = $db->query($sql_pruduct);
+        
+                $products = array();
+                while ($row_pruduct = $db->fetchByAssoc($return_product))
+                {
+                    if($row['product_cost_price'] != null)
+                    {
+                        $row['product_cost_price'] = format_number($row_pruduct['cost']);
+                    }
+                    $group_total += ((float)(str_replace(",","",$row_pruduct['cost']))) * $row['product_qty'];
+                    $row['product_list_price'] = $row_pruduct['cost'];
+                    if($row['product_discount'] != null)
+                    {
+                        $row['product_discount'] = format_number($row['cost']);
+                        $row['product_discount_amount'] = format_number($row['cost']);
+                    }
+                    $row['product_cost_price'] = format_number($row_pruduct['cost']);
+                    $row['product_list_price'] = format_number($row_pruduct['cost']);
+                    $row['discount'] = "Percentage";
+                    $row['product_unit_price'] = format_number($row_pruduct['cost']);
+                    $row['product_amt'] = 'vat_amt';
+                    $row['product_total_price'] = format_number($row_pruduct['cost'])*format_number($row['product_qty']);
+                    $row['vat_amt'] = format_number($row['product_total_price']/10);
+                    $row['vat'] = "10.0";
+                    $row['product_qty'] = format_number($row['product_qty']);
+                }
+
+                $prod_invoice = new AOS_Products_Quotes();
+                $prod_invoice->populateFromRow($row);
+                $prod_invoice->save();
+            }
+        }
+
+   
+        // $group_total += $total_price;
+
+        $group_invoice->total_amt = format_number($group_total);
+        $group_invoice->discount_amount = format_number($group_total);
+        $group_invoice->subtotal_amount = format_number($group_total);
+        $group_invoice->tax_amount = format_number($group_total/10);
+        $group_invoice->total_amount = format_number($group_total*1.1);
+        $group_invoice->save();
+
+        $purchaseOrder->total_amt = format_number($group_total);
+        $purchaseOrder->subtotal_amount = format_number($group_total);
+        $purchaseOrder->tax_amount = format_number($group_total/10);
+        $purchaseOrder->total_amount = format_number($group_total*1.1);
+
+        //VUT - fix name $PO when create PO1-2-3 (delete GAUS- & -HPUMP)
+        // //VUT - S >> https://trello.com/c/q2DSrioE/3111-please-delete-the-marked-part-in-the-automatical-po-name-when-converting-from-quote-to-invoice
+        // if ($name_tank != '') {
+        //     $purchaseOrder->name .= ' '.$name_tank;
+        // }
+        // //VUT - E >> https://trello.com/c/q2DSrioE/3111-please-delete-the-marked-part-in-the-automatical-po-name-when-converting-from-quote-to-invoice
+        $purchaseOrder->name = str_replace("SPR-","",$purchaseOrder->name);
+
+        $purchaseOrder->name .= ' to ' .$purchaseOrder->shipping_address_city 
+        . ' ' .$purchaseOrder->shipping_address_state .' '.$string_dispatch_date;
+
+        $purchaseOrder->save();
+        
+    }
     // tuan code
     if($invoice_installation != ""){
         $purchase = new PO_purchase_order();
@@ -833,6 +934,13 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     } else {
         // todo daikin_po_c 
         $invoice->daikin_po_c = $purchaseOrder->id;
+        if ($_REQUEST["button"] == 1) {
+            $invoice->daikin_po_1_c = $purchaseOrder->id;
+        } elseif ($_REQUEST["button"] == 2) {
+            $invoice->daikin_po_2_c = $purchaseOrder->id;
+        } elseif ($_REQUEST["button"] == 3) {
+            $invoice->daikin_po_3_c = $purchaseOrder->id;
+        }
     }
     $invoice->save();
     if ($_REQUEST["type"] != '') {
@@ -970,7 +1078,7 @@ function create_thumbnail($source,$file_name,$path_save_file){
  */
 function createMettingForPOInstaller($invoice, $purchaseOrder, $type='') {
     $meetings = new Meeting;
-    $meetings->name = $purchaseOrder->name;
+    $meetings->name = 'Meeting '.$type.' '.$purchaseOrder->name;
     $meetings->parent_type = "Accounts";
     $meetings->parent_id = $purchaseOrder->billing_account_id;
     $meetings->assigned_user_id = $invoice->assigned_user_id;

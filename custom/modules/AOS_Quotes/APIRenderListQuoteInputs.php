@@ -29,6 +29,9 @@ function renderQuoteFieldHTML($vardefs_array){
             case 'number':
                 $field_content = '<input class="custom_fields" type="number" value="" name="'.$k.'" id="'.$k.'" step="'.$v['step'].'" style="width:70px;" />';
                 break;
+            case 'multiselect':
+                $field_content = '<select class="custom_fields" name="'.$k.'" id="'.$k.'" style="width:260px;" title="" size="6" multiple>'.renderOption($v['list_array']).'</select>';
+                break;
         }
         $tempHTML = '<div class="col-md-6 col-xs-12 col-sm-12 edit-view-row-item">
                         <div class="col-md-6 col-xs-12 col-sm-12 label">$display_label</div>
