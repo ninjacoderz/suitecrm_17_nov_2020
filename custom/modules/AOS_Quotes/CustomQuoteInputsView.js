@@ -358,9 +358,15 @@ const PEAdminPercent = 0.3;
     }
     // .:nhantv:. Round to 90
     function roundTo90(val){
-        let strNum = typeof val == "String" ? val.split('.')[0] : val.toString().split('.')[0];
-        let first2Digit = strNum.substr(0, strNum.length - 2).replace(',','');
-        return parseFloat(first2Digit + "90.00").toFixed(2);
+        let strNum = typeof val == "String" ? val.replaceAll(',','').split('.')[0] : val.toString().replaceAll(',','').split('.')[0];
+        let firstDigit = strNum.substr(0, strNum.length - 2);
+        let last2Digit = strNum.substr(strNum.length - 2, strNum.length);
+        // alway UP if last 2 digit > 90
+        if(parseInt(last2Digit) > 90){
+            return ((parseFloat(firstDigit) + 1) * 100).toFixed(2);
+        }
+        // round to **90.00
+        return parseFloat(firstDigit + "90.00").toFixed(2);
     }
     // .:nhantv:. Get Product Line Item info 
     async function autoCreateLineItem(productInfo, total_item){
