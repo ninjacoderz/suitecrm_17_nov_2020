@@ -9,22 +9,16 @@ $name = $_GET["name"];
 $invoices = $_GET["invoices"];
 
 $meetings = new Meeting;
+$meetings->name = $name;
 global $current_user;
 
 $reminder_json = '[{"idx":0,"id":"","popup":false,"email":true,"timer_popup":"60","timer_email":"86400","invitees":[{"id":"","module":"Users","module_id":"'.$current_user->id.'"}]}]';
+
 $meetings->saving_reminders_data = true;
 $reminderData = json_encode(
     $meetings->removeUnInvitedFromReminders(json_decode(html_entity_decode($reminder_json), true))
 );
 Reminder::saveRemindersDataJson('Meetings', $meetings->id, $reminderData);
-
-$meetings->saving_reminders_data = false;
-$relate_values = array('user_id'=>$current_user->id,'meeting_id'=>$meetings->id);
-$data_values = array('accept_status'=>true);
-$meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
-
-
-$meetings->name = $name;
 
 if (empty($meetings->duration_hours)) {
  $meetings->duration_hours  = 1;
@@ -38,11 +32,16 @@ $meetings->date_start = $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m
  $date = DateTime::createFromFormat('d/m/Y H:i:s', $delivery_date.' 08:00:00', new DateTimeZone("Australia/Melbourne"));
  $meetings->date_start = $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
 }
-// $meetings->description = $description;
-// $meetings->date_start = $date->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
 
 $meetings->assigned_user_id = $assigned_user;
 $meetings->aos_invoices_id_c = $invoices;
+
+$meetings->save();
+
+$meetings->saving_reminders_data = false;
+$relate_values = array('user_id'=>$current_user->id,'meeting_id'=>$meetings->id);
+$data_values = array('accept_status'=>true);
+$meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
 
 if($current_user->id == '8d159972-b7ea-8cf9-c9d2-56958d05485e'){
     $relate_values = array('user_id'=>'61e04d4b-86ef-00f2-c669-579eb1bb58fa','meeting_id'=>$meetings->id);
@@ -65,8 +64,6 @@ if($current_user->id == '8d159972-b7ea-8cf9-c9d2-56958d05485e'){
 $relate_values = array('user_id'=>'ad0d4940-e0ea-1dc1-7748-592b7b07d80f','meeting_id'=>$meetings->id);
 $data_values = array('accept_status'=>true);
 $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
-
-$meetings->save();
 
  if($meetings->update_vcal)
     {

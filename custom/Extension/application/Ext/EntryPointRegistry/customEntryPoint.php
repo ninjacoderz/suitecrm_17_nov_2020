@@ -1454,6 +1454,6 @@ $entry_point_registry['APIRenderRebateProvided'] = array(
 
 //Nhat -Test
 $entry_point_registry['PO_purchase_order_meeting'] = array(
-    'file' => 'custom/modules/NhatTest/PO_purchase_order_meeting.php',
-    'auth' => false
+    'file' => 'custom/modules/PO_purchase_order_meeting/PO_purchase_order_meeting.php',
+    'auth' => true
 );

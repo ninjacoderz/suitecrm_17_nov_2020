@@ -32,30 +32,36 @@ $(function () {
             let invoices = $("#aos_invoices_po_purchase_order_1aos_invoices_ida").attr("data-id-value");
             let shipping_account = $("#shipping_account_id").val();
 
-            $.ajax({
-              url:
-                "?entryPoint=PO_purchase_order_meeting&module=PO_purchase_order" +
-                "&delivery_date=" +
-                delivery_date +
-                "&dispatch_date=" +
-                dispatch_date +
-                "&name=" +
-                name +
-                // "&install_date=" +
-                // install_date +
-                // "&description=" +
-                // description +
-                "&invoices=" +
-                invoices +
-                "&assigned_user_name=" +
-                assigned_user_name +
-                "&record=" +
-                record_id,
-              type: "GET",
-              context: document.body,
-            }).done(function (data) {
-              //step2: load new invoice
-            });
+            if (!dispatch_date && !delivery_date) {
+              alert("Please enter dispatch date or delivery date");
+              return;
+            } else {                
+              $.ajax({
+                url:
+                  "?entryPoint=PO_purchase_order_meeting&module=PO_purchase_order" +
+                  "&delivery_date=" +
+                  delivery_date +
+                  "&dispatch_date=" +
+                  dispatch_date +
+                  "&name=" +
+                  name +
+                  // "&install_date=" +
+                  // install_date +
+                  // "&description=" +
+                  // description +
+                //   "&invoices=" +
+                //   invoices +
+                  "&assigned_user_name=" +
+                  assigned_user_name +
+                  "&record=" +
+                  record_id,
+                type: "GET",
+                context: document.body,
+              }).done(function (data) {
+                //step2: load new invoice                
+              });
+              alert("Purchase Order Meeting is created");
+            }            
           });
         }
         $(document).on('click','#detail_preview_pdf_purchase',function(){
