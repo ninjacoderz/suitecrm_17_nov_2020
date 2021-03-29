@@ -414,7 +414,6 @@ $GLOBALS['app_list_strings']['lead_source_dom']=array (
   'Home_Show' => 'Home Show',
   'FBMyEffElecHome' => 'FB My Efficient Electric Home',
   'PE_Sanden_Quote_Form' => 'PE Sanden Quote Form',
-  'PE_website_quote_form' => 'PE Website Quote Form',
   'PE_Daikin_Quote_Form' => 'PE Daikin Quote Form',
 );
 $GLOBALS['app_list_strings']['type_inter_note_c_list']=array (
