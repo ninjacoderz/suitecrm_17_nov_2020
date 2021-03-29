@@ -160,7 +160,6 @@ if ($type == 'gp_cal' && (count($geoAssignments)>0)) {
     $returnValues[$key]['status'] = $result_json->assignment->result->status;
     $returnValues[$key]['totalValue'] = $result_json->assignment->result->certificateBundles[0]->value;
   }
-  echo json_encode($returnValues);
-} else {
-  echo 'Not type gp_cal or not have geoSTC';
-}
+} 
+
+echo json_encode($returnValues);
