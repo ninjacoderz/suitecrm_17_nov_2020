@@ -63,32 +63,6 @@ if($is_update && $deleted !== 1){
     $meetings->duration_minutes  = "0";
     
     $meetings->save();
-    global $current_user;
-
-    $reminder_json = '[{"idx":0,"id":"","popup":true,"email":true,"timer_popup":"86400","timer_email":"86400","invitees":[{"id":"","module":"Users","module_id":"'.$current_user->id.'"}]}]';
-    $$reminderData = json_encode($meetings->removeUnInvitedFromReminders(json_decode(html_entity_decode($reminder_json), true)));
-    $meetings->saving_reminders_data = true;
-
-    Reminder::saveRemindersDataJson('Meetings', $meetings->id, $reminderData);
-    $meetings->saving_reminders_data = false;
-
-    $relate_values = array('user_id'=>$current_user->id,'meeting_id'=>$meetings->id);
-    $data_values = array('accept_status'=>true);
-    $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
-
-    if($current_user->id == '8d159972-b7ea-8cf9-c9d2-56958d05485e'){
-        $relate_values = array('user_id'=>'61e04d4b-86ef-00f2-c669-579eb1bb58fa','meeting_id'=>$meetings->id);
-        $data_values = array('accept_status'=>true);
-        $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
-    }else if($current_user->id == '61e04d4b-86ef-00f2-c669-579eb1bb58fa'){
-        $relate_values = array('user_id'=>'8d159972-b7ea-8cf9-c9d2-56958d05485e','meeting_id'=>$meetings->id);
-        $data_values = array('accept_status'=>true);
-        $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
-    }else{
-        $relate_values = array('user_id'=>'61e04d4b-86ef-00f2-c669-579eb1bb58fa','meeting_id'=>$meetings->id);
-        $data_values = array('accept_status'=>true);
-        $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
-    }
     
 } else {
     $meetings->name = $name;
@@ -109,10 +83,10 @@ if($is_update && $deleted !== 1){
     $meetings->save();
     global $current_user;
     
-    $reminder_json = '[{"idx":0,"id":"","popup":true,"email":true,"timer_popup":"86400","timer_email":"86400","invitees":[{"id":"","module":"Users","module_id":"'.$current_user->id.'"}]}]';
-    $$reminderData = json_encode($meetings->removeUnInvitedFromReminders(json_decode(html_entity_decode($reminder_json), true)));
+    $reminder_json = '[{"idx":0,"id":"","popup":true,"email":true,"timer_popup":"600","timer_email":"86400","invitees":[{"id":"","module":"Users","module_id":"'.$current_user->id.'"}]}]';
     $meetings->saving_reminders_data = true;
 
+    $reminderData = json_encode($meetings->removeUnInvitedFromReminders(json_decode(html_entity_decode($reminder_json), true)));
     Reminder::saveRemindersDataJson('Meetings', $meetings->id, $reminderData);
     $meetings->saving_reminders_data = false;
 
@@ -120,6 +94,7 @@ if($is_update && $deleted !== 1){
     $data_values = array('accept_status'=>true);
     $meetings->set_relationship($meetings->rel_users_table, $relate_values, false, false,$data_values);
 
+    //thien fix
     if($current_user->id == '8d159972-b7ea-8cf9-c9d2-56958d05485e'){
         $relate_values = array('user_id'=>'61e04d4b-86ef-00f2-c669-579eb1bb58fa','meeting_id'=>$meetings->id);
         $data_values = array('accept_status'=>true);
