@@ -390,7 +390,6 @@ $GLOBALS['app_list_strings']['lead_source_list']=array (
 
 $GLOBALS['app_list_strings']['lead_source_dom']=array (
   '' => '',
-  'PE_website_quote_form' => 'PE Website Quote Form',
   'ATA_ReNew' => 'ATA ReNew',
   'Sanden_Web_Site' => 'Sanden Web Site',
   'PE_Sanden_Quote_Form' => 'PE Sanden Quote Form',

@@ -1086,8 +1086,8 @@ if(isset($_REQUEST['po_record']) && $_REQUEST['po_record'] !== ""){
     } else if($mail_format == "electrical") {
         $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=electrical">Link Review And Approve PO</a>' ;
     }
-    $body = str_replace('$link_review_approve',$link_review_approve,$body);
-    $body_html = str_replace('$link_review_approve',$link_review_approve,$body_html);
+    $body_ = str_replace('$link_review_approve',$link_review_approve,$body_);
+    $body_html_ = str_replace('$link_review_approve',$link_review_approve,$body_html_);
     if($noteID !== false && !empty($noteId)) {
         rename($sugar_config['upload_dir'] . $attached_file_name, $sugar_config['upload_dir'] . $note->id);
         $email->attachNote($note);

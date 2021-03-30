@@ -268,9 +268,9 @@ $(document).ready(function() {
             if ($('#stc_aggregator_serial_2_c').val() != '') {
                 geoSTCs.push($('#stc_aggregator_serial_2_c').val());
             }
-            if ($('#stc_aggregator_c').val() != '') {
-                geoSTCs.push($('#stc_aggregator_c').val());
-            }
+            // if ($('#stc_aggregator_c').val() != '') {
+            //     geoSTCs.push($('#stc_aggregator_c').val());
+            // }
             if (geoSTCs.length > 0) {
                 let totalValueAssignment = getGeoTotalValueAssinnment(geoSTCs);
                 // $('#noteAssignment').text('calc from GEO Assignment');

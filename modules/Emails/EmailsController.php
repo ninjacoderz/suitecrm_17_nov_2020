@@ -1034,10 +1034,13 @@ class EmailsController extends SugarController
                 //get infomation from quote
                 /**Check product type => select installer */
                 $installer = new Account();
+                $contact_installer = new Contact();
                 if ($focus->quote_type_c ==  "quote_type_sanden" ) {
                     $installer->retrieve($focus->account_id3_c);
+                    $contact_installer->retrieve($installer->primary_contact_c);
                 } else if ($focus->quote_type_c == "quote_type_daikin" || $focus->quote_type_c == "quote_type_nexura") {
                     $installer->retrieve($focus->account_id4_c);
+                    $contact_installer->retrieve($installer->primary_contact_c);
                 }
                 
                 $this->bean->name = $templateData['subject'];
@@ -1048,22 +1051,21 @@ class EmailsController extends SugarController
 
                 // //start - code render sms_template  
                 // global $current_user;
-                // $smsTemplateID = '4efab103-2d92-a39d-bcdd-5eb2030047bd'; //suitecrm server
-                // // $smsTemplateID = '92b32931-44c6-7dc4-3358-5eb2235ba028'; //test local VUT
-                // $smsTemplate = BeanFactory::getBean(
-                //     'pe_smstemplate',
-                //     $smsTemplateID 
-                // );
-                // $body =  $smsTemplate->body_c;
-                // $body = str_replace("\$first_name", $contact_bean->first_name, $body);
-                // $smsTemplate->body_c = $body;
-                // $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
-                // $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
-                // $this->bean->number_receive_sms = "matthew_paul_client";
-                // $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact_bean->phone_mobile));
-                // $phone_number = preg_replace("/^61/", "+61", $phone_number);
-                // $this->bean->number_client =  $phone_number; 
-                // $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                $smsTemplateID = '328a27e7-51e8-1640-4183-5d75f7757982'; //suitecrm server
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    $smsTemplateID 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$first_name", $contact_installer->first_name, $body);
+                $smsTemplate->body_c = $body;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->number_receive_sms = "matthew_paul_client";
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact_installer->phone_mobile));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client =  $phone_number; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus)/**.' '.$current_user->sms_signature_c */,ENT_QUOTES)));   
                 // //end - code render sms_template
             }
             /**VUT-E-Quote-Button 'Send Inspection Request' */
