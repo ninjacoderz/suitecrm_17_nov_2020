@@ -240,9 +240,9 @@ function Create_Invoice_By_Order_Number($sg_order_number){
   }
    //logic for title invoice
   if(isset($json_result->Customer->TradingName) && $json_result->Customer->TradingName !== ''){
-      $title_inv = 'Solargain_' .$json_result->Customer->TradingName .'_' .$json_result->Install->Address->Locality .'_Order #' .$sg_order_number;
+      $title_inv = 'Solargain_' .$json_result->Customer->TradingName .'_' .$json_result->Install->Address->Locality.'_'.$json_result->Install->Address->State.'_Order #' .$sg_order_number;
   }else{
-      $title_inv = 'Solargain_' .$json_result->Customer->Name .'_' .$json_result->Install->Address->Locality .'_Order #' .$sg_order_number;
+      $title_inv = 'Solargain_' .$json_result->Customer->Name .'_' .$json_result->Install->Address->Locality.'_'.$json_result->Install->Address->State.'_Order #' .$sg_order_number;
   }
 
   //logic get quote number in suitecrm by quote number SAM
