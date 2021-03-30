@@ -786,6 +786,9 @@ $(document).ready(function () {
     // Thienpb code for add button Save and email pdf
     $('input[id="SAVE"]').next().after('&nbsp;<button type="button" id="save_and_email_pdf" class="button save_and_email_pdf" title="Metting With Installer" >Save and Email PDF<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
     $(".save_and_email_pdf").click(function () {
+        //VUT-S-Compare quote_date vs today
+        if (!compareToday()) return;
+        //VUT-E-Compare quote_date vs today
         var quote_id = '';
         var return_module = $("#EditView input[name='return_module']").val();
         $('.save_and_email_pdf span.glyphicon-refresh').removeClass('hidden');
@@ -6184,4 +6187,19 @@ function checkLineItem(product, type='') {
     }
     return false;
 }
+
+/**VUT-Check quote date vs today*/
+function compareToday() {
+    //debugger
+    var today = new Date().toLocaleString('default',{day: '2-digit', month: '2-digit',year: 'numeric'}); //mm/dd/yyyy
+    var date = $('#quote_date_c').val().trim().split(' ')[0].split('/'); //dd/mm/yyyy
+    var new_date = date[1]+'/'+date[0]+'/'+date[2];
+    new_date = new Date(new_date).toLocaleString('default',{day: '2-digit', month: '2-digit',year: 'numeric'});
+    if (today !== new_date) {
+        if (!confirm('Quote Date is not today, still want to send out?')) {
+            return false;
+        } else return true;
+    } else return true;
+}
+
 
