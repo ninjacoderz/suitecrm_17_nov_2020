@@ -98,6 +98,9 @@
         $email->new_with_id = true;
         $email->type = "draft";
         $email->status = "draft";
+        if (strpos($name, "&#039;")!==false) {
+            $name = explode("&#039;",$name,2)[0];
+        }   
 
         $quote_type = '';
         switch ($invoice->quote_type_c) {
