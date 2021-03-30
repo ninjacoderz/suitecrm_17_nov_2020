@@ -5,7 +5,7 @@
     // $_REQUEST["quote_id"] = 'ecd384ca-d52a-8662-716c-5e706d65b8fd';
     if($_REQUEST['type_form'] == 'daikin_form') {
         $arrayDaikin = [];
-        foreach($_REQUEST['products'] as $product) {
+        foreach($_REQUEST['list_infomation']['products'] as $product) {
             if (strpos($product["productName"], 'US7') == true) {
                 array_push($arrayDaikin,'US7');
             } else if(strpos($product["productName"], 'Nexura') == true) {
@@ -16,10 +16,10 @@
         foreach($array_tmp as $tmp) {
             if($tmp == "US7") {
                 $emailTemplateId = "8d9e9b2c-e05f-deda-c83a-59f97f10d06a";
-                sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['email_customer']);
+                sendMailInfoPack($_REQUEST['list_infomation']["quote_daikin_id"], $emailTemplateId, $_REQUEST['list_infomation']['email_customer']);
             } else if($tmp == "Nexura") {
                 $emailTemplateId = "5ad80115-b756-ea3e-ca83-5abb005602bf";
-                sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['email_customer']);
+                sendMailInfoPack($_REQUEST['list_infomation']["quote_daikin_id"], $emailTemplateId, $_REQUEST['list_infomation']['email_customer']);
             }
         }
 
@@ -135,6 +135,7 @@
             }
             $mail->AddCC('paul.szuster@pure-electric.com.au');
             $mail->AddCC('matthew.wright@pure-electric.com.au');
+            $mail->AddCC('michael.golden@pure-electric.com.au');
             $mail->AddCC('info@pure-electric.com.au');
             $mail->prepForOutbound();
             $mail->setMailerForSystem();  

@@ -90,6 +90,7 @@ $extraWallPlasterCut		= [];
 $extraExtra			        = [];
 $extraDICondensatePump		= [];
 $extraTravel		        = [];
+$extraDRI   		        = [];
 $quantity_daikin            = 0;		
 
 foreach($products as $product) {
@@ -498,6 +499,18 @@ foreach($products as $product) {
                     array_push($extraTravel,$tmp);
                 }
             }
+            if($key == "itemise_DRI_all") {
+                if($value == true) {
+                    $tmp = 1;
+                } else {
+                    $tmp = 0;
+                }
+                if(count($extraDRI) > 0) {
+                    $extraDRI[1] = $tmp;
+                } else {
+                    array_push($extraDRI,$tmp);
+                }
+            }
         }
     }
     // if($product['wifiInstall'] == 'Yes') {
@@ -550,6 +563,9 @@ if(count($extraDICondensatePump) > 0) {
 }
 if(count($extraTravel) > 0) {
     array_push($part_numbers,'Travel');
+}
+if(count($extraDRI) > 0) {
+    array_push($part_numbers,'DRI');
 }
 ///////
 
@@ -790,6 +806,9 @@ while ($row = $db->fetchByAssoc($ret))
         } else if($row['part_number'] == 'Travel') {
             $product_line->product_qty = 1;
             $product_line->product_list_price = $extraTravel[0];
+        } else if($row['part_number'] == 'DRI') {
+            $product_line->product_qty = 1;
+            $product_line->product_list_price = $extraDRI[0];
         } else {
             $product_line->product_qty = 1;
             $product_line->product_list_price = $row['cost'];
@@ -808,7 +827,7 @@ while ($row = $db->fetchByAssoc($ret))
             $product_line->number = 3;
         } else if( $row['part_number'] == 'BRP072C42') {
             $product_line->number = 4;
-        } else if( $row['part_number'] == 'STANDARD_AC_INSTALL' || $row['part_number'] == 'DIFFICUL_INSTALL'  || $row['part_number'] == 'DAIKIN_INSTALL_DEDIC_CIRC' || $row['part_number'] == 'DAIKIN_INSTALL_DBL_BRICK' || $row['part_number'] == 'DAIKIN_INSTALL_DOUBLE_S' || $row['part_number'] == 'Daikin_INSTALL_RCD_UPGRAD' || $row['part_number'] == 'DAIKIN_INSTALL_HIGH_BRACK' || $row['part_number'] == 'DAIKIN_INSTALL_INTERNWALL' || $row['part_number'] == 'DAIKIN_INSTALL_LOW_BRACK' || $row['part_number'] == 'DAIKIN_INSTALL_LONG_PIPE' || $row['part_number'] == 'DAIKIN_INSTALL_ROOFCAVITY' || $row['part_number'] == 'DI-Roof' || $row['part_number'] == 'DAIKIN_INSTALL_SUB_FLOOR' || $row['part_number'] == 'DAIKIN_INSTALL_WALL_CUT' || $row['part_number'] == 'DI_CondensatePump') {
+        } else if( $row['part_number'] == 'STANDARD_AC_INSTALL' || $row['part_number'] == 'DIFFICUL_INSTALL'  || $row['part_number'] == 'DAIKIN_INSTALL_DEDIC_CIRC' || $row['part_number'] == 'DAIKIN_INSTALL_DBL_BRICK' || $row['part_number'] == 'DAIKIN_INSTALL_DOUBLE_S' || $row['part_number'] == 'Daikin_INSTALL_RCD_UPGRAD' || $row['part_number'] == 'DAIKIN_INSTALL_HIGH_BRACK' || $row['part_number'] == 'DAIKIN_INSTALL_INTERNWALL' || $row['part_number'] == 'DAIKIN_INSTALL_LOW_BRACK' || $row['part_number'] == 'DAIKIN_INSTALL_LONG_PIPE' || $row['part_number'] == 'DAIKIN_INSTALL_ROOFCAVITY' || $row['part_number'] == 'DI-Roof' || $row['part_number'] == 'DAIKIN_INSTALL_SUB_FLOOR' || $row['part_number'] == 'DAIKIN_INSTALL_WALL_CUT' || $row['part_number'] == 'DI_CondensatePump' || $row['part_number'] == 'DRI' || $row['part_number'] == 'Travel') {
             $product_line->number = 5;
         }
         else if( $row['part_number'] == 'DBW') {
@@ -832,6 +851,7 @@ while ($row = $db->fetchByAssoc($ret))
                     || ($row['part_number'] == 'DIFFICUL_INSTALL' && $extraExtra[0] >= 0 && $extraExtra[1] == 1)
                     || ($row['part_number'] == 'DI_CondensatePump' && $extraDICondensatePump[0] >= 0 && $extraDICondensatePump[1] == 1)
                     || ($row['part_number'] == 'Travel' && $extraTravel[0] >= 0 && $extraTravel[1] == 1)
+                    || ($row['part_number'] == 'DRI' && $extraDRI[0] >= 0 && $extraDRI[1] == 1)
                     ) {
                     $products_return[$row['part_number']] = array (
                         'Quantity' =>$product_line->product_qty,
@@ -892,6 +912,7 @@ while ($row = $db->fetchByAssoc($ret))
                     || ($row['part_number'] == 'DIFFICUL_INSTALL' && $extraExtra[0] >= 0 && $extraExtra[1] == 1)
                     || ($row['part_number'] == 'DI_CondensatePump' && $extraDICondensatePump[0] >= 0 && $extraDICondensatePump[1] == 1)
                     || ($row['part_number'] == 'Travel' && $extraTravel[0] >= 0 && $extraTravel[1] == 1)
+                    || ($row['part_number'] == 'DRI' && $extraDRI[0] >= 0 && $extraDRI[1] == 1)
                 ) {
                     $product_line->save();
                 }

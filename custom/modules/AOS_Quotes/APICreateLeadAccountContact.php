@@ -1,78 +1,49 @@
 <?php
     $rq_data = $_POST;
-    if(isset($rq_data['firstname']) && isset($rq_data['lastname'])){
+
+    if(isset($rq_data['list_infomation']['first_name']) && isset($rq_data['list_infomation']['last_name'])){
        
         if($rq_data['type_form'] == 'daikin_form') {
 
-            $first_name = $rq_data['firstname'];
-            $last_name = $rq_data['lastname'];
-            $primary_address_city = $rq_data['primary_address_city'];
-            $primary_address_state = $rq_data['primary_address_state'];
-            $primary_address_postalcode =  $rq_data['primary_address_postalcode'];
-            $primary_address_country = 'Austrailia';
-            $email_customer =  $rq_data['email_customer'];
-            $phone_number = $rq_data['phonenumber'];
-            $your_street = $rq_data['your_street'];
-            $products = $rq_data['products'];
-            $quote_id = $rq_data['uid'];
-            $notes = $rq_data['notes'];
+            $first_name = $rq_data['list_infomation']['first_name'];
+            $last_name = $rq_data['list_infomation']['last_name'];
+            $primary_address_city = $rq_data['list_infomation']['suburb_customer'];
+            $primary_address_state = $rq_data['list_infomation']['state_customer'];
+            $primary_address_postalcode =  $rq_data['list_infomation']['postcode_customer'];
+            $primary_address_country = 'Australia';
+            $email_customer =  $rq_data['list_infomation']['email_customer'];
+            $phone_number = $rq_data['list_infomation']['phone_number'];
+            $your_street = $rq_data['list_infomation']['your_street'];
+            $products = $rq_data['list_infomation']['products'];
+            $quote_id = $rq_data['list_infomation']['quote_daikin_id'];
+            $notes = $rq_data['list_infomation']['notes'];
+            $wifi = $rq_data['list_infomation']['wifi'];
 
-        } else {
-            $first_name = $rq_data['firstname'];
-            $last_name = $rq_data['lastname'];
-            $primary_address_city = $rq_data['primary_address_city'];
-            $primary_address_state = $rq_data['primary_address_state'];
-            $primary_address_postalcode =  $rq_data['primary_address_postalcode'];
-            $primary_address_country =  $rq_data['primary_address_country'];
-            $email_customer =  $rq_data['email_customer'];
-            $phone_number = $rq_data['phonenumber'];
-            $your_street = $rq_data['your_street'];
-            $products = $rq_data['products'];
-            $quote_id = $rq_data['uid'];
-    
-            //Data Note
-            $are_you_have_hws = $rq_data['are_you_have_hws'];
-            $type_device = $rq_data['type_device'];
-            $gas_type = $rq_data['gas_type'];
-            $gas_instant_electrical = $rq_data['gas_instant_electrical'];
-            $electric_type = $rq_data['electric_type'];
-            $electric_storage_located = $rq_data['electric_storage_located'];
-            $electric_storage_outside = $rq_data['electric_storage_outside'];
-            $electric_storage_inside = $rq_data['electric_storage_inside'];
-            $solar_type = $rq_data['solar_type'];
-            $solar_rooftank = $rq_data['solar_rooftank'];
-            $solar_grouptank = $rq_data['solar_grouptank'];
-            $wood_type = $rq_data['wood_type'];
-            $install_location = $rq_data['install_location'];
-            $product_choice = $rq_data['product_choice'];
-            $quickie_type = $rq_data['quickie_type'];
-            $plumbing_installation = $rq_data['plumbing_installation'];
-            $electrical_installation = $rq_data['electrical_installation'];
-            $hot_water_rebate = $rq_data['hot_water_rebate'];
-            $reticulated_gas = $rq_data['reticulated_gas'];
-    
-            $sanden_compressor = $rq_data['sanden_compressor'];
-            $where_install_location = $rq_data['where_install_location'];
-            $install_location_access = $rq_data['install_location_access'];
-            $stairs = $rq_data['stairs'];
-    
-            $connections_presented = $rq_data['connections_presented'];
-            $additional_untempered = $rq_data['additional_untempered'];
-            $notes_field = $rq_data['notes_field'];
-        }
+            if($rq_data['list_infomation']['prepared_by'] == 'Matthew Wright') {
+                $assigned_user = '8d159972-b7ea-8cf9-c9d2-56958d05485e';
+            } else if($rq_data['list_infomation']['prepared_by'] == 'Paul Szuster') {
+                $assigned_user = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
+            } else if($rq_data['list_infomation']['prepared_by'] == 'Michael Golden') {
+                $assigned_user = '71adfe6a-5e9e-1fc2-3b6c-6054c8e33dcb';
+            } else if($rq_data['list_infomation']['prepared_by'] == 'PE Admin') {
+                $assigned_user = '1';
+            } else {
+                $assigned_user = '1';
+            }
+
+            $decription_internal_notes = 'Node Description :  ';
+            if($products != '') {
+                $product = str_replace('"', '', $products);
+                $decription_internal_notes .= '  |  List Products: '.$product;
+            }
+            if($wifi != '') {
+                $decription_internal_notes .= '  |  </br>Wifi: '.$wifi;
+            }
+            if($notes != '') {
+                $decription_internal_notes .= '  |  </br>Notes: '.$notes;
+            }
+        } 
         
-        if($rq_data['prepared_by'] == 'Matthew Wright') {
-            $assigned_user = '8d159972-b7ea-8cf9-c9d2-56958d05485e';
-        } else if($rq_data['prepared_by'] == 'Paul Szuster') {
-            $assigned_user = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
-        } else if($rq_data['prepared_by'] == 'Michael Golden') {
-            $assigned_user = '71adfe6a-5e9e-1fc2-3b6c-6054c8e33dcb';
-        } else if($rq_data['prepared_by'] == 'PE Admin') {
-            $assigned_user = '1';
-        } else {
-            $assigned_user = '1';
-        }
-
         //check Lead existing
         $db = DBManagerFactory::getInstance();
         $sql = "SELECT leads.id FROM leads INNER JOIN email_addr_bean_rel ON email_addr_bean_rel.bean_id = leads.id INNER JOIN email_addresses ON email_addr_bean_rel.email_address_id = email_addresses.id WHERE leads.deleted = 0 AND email_addresses.email_address = '$email_customer' LIMIT 1";
@@ -95,106 +66,6 @@
             $existed_lead = false; 
         }
 
-
-        if($rq_data['type_form'] == 'daikin_form') {
-
-            $decription_internal_notes = 'Node Description :  ';
-            if($products != '') {
-                $product = str_replace('"', '', $products);
-                $decription_internal_notes .= '  |  List Products: '.$product;
-            }
-            if($wifi != '') {
-                $decription_internal_notes .= '  |  </br>Wifi: '.$wifi;
-            }
-            if($notes != '') {
-                $decription_internal_notes .= '  |  </br>Notes: '.$notes;
-            }
-            $lead_source = "PE_Daikin_Quote_Form";
-        } else {
-            $lead_source = "PE_Sanden_Quote_Form";
-            $decription_internal_notes = 'Node Description :  ';
-
-            if($are_you_have_hws != '') {
-                $decription_internal_notes .= '  |  Are you existing HWS or New Build: '.$are_you_have_hws;
-            }
-            if($type_device != '') {
-                $decription_internal_notes .= '  |  </br>You want to replacing: '.$type_device;
-            }
-            if($gas_type != '') {
-                $decription_internal_notes .= '  |  </br>Gas Type: '.$gas_type;
-            }
-            if($gas_instant_electrical != '') {
-                $decription_internal_notes .= '  |  </br>Gas instant electrical connection: '.$gas_instant_electrical;
-            }
-            if($electric_type != '') {
-                $decription_internal_notes .= '  |  </br>Electric Type: '.$electric_type;
-            }
-            if($electric_storage_located != '') {
-                $decription_internal_notes .= '  |  </br>Where is your electric storage located: '.$electric_storage_located;
-            }
-            if($electric_storage_outside != '') {
-                $decription_internal_notes .= '  |  </br>Where about outside: '.$electric_storage_outside;
-            }
-            if($electric_storage_inside != '') {
-                $decription_internal_notes .= '  |  </br>Where about inside: '.$electric_storage_inside;
-            }
-            if($solar_type != '') {
-                $decription_internal_notes .= '  |  </br>Solar Type: '.$solar_type;
-            }
-            if($solar_rooftank != '') {
-                $decription_internal_notes .= '  |  </br>How is it boosted: '.$solar_rooftank;
-            }
-            if($solar_grouptank != '') {
-                $decription_internal_notes .= '  |  </br>How is it boosted: '.$solar_grouptank;
-            }
-            if($wood_type != '') {
-                $decription_internal_notes .= '  |  </br>Wood type: '.$wood_type;
-            }
-            if($install_location != '') {
-                $decription_internal_notes .= '  |  </br>Install Location: '.$install_location ;
-            }
-            if($product_choice != '') {
-                $decription_internal_notes .= '  |  </br>Product Choice: '.$product_choice;
-            }
-            if($quickie_type != '') {
-                $decription_internal_notes .= '  |  </br>Quickie Type: '.$quickie_type;
-            }
-            if($plumbing_installation != '') {
-                $decription_internal_notes .= '  |  </br>Plumbing Installation: '.$plumbing_installation;
-            }
-            if($electrical_installation != '') {
-                $decription_internal_notes .= '  |  </br>Electrical Installation: '.$electrical_installation;
-            }
-            if($hot_water_rebate != '') {
-                $decription_internal_notes .= '  |  </br>Solar Vic Solar Hot Water Rebate - Do you qualify: '.$hot_water_rebate;
-            }
-            if($reticulated_gas != '') {
-                $decription_internal_notes .= '  |  </br>Are you connected to reticulated gas: '.$reticulated_gas;
-            }
-            if($where_install_location != '') {
-                $decription_internal_notes .= '  |  </br>New Sanden HWS Install Location: '.$where_install_location;
-            }
-            if($sanden_compressor != '') {
-                $decription_internal_notes .= '  |  </br>Sanden compressor unit position: '.$sanden_compressor;
-            }
-            if($install_location_access != '') {
-                $decription_internal_notes .= '  |  </br>Install Location Access: '.$install_location_access;
-            }
-            if($stairs != '') {
-                $decription_internal_notes .= '  |  </br>Stairs: '.$stairs;
-            }
-            //
-            if($connections_presented != '') {
-                $decription_internal_notes .= '  |  </br>Hot and Cold Connections presented, externally located, single storey, paved area: '.$connections_presented;
-            }
-            if($additional_untempered != '') {
-                $decription_internal_notes .= '  |  </br>Additional untempered: '.$additional_untempered;
-            }
-            if($notes_field != '') {
-                $decription_internal_notes .= '  |  </br>Notes Field: '.$notes_field;
-            }
-        }
-
         if(!$existed_lead){
 
 
@@ -209,7 +80,7 @@
             $new_lead->phone_mobile = $phone_number;
             $new_lead->email1 = $email_customer;
             $new_lead->description = $decription_internal_notes;
-            $new_lead->lead_source = $rq_data['hear_about'];
+            $new_lead->lead_source = $rq_data['list_infomation']['hear_about'];
             $new_lead->lead_source_co_c = 'PureElectric';
             // $new_lead->status = 'Converted'; //VUT - Create status NEW with new Lead
             
@@ -279,7 +150,7 @@
                 $quote->billing_address_postalcode = $primary_address_postalcode;
                 $quote->billing_address_state = $primary_address_state;
                 $quote->billing_address_city = $primary_address_city;
-                $quote->name = str_replace('GUEST', $_REQUEST['firstname'].' '.$_REQUEST['lastname'].' '.$primary_address_city.' '.$primary_address_state, $quote->name);
+                $quote->name = str_replace('GUEST', $_REQUEST['list_infomation']['first_name'].' '.$_REQUEST['list_infomation']['last_name'].' '.$primary_address_city.' '.$primary_address_state, $quote->name);
                 $quote->quote_upload_url_c = "https://pure-electric.com.au/pedaikinform-new/confirm?quote-id=".$quote->id;
                 $quote->the_quote_prepared_c = "daikin_quote_form";
             } else {
@@ -318,7 +189,7 @@
             $quote->install_address_c = $your_street;
             $quote->description = $decription_internal_notes;
             $quote->quote_note_c = $notes;
-            $quote->lead_source_c = $rq_data['hear_about'];
+            $quote->lead_source_c = $rq_data['list_infomation']['hear_about'];
             $quote->lead_source_co_c = 'PureElectric';
             $quote->assigned_user_id = $assigned_user;
             $quote->stage = 'New';
@@ -391,7 +262,7 @@
             $islead->account_id = $account->id;
             $islead->account_name = $account->name;
             $islead->contact_id = $contact->id;
-            $islead->lead_source = $rq_data['hear_about'];
+            $islead->lead_source = $rq_data['list_infomation']['hear_about'];
     
             $islead->status = 'Converted';
             // $islead->the_quote_prepared_c = "daikin_quote_form";
@@ -426,8 +297,8 @@
                 $quote->billing_address_postalcode = $primary_address_postalcode;
                 $quote->billing_address_state = $primary_address_state;
                 $quote->billing_address_city = $primary_address_city;
-                $quote->name = str_replace('GUEST', $_REQUEST['firstname'].' '.$_REQUEST['lastname'].' '.$primary_address_city.' '.$primary_address_state, $quote->name);
-                $quote->lead_source_c = $rq_data['hear_about'];
+                $quote->name = str_replace('GUEST', $_REQUEST['list_infomation']['first_name'].' '.$_REQUEST['list_infomation']['last_name'].' '.$primary_address_city.' '.$primary_address_state, $quote->name);
+                $quote->lead_source_c = $rq_data['list_infomation']['hear_about'];
                 $quote->lead_source_co_c = 'PureElectric';
                 $quote->assigned_user_id = $assigned_user;
                 $quote->quote_upload_url_c = "https://pure-electric.com.au/pedaikinform-new/confirm?quote-id=".$quote->id;
@@ -553,4 +424,7 @@
         }  
         while( $swapped );  
         return $distance_array;
-    }  
+    }
+    function ParseDataProductByDaikinQuoteForm($data) {
+
+    }
