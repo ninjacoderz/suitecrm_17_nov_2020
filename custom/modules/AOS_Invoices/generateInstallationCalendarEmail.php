@@ -98,6 +98,9 @@
         $email->new_with_id = true;
         $email->type = "draft";
         $email->status = "draft";
+        if (strpos($name, "&#039;")!==false) {
+            $name = explode("&#039;",$name,2)[0];
+        }   
 
         $quote_type = '';
         switch ($invoice->quote_type_c) {
@@ -191,31 +194,31 @@
             //VUT - S - Add file "Proposed Install Location" to email Plumber/Electrician
             $invoice_file_attachments = scandir($_SERVER['DOCUMENT_ROOT'].'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c .'/');
             $name_file_include = 'Proposed_Install_Location';
-            if (count($invoice_file_attachments)>0 ) foreach ($invoice_file_attachments as $att){
-                $source =  $_SERVER['DOCUMENT_ROOT'].'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c .'/'. $att;
-                if(!is_file($source)) continue;
-                if (strpos(strtolower($att),strtolower($name_file_include)) !==  false
-                || strpos(strtolower($att),strtolower('_Existing_Hws')) !== false /**https://trello.com/c/3Fe84CCL/3026-invoice-email-po-and-send-out-the-calendar-link-to-the-installers-please-ensure-automatically-show-the-old-hws-photos-and-switch?menu=filter&filter=member:paulszuster1,mode:and*/
-                || strpos(strtolower($att),strtolower('Switchboard')) !== false) {
-                    $noteTemplate = new Note();
-                    $noteTemplate->id = create_guid();
-                    $noteTemplate->new_with_id = true; // duplicating the note with files
-                    $noteTemplate->parent_id = $email->id;
-                    $noteTemplate->parent_type = 'Emails';
-                    $noteTemplate->date_entered = '';
-                    // $noteTemplate->file_mime_type = 'application/pdf';
-                    $noteTemplate->filename = $att;
-                    $noteTemplate->name = $att;
+            // if (count($invoice_file_attachments)>0 ) foreach ($invoice_file_attachments as $att){
+            //     $source =  $_SERVER['DOCUMENT_ROOT'].'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $invoice->installation_pictures_c .'/'. $att;
+            //     if(!is_file($source)) continue;
+            //     if (strpos(strtolower($att),strtolower($name_file_include)) !==  false
+            //     || strpos(strtolower($att),strtolower('_Existing_Hws')) !== false /**https://trello.com/c/3Fe84CCL/3026-invoice-email-po-and-send-out-the-calendar-link-to-the-installers-please-ensure-automatically-show-the-old-hws-photos-and-switch?menu=filter&filter=member:paulszuster1,mode:and*/
+            //     || strpos(strtolower($att),strtolower('Switchboard')) !== false) {
+            //         $noteTemplate = new Note();
+            //         $noteTemplate->id = create_guid();
+            //         $noteTemplate->new_with_id = true; // duplicating the note with files
+            //         $noteTemplate->parent_id = $email->id;
+            //         $noteTemplate->parent_type = 'Emails';
+            //         $noteTemplate->date_entered = '';
+            //         // $noteTemplate->file_mime_type = 'application/pdf';
+            //         $noteTemplate->filename = $att;
+            //         $noteTemplate->name = $att;
 
-                    $noteTemplate->save();
+            //         $noteTemplate->save();
 
-                    $destination = $_SERVER['DOCUMENT_ROOT'].'/upload/'.$noteTemplate->id;
-                    if (!symlink($source, $destination)) {
-                        $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
-                    }
-                   $email->attachNote($noteTemplate);
-                }
-            }
+            //         $destination = $_SERVER['DOCUMENT_ROOT'].'/upload/'.$noteTemplate->id;
+            //         if (!symlink($source, $destination)) {
+            //             $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+            //         }
+            //        $email->attachNote($noteTemplate);
+            //     }
+            // }
             //VUT - E - Add file "Proposed Install Location" to email Plumber/Electrician
 
             $contact_customer = new Contact();
