@@ -1451,3 +1451,9 @@ $entry_point_registry['APIRenderRebateProvided'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIRenderRebateProvided.php',
     'auth' => false
 );
+
+// .:nhantv:. Get Product Info By Short Name
+$entry_point_registry['APIGetProductInfoByShortName'] = array(
+    'file' => 'custom/modules/AOS_Products/APIGetProductInfoByShortName.php',
+    'auth' => false
+);

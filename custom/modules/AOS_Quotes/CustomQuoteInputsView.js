@@ -1,118 +1,3 @@
-/** PRODUCT MAPPER */
-const productMapper = [{
-    name: "Solar PV Supply and Install",
-    nameDb: "Solar PV Supply and Install",
-    id: "24049a0d-6338-4b87-195e-602b0e92eb62",
-},{
-    name: "Solar PV Balance of System",
-    nameDb: "Solar PV Balance of System",
-    id: "65190f36-b6b2-3f84-25f3-605ab400e57d",
-},{
-    name: "Solar PV Standard PV Module Installation",
-    nameDb: "Solar PV Standard PV Module Installation",
-    id: "a3dbdef8-0e1f-e598-bd25-605ab53c69d2",
-},{
-    name: "Single Phase 1Ph Inverter Installation",
-    nameDb: "Single Phase 1Ph Inverter Installation",
-    id: "a73c1dbb-a51c-fdf3-6df0-605ab51c41ae",
-},{
-    name: "Smart Meter Solar Monitoring Installation",
-    nameDb: "Smart Meter Solar Monitoring Installation",
-    id: "a8f2646f-c99b-40bc-562b-605ab65fa481",
-},{
-    name: "STCs",
-    nameDb: "STCs",
-    id: "4efbea92-c52f-d147-3308-569776823b19",
-},{
-    name: "Sunpower P3 370 BLACK",
-    nameDb: "Sunpower P3 370W BLACK",
-    id: "7e01564f-6a43-560e-5d1c-604f0166b7c0",
-},{
-    name: "Sunpower P3 325 BLACK",
-    nameDb: "Sunpower P3 325W BLACK",
-    id: "ddccc2e2-8673-167a-486d-5ea65e73b911",
-},{
-    name: "Sunpower Maxeon 3 400W",
-    nameDb: "Sunpower Maxeon 3 400W",
-    id: "94ad880e-feee-bf20-54ca-5ccfe9e7a0de",
-},{
-    name: "Q CELLS Q.MAXX-G2 350W",
-    nameDb: "",
-    id: "",
-},{
-    name: "Jinko 370W Cheetah Plus JKM370M-66H",
-    nameDb: "",
-    id: "",
-},{
-    name: "Sungrow 5",
-    nameDb: "Sungrow 5kW Premium Inverter",
-    id: "327b088f-c395-c6fc-308b-6058620a615a",
-},{
-    name: "Sungrow 8",
-    nameDb: "",
-    id: "",
-},{
-    name: "Primo 5",
-    nameDb: "Fronius Primo 5kW Inverter",
-    id: "2b6dd740-ab28-1cde-012e-5d2e89ed82cd",
-},{
-    name: "S Edge 5G",
-    nameDb: "Solaredge HDWave 5kW 1P",
-    id: "e76b3404-3b16-6e43-0560-5d3ee1b7e0d5",
-},{
-    name: "S Edge 6G",
-    nameDb: "SolarEdge 6kW Genesis HD-Wave 1Ph Inverter",
-    id: "f02c1d4b-2d97-fb32-c9c0-602b6ac5da42",
-},{
-    name: "S Edge 8G",
-    nameDb: "SolarEdge 6kW Genesis HD-Wave 1Ph Inverter",
-    id: "",
-},{
-    name: "S Edge 10G",
-    nameDb: "Solaredge HDWave 10kW 1P",
-    id: "e8450cf9-13d9-f85d-5436-5d3ee1e39a4b",
-},{
-    name: "Sungrow 10 3P",
-    nameDb: "",
-    id: "",
-},{
-    name: "Primo 8.2",
-    nameDb: "Fronius Primo 8.2 SCERT Inverter",
-    id: "2b6dd740-ab28-1cde-012e-5d2e89ed82cd",
-},{
-    name: "Symo 10",
-    nameDb: "",
-    id: "",
-},{
-    name: "Symo 15",
-    nameDb: "Fronius Symo 15-0-3-M",
-    id: "d051d35d-7a84-e4f1-b39f-5d42c9358989",
-},{
-    name: "Primo 6",
-    nameDb: "Fronius Primo 6.0 SCERT Inverter",
-    id: "abdbedba-c295-f28a-5657-6021ca28ada6",
-},{
-    name: "Sungrow Smart Meter (1P)",
-    nameDb: "Sungrow Single Phase Smart Meter",
-    id: "20b26f98-90d4-a7c2-cfe9-605863bd4435",
-},{
-    name: "Fro. Smart Meter (1P)",
-    nameDb: "",
-    id: "",
-},{
-    name: "SE Wifi",
-    nameDb: "",
-    id: "",
-},{
-    name: "Fro. Smart Meter (3P)",
-    nameDb: "Fronius Smart Meter 3P 50kA--3",
-    id: "5d53735c-a394-2bd5-8032-5d42d1e93929",
-},{
-    name: "SE Smart Meter",
-    nameDb: "",
-    id: "",
-}]
-
 // .:nhantv:. Solar Products need to calculate on back-end
 const solarProductCal = {};
 solarProductCal["Solar_PV_Site_Visit_Module_Load_Up"] = "PV-SV-MLU";
@@ -241,14 +126,14 @@ const PEAdminPercent = 0.3;
         // Create line item
         try{
             // Alway add this product: Solar PV Supply and Install
-            await autoCreateLineItem(getProductInfoFromName("Solar PV Supply and Install"), 1);
-            panelSelected && await autoCreateLineItem(getProductInfoFromName(panelSelected), panelTotal);
-            inverterSelected && await autoCreateLineItem(getProductInfoFromName(inverterSelected), 1);
-            extra1Selected && await autoCreateLineItem(getProductInfoFromName(extra1Selected), 1);
-            extra2Selected && await autoCreateLineItem(getProductInfoFromName(extra2Selected), 1);
-            extra3Selected && await autoCreateLineItem(getProductInfoFromName(extra3Selected), 1);
+            await autoCreateLineItem("Solar PV Supply and Install", 1);
+            panelSelected && await autoCreateLineItem(panelSelected, panelTotal);
+            inverterSelected && await autoCreateLineItem(inverterSelected, 1);
+            extra1Selected && await autoCreateLineItem(extra1Selected, 1);
+            extra3Selected && await autoCreateLineItem(extra3Selected, 1);
+            extra2Selected && await autoCreateLineItem(extra2Selected, 1);
             // Alway add this product: STCs
-            await autoCreateLineItem(getProductInfoFromName("STCs"), stcTotal);
+            await autoCreateLineItem("STCs", stcTotal);
             // Calculate
             await calculatePrice(panelTotal, totalKw);
             // Hide loading
@@ -369,10 +254,19 @@ const PEAdminPercent = 0.3;
         return parseFloat(firstDigit + "90.00").toFixed(2);
     }
     // .:nhantv:. Get Product Line Item info 
-    async function autoCreateLineItem(productInfo, total_item){
-        // await wait(200);
-        // Case: id = ""
-        if(productInfo === undefined || productInfo.id === ""){
+    async function autoCreateLineItem(shortName, total_item){
+        let productInfo = {};
+        // Get Product info by Short name
+        await $.ajax({
+            url: "/index.php?entryPoint=APIGetProductInfoByShortName&short_name=" + shortName,
+            type: 'GET'})
+        .then(function(data) {
+            if(data !== undefined || data !== ""){
+                productInfo = JSON.parse(data);
+            }
+        });
+        // Case: id == ""
+        if(productInfo.id === undefined || productInfo.id === ""){
             return;
         }
         // Case: id !== ""
@@ -403,16 +297,7 @@ const PEAdminPercent = 0.3;
                 }
             });
     }
-    // .:nhantv:. Get product id from Option selected
-    function getProductInfoFromName(name){
-        let result = undefined;
-        productMapper.forEach(element => {
-            if(element.name === name){
-                result = element;
-            }
-        });
-        return result;
-    }
+    
     // .:nhantv:. Wait function
     const wait = ms => {
         return new Promise(res => setTimeout(res, ms));
