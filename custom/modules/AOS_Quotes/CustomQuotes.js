@@ -2771,7 +2771,27 @@ $(document).ready(function () {
         }
         return i;
     }
-    var today = new Date();
+    var time_zone;
+    switch ( $('#install_address_state_c').val() ) {
+        case 'SA':
+            time_zone = 'Australia/Adelaide';
+        break;
+        case 'WA':
+            time_zone = 'Australia/Perth';
+        break;
+        case 'QLD':
+            time_zone = 'Australia/Queensland';
+        break;
+        case 'VIC':case 'NSW':case 'TAS':
+            time_zone = 'Australia/Melbourne';
+        break;
+    }
+    // Australia/Adelaide AEDCT SA
+    // Australia/Perth AWST WA
+    // Australia/Queensland AEST QLD
+    // Australia/Melbourne AEDST (VIC, NSW, TAS) 
+    var today = new Date().toLocaleString("en-US", { timeZone: time_zone });
+        today  = new Date(today);
     var month = addZero(today.getMonth() + 1);
     var day = addZero(today.getDate());
     var year = today.getFullYear();
@@ -2797,8 +2817,8 @@ $(document).ready(function () {
         $("#quote_date_c").val(newdate + "  " + hours + ":" + minutes);
         $("#quote_date_c_date").val(newdate);
         $("#quote_date_c_hours").val(hours);
-        $("#next_action_date_c").val(getDateTime('7'));
-        $("#expiration").val(getDateTime('7'));
+        $("#next_action_date_c").val(getDateTime('7',today));
+        $("#expiration").val(getDateTime('7',today));
     });
 
     //Thienpb code -- copy all function with solar from Lead to Quote
@@ -2842,10 +2862,11 @@ $(document).ready(function () {
     //TriTruong Function Get Day
     var getDateTime = function (type) {
         var date_return = '';
-        var date = new Date();
+        var date = new Date().toLocaleString("en-US", { timeZone: time_zone });
+            date  = new Date(date);
         switch (type) {
             case 'today':
-                var data = defaultDateTime(new Date());
+                var data = defaultDateTime(date);
                 if (data['day'] < 10) {
                     data['day'] = '0' + data['day'];
                 }
