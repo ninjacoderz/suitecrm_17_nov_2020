@@ -77,7 +77,13 @@ foreach ($accounts as $account) {
             $contact->save();
         }
     }
-
+    $calls = $account->get_linked_beans('calls','Calls');
+    if (!empty($calls) && is_array($calls)) {
+        foreach ($calls as $call) {
+            $call->assigned_user_id = $assigned_id;
+            $call->save();
+        }
+    }
     $account->assigned_user_id = $assigned_id;
     $account->save();   
 }
