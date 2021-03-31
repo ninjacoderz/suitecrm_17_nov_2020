@@ -5012,7 +5012,11 @@ class EmailsController extends SugarController
             $smsTemplate->body_c = $body;
             $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
             $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
-            $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+            if (!$focus) {
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$quote_data).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+            } else {
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+            }
             //end - code render sms_template
         }
 
@@ -7424,7 +7428,12 @@ class EmailsController extends SugarController
             $body = str_replace("\$assigned_user_first_name", 'Paul', $body);
             $body = str_replace("\$assigned_user_email", 'paul.szuster@pure-electric.com.au', $body);
             $body = str_replace("\$assigned_user_phone_number", '0423 494 949', $body);
-        }else{
+        }elseif ($focus->assigned_user_id == '71adfe6a-5e9e-1fc2-3b6c-6054c8e33dcb') {
+            //Michael Golden
+            $body = str_replace("\$assigned_user_first_name", 'Michael', $body);
+            $body = str_replace("\$assigned_user_email", 'michael.golden@pure-electric.com.au', $body);
+            $body = str_replace("\$assigned_user_phone_number", '0416 185 005', $body);
+        } else {
             //matt
             $body = str_replace("\$assigned_user_first_name", 'Matthew', $body);
             $body = str_replace("\$assigned_user_email", 'matthew.wright@pure-electric.com.au', $body);
