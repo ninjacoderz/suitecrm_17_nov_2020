@@ -2878,6 +2878,16 @@ $(document).ready(function () {
                 }
                 date_return = data['day'] + '/' + data['month'] + '/' + data['year'];
                 break;
+            case '1':
+                var data = defaultDateTime(new Date(date.getTime() + 1 * (24 * 60 * 60 * 1000)));
+                if (data['day'] < 10) {
+                    data['day'] = '0' + data['day'];
+                }
+                if (data['month'] < 10) {
+                    data['month'] = '0' + data['month'];
+                }
+                date_return = data['day'] + '/' + data['month'] + '/' + data['year'];
+                break;
             case '7':
                 var data = defaultDateTime(new Date(date.getTime() + 7 * (24 * 60 * 60 * 1000)));
                 if (data['day'] < 10) {
@@ -2901,11 +2911,11 @@ $(document).ready(function () {
     //     $('#solargain_tesla_quote_number_c').show();
     //     $('div[data-label="LBL_SOLARGAIN_TESLA_QUOTE_NUMBER"]').show()
     // }
-    $('div[field="next_action_date_c"]').append('<button style="padding: 0px 5px;margin: 0px 1px;" type="button" id="get_today_action_date" class="button" title="Get Today" data-type="7" >T+7</button>');
+    $('div[field="next_action_date_c"]').append('<button style="padding: 0px 5px;margin: 0px 1px;" type="button" class="button get_date_next_action" title="Get Today" data-type="7" >T+7</button><button style="padding: 0px 5px;margin: 0px 1px;" type="button" class="button get_date_next_action" title="Get Today" data-type="1">T+1</button><button style="padding: 0px 5px;margin: 0px 1px;" type="button" id="get_today_action_date" class="button get_date_next_action" title="Get Today" data-type="today">T</button>');
     $('#get_today_action_date').after(
         '&nbsp;<button type="button" id="push_action_date_toSG" class="button push_action_date_toSG" title="" onClick="SUGAR.pushactiondatetoSG_quote(this);" > PUSH TO SG <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
     )
-    $("#get_today_action_date").click(function () {
+    $(".get_date_next_action").click(function () {
         var type = $(this).attr('data-type');
         $("#next_action_date_c").val(getDateTime(type));
     });
