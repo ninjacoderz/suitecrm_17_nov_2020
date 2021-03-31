@@ -4146,17 +4146,22 @@ $(document).ready(function(){
 
     });
     $("#btn_solar_design").on('click',function(e) {
-        
-        var address = [$("#primary_address_street").val(),$("#primary_address_city").val()+' '+$("#primary_address_state").val(),$("#primary_address_postalcode").val(),'Australia'];
-        address = address.join(', ');
-        var first_name = $("#first_name").val();
-        var family_name = $("#last_name").val();
-        var email = $("#Leads0emailAddress0").val();
-        var phone = $("#phone_mobile").val().replace(/ /g,'');
+        // .:nhantv:. Update link to Jarod's Solar Design Tool
         window.open(
-            'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+            'https://main.d3djjyr2awjnsi.amplifyapp.com/',
             '_blank' // <- This is what makes it open in a new window.
         );
+
+        // var address = [$("#primary_address_street").val(),$("#primary_address_city").val()+' '+$("#primary_address_state").val(),$("#primary_address_postalcode").val(),'Australia'];
+        // address = address.join(', ');
+        // var first_name = $("#first_name").val();
+        // var family_name = $("#last_name").val();
+        // var email = $("#Leads0emailAddress0").val();
+        // var phone = $("#phone_mobile").val().replace(/ /g,'');
+        // window.open(
+        //     'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+        //     '_blank' // <- This is what makes it open in a new window.
+        // );
     });
     //});
     //end

@@ -548,16 +548,22 @@ $(function () {
             );
         });
         $("#btn_solar_design").on('click',function(e) {
-            var address = [$("#primary_address_street").val(),$("#primary_address_city").val()+' '+$("#primary_address_state").val(),$("#primary_address_postalcode").val(),'Australia'];
-            address = address.join(', ');
-            var first_name = $("#account_name").text().split(" ")[0];
-            var family_name = $("#account_name").text().split(" ").slice(1).join(" ");
-            var email = $("div[field='billing_account_email'] a").data("email-address");
-            var phone = $("#mobile_phone_c").text().replace(/ /g,'');
+            // .:nhantv:. Update link to Jarod's Solar Design Tool
             window.open(
-                'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+                'https://main.d3djjyr2awjnsi.amplifyapp.com/',
                 '_blank' // <- This is what makes it open in a new window.
             );
+            
+            // var address = [$("#primary_address_street").val(),$("#primary_address_city").val()+' '+$("#primary_address_state").val(),$("#primary_address_postalcode").val(),'Australia'];
+            // address = address.join(', ');
+            // var first_name = $("#account_name").text().split(" ")[0];
+            // var family_name = $("#account_name").text().split(" ").slice(1).join(" ");
+            // var email = $("div[field='billing_account_email'] a").data("email-address");
+            // var phone = $("#mobile_phone_c").text().replace(/ /g,'');
+            // window.open(
+            //     'https://solardesign.pure-electric.com.au/#/projects/create?addressSearch='+address+'&first_name='+first_name+'&family_name='+family_name+'&email='+email+'&phone='+phone,
+            //     '_blank' // <- This is what makes it open in a new window.
+            // );
         });
         $('.button_convert').on('click',function(){
             var record_lead_id = $("input[name='lead_id']").val();
