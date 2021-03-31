@@ -8,8 +8,6 @@ $delivery_date = $_GET['delivery_date'];
 // $install_date = $_GET['install_date'];
 $assigned_user = $_GET['assigned_user_name'];
 $name = $_GET["name"];
-$invoices = $_GET["invoices"];
-$PO_name = $_GET["PO_name"];
 
 $dbconfig = $sugar_config["dbconfig"];
 $servername = $dbconfig["db_host_name"];
@@ -50,7 +48,6 @@ if($is_update && $deleted !== 1){
     $meetings->name = $name;
     $meetings->date_modified = DateTime::createFromFormat('d/m/Y H:i:s', date('d/m/Y H:i:s'), new DateTimeZone("Australia/Melbourne"))->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     $meetings->assigned_user_id = $assigned_user;
-    $meetings->invoice_c = $invoices;
     $meetings->parent_type = "PO_purchase_order";
     $meetings->parent_type_options = "PO_purchase_order";
     $meetings->parent_id = $record_id;
@@ -72,7 +69,6 @@ if($is_update && $deleted !== 1){
 } else {
     $meetings->name = $name;
     $meetings->assigned_user_id = $assigned_user;
-    $meetings->invoice_c = $invoices;
 
     if($dispatch_date){
         $date = DateTime::createFromFormat('d/m/Y H:i:s', $dispatch_date.' 08:00:00', new DateTimeZone("Australia/Melbourne"));

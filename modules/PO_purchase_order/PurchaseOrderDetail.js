@@ -29,9 +29,9 @@ $(function () {
             let assigned_user_name = $("#assigned_user_id").attr("data-id-value");
             // let description = $("#description").html().replace(/<br>/g, "\n");
             let name = $("#name").text().slice(0, 50);
-            let PO_name = $("#name").text();
-            let invoices = $("#aos_invoices_po_purchase_order_1aos_invoices_ida").attr("data-id-value");
-            let shipping_account = $("#shipping_account_id").val();
+            // let PO_name = $("#name").text();
+            // let invoices = $("#aos_invoices_po_purchase_order_1aos_invoices_ida").attr("data-id-value");
+            // let shipping_account = $("#shipping_account_id").val();
 
             if (!dispatch_date && !delivery_date) {
               alert("Please enter dispatch date or delivery date");
@@ -46,8 +46,6 @@ $(function () {
                   dispatch_date +
                   "&name=" +
                   name +
-                  "&PO_name=" +
-                  PO_name +
                   // "&install_date=" +
                   // install_date +
                   // "&description=" +
