@@ -50,7 +50,9 @@ $(function () {
                 var year    = now.getFullYear();
                 var month   = now.getMonth()+1; 
                 var day     = now.getDate();
-                return {'day':day,'month':month,'year':year,}
+                var hours     = now.getHours();
+                var minutes     = now.getMinutes();
+                return {'day':day,'month':month,'year':year, 'hours': hours , 'minutes':minutes}
             }
             $('.button-get-day').click(function() {
                 var type  = $(this).attr('data-type');
@@ -64,6 +66,7 @@ $(function () {
                         var minutes = today.getMinutes();
                         var newdate     = day + "/" + month + "/" + year;  
                         minutes = Math.round(minutes/5)*5;
+                        minutes = addZero(minutes);
                         $("#date_start_date").val(newdate);
                         $("#date_start").val(newdate+" "+hours+":"+ minutes);
                         $("#date_start_minutes").val(minutes);
@@ -74,8 +77,13 @@ $(function () {
                 
                     default:
                         var date_changed =getDateTime(type);
-                        $("#date_start_date").val(date_changed);
-                        $("#date_start").val(date_changed+" "+$("#date_start_hours").val()+":"+$("#date_start_minutes").val());
+                        var minutes = date_changed['minutes'];
+                        minutes = Math.round(minutes/5)*5;
+                        minutes = addZero(minutes);
+                        $("#date_start_date").val(date_changed['date']);
+                        $("#date_start_minutes").val(minutes);
+                        $("#date_start_hours").val(addZero(date_changed['hours']));
+                        $("#date_start").val(date_changed['date']+" "+date_changed['hours']+":"+date_changed['minutes']);
                         break;
                 }
             });
@@ -83,10 +91,13 @@ $(function () {
             $('.button-get-day-next-call').click(function() {
                 var type  = $(this).attr('data-type');
                 var date_changed =getDateTime(type);
-                $("#next_call_c_date").val(date_changed);
-                ($("#next_call_c_minutes").val() == '')?$("#next_call_c_minutes").val('00'):'';
-                ($("#next_call_c_hours").val() == '')?$("#next_call_c_hours").val('00'):'';
-                $("#next_call_c").val(date_changed+" "+$("#date_start_hours").val()+":"+$("#date_start_minutes").val());
+                var minutes = date_changed['minutes'];
+                minutes = Math.round(minutes/15)*15;
+                minutes = addZero(minutes);
+                $("#next_call_c_date").val(date_changed['date']);
+                $("#next_call_c_minutes").val(minutes);
+                $("#next_call_c_hours").val(addZero(date_changed['hours']));
+                $("#next_call_c").val(date_changed['date']+" "+date_changed['hours']+":"+date_changed['minutes']);
             });
             //Function Get Day
             var getDateTime = function(type){
@@ -114,7 +125,9 @@ $(function () {
                     data['month'] = '0' + data['month'];
                 }
                 date_return = data['day']+'/'+data['month']+'/'+data['year']; 
-                return date_return;
+
+                return {'date':date_return,'minutes':data['minutes'],'hours':data['hours']}
+
             }
             
             //end add button +1, +7 days
