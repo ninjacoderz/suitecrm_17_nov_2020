@@ -5012,11 +5012,7 @@ class EmailsController extends SugarController
             $smsTemplate->body_c = $body;
             $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
             $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
-            if (!$focus) {
-                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$quote_data).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
-            } else {
-                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
-            }
+            $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$quote_data).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
             //end - code render sms_template
         }
 
