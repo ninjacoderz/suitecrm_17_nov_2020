@@ -29,6 +29,7 @@ $(function () {
             let assigned_user_name = $("#assigned_user_id").attr("data-id-value");
             // let description = $("#description").html().replace(/<br>/g, "\n");
             let name = $("#name").text().slice(0, 50);
+            let PO_name = $("#name").text();
             let invoices = $("#aos_invoices_po_purchase_order_1aos_invoices_ida").attr("data-id-value");
             let shipping_account = $("#shipping_account_id").val();
 
@@ -45,12 +46,14 @@ $(function () {
                   dispatch_date +
                   "&name=" +
                   name +
+                  "&PO_name=" +
+                  PO_name +
                   // "&install_date=" +
                   // install_date +
                   // "&description=" +
                   // description +
-                //   "&invoices=" +
-                //   invoices +
+                  //   "&invoices=" +
+                  //   invoices +
                   "&assigned_user_name=" +
                   assigned_user_name +
                   "&record=" +
@@ -58,7 +61,7 @@ $(function () {
                 type: "GET",
                 context: document.body,
               }).done(function (data) {
-                //step2: load new invoice                
+                //step2: load new invoice
               });
               alert("Purchase Order Meeting is created");
             }            

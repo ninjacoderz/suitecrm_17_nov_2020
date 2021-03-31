@@ -9,6 +9,7 @@ $delivery_date = $_GET['delivery_date'];
 $assigned_user = $_GET['assigned_user_name'];
 $name = $_GET["name"];
 $invoices = $_GET["invoices"];
+$PO_name = $_GET["PO_name"];
 
 $dbconfig = $sugar_config["dbconfig"];
 $servername = $dbconfig["db_host_name"];
@@ -43,13 +44,17 @@ try {
 
 $meetings = new Meeting;
 
-
 if($is_update && $deleted !== 1){    
+    $meetings->retrieve($record_id);
     $meetings->id = $current_meetings;
     $meetings->name = $name;
     $meetings->date_modified = DateTime::createFromFormat('d/m/Y H:i:s', date('d/m/Y H:i:s'), new DateTimeZone("Australia/Melbourne"))->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     $meetings->assigned_user_id = $assigned_user;
-    $meetings->aos_invoices_id_c = $invoices;
+    $meetings->invoice_c = $invoices;
+    $meetings->parent_type = "PO_purchase_order";
+    $meetings->parent_type_options = "PO_purchase_order";
+    $meetings->parent_id = $record_id;
+    $meetings->parent_name = $record_id;
 
     if($dispatch_date){
         $date = DateTime::createFromFormat('d/m/Y H:i:s', $dispatch_date.' 08:00:00', new DateTimeZone("Australia/Melbourne"));
@@ -67,7 +72,7 @@ if($is_update && $deleted !== 1){
 } else {
     $meetings->name = $name;
     $meetings->assigned_user_id = $assigned_user;
-    $meetings->aos_invoices_id_c = $invoices;
+    $meetings->invoice_c = $invoices;
 
     if($dispatch_date){
         $date = DateTime::createFromFormat('d/m/Y H:i:s', $dispatch_date.' 08:00:00', new DateTimeZone("Australia/Melbourne"));
@@ -79,11 +84,15 @@ if($is_update && $deleted !== 1){
     
     $meetings->duration_hours = "1";
     $meetings->duration_minutes  = "0";
-    
+    $meetings->parent_type = "PO_purchase_order";
+    $meetings->parent_type_options = "PO_purchase_order";
+    $meetings->parent_id = $record_id;
+    $meetings->parent_name = $record_id;
+
     $meetings->save();
     global $current_user;
     
-    $reminder_json = '[{"idx":0,"id":"","popup":true,"email":true,"timer_popup":"600","timer_email":"86400","invitees":[{"id":"","module":"Users","module_id":"'.$current_user->id.'"}]}]';
+    $reminder_json = '[{"idx":0,"id":"","popup":true,"email":true,"timer_popup":"86400","timer_email":"86400","invitees":[{"id":"","module":"Users","module_id":"'.$current_user->id.'"}]}]';
     $meetings->saving_reminders_data = true;
 
     $reminderData = json_encode($meetings->removeUnInvitedFromReminders(json_decode(html_entity_decode($reminder_json), true)));
