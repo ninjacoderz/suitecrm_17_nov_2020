@@ -66,6 +66,7 @@ $(function () {
                         var minutes = today.getMinutes();
                         var newdate     = day + "/" + month + "/" + year;  
                         minutes = Math.round(minutes/5)*5;
+                        if(minutes == 60) {minutes = 0;}
                         minutes = addZero(minutes);
                         $("#date_start_date").val(newdate);
                         $("#date_start").val(newdate+" "+hours+":"+ minutes);
@@ -79,6 +80,7 @@ $(function () {
                         var date_changed =getDateTime(type);
                         var minutes = date_changed['minutes'];
                         minutes = Math.round(minutes/5)*5;
+                        if(minutes == 60) {minutes = 0;}
                         minutes = addZero(minutes);
                         $("#date_start_date").val(date_changed['date']);
                         $("#date_start_minutes").val(minutes);
@@ -93,6 +95,7 @@ $(function () {
                 var date_changed =getDateTime(type);
                 var minutes = date_changed['minutes'];
                 minutes = Math.round(minutes/15)*15;
+                if(minutes == 60) {minutes = 0;}
                 minutes = addZero(minutes);
                 $("#next_call_c_date").val(date_changed['date']);
                 $("#next_call_c_minutes").val(minutes);
