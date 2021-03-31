@@ -284,18 +284,6 @@ $GLOBALS['app_list_strings']['whlog_status_dom']=array (
   'Pickup' => 'Pickup',
   'Splitted' => 'Splitted',
 );
-$GLOBALS['app_list_strings']['roof_type_list']=array (
-  'Tile' => 'Tile',
-  'Tin' => 'Tin',
-  'klip_loc' => 'Klip Loc',
-  'Concrete' => 'Concrete',
-  'Trim_Deck' => 'Trim Deck',
-  'Insulated' => 'Insulated',
-  'Asbestos' => 'Asbestos',
-  'Ground_Mount' => 'Ground Mount',
-  'Other' => 'Other',
-  'Terracotta' => 'Terracotta',
-);
 $GLOBALS['app_list_strings']['sales_stage_dom']=array (
   'Negotiation/Review' => 'Negociación/Revisión',
   'Closed Won' => 'Ganado',
@@ -386,35 +374,6 @@ $GLOBALS['app_list_strings']['bill_status_list']=array (
 );
 $GLOBALS['app_list_strings']['lead_source_list']=array (
   'pe_daikin_quote_form' => 'PE DAIKIN QUOTE FORM',
-);
-
-$GLOBALS['app_list_strings']['lead_source_dom']=array (
-  '' => '',
-  'Cold Call' => 'Llamada en Frío',
-  'Existing Customer' => 'Cliente Existente',
-  'Self Generated' => 'Auto Generado',
-  'Employee' => 'Empleado',
-  'Partner' => 'Partner',
-  'Public Relations' => 'Relaciones Públicas',
-  'Direct Mail' => 'Correo Directo',
-  'Conference' => 'Conferencia',
-  'Trade Show' => 'Exposición',
-  'Web Site' => 'Sitio Web',
-  'Word of mouth' => 'Recomendación',
-  'Email' => 'Email',
-  'Campaign' => 'Campaña',
-  'Other' => 'Otro',
-  'Solargain' => 'Solargain',
-  'EarthGarden' => 'Earth & Garden',
-  'ATA_ReNew' => 'ATA ReNew',
-  'ATA_Sanctuary' => 'ATA Sanctuary Magazine',
-  'ABC_Organic_Gardener' => 'ABC Organic Gardener Magazine',
-  'OneStepOffTheGrid' => 'One Step Off The Grid Website',
-  'Sanden_Web_Site' => 'Sanden Web Site',
-  'Home_Show' => 'Home Show',
-  'FBMyEffElecHome' => 'FB My Efficient Electric Home',
-  'PE_Sanden_Quote_Form' => 'PE Sanden Quote Form',
-  'PE_Daikin_Quote_Form' => 'PE Daikin Quote Form',
 );
 $GLOBALS['app_list_strings']['type_inter_note_c_list']=array (
   '' => '',
@@ -594,52 +553,6 @@ $GLOBALS['app_list_strings']['first_solar_c_0']=array (
   'bool_true' => 'Yes',
   'bool_false' => 'No',
 );
-$GLOBALS['app_list_strings']['PO_type_list']=array (
-  '' => '',
-  'sanden_supply' => 'Sanden Supply',
-  'daikin_supply' => 'Daikin Supply',
-  'installer' => 'Installer',
-);
-
-$GLOBALS['app_list_strings']['quote_type_list']=array (
-  'quote_type_sanden' => 'Sanden',
-  'quote_type_solar' => 'Solar',
-  'quote_type_daikin' => 'Daikin',
-  'quote_type_off_grid_system' => 'Off-grid System',
-  'quote_type_nexura' => 'Nexura',
-  'quote_type_methven' => 'Methven',
-  '' => '',
-  'quote_type_battery' => 'Battery',
-  'quote_type_tesla' => 'Tesla',
-  'quote_type_upcomming_service' => 'Upcoming Service',
-  'quote_type_sanden_service' => 'Sanden Service',
-);
-$GLOBALS['app_list_strings']['lead_status_dom']=array (
-  '' => '',
-  'New' => 'Nuevo',
-  'Assigned' => 'Asignado',
-  'In Process' => 'En Proceso',
-  'Converted' => 'Convertido',
-  'Recycled' => 'Reciclado',
-  'Dead' => 'Muerto',
-  'Lost_Competitor' => 'Lost - Competitor',
-  'Lost_Uncontactable' => 'Lost - Uncontactable',
-  'Lost_Unsuitable_Roof' => 'Lost - Unsuitable Roof',
-  'Lost_Enquiry_Only' => 'Lost - Enquiry Only',
-  'Lost_No_Longer_Interested' => 'Lost - No Longer Interested',
-  'Lost_Outside_Service_Area' => 'Lost - Outside Service Area',
-  'Lost_Duplicate' => 'Lost - Duplicate',
-  'Lost_Council' => 'Lost - Council',
-  'Lost_Reassigned_To_Solorgain' => 'Lost - Reassigned To Solargain',
-  'Address_Requested' => 'Address Requested',
-  'Spam' => 'Spam',
-  'Info_Pack_Sent' => 'Info Pack Sent',
-  'Test' => 'Test',
-  'Methven_BackOrder' => 'Methven Back Order',
-  'Lost_Too_Expensive' => 'Lost - Too Expensive',
-  'Lost_Different_Product' => 'Lost - Different Product',
-  'Lost_Unsuitable_Site' => 'Lost - Unsuitable Site',
-);
 $GLOBALS['app_list_strings']['servicecase_status_dom']=array (
   '' => '',
   'new' => 'New',
@@ -694,6 +607,132 @@ $GLOBALS['app_list_strings']['check_account_type_list']=array (
   'ElectricianBuyer' => 'Electrician',
   'HomeOwner' => 'Home Owner',
 );
+$GLOBALS['app_list_strings']['po_status_dom']=array (
+  'Test' => 'Test',
+  'Cancelled' => 'Cancelled',
+  '' => '',
+  'Draft' => 'Draft',
+  'Sent_To_Supplier' => 'Sent To Supplier',
+  'Supply_Allocated' => 'Supply Allocated',
+  'PE_Mgmt_Approved' => 'PE Mgmt Approved',
+);
+
+$GLOBALS['app_list_strings'][' local_freight_company_list']=array (
+  'cope_act' => 'COPE ACT',
+  'cope_nsw' => 'COPE NSW',
+  'cope_qld' => 'COPE QLD',
+  'cope_sa' => 'COPE SA',
+  'cope_vic' => 'COPE VIC',
+  'cope_wa' => 'COPE WA',
+  '' => '',
+);
+$GLOBALS['app_list_strings']['external_or_internal_c_list']=array (
+  '' => '',
+  'External' => 'External Switchboard',
+  'Internal' => 'Internal Switchboard',
+);
+$GLOBALS['app_list_strings']['meter_type_list']=array (
+  '' => '',
+  'SmartMeter' => 'Smart Meter',
+  'SpinningDisk' => 'Spinning Disk',
+);
+
+$GLOBALS['app_list_strings']['cert_templates_c_list']=array (
+  '' => '',
+  'pcoc_cert_wording_c' => 'PCOC Cert Wording',
+  'ces_cert_wording_c' => 'CES Cert Wording',
+);
+$GLOBALS['app_list_strings']['main_switch_c_list']=array (
+  '' => '',
+  'Yes' => 'Yes',
+  'No' => 'No',
+  'Unsure' => 'Unsure',
+);
+$GLOBALS['app_list_strings']['lead_status_dom']=array (
+  '' => '',
+  'New' => 'Nuevo',
+  'Assigned' => 'Asignado',
+  'In Process' => 'En Proceso',
+  'Converted' => 'Convertido',
+  'Recycled' => 'Reciclado',
+  'Dead' => 'Muerto',
+  'Lost_Competitor' => 'Lost - Competitor',
+  'Lost_Uncontactable' => 'Lost - Uncontactable',
+  'Lost_Unsuitable_Roof' => 'Lost - Unsuitable Roof',
+  'Lost_Enquiry_Only' => 'Lost - Enquiry Only',
+  'Lost_No_Longer_Interested' => 'Lost - No Longer Interested',
+  'Lost_Outside_Service_Area' => 'Lost - Outside Service Area',
+  'Lost_Duplicate' => 'Lost - Duplicate',
+  'Lost_Council' => 'Lost - Council',
+  'Lost_Reassigned_To_Solorgain' => 'Lost - Reassigned To Solargain',
+  'Address_Requested' => 'Address Requested',
+  'Spam' => 'Spam',
+  'Info_Pack_Sent' => 'Info Pack Sent',
+  'Test' => 'Test',
+  'Methven_BackOrder' => 'Methven Back Order',
+  'Lost_Too_Expensive' => 'Lost - Too Expensive',
+  'Lost_Different_Product' => 'Lost - Different Product',
+  'Lost_Unsuitable_Site' => 'Lost - Unsuitable Site',
+  'Info_Uploaded' => 'Info Uploaded',
+);
+
+$GLOBALS['app_list_strings']['roof_pitch_list']=array (
+  '0_25_Degrees' => '0-25 Degrees',
+  '25_30_Degrees' => '25-30 Degrees',
+  '30_more_Degrees' => '30+ Degrees',
+  '' => '',
+);
+$GLOBALS['app_list_strings']['record_type_display']=array (
+  '' => '',
+  'Accounts' => 'Cuenta',
+  'Opportunities' => 'Oportunidad',
+  'Cases' => 'Caso',
+  'Leads' => 'Cliente Potencial',
+  'Contacts' => 'Contacto',
+  'Bugs' => 'Incidencia',
+  'Project' => 'Proyecto',
+  'Prospects' => 'Público Objetivo',
+  'ProjectTask' => 'Tarea de Proyecto',
+  'Tasks' => 'Tarea',
+  'AOS_Contracts' => 'Contract',
+  'AOS_Invoices' => 'Invoice',
+  'AOS_Quotes' => 'Quote',
+  'AOS_Products' => 'Product',
+  'PO_purchase_order' => 'Purchase Order',
+  'pe_warehouse_log' => 'Warehouse Log',
+);
+$GLOBALS['app_list_strings']['record_type_display_notes']=array (
+  'Accounts' => 'Cuenta',
+  'Contacts' => 'Contacto',
+  'Opportunities' => 'Oportunidad',
+  'Tasks' => 'Tarea',
+  'Emails' => 'Email',
+  'Bugs' => 'Incidencia',
+  'Project' => 'Proyecto',
+  'ProjectTask' => 'Tarea de Proyecto',
+  'Prospects' => 'Público Objetivo',
+  'Cases' => 'Caso',
+  'Leads' => 'Cliente Potencial',
+  'Meetings' => 'Reunión',
+  'Calls' => 'Llamada',
+  'AOS_Contracts' => 'Contract',
+  'AOS_Invoices' => 'Invoice',
+  'AOS_Quotes' => 'Quote',
+  'AOS_Products' => 'Product',
+  'PO_purchase_order' => 'Purchase Order',
+  'pe_warehouse_log' => 'Warehouse Log',
+);
+$GLOBALS['app_list_strings']['product_status_list']=array (
+  'disable' => 'Disable',
+  'available' => 'Available',
+);
+$GLOBALS['app_list_strings']['repeating_list']=array (
+  '' => '',
+  'every_day' => 'Every Day',
+  'every_week' => 'Every Week',
+  'every_month' => 'Every Month',
+  'every_3_month' => 'Every 3 Month',
+);
 $GLOBALS['app_list_strings']['quote_stage_dom']=array (
   'Draft' => 'Borrador',
   'Negotiation' => 'Negociación',
@@ -734,44 +773,105 @@ $GLOBALS['app_list_strings']['quote_stage_dom']=array (
   'Customer_Accepted_Another_PE_Quote' => 'Customer Accepted Different PE Quote',
   'Followed_Up_2' => 'Followed Up #2',
 );
-
-$GLOBALS['app_list_strings']['po_status_dom']=array (
-  'Test' => 'Test',
-  'Cancelled' => 'Cancelled',
+$GLOBALS['app_list_strings']['quote_type_list']=array (
+  'quote_type_sanden' => 'Sanden',
+  'quote_type_solar' => 'Solar',
+  'quote_type_daikin' => 'Daikin',
+  'quote_type_off_grid_system' => 'Off-grid System',
+  'quote_type_methven' => 'Methven',
   '' => '',
-  'Draft' => 'Draft',
-  'Sent_To_Supplier' => 'Sent To Supplier',
-  'Supply_Allocated' => 'Supply Allocated',
-  'PE_Mgmt_Approved' => 'PE Mgmt Approved',
+  'quote_type_battery' => 'Battery',
+  'quote_type_upcomming_service' => 'Upcoming Service',
+  'quote_type_sanden_service' => 'Sanden Service',
+  'ValveCosy' => 'ValveCosy',
+  'Sanden_Warranty' => 'Sanden Warranty',
+  'Daikin_Warranty' => 'Daikin Warranty',
+  'SOTI' => 'SOTI',
+);
+$GLOBALS['app_list_strings']['roof_type_list']=array (
+  'Tile' => 'Tile',
+  'Tin' => 'Tin',
+  'klip_loc' => 'Klip Loc',
+  'Concrete' => 'Concrete',
+  'Trim_Deck' => 'Trim Deck',
+  'Insulated' => 'Insulated',
+  'Asbestos' => 'Asbestos',
+  'Ground_Mount' => 'Ground Mount',
+  'Other' => 'Other',
+  'Terracotta' => 'Terracotta',
+  '' => '',
+);
+$GLOBALS['app_list_strings']['primary_wall_type_list']=array (
+  '' => '',
+  'single_brick' => 'Single Brick',
+  'double_brick' => 'Double Brick',
+  'wood' => 'Wood',
+  'cement_sheet' => 'Cement Sheet',
+);
+$GLOBALS['app_list_strings']['switchboard_location_list']=array (
+  '' => '',
+  'internal_wall' => 'Internal Wall',
+  'external_wall' => 'External Wall',
+  'garage_wall' => 'Garage Wall',
 );
 
-$GLOBALS['app_list_strings'][' local_freight_company_list']=array (
-  'cope_act' => 'COPE ACT',
-  'cope_nsw' => 'COPE NSW',
-  'cope_qld' => 'COPE QLD',
-  'cope_sa' => 'COPE SA',
-  'cope_vic' => 'COPE VIC',
-  'cope_wa' => 'COPE WA',
-  '' => '',
+$GLOBALS['app_list_strings']['geo_type_of_wh_replaced_list']=array (
+  'newBuilding' => 'New building',
+  'replacedElectricHeater' => 'Replaced solar water heater',
+  'replacedHeatPump' => 'Replaced heat pump',
+  'firstSwhAtExistingBuilding' => 'First SWH at existing building',
+  'replaceGasWh' => 'Replaced gas water heater',
+  'other' => 'Other',
+  'replacedSolarWaterHeater' => 'Replaced solar water heater',
 );
-$GLOBALS['app_list_strings']['main_switch_c_list']=array (
-  '' => '',
-  'Yes' => 'Yes',
-  'No' => 'No',
+$GLOBALS['app_list_strings']['existing_gas_connection_list']=array (
+  'true' => 'Yes',
+  'false' => 'No',
 );
-$GLOBALS['app_list_strings']['external_or_internal_c_list']=array (
+$GLOBALS['app_list_strings']['lead_source_dom']=array (
   '' => '',
-  'External' => 'External Switchboard',
-  'Internal' => 'Internal Switchboard',
+  'Cold Call' => 'Llamada en Frío',
+  'Existing Customer' => 'Cliente Existente',
+  'Self Generated' => 'Auto Generado',
+  'Employee' => 'Empleado',
+  'Partner' => 'Partner',
+  'Public Relations' => 'Relaciones Públicas',
+  'Direct Mail' => 'Correo Directo',
+  'Conference' => 'Conferencia',
+  'Trade Show' => 'Exposición',
+  'Web Site' => 'Sitio Web',
+  'Word of mouth' => 'Recomendación',
+  'Email' => 'Email',
+  'Campaign' => 'Campaña',
+  'Other' => 'Otro',
+  'Solargain' => 'Solargain',
+  'EarthGarden' => 'Earth & Garden',
+  'ATA_ReNew' => 'ATA ReNew',
+  'ATA_Sanctuary' => 'ATA Sanctuary Magazine',
+  'ABC_Organic_Gardener' => 'ABC Organic Gardener Magazine',
+  'OneStepOffTheGrid' => 'One Step Off The Grid Website',
+  'Sanden_Web_Site' => 'Sanden Web Site',
+  'Home_Show' => 'Home Show',
+  'FBMyEffElecHome' => 'FB My Efficient Electric Home',
+  'PE_Sanden_Quote_Form' => 'PE Sanden Quote Form',
+  'PE_Daikin_Quote_Form' => 'PE Daikin Quote Form',
+  'Google_Search' => 'Google Search',
 );
-$GLOBALS['app_list_strings']['meter_type_list']=array (
+$GLOBALS['app_list_strings']['payment_options_list']=array (
   '' => '',
-  'SmartMeter' => 'Smart Meter',
-  'SpinningDisk' => 'Spinning Disk',
+  'Deposit_Paid' => 'Deposit',
+  'Part_Payment' => 'Part Payment',
+  'Balance_of_Payment' => 'Balance of Payment',
+  'Partial_Payment' => 'Partial Payment',
+  'Full_Payment' => 'Full Payment',
+  'final_payment' => 'Final Payment',
 );
-
-$GLOBALS['app_list_strings']['cert_templates_c_list']=array (
+$GLOBALS['app_list_strings']['PO_type_list']=array (
   '' => '',
-  'pcoc_cert_wording_c' => 'PCOC Cert Wording',
-  'ces_cert_wording_c' => 'CES Cert Wording',
+  'sanden_supply' => 'Sanden Supply',
+  'daikin_supply' => 'Daikin Supply',
+  'installer' => 'Installer',
+  'sanden_plumber' => 'Sanden Plumber',
+  'sanden_electrician' => 'Sanden Electrician',
+  'SPR_PV_Supply' => 'Sunpower PV Supply',
 );
