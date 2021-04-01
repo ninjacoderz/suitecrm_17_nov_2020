@@ -2867,6 +2867,7 @@ $(document).ready(function () {
         var date_return = '';
         var date = new Date().toLocaleString("en-US", { timeZone: time_zone });
             date  = new Date(date);
+        let day = date.getDay();
         switch (type) {
             case 'today':
                 var data = defaultDateTime(date);
@@ -2879,7 +2880,11 @@ $(document).ready(function () {
                 date_return = data['day'] + '/' + data['month'] + '/' + data['year'];
                 break;
             case '1':
-                var data = defaultDateTime(new Date(date.getTime() + 1 * (24 * 60 * 60 * 1000)));
+                if (day === 5) {
+                    var data = defaultDateTime(new Date(date.getTime() + 3 * (24 * 60 * 60 * 1000)));
+                } else {
+                    var data = defaultDateTime(new Date(date.getTime() + 1 * (24 * 60 * 60 * 1000)));
+                }
                 if (data['day'] < 10) {
                     data['day'] = '0' + data['day'];
                 }

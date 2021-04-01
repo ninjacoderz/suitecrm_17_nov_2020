@@ -8590,6 +8590,7 @@ function RenderHTMLPromoCodeCustom(){
 function getDate_Inv(type) {
     var date_return = '';
     var date = new Date();
+    let day = date.getDay();
     switch(type){
         case 'today':
             var data = defaultDateTime_Inv(new Date());
@@ -8602,7 +8603,11 @@ function getDate_Inv(type) {
             date_return = data['day']+'/'+data['month']+'/'+data['year']; 
             break;
         case '1':
-            var data = defaultDateTime_Inv(new Date(date.getTime() + (24*60*60*1000)));
+            if (day === 5) {
+                var data = defaultDateTime_Inv(new Date(date.getTime() + 3*(24*60*60*1000)));
+            } else {
+                var data = defaultDateTime_Inv(new Date(date.getTime() + (24*60*60*1000)));
+            }
             if(data['day'] < 10) {
                 data['day'] = '0'+data['day'];
             }
