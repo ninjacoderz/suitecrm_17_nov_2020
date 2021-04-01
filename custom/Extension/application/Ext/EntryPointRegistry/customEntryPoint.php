@@ -1457,3 +1457,8 @@ $entry_point_registry['APIGetProductInfoByShortName'] = array(
     'file' => 'custom/modules/AOS_Products/APIGetProductInfoByShortName.php',
     'auth' => false
 );
+//Nhat -Test
+$entry_point_registry['PO_purchase_order_meeting'] = array(
+    'file' => 'custom/modules/PO_purchase_order_meeting/PO_purchase_order_meeting.php',
+    'auth' => true
+);
