@@ -6,7 +6,16 @@
     $emailCC = '';
     if($_REQUEST['type_form'] == 'daikin_form') {
         $arrayDaikin = [];
-        foreach($_REQUEST['list_infomation']['products'] as $product) {
+        // Email CC 
+        if($_REQUEST['list_infomation']['prepared_by'] == 'Matthew Wright') {
+            $emailCC = 'matthew.wright@pure-electric.com.au';
+        } else if($_REQUEST['list_infomation']['prepared_by'] == 'Paul Szuster') {
+            $emailCC = 'paul.szuster@pure-electric.com.au';
+        } else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
+            $emailCC = 'michael.golden@pure-electric.com.au';
+        }
+
+        foreach($_REQUEST['products'] as $product) {
             if (strpos($product["productName"], 'US7') == true) {
                 array_push($arrayDaikin,'US7');
             } else if(strpos($product["productName"], 'Nexura') == true) {
@@ -17,24 +26,13 @@
         foreach($array_tmp as $tmp) {
             if($tmp == "US7") {
                 $emailTemplateId = "8d9e9b2c-e05f-deda-c83a-59f97f10d06a";
-                sendMailInfoPack($_REQUEST['list_infomation']["quote_daikin_id"], $emailTemplateId, $_REQUEST['list_infomation']['email_customer']);
+                sendMailInfoPack($_REQUEST['list_infomation']["quote_daikin_id"], $emailTemplateId, $_REQUEST['list_infomation']['email_customer'], $emailCC);
             } else if($tmp == "Nexura") {
                 $emailTemplateId = "5ad80115-b756-ea3e-ca83-5abb005602bf";
-                sendMailInfoPack($_REQUEST['list_infomation']["quote_daikin_id"], $emailTemplateId, $_REQUEST['list_infomation']['email_customer']);
+                sendMailInfoPack($_REQUEST['list_infomation']["quote_daikin_id"], $emailTemplateId, $_REQUEST['list_infomation']['email_customer'], $emailCC);
             }
         }
-        // Email CC 
-        if($_REQUEST['list_infomation']['prepared_by'] == 'Matthew Wright') {
-            $emailCC = 'matthew.wright@pure-electric.com.au';
-        } else if($_REQUEST['list_infomation']['prepared_by'] == 'Paul Szuster') {
-            $emailCC = 'paul.szuster@pure-electric.com.au';
-        } else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
-            $emailCC = 'michael.golden@pure-electric.com.au';
-        }
-
     }elseif($_REQUEST['type_form'] == 'solar_form') {
-        $emailTemplateId = "3c143527-67a2-6190-1565-5d5b3809767e";
-        sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['info_pack']['your_email']);
         if($_REQUEST['prepared_by'] == 'Matthew Wright') {
             $emailCC = 'matthew.wright@pure-electric.com.au';
         } else if($_REQUEST['prepared_by'] == 'Paul Szuster') {
@@ -42,15 +40,10 @@
         } else if($_REQUEST['prepared_by'] == 'Michael Golden') {
             $emailCC = 'michael.golden@pure-electric.com.au';
         }
+        $emailTemplateId = "3c143527-67a2-6190-1565-5d5b3809767e";
+        sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['info_pack']['your_email'], $emailCC);
+        
     }elseif($_REQUEST['type_form'] == 'sanden_form'){
-        if (strpos($_REQUEST["product_info"]["choice_product_sanden"], 'FQS') == true) {
-            $emailTemplateId = "dbf622ae-bb45-cb79-eb97-5cd287c48ac3";
-            sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['product_info']['your_email']);
-        } else {
-            $emailTemplateId = "ad1f03d0-dc47-7f39-fbb9-5cd289eafcf5";
-            sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['product_info']['your_email']);
-        }
-
         // Email CC 
         if($_REQUEST['product_info']['prepared_by'] == 'Matthew Wright') {
             $emailCC = 'matthew.wright@pure-electric.com.au';
@@ -59,8 +52,15 @@
         } else if($_REQUEST['product_info']['prepared_by'] == 'Michael Golden') {
             $emailCC = 'michael.golden@pure-electric.com.au';
         }
+        if (strpos($_REQUEST["product_info"]["choice_product_sanden"], 'FQS') == true) {
+            $emailTemplateId = "dbf622ae-bb45-cb79-eb97-5cd287c48ac3";
+            sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['product_info']['your_email'], $emailCC);
+        } else {
+            $emailTemplateId = "ad1f03d0-dc47-7f39-fbb9-5cd289eafcf5";
+            sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['product_info']['your_email'], $emailCC);
+        }
     }
-    function sendMailInfoPack($quote_id, $emailTemplateId, $email)  {
+    function sendMailInfoPack($quote_id, $emailTemplateId, $email, $cc)  {
         global $current_user;
         if($quote_id != ''){
             $quote = new AOS_Quotes();
