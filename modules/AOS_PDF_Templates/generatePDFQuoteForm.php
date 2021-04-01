@@ -156,7 +156,7 @@ if($custom_due_amount == 0 && $custom_total_payment != 0){
 //dung code -- change update status quote
 if($_REQUEST['task'] == 'emailpdf' && $_REQUEST['module'] == 'AOS_Quotes') {
     $quote = new AOS_Quotes();
-    $quote->retrieve($_REQUEST['uid']);
+    $quote->retrieve($_REQUEST['list_infomation']['quote_daikin_id']);
     if($quote->id != ''){
         $quote->stage = 'Delivered';
         $quote->save();
@@ -259,7 +259,7 @@ if($short_description_c != ""){
     $name_explode = explode(" ",$bean->billing_account);
     if ($_REQUEST['send_get_list'] == 'sanden_form')
     {
-        if($_REQUEST['first_name'] != '') {
+        if($_REQUEST['list_infomation']['first_name'] != '') {
             $first_name = $_REQUEST['list_infomation']['first_name'];
         } else {
             $first_name = 'Guest';
@@ -411,7 +411,7 @@ $text = str_replace("\$shipping_amount", "\$" . $variableName . "_shipping_amoun
 $text = str_replace("\$total_amount", "\$" . $variableName . "_total_amount", $text);
 
 $quote = new AOS_Quotes();
-$quote->retrieve($_REQUEST['uid']);
+$quote->retrieve($_REQUEST['list_infomation']['quote_daikin_id']);
 if($quote->id == '') {
     echo json_encode(array('msg'=>'error'));
     die();
