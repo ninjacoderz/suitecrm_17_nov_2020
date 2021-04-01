@@ -3,6 +3,7 @@
     $emailTemplateId = '';
     // $_REQUEST["product_info"]["choice_product_sanden"] = 'Sanden FQS';
     // $_REQUEST["quote_id"] = 'ecd384ca-d52a-8662-716c-5e706d65b8fd';
+    $emailCC = '';
     if($_REQUEST['type_form'] == 'daikin_form') {
         $arrayDaikin = [];
         foreach($_REQUEST['list_infomation']['products'] as $product) {
@@ -22,17 +23,41 @@
                 sendMailInfoPack($_REQUEST['list_infomation']["quote_daikin_id"], $emailTemplateId, $_REQUEST['list_infomation']['email_customer']);
             }
         }
+        // Email CC 
+        if($_REQUEST['list_infomation']['prepared_by'] == 'Matthew Wright') {
+            $emailCC = 'matthew.wright@pure-electric.com.au';
+        } else if($_REQUEST['list_infomation']['prepared_by'] == 'Paul Szuster') {
+            $emailCC = 'paul.szuster@pure-electric.com.au';
+        } else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
+            $emailCC = 'michael.golden@pure-electric.com.au';
+        }
 
     }elseif($_REQUEST['type_form'] == 'solar_form') {
         $emailTemplateId = "3c143527-67a2-6190-1565-5d5b3809767e";
         sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['info_pack']['your_email']);
-    } else {
+        if($_REQUEST['prepared_by'] == 'Matthew Wright') {
+            $emailCC = 'matthew.wright@pure-electric.com.au';
+        } else if($_REQUEST['prepared_by'] == 'Paul Szuster') {
+            $emailCC = 'paul.szuster@pure-electric.com.au';
+        } else if($_REQUEST['prepared_by'] == 'Michael Golden') {
+            $emailCC = 'michael.golden@pure-electric.com.au';
+        }
+    }elseif($_REQUEST['type_form'] == 'sanden_form'){
         if (strpos($_REQUEST["product_info"]["choice_product_sanden"], 'FQS') == true) {
             $emailTemplateId = "dbf622ae-bb45-cb79-eb97-5cd287c48ac3";
             sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['product_info']['your_email']);
         } else {
             $emailTemplateId = "ad1f03d0-dc47-7f39-fbb9-5cd289eafcf5";
             sendMailInfoPack($_REQUEST["quote_id"], $emailTemplateId, $_REQUEST['product_info']['your_email']);
+        }
+
+        // Email CC 
+        if($_REQUEST['product_info']['prepared_by'] == 'Matthew Wright') {
+            $emailCC = 'matthew.wright@pure-electric.com.au';
+        } else if($_REQUEST['product_info']['prepared_by'] == 'Paul Szuster') {
+            $emailCC = 'paul.szuster@pure-electric.com.au';
+        } else if($_REQUEST['product_info']['prepared_by'] == 'Michael Golden') {
+            $emailCC = 'michael.golden@pure-electric.com.au';
         }
     }
     function sendMailInfoPack($quote_id, $emailTemplateId, $email)  {
@@ -133,9 +158,7 @@
     
                 $mail->AddAttachment($file_location, $file_name, 'base64', $mime_type);
             }
-            $mail->AddCC('paul.szuster@pure-electric.com.au');
-            $mail->AddCC('matthew.wright@pure-electric.com.au');
-            $mail->AddCC('michael.golden@pure-electric.com.au');
+            $mail->AddCC($emailCC);
             $mail->AddCC('info@pure-electric.com.au');
             $mail->prepForOutbound();
             $mail->setMailerForSystem();  
