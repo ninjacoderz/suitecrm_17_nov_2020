@@ -23,7 +23,7 @@
 
         if(count($solar_options) > 0){
             for($i = 0 ; $i < count($solar_options); $i++){
-                $pm = 100;
+                $pm = (int) $solar_options[$i]->pm_price;
                 $curr_option =  $solar_options[$i];
                 $state = $curr_option->state;
                 $total_kw = (float)$curr_option->kWpanel;
