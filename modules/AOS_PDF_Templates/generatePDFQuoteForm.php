@@ -38,7 +38,7 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-if (!isset($_REQUEST['uid']) || empty($_REQUEST['uid']) || !isset($_REQUEST['templateID']) || empty($_REQUEST['templateID'])) {
+if (!isset($_REQUEST['list_infomation']['quote_daikin_id']) || empty($_REQUEST['list_infomation']['quote_daikin_id']) || !isset($_REQUEST['templateID']) || empty($_REQUEST['templateID'])) {
     die('Error retrieving record. This record may be deleted or you may not be authorized to view it.');
 }
 // $level = error_reporting();
@@ -57,7 +57,7 @@ require_once('include/SugarPHPMailer.php');
 
 global $mod_strings, $sugar_config;
 
-$bean = BeanFactory::getBean($_REQUEST['module'], $_REQUEST['uid']);
+$bean = BeanFactory::getBean($_REQUEST['module'], $_REQUEST['list_infomation']['quote_daikin_id']);
 
 if (!$bean) {
     sugar_die("Invalid Record");
@@ -165,11 +165,11 @@ if($_REQUEST['task'] == 'emailpdf' && $_REQUEST['module'] == 'AOS_Quotes') {
 //Tritruong Update Quote
 if ($_REQUEST['send_get_list'] == 'sanden_form'){
     $quote = new AOS_Quotes();
-    $quote->retrieve($_REQUEST['uid']);
+    $quote->retrieve($_REQUEST['list_infomation']['quote_daikin_id']);
 
-    $quote->name = str_replace('GUEST', $_REQUEST['firstname'].' '.$_REQUEST['lastname'], $quote->name);
-    $quote->account_firstname_c = $_REQUEST['firstname'];
-    $quote->account_lastname_c = $_REQUEST['lastname'];
+    $quote->name = str_replace('GUEST', $_REQUEST['list_infomation']['first_name'].' '.$_REQUEST['list_infomation']['last_name'], $quote->name);
+    $quote->account_firstname_c = $_REQUEST['list_infomation']['first_name'];
+    $quote->account_lastname_c = $_REQUEST['list_infomation']['last_name'];
     //Update Quote Suburb, Postcode, State
     $quote->stage = 'Delivered';
 
@@ -259,8 +259,8 @@ if($short_description_c != ""){
     $name_explode = explode(" ",$bean->billing_account);
     if ($_REQUEST['send_get_list'] == 'sanden_form')
     {
-        if($_REQUEST['firstname'] != '') {
-            $first_name = $_REQUEST['firstname'];
+        if($_REQUEST['first_name'] != '') {
+            $first_name = $_REQUEST['list_infomation']['first_name'];
         } else {
             $first_name = 'Guest';
         }
@@ -326,8 +326,8 @@ if($short_description_bottom_c != ""){
     $name_explode = explode(" ",$bean->billing_account);
     if ($_REQUEST['send_get_list'] == 'sanden_form')
     {
-        if($_REQUEST['firstname'] != '') {
-            $first_name = $_REQUEST['firstname'];
+        if($_REQUEST['list_infomation']['first_name'] != '') {
+            $first_name = $_REQUEST['list_infomation']['first_name'];
         } else {
             $first_name = 'Guest';
         }
@@ -419,13 +419,13 @@ if($quote->id == '') {
 // $quoteDate = new DateTime($quote->quote_date_c);
 // $quoteExpiration = new DateTime($quote->expiration);
 
-if($_REQUEST['prepared_by'] == 'Matthew Wright') {
+if($_REQUEST['list_infomation']['prepared_by'] == 'Matthew Wright') {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Matthew Wright',$text);
-} else if($_REQUEST['prepared_by'] == 'Paul Szuster') {
+} else if($_REQUEST['list_infomation']['prepared_by'] == 'Paul Szuster') {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Paul Szuster',$text);
-} else if($_REQUEST['prepared_by'] == 'Michael Golden') {
+} else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Michael Golden',$text);
-} else if($_REQUEST['prepared_by'] == 'PE Admin') {
+} else if($_REQUEST['list_infomation']['prepared_by'] == 'PE Admin') {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Administrator',$text);
 } else {
     $text = str_replace('$aos_quotes_modified_by_name' ,'Administrator',$text);
@@ -451,18 +451,13 @@ $text = str_replace("\$custom_due_date", $custom_due_date, $text);
 if ($_REQUEST['send_get_list'] == 'sanden_form'){
     if($_REQUEST['type_form'] == 'daikin_form') {
 
-        $products = json_decode(htmlspecialchars_decode($_POST['products']), true);
-        $wifi = $_POST['wifi'];
-        $notes = $_POST['notes'];
+        $products = json_decode(htmlspecialchars_decode($_POST['list_infomation']['products']), true);
+        $wifi = $_POST['list_infomation']['wifi'];
+        $notes = $_POST['list_infomation']['notes'];
         $continue_link = '';
         $acceptance_link = '';
         $decription_internal_notes = '<table style="margin: 20px 0; text-align: left; border-collapse: collapse; width: 735px;"><tr><th style="text-align: left; background: #1178ab; color: white; padding: 10px 5px; border-right: 1px solid #1178ab;" colspan="100%">Daikin Quote Options Selected</th></tr>';
-        // if($notes != '') {
-        //     $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">Notes: </td><td colspan="5" style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">'.$notes.'</td></tr>';
-        // }
-        // if($wifi != '') {
-        //     $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">Daikin Mobile App Wifi: </td><td colspan="5" style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">'.$wifi.'</td></tr>';
-        // }
+        
         foreach($products as $product) {
             $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">Daikin '.$product['typeOfProduct'].': </td><td style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;"> '.$product['quantity'].' </td><td style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">'.$product['choice_installation'].'</td><td style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">'.$product['brick_type'].'</td><td style="border-style: solid; border-width: .5px; padding: 5px; border-color: #8a8a8a;">'.$product['height_above_ground'].'</td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$product['outdoor_unit_location'].'</td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Wifi: '.$product['wifi'].'</td></tr>';
         }
@@ -470,123 +465,6 @@ if ($_REQUEST['send_get_list'] == 'sanden_form'){
         $continue_link = '<a href="https://pure-electric.com.au/pedaikinform-new/confirm?quote-id='.$quote->id.'" target="_blank">Continue to finalise your quote by uploading pictures and confirming positioning of your daikin system</a>';
         $acceptance_link = '<a href="https://pure-electric.com.au/pedaikinform-new/acceptance?quote-id='.$quote->id.'" target="_blank">Please click this link to accept your quote.</a>';
         // $text = str_replace('Notes/Comments' ,$notes,$text);
-    } else {
-        $decription_internal_notes = '<table style="margin: 20px 0; text-align: left; border-collapse: collapse; width: 735px;"><tr><th style="text-align: left; background: #1178ab; color: white; padding: 10px 5px; border-right: 1px solid #1178ab;" colspan="100%">Sanden Quote Options Selected:</th></tr>';
-        $are_you_have_hws = $_POST['are_you_have_hws'];
-        $type_device = $_POST['type_device'];
-        $gas_type = $_POST['gas_type'];
-        $gas_instant_electrical = $_POST['gas_instant_electrical'];
-        $electric_type = $_POST['electric_type'];
-        $electric_storage_located = $_POST['electric_storage_located'];
-        $electric_storage_outside = $_POST['electric_storage_outside'];
-        $electric_storage_inside = $_POST['electric_storage_inside'];
-        $solar_type = $_POST['solar_type'];
-        $solar_rooftank = $_POST['solar_rooftank'];
-        $solar_grouptank = $_POST['solar_grouptank'];
-        $wood_type = $_POST['wood_type'];
-        $install_location = $_POST['install_location'];
-        $product_choice = $_POST['product_choice'];
-        $quickie_type = $_POST['quickie_type'];
-        $plumbing_installation = $_POST['plumbing_installation'];
-        $electrical_installation = $_POST['electrical_installation'];
-        $hot_water_rebate = $_POST['hot_water_rebate'];
-        $reticulated_gas = $_POST['reticulated_gas'];
-
-        $sanden_compressor = $_POST['sanden_compressor'];
-        $where_install_location = $_POST['where_install_location'];
-        $install_location_access = $_POST['install_location_access'];
-        $stairs = $_POST['stairs'];
-
-        $connections_presented = $_POST['connections_presented'];
-        $additional_untempered = $_POST['additional_untempered'];
-        $notes_field = $_POST['notes_field'];
-
-        if($are_you_have_hws != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a; border-color: #8a8a8a;">Are you existing HWS or New Build: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$are_you_have_hws.'</td></tr>';
-        }
-        if($type_device != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">You want to replacing: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$type_device.'</td></tr>';
-        }
-        if($gas_type != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Gas Type: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$gas_type.'</td></tr>';
-        }
-        if($gas_instant_electrical != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Gas instant electrical connection: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$gas_instant_electrical.'</td></tr>';
-        }
-        if($electric_type != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Electric Type: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$electric_type.'</td></tr>';
-        }
-        if($electric_storage_located != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Where is your electric storage located: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$electric_storage_located.'</td></tr>';
-        }
-        if($electric_storage_outside != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Where about outside: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$electric_storage_outside.'</td></tr>';
-        }
-        if($electric_storage_inside != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Where about inside: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$electric_storage_inside.'</td></tr>';
-        }
-        if($solar_type != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Solar Type: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$solar_type.'</td></tr>';
-        }
-        if($solar_rooftank != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">How is it boosted: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$solar_rooftank.'</td></tr>';
-        }
-        if($solar_grouptank != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">How is it boosted: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$solar_grouptank.'</td></tr>';
-        }
-        if($wood_type != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Wood type: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$wood_type.'</td></tr>';
-        }
-        if($install_location != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Install Location: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$install_location.'</td></tr>';
-        }
-        if($product_choice != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Product Choice: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$product_choice.'</td></tr>';
-        }
-        if($quickie_type != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Quickie Type: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$quickie_type.'</td></tr>';
-        }
-        if($plumbing_installation != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Plumbing Installation: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$plumbing_installation.'</td></tr>';
-        }
-        if($electrical_installation != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Electrical Installation: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$electrical_installation.'</td></tr>';
-        }
-        if($hot_water_rebate != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Solar Vic Solar Hot Water Rebate - Do you qualify: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$hot_water_rebate.'</td></tr>';
-        }
-        if($reticulated_gas != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Are you connected to reticulated gas: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$reticulated_gas.'</td></tr>';
-        }
-        if($where_install_location != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">New Sanden HWS Install Location: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$where_install_location.'</td></tr>';
-        }
-        if($sanden_compressor != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Sanden compressor unit position: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$sanden_compressor.'</td></tr>';
-        }
-        if($install_location_access != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Install Location Access: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$install_location_access.'</td></tr>';
-        }
-        if($stairs != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Stairs: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$stairs.'</td></tr>';
-        }
-
-        if($connections_presented != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Hot and Cold Connections presented, externally located, single storey, paved area: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$connections_presented.'</td></tr>';
-        }
-        if($additional_untempered != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Additional untempered: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$additional_untempered.'</td></tr>';
-        }
-        if($notes_field != '') {
-            $decription_internal_notes .= '<tr><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">Notes: </td><td style="border-style: solid; border-width: .5px; padding: 5px;  border-color: #8a8a8a;">'.$notes_field.'</td></tr>';
-        }
-        $decription_internal_notes .= '</table>';
-
-         $continue_link = '<a href="https://pure-electric.com.au/pe-sanden-quote-form?customer_confirm='.$quote->id.'" target="_blank">Continue to finalise your quote by uploading pictures and confirming positioning of your sanden system</a>';
-         $acceptance_link = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/acceptance?quote-id='.$quote->id.'" target="_blank">Please click this link to accept your quote</a>';
-
-         // $continue_link = '<a href="http://loc.pure-electric.com/pesandenform?customer_confirm='.$quote->id.'" target="_blank">Continue to finalise your quote by uploading pictures and confirming positioning of your sanden system</a>';
-        //  $text = str_replace('Notes/Comments' ,$_REQUEST['list_infomation']['notes_field'],$text);
     }
     
     $text = str_replace("\$list_choice_form", $decription_internal_notes, $text);
@@ -704,7 +582,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
 
             } elseif ($_REQUEST['send_get_list'] == 'sanden_form'){
                 $path           = $_SERVER["DOCUMENT_ROOT"] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/';
-                $dirName        = $_REQUEST['pre_install_photos_c'];
+                $dirName        = $_REQUEST['list_infomation']['pre_install_photos_c'];
                 $folderName     = $path . $dirName . '/';
                 if (!file_exists($folderName)) {
                     mkdir($path . $dirName, 0777, true);
@@ -749,18 +627,18 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                 $bodytext .=  $defaultEmailSignature['signature_html'];
                 $mail->Body = $bodytext;
                 $mail->IsHTML(true);
-                $mail->AddAddress($_REQUEST['email_customer']);
+                $mail->AddAddress($_REQUEST['list_infomation']['email_customer']);
                 $mail->AddAttachment($folder_location, $name_file, 'base64', $mime_type);
-                if($_REQUEST['prepared_by'] == 'Matthew Wright') {
+                if($_REQUEST['list_infomation']['prepared_by'] == 'Matthew Wright') {
                     $mail->AddCC('matthew.wright@pure-electric.com.au');
                     $mail->AddCC('info@pure-electric.com.au');
-                } else if($_REQUEST['prepared_by'] == 'Paul Szuster') {
+                } else if($_REQUEST['list_infomation']['prepared_by'] == 'Paul Szuster') {
                     $mail->AddCC('paul.szuster@pure-electric.com.au');
                     $mail->AddCC('info@pure-electric.com.au');
-                } else if($_REQUEST['prepared_by'] == 'Michael Golden') {
+                } else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
                     $mail->AddCC('michael.golden@pure-electric.com.au');
                     $mail->AddCC('info@pure-electric.com.au');
-                } else if($_REQUEST['prepared_by'] == 'PE Admin') {
+                } else if($_REQUEST['list_infomation']['prepared_by'] == 'PE Admin') {
                     $mail->AddCC('info@pure-electric.com.au');
                 } else {
                     $mail->AddCC('info@pure-electric.com.au');
@@ -773,12 +651,12 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                 echo 'https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files'.'/'. $dirName. '/'.$name_file;
                 // echo 'http://new.suitecrm-pure.com/custom/include/SugarFields/Fields/Multiupload/server/php/files'.'/'. $dirName. '/'.$name_file;
 
-                if($_REQUEST['phonenumber'] != '' && $_POST['send_sms']=="Yes"){
+                if($_REQUEST['list_infomation']['phone_number'] != '' && $_POST['list_infomation']['send_sms']=="Yes"){
 
                     // $number_receive_sms = $request['number_receive_sms'];
                     $file_path = '';
-                    $client_numbers = $_REQUEST['phonenumber'];
-                    $first_name_quote = $_REQUEST['firstname'];
+                    $client_numbers = $_REQUEST['list_infomation']['phone_number'];
+                    $first_name_quote = $_REQUEST['list_infomation']['first_name'];
     
                     $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '',  $client_numbers));
                     $body = '';
