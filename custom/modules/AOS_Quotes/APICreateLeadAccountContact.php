@@ -82,6 +82,7 @@
             $new_lead->description = $decription_internal_notes;
             $new_lead->lead_source = $rq_data['list_infomation']['hear_about'];
             $new_lead->lead_source_co_c = 'PureElectric';
+            $new_lead->product_type_c = "^quote_type_daikin^";
             // $new_lead->status = 'Converted'; //VUT - Create status NEW with new Lead
             
             $new_lead->assigned_user_id = $assigned_user;
@@ -263,7 +264,17 @@
             $islead->account_name = $account->name;
             $islead->contact_id = $contact->id;
             $islead->lead_source = $rq_data['list_infomation']['hear_about'];
-    
+            $dataProductType = explode(",",$islead->product_type_c);
+            if(empty($dataProductType)) {
+                $islead->product_type_c = "^quote_type_daikin^";
+            } else {
+                if (!in_array("^quote_type_daikin^", $dataProductType)) {
+                    array_push($dataProductType, "^quote_type_daikin^");
+                    $dataProductType = implode(",", $dataProductType);
+                }
+            }
+            $islead->product_type_c = $dataProductType;
+            
             $islead->status = 'Converted';
             // $islead->the_quote_prepared_c = "daikin_quote_form";
             $islead->description = $decription_internal_notes;

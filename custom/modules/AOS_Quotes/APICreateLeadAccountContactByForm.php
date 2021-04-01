@@ -183,6 +183,12 @@
         $new_lead->description = $decription_internal_notes;
         $new_lead->lead_source = $rq_data['hear_about'];
         $new_lead->lead_source_co_c = 'PureElectric';
+        $new_lead->product_type_c = "^quote_type_sanden^";
+        // $dataProductType = explode(",",$lead->product_type_c);
+        // if (!in_array("^quote_type_sanden^", $dataProductType)) {
+        //     array_push($dataProductType, "^quote_type_sanden^");
+        //     $dataProductType = implode(",", $dataProductType);
+        // }
         // $new_lead->status = 'Converted'; //VUT status New for new Lead
         $new_lead->assigned_user_id = $assigned_user;
 
@@ -318,6 +324,16 @@
         $lead =  new Lead();
         $lead->retrieve($row['id']);
 
+        $dataProductType = explode(",",$lead->product_type_c);
+        if(empty($dataProductType)) {
+            $islead->product_type_c = "^quote_type_sanden^";
+        } else {
+            if (!in_array("^quote_type_sanden^", $dataProductType)) {
+                array_push($dataProductType, "^quote_type_sanden^");
+                $dataProductType = implode(",", $dataProductType);
+            }
+        }
+
         if(!$lead->account_id) {
             // create account
             $account = new Account();
@@ -368,6 +384,7 @@
 
         $lead->description = $decription_internal_notes;
         $lead->status = 'Converted';
+        $lead->product_type_c = $dataProductType;
         $lead->lead_source = $rq_data['hear_about'];
 
         if (strpos($products, 'FQV') === 0 ) {
