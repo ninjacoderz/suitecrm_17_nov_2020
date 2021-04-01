@@ -158,7 +158,7 @@
     
                 $mail->AddAttachment($file_location, $file_name, 'base64', $mime_type);
             }
-            $mail->AddCC($emailCC);
+            $mail->AddCC($cc);
             $mail->AddCC('info@pure-electric.com.au');
             $mail->prepForOutbound();
             $mail->setMailerForSystem();  
