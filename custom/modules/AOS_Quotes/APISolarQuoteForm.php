@@ -9,6 +9,9 @@
     $email_customer = $_POST['email_customer'];
     $first_name = $_POST['firstname'];
     $last_name = $_POST['lastname'];
+    // .:nhantv:. Add sms_send from form
+    $sms_send = $_POST['sms_send'];
+
 
     $primary_address_city = $_POST['suburb_customer'];
     $primary_address_state = $_POST['state_customer'];
@@ -787,17 +790,19 @@
         $mail->setMailerForSystem();  
         $sent = $mail->Send();
 
+        // .:nhantv:. Add logic to check that "Quote via SMS?" is selected
+        if($sms_send === "Yes"){
+            $phone = preg_replace("/^0/", "+61", preg_replace('/\D/', '',  $phone_number));
 
-        $phone = preg_replace("/^0/", "+61", preg_replace('/\D/', '',  $phone_number));
+            $message_dir = '/var/www/message';
+            $admin_name = "Paul";
 
-        $message_dir = '/var/www/message';
-        $admin_name = "Paul";
+            $body_sms = "Hi ".$contact->first_name.", Thank you for your solar pricing request, we have sent your solar PV pricing options to your email inbox. Kind regards, Pure Electric";
+            $body_sms .= "To firm the quote, upload photos via this link : https://pure-electric.com.au/pesolarform/confirm?quote-id=".$quote_id;
+            $body_sms .= "To approve option of the quote via this link : https://pure-electric.com.au/confirm_option_acceptance?quote-id=".$quote_id;
 
-        $body_sms = "Hi ".$contact->first_name.", Thank you for your solar pricing request, we have sent your solar PV pricing options to your email inbox. Kind regards, Pure Electric";
-        $body_sms .= "To firm the quote, upload photos via this link : https://pure-electric.com.au/pesolarform/confirm?quote-id=".$quote_id;
-        $body_sms .= "To approve option of the quote via this link : https://pure-electric.com.au/confirm_option_acceptance?quote-id=".$quote_id;
-
-        exec("cd " . $message_dir . "; php send-message.php sms " . $phone . ' "' . $body_sms . '"');
+            exec("cd " . $message_dir . "; php send-message.php sms " . $phone . ' "' . $body_sms . '"');
+        }
 
     }
     function upload_file_form_solar($quote_id){    
