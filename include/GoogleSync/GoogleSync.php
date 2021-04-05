@@ -165,7 +165,7 @@ class GoogleSync extends GoogleSyncBase
              if($meeting == null && $action == 'pull'){
                 $name_event_google = trim($gevent->getSummary());
                 $db = DBManagerFactory::getInstance();
-                $query = "SELECT COUNT(id) FROM meetings WHERE name='$name_event_google' ";
+                $query = "SELECT id FROM meetings WHERE name = '$name_event_google' and deleted = 0";
                 
                 $result = $db->query($query);
                 if ($result->num_rows > 1) {
