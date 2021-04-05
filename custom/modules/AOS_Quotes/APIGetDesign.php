@@ -13,4 +13,13 @@
     if(!$quote->id) return;
 
     // Return
-    echo html_entity_decode($quote->design_tool_json_c);
+    $resData = [];
+    $data = $quote->design_tool_json_c;
+    if(is_null($data) || empty($data)){
+        $resData['code'] = -1;
+        $resData['content'] = [];
+    } else {
+        $resData['code'] = 0;
+        $resData['content'] = utf8_encode(html_entity_decode($data));
+    }
+    echo json_encode($resData);
