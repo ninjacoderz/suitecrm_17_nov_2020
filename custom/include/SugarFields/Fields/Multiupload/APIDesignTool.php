@@ -26,12 +26,14 @@
             $dataURL = $_REQUEST['dataURL'];
             $quoteType = 'Daikin';
             for($i = 0 ; $i < count($dataURL); $i++){
-                if($i == 0){
-                    $designType = '_FloorPlan';
-                }else{
-                    $designType = '_'.$i;
+                foreach($dataURL[$i] as $key =>$val){
+                    if($key == "floorplan"){
+                        $designType = '_'.$key;
+                    }else{
+                        $designType = '_'.$i.'_'.$key;
+                    }
+                    createImage($quote,base64_decode($val),$designType,$quoteType,$status);
                 }
-                createImage($quote,base64_decode($dataURL[$i]),$designType,$quoteType,$status);
             }
     
         }else if($quote->quote_type_c == 'quote_type_sanden'){

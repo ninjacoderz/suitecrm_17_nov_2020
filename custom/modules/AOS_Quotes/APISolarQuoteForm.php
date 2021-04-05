@@ -117,6 +117,9 @@
         // $new_lead->status = 'Converted'; //VUT- create status NEW for new Lead
         $new_lead->assigned_user_id = $assigned_user;
 
+        /// 
+        $new_lead->product_type_c = "^quote_type_solar^";
+
         // create account
         $account = new Account();
         $account->name = $first_name ." " . $last_name;
@@ -277,6 +280,16 @@
         $lead->account_name = $account->name;
         $lead->contact_id = $contact->id;
         $lead->the_quote_prepared_c = "solar_quote_form";
+        $dataProductType = explode(",",$lead->product_type_c);
+        if(empty($dataProductType)) {
+            $lead->product_type_c = "^quote_type_solar^";
+        } else {
+            if (!in_array("^quote_type_solar^", $dataProductType)) {
+                array_push($dataProductType, "^quote_type_solar^");
+                $dataProductType = implode(",", $dataProductType);
+            }
+        }
+        $lead->product_type_c = $dataProductType;
 
         // $lead->description = $decription_internal_notes;
         $lead->status = 'Converted';

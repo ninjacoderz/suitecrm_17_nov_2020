@@ -14,6 +14,7 @@ $result = array(
     'PO_purchase_order' => [],
 );
 $number_module = "";
+$email_assigned = "";
 $quote_id = $_POST['quote_id'];
 $invoice_id = $_POST['invoice_id'];
 $lead_id = $_POST['lead_id'];
@@ -21,7 +22,9 @@ if( $lead_id != ""){
     $lead = new Lead();
     $lead->retrieve($lead_id);
     $number_module = $lead->number;
-
+    $user = new User();
+    $user->retrieve($lead->assigned_user_id);
+    $email_assigned = $user->email1;
 }else if($quote_id != ""){
     $parent_id = $quote_id;
     $parent_type = "AOS_Quotes";
@@ -29,7 +32,9 @@ if( $lead_id != ""){
     $quote->retrieve($quote_id);
     $number_module = $quote->number;
     $result = render_json_quote($result,$quote_id);
-
+    $user = new User();
+    $user->retrieve($quote->assigned_user_id);
+    $email_assigned = $user->email1;
     foreach($result as $key => $value){
         if( !empty($value) ){
             $shortcuts .= "<a href='https://suitecrm.pure-electric.com.au/index.php?module=".$key."&action=EditView&record=".$value."'>".$key."</a> | ";
@@ -42,7 +47,9 @@ if( $lead_id != ""){
     $invoice->retrieve($_POST['invoice_id']);
     $number_module = $invoice->number;
     $result = render_json_invoice($result,$invoice_id);
-
+    $user = new User();
+    $user->retrieve($invoice->assigned_user_id);
+    $email_assigned = $user->email1;
     foreach($result as $key => $value){
         if( !empty($value) ){
             if( $key == "AOS_Quotes"){
@@ -976,7 +983,7 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->AddAttachment($file_attach['folderName'], $file_attach['fileName'], 'base64', 'application/octet-stream');
     }
     $mail->AddAddress('info@pure-electric.com.au');
-    // $mail->AddCC('paul.szuster@pure-electric.com.au');
+    $mail->AddCC($email_assigned);
     // $mail->AddCC('matthew.wright@pure-electric.com.au');
     // $mail->AddCC('john.hooper@pure-electric.com.au');
     // $mail->AddCC('quochuybkdn@gmail.com');
