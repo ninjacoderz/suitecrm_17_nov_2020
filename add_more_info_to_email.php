@@ -122,6 +122,7 @@ if (isset($matches[1]) && $matches[1] != "") {
 		$matches[1] ==  "matthew@pure-electric.com.au" ||
 		$matches[1] ==  "lee.andrewartha@pure-electric.com.au" ||
 		$matches[1] == "pure.electric.com.au@gmail.com" || 
+		$matches[1] == "info@pure-electric.com.au" || 
 		$matches[1] == "john.hooper@pure-electric.com.au"){
 			$data = preg_replace('/CRM Links\:[\s\S]+?End Links/', '', $data);
 			file_put_contents("email/".$file, $data);
