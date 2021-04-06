@@ -447,8 +447,17 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         //Setting Group Line Items
         $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = 'AOS_Invoices' AND parent_id = '".$invoice->id."' AND deleted = 0";
         $result = $db->query($sql);
+        $sanden_products = [
+            'sanden_fqv_315' => '0',
+            'sanden_fqs_315' => '0',
+            'sanden_fqs_300' => '0',
+            'sanden_fqs_250' => '0',
+            'sanden_fqs_160' => '0',
+            'QIK15_HPUMP' => '0',
+            'QIK20_HPUMP' => '0',
+        ];
         while ($row = $db->fetchByAssoc($result)) {
-            if(strpos($row['part_number'], "GAUS-") !== false  || strpos($row['part_number'], "QIK15−HPUMP") !== false ){
+            if(strpos($row['part_number'], "GAUS-") !== false  || strpos($row['part_number'], "−HPUMP") !== false ){
                 $purchaseOrder->name .= ' '.(int)$row['product_qty'].'x' .$row['part_number'];
                 if(strpos($row['part_number'], "GAUS-") !== false ){
                     $row['number'] = '1';
@@ -497,18 +506,23 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
                 switch ($row['part_number']) {
                     case 'GAUS-315FQS':
                         $part_numbers[] = "SAN-315SAQA";
+                        $sanden_products['sanden_fqs_315'] = (int)$row['product_qty'];
                         break;
                     case 'GAUS-315FQV':
                         $part_numbers[] = "SAN-315 VE";
+                        $sanden_products['sanden_fqv_315'] = (int)$row['product_qty'];
                         break;
                     case 'GAUS-250FQS':
                         $part_numbers[] = "SAN-250SAQA";
+                        $sanden_products['sanden_fqs_250'] = (int)$row['product_qty'];
                         break;
                     case 'GAUS-160FQS':
                         $part_numbers[] = "SAN-160SAQA";
+                        $sanden_products['sanden_fqs_160'] = (int)$row['product_qty'];
                         break;
                     case 'GAUS-300FQS':
                         $part_numbers[] = "SAN-300SAQA";
+                        $sanden_products['sanden_fqs_300'] = (int)$row['product_qty'];
                         break;
                     default:
                         # code...
@@ -563,6 +577,20 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
 
             }
 
+            // get quantity with part number -HPUMP
+            if (strpos($row['part_number'], "−HPUMP") !== false ) {
+                switch ($row['part_number']) {
+                    case 'QIK15−HPUMP':
+                        $sanden_products['QIK15_HPUMP'] = (int)$row['product_qty'];
+                        break;
+                    case 'QIK20−HPUMP':
+                        $sanden_products['QIK20_HPUMP'] = (int)$row['product_qty'];
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
 
    
@@ -586,12 +614,15 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         //     $purchaseOrder->name .= ' '.$name_tank;
         // }
         // //VUT - E >> https://trello.com/c/q2DSrioE/3111-please-delete-the-marked-part-in-the-automatical-po-name-when-converting-from-quote-to-invoice
+        //VUT - S >> 
+        $purchaseOrder->create_sanden_quote_fqs_c = json_encode($sanden_products);
+        //VUT - E >> 
         $purchaseOrder->name = str_replace("GAUS-","",$purchaseOrder->name);
         $purchaseOrder->name = str_replace("−HPUMP","",$purchaseOrder->name);
 
         $purchaseOrder->name .= ' to ' .$purchaseOrder->shipping_address_city 
         . ' ' .$purchaseOrder->shipping_address_state .' '.$string_dispatch_date;
-
+        
         $purchaseOrder->save();
         
     }
