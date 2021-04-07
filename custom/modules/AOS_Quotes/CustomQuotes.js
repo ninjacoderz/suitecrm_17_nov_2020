@@ -3369,13 +3369,18 @@ $(document).ready(function () {
             async: false,
             success: function (data) {
                 if (data == '' || typeof data === undefined) { $('#createsolargainLead span.glyphicon-refresh').addClass('hidden'); return; }
-                var jsonData = $.parseJSON(data);
+                var jsonData = JSON.parse(data);
                 $('#createsolargainLead span.glyphicon-refresh').addClass('hidden');
-                $("#solargain_quote_number_c").val(jsonData.QuoteNumber);
-                $("#sg_site_details_no_c").val(jsonData.SiteDetailNumber);
+                $("#solargain_quote_number_c").val(jsonData.quote_info.QuoteNumber);
+                $("#sg_site_details_no_c").val(jsonData.quote_info.SiteDetailNumber);
                 $("#solargain_quote_number_c").trigger("change");
                 SUGAR.ajaxUI.hideLoadingPanel();
-                alert("Push to SG successfully.")
+                if(jsonData.quote_info.SG_error != ''){
+                    alert("Quote is created but can't push pricing option.('"+jsonData.quote_info.SG_error+"')");
+                }else{
+                    alert("Push to SG successfully.")
+                }
+               
             },
         });
     }
