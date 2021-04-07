@@ -227,7 +227,7 @@
                 case 'jpeg':
                     $src_func = 'imagecreatefromjpeg';
                     $write_func = 'imagejpeg';
-                    $thumb =  $path."/thumbnail/".$filename.'.jpg';
+                    $thumb =  $path."/thumbnail/".$filename.'.jpeg';
                     $image_quality = isset($options['jpeg_quality']) ?
                         $options['jpeg_quality'] : 75;
                     break;
