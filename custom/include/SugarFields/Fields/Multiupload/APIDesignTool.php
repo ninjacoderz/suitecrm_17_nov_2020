@@ -2,15 +2,34 @@
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST');
     header("Access-Control-Allow-Headers: X-Requested-With");
+    header('Access-Control-Allow-Headers: Content-type');
 
     set_time_limit ( 0 );
     ini_set('memory_limit', '-1');
     date_default_timezone_set('Australia/Melbourne');
 
-    $quote_id = $_REQUEST['quote_id'];
-    $design_json = html_entity_decode($_REQUEST['design_json']);
-    $type = $_REQUEST['type'];
-    $status = $_REQUEST['status'];
+    // .:nhantv:. Check Content-type
+    $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+    if ($contentType === "application/json") {
+        //Receive the RAW post data.
+        $content = trim(file_get_contents("php://input"));
+        $decoded = json_decode($content, true);
+
+        // If json_decode success, the JSON is valid.
+        if(is_array($decoded)) {
+            $quote_id = $decoded['quote_id'];
+            $design_json = json_encode($decoded['design_json']);
+            $type = $decoded['type'];
+            $status = $decoded['status'];
+            $dataURL = base64_decode($decoded['dataURL']);
+        }
+    } else {
+        $quote_id = $_REQUEST['quote_id'];
+        $design_json = html_entity_decode($_REQUEST['design_json']);
+        $type = $_REQUEST['type'];
+        $status = $_REQUEST['status'];
+    }
+
     $quote  = new AOS_Quotes();
     $quote->retrieve($quote_id);
     $quoteType = '';
@@ -40,6 +59,10 @@
             $dataURL = base64_decode($_REQUEST['dataURL']);
             $quoteType = 'Sanden';
             createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status );
+        } else if ($quote->quote_type_c == 'quote_type_solar'){
+            // .:nhantv:. Save image for Solar design
+            $quoteType = 'Solar';
+            createImage($quote, $dataURL, '', $designType, $quoteType, $status);
         }
     }
 
@@ -80,28 +103,31 @@
             }
             
             $success = file_put_contents($source, $data);
-            
-            $data_option['quote_number'] = $quote->number;
-            $data_option['customer_name'] = $quote->account_firstname_c.' '.$quote->account_lastname_c;
-            $data_option['address_line1'] = $quote->install_address_c;
-            $data_option['address_line2'] = $quote->install_address_city_c.' '.$quote->install_address_state_c.' '.$quote->install_address_postalcode_c;
-            $data_option['address_line3'] = "Australia";
-            $data_option['product0'] = '';
-            $data_option['product1'] = '';
-            $data_option['product2'] = '';
-            if($key == 'sanden'){
-                $quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c));
-                $data_option['product0'] = $quote_input->quote_number_sanden."x ".$quote_input->quote_tank_size;
-            }else{
-                preg_match('/\[\{(.*?)\}\]/',$quote->description, $matches);
-                if(count($matches) > 1){
-                    foreach(json_decode(html_entity_decode($matches[0])) as $k=>$v){
-                        $data_option['product'.$k] = $v->quantity."x "."Daikin ".$v->typeOfProduct;
+
+            // .:nhantv:. Add bottom image. Check quoteType != Solar
+            if($quoteType != 'Solar'){
+                $data_option['quote_number'] = $quote->number;
+                $data_option['customer_name'] = $quote->account_firstname_c.' '.$quote->account_lastname_c;
+                $data_option['address_line1'] = $quote->install_address_c;
+                $data_option['address_line2'] = $quote->install_address_city_c.' '.$quote->install_address_state_c.' '.$quote->install_address_postalcode_c;
+                $data_option['address_line3'] = "Australia";
+                $data_option['product0'] = '';
+                $data_option['product1'] = '';
+                $data_option['product2'] = '';
+                if($key == 'sanden'){
+                    $quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c));
+                    $data_option['product0'] = $quote_input->quote_number_sanden."x ".$quote_input->quote_tank_size;
+                }else{
+                    preg_match('/\[\{(.*?)\}\]/',$quote->description, $matches);
+                    if(count($matches) > 1){
+                        foreach(json_decode(html_entity_decode($matches[0])) as $k=>$v){
+                            $data_option['product'.$k] = $v->quantity."x "."Daikin ".$v->typeOfProduct;
+                        }
                     }
                 }
+                
+                create_img_option($path,$filename,$data_option,$key);
             }
-            
-            create_img_option($path,$filename,$data_option,$key);
         }
     }
 
