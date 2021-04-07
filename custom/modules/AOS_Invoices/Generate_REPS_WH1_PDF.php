@@ -122,7 +122,7 @@ function generatePDF($Invoice){
     }
     
     //CUSTOMER / INSTALLER DECLARATION
-    $pdf->Write($pdf->SetXY(36.5,203.5), html_entity_decode($Invoice->plumber_c,ENT_QUOTES)); // Installer Name
+    $pdf->Write($pdf->SetXY(36.5,203.5), html_entity_decode($Invoice->plumber_contact_c,ENT_QUOTES)); // Installer Name
     $pdf->Write($pdf->SetXY(36.5,208), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
     $pdf->Write($pdf->SetXY(125,208), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
     
@@ -200,7 +200,7 @@ function Generate_REPS_Information_Statement($Invoice){
         //I confirm that all shower heads connected to the installed water heater have been tested or replaced and are 9 litres per minute or less. 
         $pdf->Image(__DIR__.'/text/icon.jpg' ,13.5,160,3,2.8);
 
-        $pdf->Write($pdf->SetXY(36.5,169.5), html_entity_decode($Invoice->plumber_c,ENT_QUOTES)); // Installer Name
+        $pdf->Write($pdf->SetXY(36.5,169.5), html_entity_decode($Invoice->plumber_contact_c,ENT_QUOTES)); // Installer Name
         $pdf->Write($pdf->SetXY(125,169.5), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
         $pdf->Write($pdf->SetXY(125,173.7), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
 
@@ -214,9 +214,9 @@ function Generate_REPS_Information_Statement($Invoice){
 
     $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name));
 
-    $fp = fopen($ds_dir.'/'.$pre_file.'_SA_REP_Information_Statement.pdf', 'wb');
+    $fp = fopen($ds_dir.'/'.$pre_file.'_SA_REPS_Information_Statement.pdf', 'wb');
     fclose($fp);
-    $pdf->Output($ds_dir.'/'.$pre_file.'_SA_REP_Information_Statement.pdf', 'F');
+    $pdf->Output($ds_dir.'/'.$pre_file.'_SA_REPS_Information_Statement.pdf', 'F');
    
     return 'Finish';
 }

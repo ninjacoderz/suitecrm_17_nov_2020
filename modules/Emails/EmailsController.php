@@ -4612,14 +4612,15 @@ class EmailsController extends SugarController
 
             /**Custom Attachments From Folder Files and Photo*/
             $file_attachments = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->installation_pictures_c ."/");
-            $name_file_include = ['SA_REP_Information_Statement.pdf','REPS_WH1_Hot_Water_Replacement.pdf'];
+            $name_file_include = ['SA_REPS_Information_Statement.pdf','SA_REPS_Activity_Record_WH1_Hot_Replacement.pdf'];
             if (count($file_attachments)>0 ) {
                 $this->bean->status = "draft";
                 $this->bean->save();
                 foreach ($file_attachments as $att) {
                     $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->installation_pictures_c ."/" . $att ;
                     if(!is_file($source)) continue;
-                    if (in_array($att,$name_file_include)) {
+                    if (strpos(strtolower($att),  strtolower($name_file_include[0])) !== false ||
+                    strpos(strtolower($att),  strtolower($name_file_include[1])) !== false ) {
                         $noteTemplate = new Note();
                         $noteTemplate->id = create_guid();
                         $noteTemplate->new_with_id = true; // duplicating the note with files
