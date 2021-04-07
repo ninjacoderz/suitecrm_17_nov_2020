@@ -381,8 +381,8 @@ $(function () {
         <div style="padding-top:10px"><button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
         </div>';
         var po_solar_pv_bos_input = '<div id="po_sanden_pv_bos_input">\
-            <span>Standard Solar PV Install</span> <input id="standard_solar_PV_install" type="checkbox" value="Standard Solar PV Install" name="Standard Solar PV Install"data-id="40d20616-6007-44c4-1e9b-5ca447459af6">\
-            <span>30-60 Deg Tilts</span> <input type="number" id="deg_tilts" value="33" min="30" max="60"  name="30-60 Deg Tilts"data-id="40d20616-6007-44c4-1e9b-5ca447459af6">\
+            <span>Standard Solar PV Install</span> <input id="standard_solar_PV_install" type="checkbox" value="Standard Solar PV Install" name="Standard Solar PV Install">\
+            <span>30-60 Deg Tilts</span> <input type="number" id="deg_tilts" value="33" min="30" max="60"  name="30-60 Deg Tilts">\
             <div style="padding-top:10px"><button type="button"  class="button"  onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
         </div>';
         if( $('#po_type_c').val() =="sanden_supply"){
