@@ -39,7 +39,7 @@
         }else if($quote->quote_type_c == 'quote_type_sanden'){
             $dataURL = base64_decode($_REQUEST['dataURL']);
             $quoteType = 'Sanden';
-            createImage($quote,$dataURL,'',$designType,$quoteType,$status );
+            createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status );
         }
     }
 
@@ -58,20 +58,20 @@
             $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
             $files = scandir($path,SCANDIR_SORT_DESCENDING);
             $filename = '';
-            if($status == 'override' || $quoteType == 'Daikin'){
-                foreach($files as $file){
-                    if(is_file($path.'/'.$file) && strpos($file,$designType."_Design_Proposed_Install_Location") !== false){
-                        // $filename = explode(".",$file)[0];
-                        // $source = $path.$file;
-                        unlink($path.'/'.$file);
-                        break;
-                    }
+            // if($status == 'override' || $quoteType == 'Daikin'){
+            foreach($files as $file){
+                if(is_file($path.'/'.$file) && strpos($file,"_Design_Proposed_Install_Location") !== false){
+                    // $filename = explode(".",$file)[0];
+                    // $source = $path.$file;
+                    unlink($path.'/'.$file);
+                    break;
                 }
-            }else{
-                $time_string = strftime("%d%b%Y_%H%M",time());
-                $filename = 'Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string;
-                $source = $path.'/Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string.'.png';
             }
+            // }else{
+            //     $time_string = strftime("%d%b%Y_%H%M",time());
+            //     $filename = 'Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string;
+            //     $source = $path.'/Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string.'.png';
+            // }
 
             if($filename == ''){
                 $time_string = strftime("%d%b%Y_%H%M",time());
@@ -80,6 +80,7 @@
             }
             
             $success = file_put_contents($source, $data);
+            
             $data_option['quote_number'] = $quote->number;
             $data_option['customer_name'] = $quote->account_firstname_c.' '.$quote->account_lastname_c;
             $data_option['address_line1'] = $quote->install_address_c;
@@ -88,13 +89,18 @@
             $data_option['product0'] = '';
             $data_option['product1'] = '';
             $data_option['product2'] = '';
-            
-            preg_match('/\[\{(.*?)\}\]/',$quote->description, $matches);
-            if(count($matches) > 1){
-                foreach(json_decode(html_entity_decode($matches[0])) as $k=>$v){
-                    $data_option['product'.$k] = $v->quantity."x "."Daikin ".$v->typeOfProduct;
+            if($key == 'sanden'){
+                $quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c));
+                $data_option['product0'] = $quote_input->quote_number_sanden."x ".$quote_input->quote_tank_size;
+            }else{
+                preg_match('/\[\{(.*?)\}\]/',$quote->description, $matches);
+                if(count($matches) > 1){
+                    foreach(json_decode(html_entity_decode($matches[0])) as $k=>$v){
+                        $data_option['product'.$k] = $v->quantity."x "."Daikin ".$v->typeOfProduct;
+                    }
                 }
             }
+            
             create_img_option($path,$filename,$data_option,$key);
         }
     }
@@ -138,6 +144,8 @@
                 $img_template = $path.'../daikin_bot_image_indoor.png';
             }else if($key == "outdoor"){
                 $img_template = $path.'../daikin_bot_image_outdoor.png';
+            }else if($key == "sanden"){
+                $img_template = $path.'../sanden_bot_image.png';
             }
 
             list($w_info, $h_info) = getimagesize($img_template);
@@ -161,6 +169,8 @@
                 $img_template = $path.'../daikin_bot_image_indoor_small.png';
             }else if($key == "outdoor"){
                 $img_template = $path.'../daikin_bot_image_outdoor_small.png';
+            }else if($key == "sanden"){
+                $img_template = $path.'../sanden_bot_image_small.png';
             }
 
             list($w_info, $h_info) = getimagesize($img_template);
