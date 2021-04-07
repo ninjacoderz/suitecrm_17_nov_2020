@@ -379,22 +379,37 @@ $(function () {
         <span>QIK15</span>  <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-name="QIK15" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option>'+options_quatity+'</select>\
         <span>QIK20</span>  <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-name="QIK20" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option>'+options_quatity+'</select>\
         <div style="padding-top:10px"><button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
-    </div>';
+        </div>';
+        var po_solar_pv_bos_input = '<div id="po_sanden_pv_bos_input">\
+            <span>Standard Solar PV Install</span> <input id="standard_solar_PV_install" type="checkbox" value="Standard Solar PV Install" name="Standard Solar PV Install"data-id="40d20616-6007-44c4-1e9b-5ca447459af6">\
+            <span>30-60 Deg Tilts</span> <input type="number" id="deg_tilts" value="33" min="30" max="60"  name="30-60 Deg Tilts"data-id="40d20616-6007-44c4-1e9b-5ca447459af6">\
+            <div style="padding-top:10px"><button type="button"  class="button"  onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
+        </div>';
         if( $('#po_type_c').val() =="sanden_supply"){
             $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
+            LoadJSONPOInput();
+        }else if($('#po_type_c').val() =="SolarBOS"){
+            $('#create_sanden_quote_fqs_c').after(po_solar_pv_bos_input);
             LoadJSONPOInput();
         }
         $('#po_type_c').change(function(){
             if( $('#po_type_c').val() =="sanden_supply"){
-                $(document).find('#po_sanden_supply_input').remove();
+                $(document).find('#po_sanden_supply_input,#po_sanden_pv_bos_input').remove();
                 $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
                 LoadJSONPOInput();
+            }else if($('#po_type_c').val() =="SolarBOS"){
+                $(document).find('#po_sanden_supply_input,#po_sanden_pv_bos_input').remove();
+                $('#create_sanden_quote_fqs_c').after(po_solar_pv_bos_input);
+                LoadJSONPOInput();
             }else{
-                $(document).find('#po_sanden_supply_input').remove();
+                $(document).find('#po_sanden_supply_input,#po_sanden_pv_bos_input').remove();
             }
         });
 
         $(document).find('#po_sanden_supply_input').on("change", "select", function(e){
+            saveJSONPOInput();
+        });
+        $(document).find('#po_sanden_pv_bos_input input').on("change", function(e){
             saveJSONPOInput();
         });
 
@@ -1263,106 +1278,153 @@ function getInfoProductDaikin() {
 }
 
 async function generatePOLineItem(){
-    saveJSONPOInput();
-    SUGAR.ajaxUI.showLoadingPanel();
-    switch ($('#shipping_address_state').val()) {
-        case "VIC":
-            $('#shipping_account').val('PureElectric VIC');
-            $('#shipping_account_id').val("7a36afbe-04a1-2830-eaa8-5ae65dc8c4ba"); // Unit 7, 23 Mildura Street,Fyshwick, Australian Capital Territory 2609
-        break;
-        case "ACT":
-            $('#shipping_account').val('PureElectric ACT');
-            $('#shipping_account_id').val("8cdef336-2c50-6355-5101-5af0fea48795");//53 Britton Street,Smithfield, New South Wales 2164
-        break;
-        case "QLD":
-            $('#shipping_account').val('PureElectric QLD');
-            $('#shipping_account_id').val("4485ecd2-33fa-f128-a171-5add589966cd");//2 Stephens Way,Luscombe, Queensland 4207
-        break;
-        case "SA":
-            $('#shipping_account').val('PureElectric SA');
-            $('#shipping_account_id').val("bfdb9053-635c-b212-6958-5af0fe72edd4"); //1A Symonds Street, Royal Park, South Australia 5014
-        break;
-        case "WA":
-            $('#shipping_account').val('PureElectric WA');
-            $('#shipping_account_id').val("60a92cda-3c50-018b-73df-5cf613950c25");//40 Fulton Drive,Derrimut, Victoria 3030
-        break;
-        case "NSW":
-            $('#shipping_account').val('PureElectric NSW');
-            $('#shipping_account_id').val("13f3384a-36a1-e053-4d9e-5b3c509c427d"); //15 Modal Crescent,Canning Vale, West Australia 6155
-        break;
-     }
     for (var i = 0; i < prodln; i++){
         markLineDeleted(i,"product_");
     }
-    if($("#lineItems").find(".group_body").length == 0){
-        insertGroup(0);
-        $("#group0name").val("Sanden");
-    }else{
-        $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
-    }
-    var new_name = "Sanden ";
-    var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
-    // .:nhantv:. Update "LINE ITEM" with the correct order
-    var select_inputs = $("#po_sanden_supply_input").find("select");
-    try {
-        for (i = 0; i < select_inputs.length; i++){
-            var el = select_inputs[i];
-            if(parseInt($(el).val()) > 0){
-                console.log('Start ' + $(el).attr('data-name'));
-                await autoCreateLineItem($(el).attr('data-id'),parseInt($(el).val()));
-                
-                switch ($(el).attr("data-name")) {
-                    case '315FQV':
-                            await autoCreateLineItem('d2548387-59da-2980-cdd5-5cff2e43f980',parseInt($(el).val()));
-                        break;
-                    case '315FQS':
-                            await autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',parseInt($(el).val()));//SAN-315SAQA
-                        break;
-                    case '300FQS':
-                            await autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',parseInt($(el).val()));//SAN-300SAQA
-                        break;
-                    case '250FQS':
-                            await autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($(el).val()));//SAN-250SAQA
-                        break;
-                    case '160FQS':
-                            await autoCreateLineItem('30eb1628-9f73-272d-5e0a-604ffd855450',parseInt($(el).val()));//SAN-250SAQA
-                        break;
+    if( $('#po_type_c').val() =="sanden_supply"){
+        saveJSONPOInput();
+        SUGAR.ajaxUI.showLoadingPanel();
+        switch ($('#shipping_address_state').val()) {
+            case "VIC":
+                $('#shipping_account').val('PureElectric VIC');
+                $('#shipping_account_id').val("7a36afbe-04a1-2830-eaa8-5ae65dc8c4ba"); // Unit 7, 23 Mildura Street,Fyshwick, Australian Capital Territory 2609
+            break;
+            case "ACT":
+                $('#shipping_account').val('PureElectric ACT');
+                $('#shipping_account_id').val("8cdef336-2c50-6355-5101-5af0fea48795");//53 Britton Street,Smithfield, New South Wales 2164
+            break;
+            case "QLD":
+                $('#shipping_account').val('PureElectric QLD');
+                $('#shipping_account_id').val("4485ecd2-33fa-f128-a171-5add589966cd");//2 Stephens Way,Luscombe, Queensland 4207
+            break;
+            case "SA":
+                $('#shipping_account').val('PureElectric SA');
+                $('#shipping_account_id').val("bfdb9053-635c-b212-6958-5af0fe72edd4"); //1A Symonds Street, Royal Park, South Australia 5014
+            break;
+            case "WA":
+                $('#shipping_account').val('PureElectric WA');
+                $('#shipping_account_id').val("60a92cda-3c50-018b-73df-5cf613950c25");//40 Fulton Drive,Derrimut, Victoria 3030
+            break;
+            case "NSW":
+                $('#shipping_account').val('PureElectric NSW');
+                $('#shipping_account_id').val("13f3384a-36a1-e053-4d9e-5b3c509c427d"); //15 Modal Crescent,Canning Vale, West Australia 6155
+            break;
+        }
+        if($("#lineItems").find(".group_body").length == 0){
+            insertGroup(0);
+            $("#group0name").val("Sanden");
+        }else{
+            $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
+        }
+        var new_name = "Sanden ";
+        var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
+        // .:nhantv:. Update "LINE ITEM" with the correct order
+        var select_inputs = $("#po_sanden_supply_input").find("select");
+        try {
+            for (i = 0; i < select_inputs.length; i++){
+                var el = select_inputs[i];
+                if(parseInt($(el).val()) > 0){
+                    console.log('Start ' + $(el).attr('data-name'));
+                    await autoCreateLineItem($(el).attr('data-id'),parseInt($(el).val()));
+                    
+                    switch ($(el).attr("data-name")) {
+                        case '315FQV':
+                                await autoCreateLineItem('d2548387-59da-2980-cdd5-5cff2e43f980',parseInt($(el).val()));
+                            break;
+                        case '315FQS':
+                                await autoCreateLineItem('d3c83262-2ce5-753a-dae0-5bc566179453',parseInt($(el).val()));//SAN-315SAQA
+                            break;
+                        case '300FQS':
+                                await autoCreateLineItem('81acb57b-442f-f5b3-1027-5cc62cc7c477',parseInt($(el).val()));//SAN-300SAQA
+                            break;
+                        case '250FQS':
+                                await autoCreateLineItem('a3d39983-c54e-e94e-0a2c-5c12e9104a87',parseInt($(el).val()));//SAN-250SAQA
+                            break;
+                        case '160FQS':
+                                await autoCreateLineItem('30eb1628-9f73-272d-5e0a-604ffd855450',parseInt($(el).val()));//SAN-250SAQA
+                            break;
+                    }
+                    new_name += $(el).val()+"x "+$(el).attr("data-name")+" ";
                 }
-                new_name += $(el).val()+"x "+$(el).attr("data-name")+" ";
+                
             }
-            
+            if(total_item > 0){
+                await autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
+                await autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+            }
+        } catch(err) {
+            console.log(err);
         }
-        if(total_item > 0){
-            await autoCreateLineItem("5c46a474-8d5e-5c3c-6825-5acd51527f3f",total_item); //HPFT-1
-            await autoCreateLineItem("eed60347-3e2a-6b64-966d-5c7f509737c5",total_item); //GAU-A45HPC
+        new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#dispatch_date_c").val() != '') ? formatTimeforPOname($("#dispatch_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
+        $('#name').val(new_name);
+        setTimeout(function (){
+            SUGAR.ajaxUI.hideLoadingPanel();
+            $('html, body').animate({
+                scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
+            }, 800);
+        },500);
+    }else if($('#po_type_c').val() =="SolarBOS"){
+        if( $('#standard_solar_PV_install').is(':checked') == true){
+            if($("#lineItems").find(".group_body").length == 0){
+                insertGroup(0);
+                $("#group0name").val("Micro Grid and Solar PV Solution");
+            }else{
+                $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
+                $("#group0name").val("Micro Grid and Solar PV Solution");
+            }
+            var new_name = "Solargain PE Solar BOS Including Tilt Frames";
+            // var select_inputs = $("#po_sanden_supply_input").find("input");
+            try {
+                await autoCreateLineItem('2a3a7b2e-df46-9712-3912-5fc599f5f53d',4);
+                await autoCreateLineItem('689ee364-86e8-99b1-289e-5fc599512548',1);
+                await autoCreateLineItem('3d048a3c-b523-6ea6-fea8-5fc599803325',1);
+                await autoCreateLineItem('18813d5c-de30-4662-9ae5-5fc59977f55a',100);
+                await autoCreateLineItem('2c08e5b6-2151-e85f-d122-5fc5997b15a5',100);
+                await autoCreateLineItem('c26d93d4-4312-2be0-6770-5fc59c8161d9',32);
+                await autoCreateLineItem('b77102f9-1d9a-d110-fd80-5fc59c1dd6c8',30);
+                await autoCreateLineItem('e23308d1-eee9-f8fc-315d-5fc59c203fd6',1);
+                await autoCreateLineItem('12f25884-0872-9df9-bd13-5fc5dca6bfc7',40);
+                await autoCreateLineItem('204bae92-63ed-9985-58cc-5fc5ddd20056',4);
+                await autoCreateLineItem('11c130f2-4907-96fe-3efc-5fc5dda63e1c',130);
+            } catch(err) {
+                console.log(err);
+            }
+            $('#name').val(new_name);
+            setTimeout(function (){
+                SUGAR.ajaxUI.hideLoadingPanel();
+                $('html, body').animate({
+                    scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
+                }, 800);
+            },500);
         }
-    } catch(err) {
-        console.log(err);
     }
-    new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#dispatch_date_c").val() != '') ? formatTimeforPOname($("#dispatch_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
-    $('#name').val(new_name);
-    setTimeout(function (){
-        SUGAR.ajaxUI.hideLoadingPanel();
-        $('html, body').animate({
-            scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
-        }, 800);
-    },500);
 }
 
 function saveJSONPOInput(){
     var values = {};
-    $(document).find('#po_sanden_supply_input select').each(function (){
-        var id_name = $(this).attr("id");
-        values[id_name] = $(this).val();
-    });
+    if($('#po_type_c').val() =="sanden_supply"){
+        $(document).find('#po_sanden_supply_input select').each(function (){
+            var id_name = $(this).attr("id");
+            values[id_name] = $(this).val();
+        });
+    }else if($('#po_type_c').val() =="SolarBOS"){
+        $(document).find('#po_sanden_pv_bos_input input').each(function (){
+            var id_name = $(this).attr("id");
+            values[id_name] = $(this).val();
+        });
+    }
     $("#create_sanden_quote_fqs_c").val(JSON.stringify(values));
 }
 
 function LoadJSONPOInput(){
     if($("#create_sanden_quote_fqs_c").val() != ''){
         var dataJSON = JSON.parse($("#create_sanden_quote_fqs_c").val());
-        for (let key in dataJSON) {  
-            $("#"+key).val(dataJSON[key]);
+        for (let key in dataJSON) {
+            if(dataJSON[key] == 'Standard Solar PV Install'){
+                $("#"+key).prop('checked', true);
+            }else{
+                $("#"+key).val(dataJSON[key]);
+            }
         }
     }
 }
