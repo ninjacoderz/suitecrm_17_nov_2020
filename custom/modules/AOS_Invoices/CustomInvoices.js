@@ -368,7 +368,7 @@ $(function () {
                 url:"?entryPoint=show_sr_number&id="+serialNumber,
                 success: function(data)
                 {
-                    if(data == '' && typeof data == undefined) return;
+                    if(data == '' || typeof data === 'undefined') return;
                     var suggest =[];
                     var jsonObject = JSON.parse(data);
                     for (i = 0; i < jsonObject.length; i++) {
@@ -505,7 +505,7 @@ $(function () {
                     url: "?entryPoint=getContactFromAccount&request=custom_display_link_contact_plum_elec_invoice&electrician_id=" + electrician_id
                      + "&plumber_id=" +plumber_id,
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined) return;
+                    if(data == '' || typeof data === 'undefined') return;
                     var json = $.parseJSON(data);
                     
                     $("#link_account_plumquote").remove();
@@ -645,7 +645,7 @@ $(function () {
                     context: document.body,
                     async: true
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined) {
+                    if(data == '' || typeof data === 'undefined') {
                         $('#seekInstallationDate span.glyphicon-refresh').addClass('hidden');
                         return;
                     }
@@ -674,7 +674,7 @@ $(function () {
                     context: document.body,
                     async: true
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined) {
+                    if(data == '' || typeof data === 'undefined') {
                         $('#seekInstallationDate_elec span.glyphicon-refresh').addClass('hidden');
                         return;
                     }
@@ -1169,7 +1169,7 @@ $(function () {
                         url: "/xero-php/index.php?type=daikin&supplyID="+supply+"&installID="+install+"&revenueID="+revenue,
                         type : 'POST',
                         success: function (data) {
-                            if(data == '' && typeof data == undefined) {
+                            if(data == '' || typeof data === 'undefined') {
                                 $('#price-revenue-xero span.glyphicon-refresh').addClass('hidden');
                                 return;
                             }
@@ -1237,7 +1237,7 @@ $(function () {
                         url: "/xero-php/index.php?type=sanden&supplyID="+plumbing+"&installID="+electrician+"&revenueID="+revenue+"&stc_number="+stc_number,
                         type : 'POST',
                         success: function (data) {
-                                if(data == '' && typeof data == undefined) {
+                                if(data == '' || typeof data === 'undefined') {
                                     $('#price_revenue_xero_sanden span.glyphicon-refresh').addClass('hidden');
                                     return;
                                 }
@@ -1522,7 +1522,7 @@ $(function () {
                         success: function(data)
                         {
                             var suggest =[];
-                            if(data == '' && typeof data == undefined)return;
+                            if(data == '' || typeof data === 'undefined')return;
                             var jsonObject = $.parseJSON(data);
                             for (i = 1; i < jsonObject.length; i++) {
                                 suggest.push(jsonObject[i].name);
@@ -1576,7 +1576,7 @@ $(function () {
 
                         success: function(data)
                         {
-                            if(data == '' && typeof data == undefined)return;
+                            if(data == '' || typeof data === 'undefined')return;
                             var suggest =[];
                             var jsonObject = $.parseJSON(data);
                             for (i = 1; i < jsonObject.length; i++) {
@@ -1631,7 +1631,7 @@ $(function () {
 
                         success: function(data)
                         {
-                            if(data == '' && typeof data == undefined)return;
+                            if(data == '' || typeof data === 'undefined')return;
                             var suggest =[];
                             var jsonObject = $.parseJSON(data);
                             for (i = 1; i < jsonObject.length; i++) {
@@ -1948,7 +1948,7 @@ $(function () {
                     context: document.body,
                     async: false
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined)return;
+                    if(data == '' || typeof data === 'undefined')return;
                     var json = $.parseJSON(data);
                     owner_email = json.email;
                     owner_phone = json.phone_number;
@@ -2113,7 +2113,7 @@ $(function () {
                                     //contentType: false,
                                     //processData: false,
                                     success: function (data) {
-                                        if(data == '' && typeof data == undefined) {
+                                        if(data == '' || typeof data === 'undefined') {
                                             $('#create_assignment span.glyphicon-refresh').addClass('hidden');
                                             return;
                                         }
@@ -2152,7 +2152,7 @@ $(function () {
                         //processData: false,
 
                         success: function (data) {
-                            if(data == '' || typeof data === undefined) {
+                            if(data == '' || typeof data === 'undefined') {
                                 $('#create_assignment span.glyphicon-refresh').addClass('hidden');
                                 return;
                             }
@@ -2291,7 +2291,7 @@ $(function () {
             $.ajax({
                 url: "/index.php?entryPoint=sendGeoReminder&billing_account_id="+billing_account_id+"&record_id="+ encodeURIComponent($('input[name="record"]').val())+"&productType="+encodeURIComponent($('#group0name').val()),
                 success: function (data) {
-                    if(data == '' && typeof data == undefined) {
+                    if(data == '' || typeof data === 'undefined') {
                         $('#send_geo_reminder span.glyphicon-refresh').addClass('hidden');
                         return;
                     }
@@ -2813,7 +2813,7 @@ $(function () {
                 url: build_url,
                 context: document.body
             }).done(function(data) {
-                if(data == '' && typeof data == undefined) {
+                if(data == '' || typeof data === 'undefined') {
                     $('#sendMailToDaikinSupplier span.glyphicon-refresh').addClass('hidden');
                     return;
                 }
@@ -3123,7 +3123,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data === 'undefined')return;
                 var json = $.parseJSON(data);
                 invoice_to_email = json.email;
             });
@@ -3139,7 +3139,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 plumbing = json.account_name;
             });
@@ -3151,7 +3151,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 pe_email = json.email;
             });
@@ -3165,7 +3165,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 eletrical_email = json.email;
                 electric_phone_number = json.phone_number;
@@ -3182,7 +3182,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 electric_company = json.account_name;
             });
@@ -3444,7 +3444,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 invoice_to_email = json.email;
             });
@@ -3460,7 +3460,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 plumbing = json.account_name;
             });
@@ -3476,7 +3476,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 electric_company = json.account_name;
             });
@@ -3488,7 +3488,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 pe_email = json.email;
             });
@@ -3499,7 +3499,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 customer_phone_number = json.phone_number;
             });
@@ -3735,7 +3735,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 invoice_to_email = json.email;
             });
@@ -3747,7 +3747,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 pe_email = json.email;
             });
@@ -3764,7 +3764,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 plumber_phone_number = json.phone_number;
                 plumbing = json.account_name;
@@ -3781,7 +3781,7 @@ $(function () {
                 context: document.body,
                 async: false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var json = $.parseJSON(data);
                 electric_company = json.account_name;
             });
@@ -4064,7 +4064,7 @@ $(function () {
                     context: document.body,
                     //async: true
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined)return;
+                    if(data == '' || typeof data == 'undefined')return;
                     var json = $.parseJSON(data);
                     $("#electrician_contact_c").val(json.name);
                     $("#contact_id_c").val(json.record_id);
@@ -4080,7 +4080,7 @@ $(function () {
                     context: document.body,
                     async: false
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined)return;
+                    if(data == '' || typeof data == 'undefined')return;
                     var json = $.parseJSON(data);
                     $("#plumber_contact_c").val(json.name);
                     $("#contact_id4_c").val(json.record_id);
@@ -5082,7 +5082,7 @@ $(document).ready(function(){
             url:"?entryPoint=show_sr_number&id="+serialNumber,
             success: function(data)
             {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var suggest =[];
                 var jsonObject = JSON.parse(data);
                 for (i = 0; i < jsonObject.length; i++) {
@@ -5597,7 +5597,7 @@ $(document).ready(function(){
             url: "?entryPoint=check_sg_order&sg_order_number="+ $('#solargain_invoices_number_c').val(),
             success: function(data)
             {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                 var result = JSON.parse(data);
                 var number = result['id'];
                 //tu-code serch solargain order number
@@ -5834,7 +5834,7 @@ $(document).ready(function(){
             url: "?entryPoint=customGetValueElectricDefault&record_id=" + account_record_id,
             async: false,
         }).done(function (data) {
-            if(data == '' && typeof data == undefined)return;
+            if(data == '' || typeof data == 'undefined')return;
             var default_value = $.parseJSON(data);
             $("#fomular_price").html($("#fomular_price").html() + cal_total_constractor(default_value));
         });
@@ -6503,7 +6503,7 @@ function original_price(){
                 url: '/index.php?entryPoint=customOriginalPrice&id_partNumber='+id_partNumber,
                 success: function(data)
                 {
-                    if(data == '' && typeof data == undefined)return;
+                    if(data == '' || typeof data == 'undefined')return;
                     var products = $.parseJSON(data);
                     for(var k = 0; k < len_line_items ; k++){
                         $("#product_currency"+k).val(products[k].currency_id);
@@ -6540,7 +6540,7 @@ $(function () {
                     url: "?entryPoint=getContactFromAccount&record_id=" + record_id,
                     async: false
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined)return;
+                    if(data == '' || typeof data == 'undefined')return;
                     var json = $.parseJSON(data);
                     var data_return ='';
                     if(json.email != ''){
@@ -6987,7 +6987,7 @@ $(function () {
                     },
                     async: true,
                     success: function(result) {   
-                        if(result == '' || typeof result === undefined)return;
+                        if(result == '' || typeof result === 'undefined')return;
                         render_select_pcoc_template(result);
                     }
                 }); 
@@ -7313,7 +7313,7 @@ $(function () {
         });
 
         function render_select_plumbing_template(result){
-            if(result == '' || typeof result === undefined ) return;
+            if(result == '' || typeof result === 'undefined' ) return;
             try {
                 var data_result = JSON.parse(result);
                 window.data_plumbing_notes = data_result;
@@ -7352,7 +7352,7 @@ $(function () {
             },
             async: true,
             success: function(result) {   
-                if(result == '' || typeof result === undefined)return;
+                if(result == '' || typeof result === 'undefined')return;
                 render_select_plumbing_template(result);
             }
         }); 
@@ -7511,7 +7511,7 @@ $(function () {
         });
 
         function render_select_electrical_template(result){
-            if(result == '' || typeof result === undefined)return;
+            if(result == '' || typeof result === 'undefined')return;
             try {
                 var data_result = $.parseJSON(result);
                 window.data_electrical_notes = data_result;
@@ -7725,7 +7725,7 @@ $(document).ready(function() {
         });
 
         function render_select_template_quote(result){
-            if(result == '' || typeof result === undefined) return; //check Json
+            if(result == '' || typeof result === 'undefined') return; //check Json
             try {
                 var data_result = JSON.parse(result);
                 // debugger;
@@ -7784,7 +7784,7 @@ $(document).ready(function(){
             $.ajax({
                 url: "?entryPoint=getContactFromAccount&request=custom_display_link_contact_plum_elec_quote&sanden_electrician_id=" + sanden_electrician_id+"&sanden_installer_id="+sanden_installer_id+"&daikin_installer_id="+daikin_installer_id,
            }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data == 'undefined')return;
                var json = $.parseJSON(data);
                
                $("#link_account_sanden_installer").remove();
@@ -7852,7 +7852,7 @@ $(document).ready(function(){
                     context: document.body,
                     async: true
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined) {
+                    if(data == '' || typeof data == 'undefined') {
                         $('#seekInstallationDate_SandenElec span.glyphicon-refresh').addClass('hidden');
                         return;
                     }
@@ -7879,7 +7879,7 @@ $(document).ready(function(){
                     context: document.body,
                     async: true
                 }).done(function (data) {
-                    if(data == '' && typeof data == undefined) {
+                    if(data == '' || typeof data == 'undefined') {
                         $('#seekInstallationDate_DaikinInstaller span.glyphicon-refresh').addClass('hidden');
                         return;
                     }
@@ -7922,7 +7922,7 @@ $(document).ready(function(){
                     type:"GET",
                     success:function (data) {
                         // debugger;
-                        if(data == '' && typeof data == undefined) return;
+                        if(data == '' || typeof data == 'undefined') return;
                         var result = JSON.parse(data);
                         if (result['formbayID'] !== null) {
                             $('#formbay_c').prop('checked', true);
@@ -7960,7 +7960,7 @@ $(document).ready(function(){
                 $.ajax({
                     url: "index.php?entryPoint=xeroInvoiceSTC&method=create&xeroType="+xeroType+"&record="+ encodeURIComponent($('input[name="record"]').val()),
                     success: function (data) {
-                        if(typeof data !== undefined){
+                        if(typeof data !== 'undefined'){
                             var data_parse = $.parseJSON(data);
                             setTimeout(() => {
                                 if(data_parse.status.trim("") == 'Ok'){
@@ -8154,7 +8154,7 @@ $(document).ready(function() {
         });
 
         function render_select_customer_inv_template(result){
-            if(result == '' || typeof result === undefined)return;
+            if(result == '' || typeof result === 'undefined')return;
             try {
                 var data_result = JSON.parse(result);
                 window.data_custome_inv_notes = data_result;
@@ -8339,7 +8339,7 @@ function loadSelect_CES_Template() {
         },
         async: false,
         success: function(result) {   
-            if(result == '' || typeof result === undefined)return;
+            if(result == '' || typeof result === 'undefined')return;
             render_select_ces_template(result);
             SUGAR.ajaxUI.hideLoadingPanel();
         }
