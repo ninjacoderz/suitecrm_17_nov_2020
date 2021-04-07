@@ -4,7 +4,7 @@ function  pushToXero(el){
         $.ajax({
             url: "/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method=create&record="+ encodeURIComponent($('input[name="record"]').val()),
             success: function (data) {
-                if(typeof data !== undefined){
+                if(typeof data !== 'undefined'){
                     var data_parse = $.parseJSON(data);
                     $(el).find('span.glyphicon-refresh').addClass('hidden');
                     setTimeout(() => {
