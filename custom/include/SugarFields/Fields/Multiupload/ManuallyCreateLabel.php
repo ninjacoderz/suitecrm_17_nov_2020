@@ -195,6 +195,15 @@
         ),
         ),
     );
+    //custom overide parcel collect
+    $regex_parcel_collect = regex_parcel_collect($primary_address_street);
+    if(!empty($regex_parcel_collect)){
+        if(isset($regex_parcel_collect['type_to']) && isset($regex_parcel_collect['apcn'])){
+            $shipments['shipments'][0]['to']['type'] = $regex_parcel_collect['type_to'];
+            $shipments['shipments'][0]['to']['apcn'] =  $regex_parcel_collect['apcn']; 
+            $shipments['shipments'][0]['to']['lines'][0] =  $regex_parcel_collect['lines_address'];    
+        } 
+    }
 
     $curl = curl_init();
     $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
@@ -226,4 +235,23 @@
         echo '';
     }
     
+function regex_parcel_collect($str){
+    $return_data = array();
+    if(isset($str)){
+        //get type_to
+        $str_lowercase = strtolower($str);
+        if(strpos($str_lowercase,'parcel') !== false){
+            $return_data['type_to'] = 'PARCEL_COLLECT';
+        }
+        //get apcn
+        preg_match('/[\d]{10,10}/s',$str,$match);
+        if(isset($match[0])){
+            $return_data['apcn'] = $match[0];
+        //get lines_address
+            $add_explode = explode($match[0],$str);
+            $return_data['lines_address'] = trim(end($add_explode));
+        }    
+    }
+    return $return_data;
+}
 ?>
