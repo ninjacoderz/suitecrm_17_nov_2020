@@ -22,7 +22,24 @@ $(function () {
         $("#CANCEL").after(
             '&nbsp;<button email-type="sanden_tips" data-record-id="'+$('input[name="record"]').val()+'" data-module-name="'+ $("#first_name").val() + ' ' + $("#last_name").val() +'" type="button" id="email_sanden_tips" class="button email_sanden_tips" title="Sanden Tips" data-module="Contacts" onClick="popupSandenProduct(this);" >Sanden Tips<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
             )
-
+        $("#electrician_license_number_c").closest('.edit-view-row-item').hide();
+        $("#plumber_license_number_c").closest('.edit-view-row-item').hide();
+        if( $('#check_contact_type_c').val() == "Plumber" || $('#check_contact_type_c').val() == "PlumberBuyer"){
+            $("#plumber_license_number_c").closest('.edit-view-row-item').show();
+        }else if( $('#check_contact_type_c').val() == "Electrician" || $('#check_contact_type_c').val() == "ElectricianBuyer"){
+            $("#electrician_license_number_c").closest('.edit-view-row-item').show();
+        }
+        $('#check_contact_type_c').change(function(){
+            if( $('#check_contact_type_c').val() == "Plumber" || $('#check_contact_type_c').val() == "PlumberBuyer"){
+                $("#plumber_license_number_c").closest('.edit-view-row-item').show();
+                $("#electrician_license_number_c").closest('.edit-view-row-item').hide();
+            }else if( $('#check_contact_type_c').val() == "Electrician" || $('#check_contact_type_c').val() == "ElectricianBuyer"){
+                $("#electrician_license_number_c").closest('.edit-view-row-item').show();
+                $("#plumber_license_number_c").closest('.edit-view-row-item').hide();
+            }else{
+                $("#plumber_license_number_c,#electrician_license_number_c").closest('.edit-view-row-item').hide();
+            }
+        });
         $("#btn_clr_assigned_user_name").after('<button type="button" style="width: 150px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
         var record = $("input[name='record']").val();
 

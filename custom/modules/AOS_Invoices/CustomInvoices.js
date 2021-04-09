@@ -80,6 +80,29 @@ $(function () {
         $("#billing_account").parent().append("<p id='link_account'><a  href='/index.php?module=Accounts&action=EditView&record=" + $("#billing_account_id").val()+ "' target='_blank'>Open Account</a></p>");
         $("#link_contact").remove();
         $("#billing_contact").parent().append("<p id='link_contact'><a  href='/index.php?module=Contacts&action=EditView&record=" + $("#billing_contact_id").val()+ "' target='_blank'>Open Contact</a></p>");
+        // Ah Tuan ngich
+        if($('#plumber_contact_c').val() != ""){
+            $("#link_contact_plumber").remove();
+            $("#plumber_contact_c").parent().append("<p id='link_contact_plumber'><a  href='/index.php?module=Contacts&action=EditView&record=" + $("#contact_id4_c").val()+ "' target='_blank'>Link To Contact</a></p>");    
+            $("#link_account_electrician").remove();
+            $("#electrician_contact_c").parent().append("<p id='link_account_electrician'><a  href='/index.php?module=Contacts&action=EditView&record=" + $("#contact_id_c").val()+ "' target='_blank'>Link To Contact</a></p>");    
+            if($('#plumber_license_number_c').val() != ""){
+                $.ajax({
+                    url: "/index.php?entryPoint=create_new_contact&contact_id="+ $("#contact_id4_c").val()+ "&plumber_license_number="+$('#plumber_license_number_c').val(),
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+            if($('#electrician_license_number_c').val() != ""){
+                $.ajax({
+                    url: "/index.php?entryPoint=create_new_contact&contact_id="+ $("#contact_id_c").val()+ "&electrician_license_number="+$('#electrician_license_number_c').val(),
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+        }
     }
     display_link_PE_order_methven();
     display_link_account_contact();
