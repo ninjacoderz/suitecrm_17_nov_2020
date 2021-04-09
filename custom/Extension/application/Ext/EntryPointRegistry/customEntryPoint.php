@@ -1475,3 +1475,9 @@ $entry_point_registry['PO_purchase_order_meeting'] = array(
     'file' => 'custom/modules/PO_purchase_order_meeting/PO_purchase_order_meeting.php',
     'auth' => true
 );
+
+//Tri code -- custom api get template checklist Quote Input
+$entry_point_registry['APIGetSMSTemplateFromSuiteById'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetSMSTemplateFromSuiteById.php',
+    'auth' => false
+);
