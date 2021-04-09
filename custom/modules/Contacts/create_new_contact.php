@@ -31,9 +31,11 @@ if($contact_id != ''){
     $contact->retrieve($contact_id);
     if( isset($_GET['plumber_license_number'])){
         $contact->plumber_license_number_c =  $_GET['plumber_license_number'];
+        $contact->check_contact_type_c = 'Plumber' ;
     }
     if( isset($_GET['electrician_license_number'])){
         $contact->electrician_license_number_c =  $_GET['electrician_license_number'];
+        $contact->check_contact_type_c = 'Electrician' ;
     }
     $contact->save();
     echo  $contact->id;
