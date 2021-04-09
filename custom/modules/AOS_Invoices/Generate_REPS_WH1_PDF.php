@@ -132,7 +132,7 @@ function generatePDF($Invoice){
     $pdf->Image(__DIR__.'/text/icon.jpg' ,13,255.7,3,2.8);
 
     //customer signature     
-    $source_link = $_SERVER['DOCUMENT_ROOT'].'/upload/e5bc4811-5017-1600-adb4-5db10782d473_signature_c';
+    $source_link = $_SERVER['DOCUMENT_ROOT'].'/upload/'.$Invoice->contact_id4_c.'_signature_c';
     if (file_exists($source_link)) {   
         $mime_content_type = mime_content_type($source_link);
         $ext = return_ext($mime_content_type);
