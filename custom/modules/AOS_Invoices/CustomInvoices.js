@@ -5481,13 +5481,13 @@ $(document).ready(function(){
             })      
          })
          //button create generate REPS_WH1_PDF
-         $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #00b2e2;" id="Generate_REPS_WH1_PDF" class="button primary" title="Generate REPS WH1 PDF"><span class="glyphicon glyphicon-file"></span> Generate REPS WH1 PDF</button>');
+         $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #00b2e2;" id="Generate_REPS_WH1_PDF" class="button primary" title="Generate REPS WH1 PDF"><span class="glyphicon glyphicon-file"></span>SA REPS ACTIVITY RECORD</button>');
          $("#Generate_REPS_WH1_PDF").click(function(){
             Ajax_Generate_File_PDF_REPS('');
          })
 
         //button create generate Generate_REPS_Information_Statement
-        $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #FF8800;" id="Generate_REPS_Information_Statement" class="button primary" title="Generate REPS Inforamtion Statement"><span class="glyphicon glyphicon-file"></span> SA REPS Inforamtion Statement</button>');
+        $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #FF8800;" id="Generate_REPS_Information_Statement" class="button primary" title="Generate REPS Inforamtion Statement"><span class="glyphicon glyphicon-file"></span>SA REPS INFORMATION STATEMENT</button>');
         $("#Generate_REPS_Information_Statement").click(function(){
             Ajax_Generate_File_PDF_REPS('REPS_Infor_State');
         })
