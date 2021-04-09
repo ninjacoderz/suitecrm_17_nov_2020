@@ -290,8 +290,10 @@
 		}
 	}
     //save value default
-    $invoice->existing_sh_flow_rate_c = '7.5';
-    $invoice->replacement_showerhead_c = '5.0';
+    $invoice->the_flow_rate_tested_c = '9';
+    $invoice->existing_sh_flow_rate_c = '';
+    $invoice->replacement_showerhead_c = '';
+    $invoice->existing_gas_connection_c = 'false';
     $invoice->sanden_model_c = $sanden_model_c;
     //dung code- convert payments json string
     if(isset($_REQUEST['payment_amount'])) {
