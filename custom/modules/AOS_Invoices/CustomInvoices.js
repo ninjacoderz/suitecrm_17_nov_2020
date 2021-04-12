@@ -5217,6 +5217,12 @@ $(document).ready(function(){
     //dung code -- button "Send Customer Install date"
     var record_id = $("input[name='record']").val();
     if(module_sugar_grp1 == 'AOS_Invoices') {
+        // From detail to edit
+        $("#CANCEL").after(
+            ' <button type="button" id="EMAIL_GET_ROT_Agreement" \
+             data-email-type="EMAIL_GET_ROT_Agreement" onclick="$(document).openComposeViewModalDefault(this);" data-module="Invoices" data-record-id="'+ record_id +'" \
+             class="button" title="EMAIL GET ROT Agreement" >EMAIL GET ROT Agreement<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+        );
         $("#CANCEL").after(
             ' <button type="button" id="Send_Customer_Install_date" \
              data-email-type="Send_Customer_Install_date" onclick="$(document).openComposeViewModal(this);" data-module="Invoices" data-record-id="'+ record_id +'" \
@@ -5262,7 +5268,12 @@ $(document).ready(function(){
         );     
         //$("#CANCEL").parent().append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');    
         $("#CANCEL").parent().append('<input type="button" id="client_reuploads_photo" value="EMAIL CLIENT WARRANTY + PHOTOS" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_reuploads_photo" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
-           
+        // From detail to edit
+        $('#CANCEL').parent().append('<button type="button" id="better_sg_solar_date" value="BETTER SG SOLAR DATE" class="button primary" data-email-type="better_sg_solar_date" onclick="$(document).openComposeViewModalDefault(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact_id').val()+'"  data-record-id="'+ record_id +'">\
+                BETTER SG SOLAR DATE<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
+        $('#CANCEL').parent().append('<input type="button" id="delivery_coming" value="Delivery coming" class="button primary" data-email-type="delivery_coming" onclick="$(document).openComposeViewModalDefault(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact_id').val()+'"  data-record-id="'+ record_id +'" />');
+        $('#CANCEL').parent().append('<input type="button" id="delivery_schedule" value="Delivery Schedule" class="button primary" data-email-type="delivery_schedule" onclick="$(document).openComposeViewModalDefault(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact_id').val()+'"  data-record-id="'+ record_id +'" />');
+
     }else if(module_sugar_grp1 == 'AOS_Quotes'){
         $("#CANCEL").after(
             ' <button type="button" id="Advise_Install_Date" \
@@ -6401,7 +6412,7 @@ function cal_total_constractor(default_value_input = null) {
 
     
     /**
-     *  Popup email default
+     *  Popup email default ...
      */
     $.fn.openComposeViewModalDefault = function(source){
         "use strict";
