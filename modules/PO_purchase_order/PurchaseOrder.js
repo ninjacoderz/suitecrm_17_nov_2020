@@ -989,7 +989,9 @@ $(document).ready(function(){
     // if($("#supplier_order_number_c").val() == ''){
     //     $("#supplier_order_number_c").val(get_supplier_order_number());
     // }
-    
+
+    //hide label Create Sanden Quote FQS
+    $('div[data-label="LBL_CREATE_SANDEN_QUOTE_FQS"]').hide()
     //tu-code show link invoices
     YAHOO.util.Event.addListener("aos_invoices_po_purchase_order_1_name", "change", function(){
         ShowLinkInvoices();

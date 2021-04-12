@@ -218,6 +218,22 @@ $(document).ready(function(){
             display_status_title(module_sugar_grp1,action_sugar_grp1);
         });
         //VUT - E - js change title
+        //VUT - S - hide total group line item        
+        var modules_hide =['AOS_Quotes','AOS_Invoices','PO_purchase_order'];
+        if (modules_hide.includes(module_sugar_grp1)) {
+            hideTotalGroup();
+            $('#addGroup').click(function(){
+                setTimeout(function () {
+                    hideTotalGroup();
+                },100);
+            });
+            $(document).on("click","#deleteGroup", function(e){
+                setTimeout(function () {
+                    hideTotalGroup();
+                },100);
+            });
+        }
+        //VUT - E - hide total group line item
     }
 
     //VUT-S-Click button assign user 
@@ -462,4 +478,15 @@ function minimise_sub(){
             $(this).find('.panel-body.panel-collapse').removeClass('in')
         }
     });
+}
+
+function hideTotalGroup() {
+    let group = $('.group_body').not('[style="display: none;"]');
+    if (group.length < 2) {
+        group.find("tfoot .totals").hide();
+    } else {
+        $.each(group, function(){
+            $(this).find("tfoot .totals").show();
+        });
+    }
 }

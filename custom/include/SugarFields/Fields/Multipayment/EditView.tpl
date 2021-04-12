@@ -20,11 +20,11 @@
 
     function addTextRow(payment_amount , payment_description , payment_date , payment_brankref )
     {ldelim}
-
-        if(payment_amount === undefined) payment_amount ="";
-        if(payment_description === undefined) payment_description ="";
-        if(payment_date === undefined) payment_date ="";
-        if(payment_brankref === undefined) payment_brankref ="";
+        // fixed check undefined and null
+        if(!payment_amount) payment_amount ="";
+        if(!payment_description) payment_description ="";
+        if(!payment_date) payment_date ="";
+        if(!payment_brankref) payment_brankref ="";
         var table = document.getElementById("multipayment");
         var rowCount = table.rows.length;
 
@@ -47,7 +47,7 @@
             var option_render = '';
             //debugger
             for (var key in payment_options) {
-                var opt_value = payment_options[key]; 
+                var opt_value = payment_options[key];
                 if (opt_value.toLowerCase() == payment_description.toLowerCase()) {
                     option_render += '<option selected="selected" name="'+key+'" label="'+opt_value+'" value="'+opt_value+'">'+opt_value+'</option>';
                 } else {
