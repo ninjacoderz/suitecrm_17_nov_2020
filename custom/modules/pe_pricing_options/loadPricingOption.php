@@ -7,7 +7,7 @@
     if( isset($form) ){
         $name_ops = array();
         $db = DBManagerFactory::getInstance();
-        $sql = "SELECT * FROM `pe_pricing_options_cstm` WHERE `solar_pricing_form_c` = 1 ";
+        $sql = "SELECT * FROM `pe_pricing_options_cstm` INNER JOIN `pe_pricing_options` ON pe_pricing_options_cstm.id_c=pe_pricing_options.id WHERE `solar_pricing_form_c`= 1 ORDER BY `pe_pricing_options`.`date_modified` ASC";
         $ret = $db->query($sql);
         if( $ret->num_rows == 0 ){
             echo '';

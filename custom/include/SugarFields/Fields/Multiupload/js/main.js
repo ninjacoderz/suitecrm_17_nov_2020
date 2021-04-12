@@ -109,7 +109,7 @@ function genRebateNumberFunc(elem){
         success: function(data)
         {
 
-            if(data == '' && typeof data == undefined)return;
+            if(data == '' || typeof data == 'undefined')return;
             $('#genRebateNumber span.glyphicon-refresh').addClass('hidden');
             var suggest =[];
             var jsonObject = $.parseJSON(data);

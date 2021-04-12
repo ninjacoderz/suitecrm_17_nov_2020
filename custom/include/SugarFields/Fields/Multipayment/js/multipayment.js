@@ -362,7 +362,7 @@ $(document).ready(function() {
                 url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+key,
                 async:false
             }).done(function (data) {
-                if(data == '' && typeof data == undefined)return;
+                if(data == '' || typeof data === undefined)return;
                 let jsonObj = JSON.parse(data);
                 price = jsonObj.price;
                 cost = jsonObj.cost;

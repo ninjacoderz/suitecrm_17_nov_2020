@@ -122,7 +122,7 @@ function generatePDF($Invoice){
     }
     
     //CUSTOMER / INSTALLER DECLARATION
-    $pdf->Write($pdf->SetXY(36.5,203.5), html_entity_decode($Invoice->plumber_c,ENT_QUOTES)); // Installer Name
+    $pdf->Write($pdf->SetXY(36.5,203.5), html_entity_decode($Invoice->plumber_contact_c,ENT_QUOTES)); // Installer Name
     $pdf->Write($pdf->SetXY(36.5,208), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
     $pdf->Write($pdf->SetXY(125,208), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
     
@@ -130,7 +130,24 @@ function generatePDF($Invoice){
     $pdf->Image(__DIR__.'/text/icon.jpg' ,13,246,3,2.8);
     $pdf->Image(__DIR__.'/text/icon.jpg' ,13,250.7,3,2.8);
     $pdf->Image(__DIR__.'/text/icon.jpg' ,13,255.7,3,2.8);
-    
+
+    //customer signature     
+    $source_link = $_SERVER['DOCUMENT_ROOT'].'/upload/'.$Invoice->contact_id4_c.'_signature_c';
+    if (file_exists($source_link)) {   
+        $mime_content_type = mime_content_type($source_link);
+        $ext = return_ext($mime_content_type);
+        if($ext != '') {
+            $signature_draft_link = __DIR__.'/text/signature_draft.'.$ext;
+            if(!file_exists ($signature_draft_link)) {
+               $fp = fopen($signature_draft_link, 'wb');
+               fclose($fp);
+            }    
+            if(file_put_contents($signature_draft_link,file_get_contents($source_link))){
+                $pdf->Image($signature_draft_link,127,194.7,30,7.8);
+            }
+        }
+    }
+   
     //Customer Name
     $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name));
     $pdf->Write($pdf->SetXY(36.5,261.3), html_entity_decode(trim($contact_bean->first_name .' '. $contact_bean->last_name),ENT_QUOTES));
@@ -200,7 +217,7 @@ function Generate_REPS_Information_Statement($Invoice){
         //I confirm that all shower heads connected to the installed water heater have been tested or replaced and are 9 litres per minute or less. 
         $pdf->Image(__DIR__.'/text/icon.jpg' ,13.5,160,3,2.8);
 
-        $pdf->Write($pdf->SetXY(36.5,169.5), html_entity_decode($Invoice->plumber_c,ENT_QUOTES)); // Installer Name
+        $pdf->Write($pdf->SetXY(36.5,169.5), html_entity_decode($Invoice->plumber_contact_c,ENT_QUOTES)); // Installer Name
         $pdf->Write($pdf->SetXY(125,169.5), html_entity_decode($Invoice->plumber_license_number_c,ENT_QUOTES)); // Installers Lic. No
         $pdf->Write($pdf->SetXY(125,173.7), html_entity_decode($Invoice->vba_pic_cert_c,ENT_QUOTES)); // COC No.
 
@@ -214,9 +231,26 @@ function Generate_REPS_Information_Statement($Invoice){
 
     $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name));
 
-    $fp = fopen($ds_dir.'/'.$pre_file.'_SA_REP_Information_Statement.pdf', 'wb');
+    $fp = fopen($ds_dir.'/'.$pre_file.'_SA_REPS_Information_Statement.pdf', 'wb');
     fclose($fp);
-    $pdf->Output($ds_dir.'/'.$pre_file.'_SA_REP_Information_Statement.pdf', 'F');
-   
+    $pdf->Output($ds_dir.'/'.$pre_file.'_SA_REPS_Information_Statement.pdf', 'F');
     return 'Finish';
+}
+
+function return_ext($mime) {
+
+    $mime_types = array(
+        // images
+        'image/png' =>'png' ,
+        'image/jpeg' => 'jpe',
+        'image/jpeg' =>'jpeg',
+        'image/jpeg' => 'jpg',
+    );
+
+    if (array_key_exists($mime, $mime_types)) {
+        return $mime_types[$mime];
+    }
+    else {
+        return 'application/octet-stream';
+    }
 }

@@ -1457,8 +1457,27 @@ $entry_point_registry['APIGetProductInfoByShortName'] = array(
     'file' => 'custom/modules/AOS_Products/APIGetProductInfoByShortName.php',
     'auth' => false
 );
+
+// .:nhantv:. Get Design data from Solar design tool
+$entry_point_registry['APIGetDesign'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIGetDesign.php',
+    'auth' => false
+);
+
+// .:nhantv:. Save Design data from Solar design tool
+$entry_point_registry['APISaveDesign'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APISaveDesign.php',
+    'auth' => false
+);
+
 //Nhat -Test
 $entry_point_registry['PO_purchase_order_meeting'] = array(
     'file' => 'custom/modules/PO_purchase_order_meeting/PO_purchase_order_meeting.php',
     'auth' => true
+);
+
+//Tri code -- custom api get template checklist Quote Input
+$entry_point_registry['APIGetSMSTemplateFromSuiteById'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetSMSTemplateFromSuiteById.php',
+    'auth' => false
 );

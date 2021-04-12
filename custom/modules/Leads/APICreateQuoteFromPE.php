@@ -1785,6 +1785,10 @@ function calc_panel_c($totalPanel,$min,$max,$line,$groupmax,$index=0){
                 $arrLine1[$j] = $i;
         }
         $count = $line[1];
+        if(array_sum($arrLine1) > $groupmax){
+            $type = "false";
+            continue;
+        }
         $res = $totalPanel - array_sum($arrLine1);
 
         if($res % $count != 0){

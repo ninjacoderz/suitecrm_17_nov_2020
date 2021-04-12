@@ -49,7 +49,8 @@
                     break;
                     case "sa":
                         // email_address_to = "sa@cope.com.au";
-                        email_address_to = "<mellbourn@cope.com.au>";
+                        // email_address_to = "<mellbourn@cope.com.au>"; //https://trello.com/c/Vl2N3oIQ/3178-change-email-address-in-wh-log-atl-for-those-deliveries-going-to-sa?menu=filter&filter=*
+                        email_address_to = "<tlauner@cope.com.au>, <mlynch@cope.com.au>";
                         email_address_cc = ", Cope SA <sa@cope.com.au>";
                     break;
                     case "vic":

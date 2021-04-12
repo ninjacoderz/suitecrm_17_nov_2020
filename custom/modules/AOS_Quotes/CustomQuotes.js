@@ -515,7 +515,7 @@ $(function () {
                     //dataType: 'jsonp',
 
                     success: function (data) {
-                        if (data == '' && typeof data == undefined) return;
+                        if (data == '' || typeof data === 'undefined') return;
                         var suggest = [];
                         var jsonObject = $.parseJSON(data);
                         for (i = 1; i < jsonObject.length; i++) {
@@ -556,7 +556,7 @@ $(function () {
                     url: "/index.php?entryPoint=customGetAddress&postcode_city=" + request["term"],
                     type: 'GET',
                     success: function (data) {
-                        if (data == '' && typeof data == undefined) return;
+                        if (data == '' || typeof data === 'undefined') return;
                         var suggest = [];
                         var jsonObject = data.split('\n');
                         for (i = 0; i < jsonObject.length; i++) {
@@ -951,7 +951,7 @@ $(document).ready(function () {
                 url: "/index.php?entryPoint=CustomCheckNumberMeter&meter_number_c=" + meter_number,
                 type: 'GET',
                 success: function (data) {
-                    if (data == '' && typeof data == undefined) return;
+                    if (data == '' || typeof data === 'undefined') return;
                     var data_json = $.parseJSON(data);
                     if (data_json['Quote For'] == null && data_json['Network Distributor'] == null && data_json['NMI'] == null) {
                         var html_append = '<p>* Number Meter Wrong *</p>';
@@ -1008,7 +1008,7 @@ $(document).ready(function () {
                 url: "/index.php?entryPoint=CustomCheckNumberNMI&nmi_c=" + nmi_number,
                 type: 'GET',
                 success: function (data) {
-                    if (data == '' && typeof data == undefined) return;
+                    if (data == '' || typeof data === 'undefined') return;
                     var data_json = $.parseJSON(data);
                     if (data_json['Quote For'] == null && data_json['Network Distributor'] == null && data_json['NMI'] == null) {
                         var html_append = '<p>* Number Meter Wrong *</p>';
@@ -1388,7 +1388,7 @@ $(document).ready(function () {
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    if (data == '' && typeof data == undefined) { $('#getSGPrice span.glyphicon-refresh').addClass('hidden'); return; }
+                    if (data == '' || typeof data === 'undefined') { $('#getSGPrice span.glyphicon-refresh').addClass('hidden'); return; }
                     $('#getSGPrice').after("<div class='div_option' style='position: absolute;left: 285px;top:-5px;font-size:13px'><div style='margin-right: 20px;float: left; font-weight: bold;font-size: 14px;'>SG Price:</div><div style='float:left;'>" + data.html + "</div><div class='clear'></div></div>");
                     $('#getSGPrice').after("<div class='div_option' style='position: absolute;left: 465px;top:-5px;font-size:13px'><div style='margin-right: 20px;float: left; font-weight: bold;font-size: 14px;'>Inverter Model:</div><div style='float:left;'>" + data.html_inverter + "</div><div class='clear'></div></div>");
                     if (data.error == 'error') {
@@ -1465,7 +1465,7 @@ $(document).ready(function () {
             action: 'read',
         },
         success: function (result) {
-            if (result == '' || typeof result === undefined) return;
+            if (result == '' || typeof result === 'undefined') return;
             var data_result = $.parseJSON(result);
             $.each(data_result, function (k, v) {
                 if (v.title == 'No Upgrade Options') {
@@ -1544,7 +1544,7 @@ $(document).ready(function () {
             url: "/index.php?entryPoint=CustomQuoteRegistrationJemena&nmiNumber=" + nmi_number_jemena + "&meterNumber=" + meter_number_jemena + "&AddressLineOne=" + AddressLineOne + "&postcode=" + postcode + "&subrb=" + subrb + "&contact_id=" + account_id,
             type: 'GET',
             success: function (data) {
-                if (data == '' && typeof data == undefined) return;
+                if (data == '' || typeof data === 'undefined') return;
                 if (data.indexOf("@sharklasers.com") > 0) {
                     $("#jemena_account_c").val(data);
                     $('#register_jemena_account span.glyphicon-refresh').addClass('hidden');
@@ -1929,7 +1929,7 @@ $(document).ready(function () {
                     data: $("#EditView").serialize(),
                     async: false,
                     success: function (data) {
-                        if (data == '' && typeof data == undefined) return;
+                        if (data == '' || typeof data === 'undefined') return;
                         var quote_id_patt = /"record" value="(.*)"/g;
                         quote_id = quote_id_patt.exec(data);
                         if (quote_id !== null && typeof quote_id === 'object') {
@@ -2347,7 +2347,7 @@ $(document).ready(function () {
             cache: false,
             url: "?entryPoint=getLeadFromAccount&account_id=" + $("#billing_account_id").val() + '&lead_id=' + $("#leads_aos_quotes_1leads_ida").val(),
         }).done(function (data) {
-            if (data == '' && typeof data == undefined) return;
+            if (data == '' || typeof data === 'undefined') return;
             $("#send_solar_design").remove();
             $("#seekInstallDate").remove();
             $("#sendRequestClient").remove();
@@ -2686,7 +2686,7 @@ $(document).ready(function () {
         cache: false,
         url: "?entryPoint=getLeadFromAccount&account_id=" + $("#billing_account_id").val() + '&lead_id=' + $("#leads_aos_quotes_1leads_ida").val(),
     }).done(function (data) {
-        if (data == '' && typeof data == undefined) return;
+        if (data == '' || typeof data === 'undefined') return;
         var json = $.parseJSON(data);
         window.lead_source = json.lead_source;
         //    invoice_to_email = json.email;
@@ -2994,7 +2994,7 @@ $(document).ready(function () {
                 async: false,
                 type: 'GET',
                 success: function (data) {
-                    if (data == '' && typeof data == undefined) { $('#sg_assigned_user span.glyphicon-refresh').addClass('hidden'); return; }
+                    if (data == '' || typeof data === 'undefined') { $('#sg_assigned_user span.glyphicon-refresh').addClass('hidden'); return; }
                     if (data == "Matthew Wright") {
                         $('#sg_assigned_user_c').val(data);
                         $('#user_id2_c').val('8d159972-b7ea-8cf9-c9d2-56958d05485e');
@@ -3368,14 +3368,19 @@ $(document).ready(function () {
             type: 'POST',
             async: false,
             success: function (data) {
-                if (data == '' && typeof data == undefined) { $('#createsolargainLead span.glyphicon-refresh').addClass('hidden'); return; }
-                var jsonData = $.parseJSON(data);
+                if (data == '' || typeof data === 'undefined') { $('#createsolargainLead span.glyphicon-refresh').addClass('hidden'); return; }
+                var jsonData = JSON.parse(data);
                 $('#createsolargainLead span.glyphicon-refresh').addClass('hidden');
-                $("#solargain_quote_number_c").val(jsonData.QuoteNumber);
-                $("#sg_site_details_no_c").val(jsonData.SiteDetailNumber);
+                $("#solargain_quote_number_c").val(jsonData.quote_info.QuoteNumber);
+                $("#sg_site_details_no_c").val(jsonData.quote_info.SiteDetailNumber);
                 $("#solargain_quote_number_c").trigger("change");
                 SUGAR.ajaxUI.hideLoadingPanel();
-                alert("Push to SG successfully.")
+                if(typeof jsonData.quote_info.SG_error !== 'undefined'){
+                    alert("Quote is created but can't push pricing option.('"+jsonData.quote_info.SG_error+"')");
+                }else{
+                    alert("Push to SG successfully.")
+                }
+               
             },
         });
     }
@@ -3582,7 +3587,7 @@ $(document).ready(function () {
             url: build_url,
             type: 'POST',
             success: function (data) {
-                if (data == '' && typeof data == undefined) { $('#createsolargainLead span.glyphicon-refresh').addClass('hidden'); return; }
+                if (data == '' || typeof data === 'undefined') { $('#createsolargainLead span.glyphicon-refresh').addClass('hidden'); return; }
                 var jsonData = $.parseJSON(JSON.stringify(data));
                 $('#createsolargainLead span.glyphicon-refresh').addClass('hidden');
                 $("#solargain_tesla_quote_number_c").val(jsonData.QuoteNumber);
@@ -4397,7 +4402,7 @@ function sendEmailDesignsComplete() {
             url: _url,
             type: 'GET',
             success: function (data) {
-                if (data == '' && typeof data == undefined) return;
+                if (data == '' || typeof data === 'undefined') return;
                 var jsonObject = $.parseJSON(data);
                 var vals = jsonObject.time_complete.split(' ');
 
@@ -4743,7 +4748,7 @@ $(function () {
                             type: "GET",
                             async: false,
                             success: function (data) {
-                                if (data != '' && typeof data !== undefined) {
+                                if (data != '' && typeof data !== 'undefined') {
                                     var data_parse = $.parseJSON(data);
                                     if (data_parse.error == "") {
                                         $("#slv_solar_vic_id_c").val(data_parse.recordId + '/' + data_parse.recordName);
@@ -5120,7 +5125,7 @@ $(function () {
                                 title: encodeURIComponent($("#title_special_template").val())
                             },
                             success: function (result) {
-                                if (data == '' && typeof data == undefined) return;
+                                if (data == '' || typeof data === 'undefined') return;
                                 render_select_template(result);
                                 SUGAR.ajaxUI.hideLoadingPanel();
                                 $("#content_template").val('');
@@ -5149,7 +5154,7 @@ $(function () {
                 },
                 async: true,
                 success: function (result) {
-                    if (data == '' && typeof data == undefined) { SUGAR.ajaxUI.hideLoadingPanel(); return; }
+                    if (data == '' || typeof data === 'undefined') { SUGAR.ajaxUI.hideLoadingPanel(); return; }
                     render_select_template(result);
                     SUGAR.ajaxUI.hideLoadingPanel();
                     $("#dialog_special_notes").dialog("open");
@@ -5189,7 +5194,7 @@ $(function () {
                 url: 'index.php?entryPoint=CustomDownloadPDF&module=AOS_Quotes&type=' + quote_type + '&record_id=' + $("input[name='record']").val() + '&preview=true&folder_id=' + $("input[name='pre_install_photos_c']").val(),
                 async: true,
                 success: function (result) {
-                    if (data == '' && typeof data == undefined) { SUGAR.ajaxUI.hideLoadingPanel(); return; }
+                    if (data == '' || typeof data === 'undefined') { SUGAR.ajaxUI.hideLoadingPanel(); return; }
                     var data = $.parseJSON(result);
                     $(".modal_preview_pdf").remove();
                     var html = '<div class="modal fade modal_preview_pdf" tabindex="-1" role="dialog">' +
@@ -5956,7 +5961,7 @@ $(function () {
             url: "?entryPoint=GetPOForCalculation&type=gp_profit_quote&quote_id=" + quote_id,
             async: false
         }).done(function (data) {
-            if (data == '' && typeof data == undefined) return;
+            if (data == '' || typeof data === 'undefined') return;
             total_amt = JSON.parse(data);
         });
         return total_amt;
@@ -6027,7 +6032,7 @@ $(function () {
                 url: "?entryPoint=getProductInfos&type=gp_profit&product_id=" + key,
                 async: false
             }).done(function (data) {
-                if (data == '' && typeof data == undefined) return;
+                if (data == '' || typeof data === 'undefined') return;
                 let jsonObj = JSON.parse(data);
                 price = jsonObj.price;
                 cost = jsonObj.cost;

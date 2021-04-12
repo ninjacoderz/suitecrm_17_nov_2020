@@ -1,5 +1,6 @@
 <?php
 $attached_file_name = "";
+global $app_list_strings;
 function result_pdf ($record_id, &$attached_file_name = ""){
 
     error_reporting(0);
@@ -929,17 +930,21 @@ else if($mail_format == "electrical"){
 
 //Add exist/old hws 
 $old_hws ='';
+$invoice_type = $app_list_strings['quote_type_list'];
 switch ( $_REQUEST['product_type']) {
     case "quote_type_sanden":
-    $old_hws = urldecode($_REQUEST['old_hws'] ? 'Existing/Old HWS: '.$_REQUEST['old_hws'] : '' );
-    $subject = str_replace('$product_type',"Sanden",$subject);
-    break;
+        $old_hws = urldecode($_REQUEST['old_hws'] ? 'Existing/Old HWS: '.$_REQUEST['old_hws'] : '' );
+        $subject = str_replace('$product_type',"Sanden",$subject);
+        break;
     case "quote_type_daikin": case "quote_type_nexura":
-    $subject = str_replace('$product_type',"Daikin",$subject);
-    break;
+        $subject = str_replace('$product_type',"Daikin",$subject);
+        break;
     case "quote_type_upcomming_service":
-    $subject = str_replace('$product_type',"Upcoming Service Call",$subject);
-    break;
+        $subject = str_replace('$product_type',"Upcoming Service Call",$subject);
+        break;
+    default:
+        $subject = str_replace('$product_type',$invoice_type[$_REQUEST['product_type']],$subject);
+        break;
 }
 $installation_pictures = $_REQUEST['installation_pictures_c'];
 
