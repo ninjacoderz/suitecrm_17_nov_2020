@@ -1459,8 +1459,14 @@ $entry_point_registry['APIGetProductInfoByShortName'] = array(
 );
 
 // .:nhantv:. Get Design data from Solar design tool
-$entry_point_registry['APIGetDesign'] = array(
-    'file' => 'custom/include/SugarFields/Fields/Multiupload/APIGetDesign.php',
+$entry_point_registry['APIGetSolarDesign'] = array(
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APIGetSolarDesign.php',
+    'auth' => false
+);
+
+// .:nhantv:. Save Design data from Solar design tool
+$entry_point_registry['APISaveSolarDesign'] = array(
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APISaveSolarDesign.php',
     'auth' => false
 );
 
