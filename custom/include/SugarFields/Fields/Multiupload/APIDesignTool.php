@@ -21,7 +21,8 @@
             $design_json = json_encode($decoded['design_json']);
             $type = $decoded['type'];
             $status = $decoded['status'];
-            $dataURL = base64_decode($decoded['dataURL']);
+            $dataURLs = $decoded['dataURL'];
+            $dataBgURL = base64_decode($decoded['dataBgURL']);
         }
     } else {
         $quote_id = $_REQUEST['quote_id'];
@@ -38,9 +39,6 @@
     $dataReturn = [];
 
     if($type == 'save'){
-        $quote->design_tool_json_c = $design_json;
-        $quote->save();
-
         if($quote->quote_type_c == 'quote_type_daikin' || $quote->quote_type_c == 'quote_type_nexura'){
             $dataURL = $_REQUEST['dataURL'];
             $quoteType = 'Daikin';
@@ -51,23 +49,53 @@
                     }else{
                         $designType = '_'.$i.'_'.$key;
                     }
-                    createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status);
+                    createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status, false, '');
                 }
             }
     
         }else if($quote->quote_type_c == 'quote_type_sanden'){
             $dataURL = base64_decode($_REQUEST['dataURL']);
             $quoteType = 'Sanden';
-            createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status );
+            createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status, false, '');
         } else if ($quote->quote_type_c == 'quote_type_solar'){
-            // .:nhantv:. Save image for Solar design
             $quoteType = 'Solar';
-            if($dataURL != ''){
-                createImage($quote, $dataURL, '', $designType, $quoteType, $status);
-            } else {
-                $dataReturn['message'] = 'SuiteCRM: Unable to create Image from EMPTY dataURL';
+            $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
+            $files = scandir($path, SCANDIR_SORT_DESCENDING);
+
+            // .:nhantv:. Delete old Design image
+            delete_file($files, $path, '_Design_Proposed_Install_Location');
+            delete_file($files, $path.'/thumbnail', '_Design_Proposed_Install_Location');
+
+            // .:nhantv:. Save rendered image
+            if(!empty($dataURLs) || count($dataURLs) > 0){
+                foreach($dataURLs as &$dataURL){
+                    createImage($quote
+                        , base64_decode($dataURL['base64'])
+                        , ''
+                        , $designType
+                        , $quoteType
+                        , $status
+                        , false
+                        , $dataURL['name']);
+                }
+            }
+            // .:nhantv:. Save background
+            if (isset($dataBgURL) && $dataBgURL != ''){
+                createImage($quote, $dataBgURL, '', $designType, $quoteType, $status, true, '');
+                // get lastet image background URL
+                $bgURLPath = get_latest_image_name($quote, '_Design_Background');
+                $decoded['design_json']['mapDesign']['imagePath'] = $bgURLPath;
+                $design_json = json_encode($decoded['design_json']);
+            }
+            // .:nhantv:. Empty dataURL
+            if ($dataURL == '' || (isset($dataBgURL) && $dataBgURL == '')) {
+                $dataReturn['message'] = 'SuiteCRM: Unable to create Image from EMPTY DataURL';
             }
         }
+
+        // .:nhantv:. Save Quote design
+        $quote->design_tool_json_c = $design_json;
+        $quote->save();
     }
 
     $dataReturn['design_json'] = html_entity_decode($quote->design_tool_json_c);
@@ -77,6 +105,7 @@
 
     echo json_encode($dataReturn);
 
+    /** Delete all file that match $strpos */
     function delete_file($files, $path, $strpos) {
         foreach($files as $file){
             if(is_file($path.'/'.$file) && strpos($file, $strpos) !== false){
@@ -85,7 +114,43 @@
         }
     }
 
-    function createImage($quote,$dataURL,$key,$designType,$quoteType,$status){
+    /** Generate file name follow pattern: Q<quoteNumber>_<designType>_<?inputName>_<strpos><timeString>.<?png> */
+    function file_name_builder($path, $quote, $quoteType, $designType, $strpos, $inputName){
+        $strBuilder = '';
+        $time_string = strftime("%d%b%Y_%H%M",time());
+        
+        // Case source: append $path
+        if($path !== ''){
+            $strBuilder .= $path.'/';
+        }
+        // Append Quote number, quote type, design type 
+        $strBuilder .= 'Q'.$quote->number.'_'.$quoteType.$designType;
+        // Case input name
+        if($inputName !== ''){
+            $strBuilder .= '_'.str_replace(' ', '_', $inputName);
+        }
+        // Append strpos, time string
+        $strBuilder .= $strpos.$time_string;
+        // Case source: append PNG
+        if($path !== ''){
+            $strBuilder .= '.png';
+        }
+
+        return $strBuilder;
+    }
+
+    /** Get latest image name that match $strpos */
+    function get_latest_image_name($quote, $strpos){
+        $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
+        $files = scandir($path,SCANDIR_SORT_DESCENDING);
+        foreach($files as $file){
+            if(is_file($path.'/'.$file) && strpos($file, $strpos) !== false){
+                return pathinfo($path.'/'.$file)["basename"];
+            }
+        }
+    }
+
+    function createImage($quote, $dataURL, $key, $designType, $quoteType, $status, $isBackGround, $inputName){
         if($dataURL != ''){
             $img = preg_replace('/data:image\/(.*?);base64,/', '', $dataURL);
             $img = str_replace(' ', '+', $img);
@@ -93,8 +158,14 @@
             $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
             $files = scandir($path,SCANDIR_SORT_DESCENDING);
             $filename = '';
+            $strpos = $isBackGround ? '_Design_Background' : '_Design_Proposed_Install_Location';
+
+            // .:nhantv:. Delete old file. Exclude: solar design tab
+            if($inputName === ''){
+                delete_file($files, $path, $strpos);
+            }
+
             // if($status == 'override' || $quoteType == 'Daikin'){
-            delete_file($files, $path, "_Design_Proposed_Install_Location");
             // foreach($files as $file){
             //     if(is_file($path.'/'.$file) && strpos($file,"_Design_Proposed_Install_Location") !== false){
             //         // $filename = explode(".",$file)[0];
@@ -110,14 +181,12 @@
             // }
 
             if($filename == ''){
-                $time_string = strftime("%d%b%Y_%H%M",time());
-                $filename = 'Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string;
-                $source = $path.'/Q'.$quote->number.'_'.$quoteType.$designType.'_Design_Proposed_Install_Location'.$time_string.'.png';
+                $filename = file_name_builder('', $quote, $quoteType, $designType, $strpos, $inputName);
+                $source = file_name_builder($path, $quote, $quoteType, $designType, $strpos, $inputName);
             }
             
             $success = file_put_contents($source, $data);
 
-            
             $data_option['quote_number'] = $quote->number;
             $data_option['customer_name'] = $quote->account_firstname_c.' '.$quote->account_lastname_c;
             $data_option['address_line1'] = $quote->install_address_c;
@@ -138,12 +207,12 @@
                 }
             }
             
-            create_img_option($path,$filename,$data_option,$key, $quoteType);
+            create_img_option($path, $filename, $data_option, $key, $quoteType, $strpos, $inputName);
         }
     }
 
-    function create_img_option($path,$fullname,$data_option,$key, $quoteType){
-        $path= $path.'/';
+    function create_img_option($inputPath, $fullname, $data_option, $key, $quoteType, $strpos, $inputName){
+        $path = $inputPath.'/';
         $filename = $fullname;
         $source = $path.$filename.'.png';
 
@@ -261,9 +330,12 @@
             if(!file_exists ($path."/thumbnail/")) {
                 mkdir($path."/thumbnail/");
             }
+            
             // delete old file
-            $files = scandir($path."/thumbnail",SCANDIR_SORT_DESCENDING);
-            delete_file($files, $path."/thumbnail", "_Design_Proposed_Install_Location");
+            if($inputName === ''){
+                $files = scandir($path."/thumbnail",SCANDIR_SORT_DESCENDING);
+                delete_file($files, $path."/thumbnail", $strpos);
+            }
 
             $typeok = TRUE;
             $thumb =  $path."/thumbnail/".$filename.'.'.$type;
@@ -294,7 +366,7 @@
                 $src = $src_func($new_name);
                 $new_img = imagecreatetruecolor(80,80);
                 imagecopyresampled($new_img,$src,0,0,0,0,80,80,$w,$h);
-                $write_func($new_img,$thumb, $image_quality);
+                $write_func($new_img, $thumb, $image_quality);
                 
                 imagedestroy($new_img);
                 imagedestroy($src);

@@ -1460,13 +1460,7 @@ $entry_point_registry['APIGetProductInfoByShortName'] = array(
 
 // .:nhantv:. Get Design data from Solar design tool
 $entry_point_registry['APIGetDesign'] = array(
-    'file' => 'custom/modules/AOS_Quotes/APIGetDesign.php',
-    'auth' => false
-);
-
-// .:nhantv:. Save Design data from Solar design tool
-$entry_point_registry['APISaveDesign'] = array(
-    'file' => 'custom/modules/AOS_Quotes/APISaveDesign.php',
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APIGetDesign.php',
     'auth' => false
 );
 
