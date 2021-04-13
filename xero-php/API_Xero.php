@@ -151,6 +151,37 @@
             
             // can't update item
             // $Item = $this->Set_Item($info_product,$Item);
+            if(strlen($info_product['name']) > 49 ) {
+                $info_product['name'] = substr($info_product['name'],0,49);
+            }
+            $setAccountCode_sale = '201';
+            $setAccountCode_purchase = '315';
+            if($info_product['category_product'] == '813af614-65de-ea0e-3abb-5a8cb24bfab6') {
+                $setAccountCode_sale = '206';
+                $setAccountCode_purchase = '307';
+            }
+
+            $class = '\XeroPHP\Models\Accounting\Item';
+            $uri = sprintf('%s/%s', $class::getResourceURI(),$Item->getItemID() );
+            $url = new \XeroPHP\Remote\URL($this->xero, $uri, null);
+            $request = new \XeroPHP\Remote\Request($this->xero, $url, \XeroPHP\Remote\Request::METHOD_POST);
+            $data =
+                "<Item>
+                    <ItemID>".$Item->getItemID()."</ItemID>
+                    <Code>".$Item->getCode()."</Code>
+                    <Name>".$info_product['name']."</Name>
+                    <Description>".$info_product['description']."</Description>
+                    <PurchaseDetails> 
+                        <UnitPrice>".$info_product['cost']."</UnitPrice>
+                        <AccountCode>".$setAccountCode_purchase."</AccountCode>
+                    </PurchaseDetails>
+                    <SalesDetails> 
+                        <UnitPrice>".$info_product['price']."</UnitPrice>
+                        <AccountCode>".$setAccountCode_sale."</AccountCode>
+                    </SalesDetails>
+                </Item>";
+            $request->setBody($data);
+            $request->send();   
             return  $Item;  
         }
 
@@ -167,13 +198,19 @@
             ->setIsSold(true)
             ->setIsPurchased(true);
             
+            $setAccountCode_sale = '201';
+            $setAccountCode_purchase = '315';
+            if($info_product['category_product'] == '813af614-65de-ea0e-3abb-5a8cb24bfab6') {
+                $setAccountCode_sale = '206';
+                $setAccountCode_purchase = '307';
+            }
             $Item_Sale =  new \XeroPHP\Models\Accounting\Item\Sale($this->xero);
             $Item_Sale->setUnitPrice($info_product['price'])
-            ->setAccountCode('201');
+            ->setAccountCode($setAccountCode_sale);
 
             $Item_Purchase =  new \XeroPHP\Models\Accounting\Item\Purchase($this->xero);
             $Item_Purchase->setUnitPrice($info_product['cost'])
-            ->setAccountCode('315');
+            ->setAccountCode($setAccountCode_purchase);
 
             $Item->setSalesDetails($Item_Sale)
             ->setPurchaseDetails($Item_Purchase);

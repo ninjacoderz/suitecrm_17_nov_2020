@@ -1459,14 +1459,14 @@ $entry_point_registry['APIGetProductInfoByShortName'] = array(
 );
 
 // .:nhantv:. Get Design data from Solar design tool
-$entry_point_registry['APIGetDesign'] = array(
-    'file' => 'custom/modules/AOS_Quotes/APIGetDesign.php',
+$entry_point_registry['APIGetSolarDesign'] = array(
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APIGetSolarDesign.php',
     'auth' => false
 );
 
 // .:nhantv:. Save Design data from Solar design tool
-$entry_point_registry['APISaveDesign'] = array(
-    'file' => 'custom/modules/AOS_Quotes/APISaveDesign.php',
+$entry_point_registry['APISaveSolarDesign'] = array(
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APISaveSolarDesign.php',
     'auth' => false
 );
 
@@ -1479,5 +1479,10 @@ $entry_point_registry['PO_purchase_order_meeting'] = array(
 //Tri code -- custom api get template checklist Quote Input
 $entry_point_registry['APIGetSMSTemplateFromSuiteById'] = array( 
     'file' => 'custom/modules/AOS_Quotes/APIGetSMSTemplateFromSuiteById.php',
+    'auth' => false
+);
+
+$entry_point_registry['CRUD_Item_Xero'] = array(
+    'file' => 'xero-php/CRUD_Item_Xero.php',
     'auth' => false
 );

@@ -100,7 +100,7 @@ $tmpfname = dirname(__FILE__).'/cookie.auspost.txt';
         curl_setopt($ch, CURLOPT_URL, 'https://digitalapi.auspost.com.au/shipping/v1/shipments');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($shipments));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, html_entity_decode(json_encode($shipments), ENT_QUOTES));
         curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
         curl_setopt($ch, CURLOPT_COOKIEJAR, $tmpfname);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $tmpfname);
