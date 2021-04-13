@@ -183,6 +183,7 @@ try {
                                         'description' => $Product_CRM->description,
                                         'price' => $Product_CRM->price,
                                         'cost' => $Product_CRM->cost,
+                                        'category_product' => $Product_CRM->aos_product_category_id
                                     );
                                     $Item_Xero = $API_Custom_Xero->Create_Item($info_product);
                                 }
