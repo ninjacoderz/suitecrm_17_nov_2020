@@ -1076,6 +1076,7 @@ function dirToArray($dir) {
 }
 
 function resize_image($file, $current_file_path) {
+    return;
     $type = strtolower(substr(strrchr($file, '.'), 1));
     $typeok = TRUE;
     if($type == 'gif' || $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
