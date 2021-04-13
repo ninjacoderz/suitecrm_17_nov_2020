@@ -167,13 +167,19 @@
             ->setIsSold(true)
             ->setIsPurchased(true);
             
+            $setAccountCode_sale = '201';
+            $setAccountCode_purchase = '315';
+            if($info_product['category_product'] == '813af614-65de-ea0e-3abb-5a8cb24bfab6') {
+                $setAccountCode_sale = '206';
+                $setAccountCode_purchase = '307';
+            }
             $Item_Sale =  new \XeroPHP\Models\Accounting\Item\Sale($this->xero);
             $Item_Sale->setUnitPrice($info_product['price'])
-            ->setAccountCode('201');
+            ->setAccountCode($setAccountCode_sale);
 
             $Item_Purchase =  new \XeroPHP\Models\Accounting\Item\Purchase($this->xero);
             $Item_Purchase->setUnitPrice($info_product['cost'])
-            ->setAccountCode('315');
+            ->setAccountCode($setAccountCode_purchase);
 
             $Item->setSalesDetails($Item_Sale)
             ->setPurchaseDetails($Item_Purchase);
