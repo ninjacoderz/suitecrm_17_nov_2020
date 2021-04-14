@@ -336,12 +336,13 @@
             // }
             if($row['part_number'] == 'Pure_Electric_Promo_Code'){
                 $priceCoupon = (float)$couponCode[0]['amount'];
-                $product_line->product_total_price =$priceCoupon* $product_line->product_qty;
-                $product_line->product_cost_price = $priceCoupon;
-                $product_line->product_list_price = $priceCoupon;
+                $list_price = $priceCoupon/1.1;
+                $product_line->product_total_price =$list_price* $product_line->product_qty;
+                $product_line->product_cost_price = $list_price;
+                $product_line->product_list_price = $list_price;
                 $product_line->item_description .= '-- '. $couponCode[0]['label'];
-                $product_line->vat = '0.0';
-                $product_line->vat_amt = 0;
+                $product_line->vat = '10.0';
+                $product_line->vat_amt = round(($list_price * $product_line->product_qty) * 0.1*1,2);
             }else{
                 $product_line->product_total_price =$row['price']* $product_line->product_qty;
                 $product_line->vat = '10.0';
