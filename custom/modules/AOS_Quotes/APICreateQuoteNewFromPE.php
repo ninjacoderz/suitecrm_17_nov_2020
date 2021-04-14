@@ -1101,15 +1101,21 @@ function get_value_stc_veec ($postalcode,$partNumbers){
         curl_setopt($curl, CURLOPT_POST, count($fields));//count($fields)
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl,CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 20);
         curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+        set_time_limit(0); 
         $result = curl_exec($curl);
         curl_close($curl);
+        if($result == false) {
+            $response_array["eligible_veecs"][$_GET['part_number']] = 35;
+        } else {
+            $html_inside = str_get_html($result);
     
-        $html_inside = str_get_html($result);
-    
-        $quantites = $html_inside->find('#ContentPlaceHolder1_Content_Editor_VEECQuantityBox td');
-        if(isset($quantites[1]) && $quantites[1]->plaintext!= "") $response_array["eligible_veecs"][$_GET['part_number']] = $quantites[1]->plaintext;
+            $quantites = $html_inside->find('#ContentPlaceHolder1_Content_Editor_VEECQuantityBox td');
+            if(isset($quantites[1]) && $quantites[1]->plaintext!= "") $response_array["eligible_veecs"][$_GET['part_number']] = $quantites[1]->plaintext;
+        }
     
     
         // STC + VEEC price
@@ -1229,7 +1235,7 @@ function get_value_stc_veec ($postalcode,$partNumbers){
             "Referer: https://geocreation.com.au/assignments/new",
             "Origin: https://geocreation.com.au",
         )
-    );
+        );
         
         $result = curl_exec($curl);
         curl_close($curl);
