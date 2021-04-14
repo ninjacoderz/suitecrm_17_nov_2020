@@ -1079,41 +1079,45 @@ function resize_image($file, $current_file_path) {
     if(!file_exists ($current_file_path."thumbnail/")) {
         mkdir($current_file_path."thumbnail/");
     }
-    $imagick = new Imagick($current_file_path.$file);
-    switch ($imagick->getImageOrientation()) {
-        case Imagick::ORIENTATION_TOPLEFT:
-            break;
-        case Imagick::ORIENTATION_TOPRIGHT:
-            $imagick->flopImage();
-            break;
-        case Imagick::ORIENTATION_BOTTOMRIGHT:
-            $imagick->rotateImage("#000", 180);
-            break;
-        case Imagick::ORIENTATION_BOTTOMLEFT:
-            $imagick->flopImage();
-            $imagick->rotateImage("#000", 180);
-            break;
-        case Imagick::ORIENTATION_LEFTTOP:
-            $imagick->flopImage();
-            $imagick->rotateImage("#000", -90);
-            break;
-        case Imagick::ORIENTATION_RIGHTTOP:
-            $imagick->rotateImage("#000", 90);
-            break;
-        case Imagick::ORIENTATION_RIGHTBOTTOM:
-            $imagick->flopImage();
-            $imagick->rotateImage("#000", 90);
-            break;
-        case Imagick::ORIENTATION_LEFTBOTTOM:
-            $imagick->rotateImage("#000", -90);
-            break;
-        default: // Invalid orientation
-            break;
+    try{
+        $imagick = new Imagick($current_file_path.$file);
+        switch ($imagick->getImageOrientation()) {
+            case Imagick::ORIENTATION_TOPLEFT:
+                break;
+            case Imagick::ORIENTATION_TOPRIGHT:
+                $imagick->flopImage();
+                break;
+            case Imagick::ORIENTATION_BOTTOMRIGHT:
+                $imagick->rotateImage("#000", 180);
+                break;
+            case Imagick::ORIENTATION_BOTTOMLEFT:
+                $imagick->flopImage();
+                $imagick->rotateImage("#000", 180);
+                break;
+            case Imagick::ORIENTATION_LEFTTOP:
+                $imagick->flopImage();
+                $imagick->rotateImage("#000", -90);
+                break;
+            case Imagick::ORIENTATION_RIGHTTOP:
+                $imagick->rotateImage("#000", 90);
+                break;
+            case Imagick::ORIENTATION_RIGHTBOTTOM:
+                $imagick->flopImage();
+                $imagick->rotateImage("#000", 90);
+                break;
+            case Imagick::ORIENTATION_LEFTBOTTOM:
+                $imagick->rotateImage("#000", -90);
+                break;
+            default: // Invalid orientation
+                break;
+        }
+        $imagick->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
+        $imagick->thumbnailImage(80, 80, true, true);
+        $imagick->writeImage( $current_file_path.'thumbnail/'.$file);
+        $imagick->destroy();
+    }catch(Exception $e){
+            
     }
-    $imagick->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
-    $imagick->thumbnailImage(80, 80, true, true);
-    $imagick->writeImage( $current_file_path.'thumbnail/'.$file);
-    $imagick->destroy();
 }
 
 function delete_directory($dirname) {
