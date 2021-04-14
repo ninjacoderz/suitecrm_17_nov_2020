@@ -2,7 +2,9 @@ $(function () {
     'use strict';
     $( document ).ready(function() {
 
-
+        $("#SAVE").after(
+            ' <button style="background:#009acf;" type="button" id="CRUD_Xero_Products" class="button CRUD_Xero_Products" title="Create And Update Xero Products" onClick="SUGAR.CRUD_Xero_Products(this);" >Create & Update Xero <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+        );
         //button CRUD Product SuiteCRM with PE Site
         var html_CRUD_Product_SuiteCRM_PESite = '<div class="clear"></div><br>\
         <button type="button" class="button primary" id="button_CRUD_Product_SuiteCRM_PESite"> \
@@ -109,6 +111,70 @@ $(function () {
             html_return += '';
             return html_return;
         }
+      
+        SUGAR.CRUD_Xero_Products= function(elemt){
+            
+            var html_alert = '';
+            if($("input[name='record']").val() == ''){
+                html_alert += '<h4 class="text-danger">Product is not saved! Please Save and Reload Page?</h4>';
+            }
+
+            if($('#part_number').val() == ''){
+                html_alert += '<h4 class="text-danger">Please insert Part Number!</h4>';
+            }
+
+            if( html_alert != ''){
+                $('#alert_modal').find('.modal-body').empty();
+                $('#alert_modal').find('.modal-body').append(html_alert); 
+                $('#alert_modal').modal('show'); 
+                return false;
+            }
+
+            // save products
+            SUGAR.ajaxUI.showLoadingPanel(); 
+            $("#EditView input[name='action']").val('Save');
+            $.ajax({
+                type: $("#EditView").attr('method'),
+                url: $("#EditView").attr('action'),
+                data: $("#EditView").serialize(),
+                async:false,
+                success: function (data) { 
+                    var productID = $("input[name='record']").val();
+                    if(productID !='')  {
+                        // create and update invoice xero
+                        var url_xero_product = "/index.php?entryPoint=CRUD_Item_Xero&method=create&from_action=button" + '&record='+ encodeURIComponent($('input[name="record"]').val());
+                        $.ajax({
+                            url:url_xero_product,
+                            success:function(data){   
+                                SUGAR.ajaxUI.hideLoadingPanel();                             
+                                    try {
+                                        var json = $.parseJSON(data);
+                                        console.log(json);
+                                        if( $('#item_code_xero').val() == ''){
+                                            $('#item_code_xero').val(json.item_code_xero);
+                                        }
+                                        if(json.msg != ''){
+                                            $('#alert_modal').find('.modal-body').empty();
+                                            $('#alert_modal').find('.modal-body').append(json.msg); 
+                                            $('#alert_modal').modal('show'); 
+                                            return false;
+                                        }else{
+                                            $('#alert_modal').find('.modal-body').empty();
+                                            $('#alert_modal').find('.modal-body').append('Push and update XERO Product done!'); 
+                                            $('#alert_modal').modal('show'); 
+                                            return false;
+                                        }
+    
+                                    } catch (e) {
+                                        return false;
+                                    }                   
+                            }
+                        });
+                    }  
+                }
+            }); 
+        }
+
     });
 
 });

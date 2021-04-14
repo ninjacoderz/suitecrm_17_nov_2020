@@ -1481,3 +1481,8 @@ $entry_point_registry['APIGetSMSTemplateFromSuiteById'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetSMSTemplateFromSuiteById.php',
     'auth' => false
 );
+
+$entry_point_registry['CRUD_Item_Xero'] = array(
+    'file' => 'xero-php/CRUD_Item_Xero.php',
+    'auth' => false
+);

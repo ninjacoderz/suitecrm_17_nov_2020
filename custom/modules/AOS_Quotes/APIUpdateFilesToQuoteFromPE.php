@@ -1076,46 +1076,44 @@ function dirToArray($dir) {
 }
 
 function resize_image($file, $current_file_path) {
-    $type = strtolower(substr(strrchr($file, '.'), 1));
-    $typeok = TRUE;
-    if($type == 'gif' || $type == 'jpg' || $type == 'jpeg' || $type == 'png') {
-        if(!file_exists ($current_file_path."/thumbnail/")) {
-            mkdir($current_file_path."/thumbnail/");
-        }
-        $thumb =  $current_file_path."/thumbnail/".$file;
-        switch ($type) {
-            case 'jpg': // Both regular and progressive jpegs
-            case 'jpeg':
-                $src_func = 'imagecreatefromjpeg';
-                $write_func = 'imagejpeg';
-                $image_quality = isset($options['jpeg_quality']) ?
-                    $options['jpeg_quality'] : 75;
-                break;
-            case 'gif':
-                $src_func = 'imagecreatefromgif';
-                $write_func = 'imagegif';
-                $image_quality = null;
-                break;
-            case 'png':
-                $src_func = 'imagecreatefrompng';
-                $write_func = 'imagepng';
-                $image_quality = isset($options['png_quality']) ?
-                    $options['png_quality'] : 9;
-                break;
-            default: $typeok = FALSE; break;
-        }
-        if ($typeok){
-            list($w, $h) = getimagesize($current_file_path.'/'. $file);
-
-            $src = $src_func($current_file_path.'/'. $file);
-            $new_img = imagecreatetruecolor(80,80);
-            imagecopyresampled($new_img,$src,0,0,0,0,80,80,$w,$h);
-            $write_func($new_img,$thumb, $image_quality);
-            
-            imagedestroy($new_img);
-            imagedestroy($src);
-        }
-    } 
+    if(!file_exists ($current_file_path."thumbnail/")) {
+        mkdir($current_file_path."thumbnail/");
+    }
+    $imagick = new Imagick($current_file_path.$file);
+    switch ($imagick->getImageOrientation()) {
+        case Imagick::ORIENTATION_TOPLEFT:
+            break;
+        case Imagick::ORIENTATION_TOPRIGHT:
+            $imagick->flopImage();
+            break;
+        case Imagick::ORIENTATION_BOTTOMRIGHT:
+            $imagick->rotateImage("#000", 180);
+            break;
+        case Imagick::ORIENTATION_BOTTOMLEFT:
+            $imagick->flopImage();
+            $imagick->rotateImage("#000", 180);
+            break;
+        case Imagick::ORIENTATION_LEFTTOP:
+            $imagick->flopImage();
+            $imagick->rotateImage("#000", -90);
+            break;
+        case Imagick::ORIENTATION_RIGHTTOP:
+            $imagick->rotateImage("#000", 90);
+            break;
+        case Imagick::ORIENTATION_RIGHTBOTTOM:
+            $imagick->flopImage();
+            $imagick->rotateImage("#000", 90);
+            break;
+        case Imagick::ORIENTATION_LEFTBOTTOM:
+            $imagick->rotateImage("#000", -90);
+            break;
+        default: // Invalid orientation
+            break;
+    }
+    $imagick->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
+    $imagick->thumbnailImage(80, 80, true, true);
+    $imagick->writeImage( $current_file_path.'thumbnail/'.$file);
+    $imagick->destroy();
 }
 
 function delete_directory($dirname) {
