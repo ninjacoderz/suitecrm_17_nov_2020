@@ -1,5 +1,5 @@
 <?php
-ini_set('display_errors',1);
+// ini_set('display_errors',1);
 use setasign\Fpdi\Fpdi;
 require_once('text/fpdf.php');
 require_once('text/src/autoload.php');
