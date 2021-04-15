@@ -858,7 +858,7 @@ $(function () {
                                                     '<h4 class="modal-title" id="title-generic"><center>'+file_name+'</center></h4>'+
                                                 '</div>'+
                                                 '<div class="modal-body" style="padding:1px;">'+
-                                                    '<object style="height:calc('+$('body').height()+'px - 100px);width:100%;" src="data:application/pdf;base64,'+filecontent+'" type="application/pdf"  /></object>'+
+                                                '<iframe style="height:calc('+$('body').height()+'px - 100px);width:100%;" src="data:application/pdf;base64,'+filecontent+'" type="application/pdf"/></iframe>'+
                                                 '</div>'+
                                             '</div>'+
                                         '</div>'+
