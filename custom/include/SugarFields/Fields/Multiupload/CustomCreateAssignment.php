@@ -260,6 +260,7 @@ $tmpfname = dirname(__FILE__).'/cookiegeo.txt';
         $surName = 'Szuster';
         $email = "accounts@pure-electric.com.au";
         $abn = "67 603 174 661";
+        $phone = '0423 494 949';
         $activityAddressIsPostalAddress = false;
         $postalAddress = array(
             "geocodedCoordinates"=>[
