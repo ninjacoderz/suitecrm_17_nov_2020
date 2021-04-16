@@ -5526,6 +5526,12 @@ $(document).ready(function(){
             Ajax_Generate_File_PDF_REPS('REPS_Infor_State');
         })
 
+        //button create generate Generate_Solar_Hot_Water_Rebate
+        $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #F9B85D;" id="Generate_Solar_Hot_Water_Rebate" class="button primary" title="Generate Solar Hot Water Rebate"><span class="glyphicon glyphicon-file"></span>Generate Solar Hot Water Rebate</button>');
+        $("#Generate_Solar_Hot_Water_Rebate").click(function(){
+            Ajax_Generate_File_PDF_REPS('Solar_Hot_Water_Rebate');
+        })
+
          //VUT-S-Get all files sms
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_all_files_sms" class="button primary" title="Get all files from SMS">GET ALL FILES FROM SMS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
          $('#get_all_files_sms').click(function(){
@@ -8533,7 +8539,10 @@ function Ajax_Generate_File_PDF_REPS(action=''){
             case 'REPS_Infor_State':
                 url_generate_pdf += '&action=REPS_Infor_State';
                 break;
-        
+            case 'Solar_Hot_Water_Rebate':
+                url_generate_pdf += '&action=Solar_Hot_Water_Rebate';
+                break;
+    
             default:
                 break;
         }

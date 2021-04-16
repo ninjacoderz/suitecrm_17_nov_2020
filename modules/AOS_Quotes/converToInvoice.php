@@ -109,6 +109,12 @@
 	//VUT - convert Proposed install Date > Installation Date
     $invoice->installation_date_c = $quote->proposed_install_date_c;
     if ($invoice->installation_date_c != '') {
+        $date_explode = explode(" ", $invoice->installation_date_c);
+		if(count($date_explode) >= 2){
+			$inst_date = $date_explode[0];
+			$invoice->due_date = $inst_date;
+            $invoice->next_action_date_c = $invoice->installation_date_c;
+		}
         createMettingForInstaller($invoice);
     }
 
@@ -155,6 +161,7 @@
 		if(count($date_explode) >= 2){
 			$inst_date = $date_explode[0];
 			$invoice->due_date = $inst_date;
+            $invoice->next_action_date_c = $quote->installation_date_c;
 		}
     }
     $invoice->quote_type_c = $quote->quote_type_c;
