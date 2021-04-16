@@ -91,7 +91,8 @@ Calendar.setup = function(params) {
         dateParams.dayPos = dayPos;
         dateParams.yearPos = yearPos;
         var showButtonElement = Dom.get(showButton);
-        Event.on(showButtonElement, "click", function() {
+        var dateInputField = Dom.get(inputField);
+        function calendarCreate() {
             if (!dialog) {
                 dialog = new YAHOO.widget.SimpleDialog("container_" + showButtonElement.id, {
                     visible: false,
@@ -307,9 +308,29 @@ Calendar.setup = function(params) {
                     }
                     var el = Event.getTarget(e);
                     var dialogEl = dialog.element;
-                    if (el != dialogEl && !Dom.isAncestor(dialogEl, el) && el != showButtonElement && !Dom.isAncestor(showButtonElement, el)) {
+                    //Nhat code - check class date time.
+                    let inputElClass = $(el).attr("class");
+                    
+                    let isDateField = () => {
+                      let firstStr = "";
+                      let secondStr = "";
+                      // Check Input field had changed.
+                      firstStr = dateInputField.id;
+                      if ($(el).attr("id") == undefined) {
+                        secondStr = "";
+                      } else {
+                        secondStr = $(el).attr("id");
+                      }
+                      if (firstStr !== secondStr) {
                         dialog.hide();
-                    }
+                      }
+                      return inputElClass === "date_input" || inputElClass === "datetimecombo_date" ? true : false;
+                    };
+                    
+                    if (el != dialogEl && !Dom.isAncestor(dialogEl, el) && el != showButtonElement && !Dom.isAncestor(showButtonElement, el) && !isDateField()) {
+                      dialog.hide();
+                    } 
+                   
                     //dung code - auto sort calendar dashlet 
                     var date_sort = $('#inset_date_dashlet').val();
                     if(date_sort !== '' && typeof(date_sort) !== 'undefined') {
@@ -468,6 +489,11 @@ Calendar.setup = function(params) {
             calendar.cfg.setProperty("pageDate", sanitizedDateArray[monthPos] + dateParams.delim + sanitizedDateArray[yearPos]);
             calendar.render();
             dialog.show();
-        });
+        };
+        Event.on(showButtonElement, "click", calendarCreate);
+        //Nhat code - add event date field is clicked;
+        Event.on(dateInputField, "click", calendarCreate);
+        //Add placeholder
+        $(dateInputField).attr("placeholder", "DD/MM/YYYY").css("width", "auto");
     });
 };
