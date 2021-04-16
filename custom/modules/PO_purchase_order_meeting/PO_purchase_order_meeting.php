@@ -40,9 +40,11 @@ try {
   echo "Connection failed: " . $e->getMessage();
 }
 
+$is_update = isset($current_meetings) && $deleted !== "1";
+
 $meetings = new Meeting;
 
-if($is_update && $deleted !== 1){    
+if($is_update){    
     $meetings->retrieve($record_id);
     $meetings->id = $current_meetings;
     $meetings->name = $name;
