@@ -1312,6 +1312,11 @@ function addSandenData() {
     } else {
         $sandenData['quote_provide_stcs'] = '';
     }
+    if($_REQUEST['quote_free_methven'] != '') {
+        $sandenData['quote_free_methven'] = $_REQUEST['quote_free_methven'];
+    } else {
+        $sandenData['quote_free_methven'] = '';
+    }
 
     if($_REQUEST['pickup_site_delivery'] != '') {
         $sandenData['quote_pickup_site_delivery'] = $_REQUEST['pickup_site_delivery'];

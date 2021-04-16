@@ -73,6 +73,17 @@ $vardefs_array = array(
         ) ,
         "parent" => "",
     ),
+    "quote_free_methven" => array(
+        "name" => "quote_free_methven",
+        "display_label" => "Free Premium Methven Kiri Satinjet Low Flow (<5L/min) showerhead valued at $146 delivered?",
+        "type" => "select",
+        "list_array" => array(
+            "",
+            "Yes",
+            "No",
+        ) ,
+        "parent" => "",
+    ),
     "quote_provide_stcs" => array(
         "name" => "quote_provide_stcs",
         "display_label" => "Would you like us to provide STCs as an upfront discount on your quote",
