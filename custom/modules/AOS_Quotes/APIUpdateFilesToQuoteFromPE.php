@@ -81,10 +81,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-hws']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-hws']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Existing_HWS_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_');
@@ -100,10 +100,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-hws-centre']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-hws-centre']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Existing_HWS_Centre_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-centre']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_Centre');
@@ -119,10 +119,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-hws-right']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-hws-right']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Existing_HWS_right_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-right']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_right');
@@ -138,10 +138,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-hws-left']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-hws-left']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Existing_HWS_left_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-left']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_left');
@@ -157,10 +157,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-hws-serial']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-hws-serial']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Existing_HWS_serial_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-hws-serial']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_serial');
@@ -176,10 +176,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-switchboard']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-switchboard']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Switchboard_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-switchboard']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Switchboard_');
@@ -195,10 +195,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-newsanden']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-newsanden']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'new_sanden_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-newsanden']['name'][$i]), PATHINFO_EXTENSION );
                 $count = checkCountExistPhoto($file_type,$folderName,'new_sanden_');
@@ -214,10 +214,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-existing-HWS-serial-number']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-existing-HWS-serial-number']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Existing_HWS_serial_number'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-existing-HWS-serial-number']['name'][$i]), PATHINFO_EXTENSION );
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_serial_number');
@@ -233,10 +233,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-access']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-access']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Photo_access_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-access']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Photo_access_');
@@ -252,10 +252,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-upclose']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-upclose']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Photo_upclose_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-upclose']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Photo_upclose_');
@@ -271,10 +271,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-meterbox']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-meterbox']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Photo_meterbox_'.$i.'.'.pathinfo( basename($_POST['files']['data-pe-files-meterbox']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Photo_meterbox_');
@@ -290,10 +290,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-electricity-bill']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-electricity-bill']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = $number_module.'_Electricity_bill_'.$i.'.'.pathinfo(basename($_POST['files']['data-pe-files-electricity-bill']['name'][$i]), PATHINFO_EXTENSION);
                 $count = checkCountExistPhoto($file_type,$folderName,'_Electricity_bill_');
@@ -311,10 +311,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-water-pressure-property']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-water-pressure-property']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-property']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_New_Install_Water_Pressure_Property'.$i.'.'.pathinfo($_POST['files']['data-pe-files-water-pressure-property']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'New_Install_Water_Pressure_Property');
@@ -330,10 +330,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-existing-hws']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-existing-hws']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-existing-hws']['tmp_name'][$i]);
-                if( $info['Exif_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Existing_Hws'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_Hws');
@@ -349,10 +349,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-existing-hws-brand-model']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-existing-hws-brand-model']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Existing_HWS_Brand_Model'.$i.'.'.pathinfo($_POST['files']['data-pe-files-existing-hws-brand-model']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Existing_HWS_Brand_Model');
@@ -368,10 +368,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-decommission-hws']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-decommission-hws']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-decommission-hws']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Decommission_HWS'.$i.'.'.pathinfo($_POST['files']['data-pe-files-decommission-hws']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Decommission_HWS');
@@ -387,10 +387,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-tank-serial']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-tank-serial']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-tank-serial']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Tank_Serial_Number'.$i.'.'.pathinfo($_POST['files']['data-pe-files-tank-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Tank_Serial_Number');
@@ -406,10 +406,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-hp-serial']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-hp-serial']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-hp-serial']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_HP_Serial_Number'.$i.'.'.pathinfo($_POST['files']['data-pe-files-hp-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_HP_Serial_Number');
@@ -425,10 +425,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-water-pressure-nriprv']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-water-pressure-nriprv']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-water-pressure-nriprv']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Measure_Water_Pressure_NRIPRV'.$i.'.'.pathinfo($_POST['files']['data-pe-files-water-pressure-nriprv']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'Measure_Water_Pressure_NRIPRV');
@@ -444,10 +444,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-install-photo']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-install-photo']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-install-photo']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_New_Install_Photo'.$i.'.'.pathinfo($_POST['files']['data-pe-files-install-photo']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_New_Install_Photo');
@@ -463,10 +463,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-plumbing-pcoc']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-plumbing-pcoc']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-plumbing-pcoc']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'PCOC'.$i.'.'.pathinfo($_POST['files']['data-pe-files-plumbing-pcoc']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'PCOC');
@@ -501,10 +501,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-switchboard-sanden']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-switchboard-sanden']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-switchboard-sanden']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Switchboard_Sanden_'.$i.'.'.pathinfo($_POST['files']['data-pe-files-switchboard-sanden']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'_Switchboard_Sanden_');
@@ -520,10 +520,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-electrical-ces']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-electrical-ces']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-electrical-ces']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-ces']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'CES');
@@ -540,10 +540,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-electrical-tank-serial']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_Tank_Serial_CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-tank-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'CES');
@@ -560,10 +560,10 @@ if( $lead_id != ""){
         for($i = 0; $i < count($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name']); $i++) {
             if($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i] != ""){
                 $info = exif_read_data($_POST['files']['data-pe-files-electrical-hp-serial']['tmp_name'][$i]);
-                if( $info['GPS_IFD_Pointer'] == ""){
-                    $checkgeo = "( without GEOTAGGED )";
-                }else {
+                if( isset($info['GPS_IFD_Pointer']) && $info['GPS_IFD_Pointer'] > 0 ){
                     $checkgeo = "( GEOTAGGED )";
+                }else {
+                    $checkgeo = "( without GEOTAGGED )";
                 }
                 $file_type = basename($number_module.'_HP_Serial_CES'.$i.'.'.pathinfo($_POST['files']['data-pe-files-electrical-hp-serial']['name'][$i], PATHINFO_EXTENSION));
                 $count = checkCountExistPhoto($file_type,$folderName,'CES');
@@ -770,15 +770,18 @@ if($_POST['to_module'] == "aos_invoice"){
         die();
     };
     if($worker_type == "Plumber" ){
-        $installer_id = $invoice->account_id1_c;
+        $installer_id = $invoice->contact_id4_c;
+        $installer=  new Contact();
+        $installer->retrieve($installer_id);
     }else if($worker_type == "Electrician" ){
-        $installer_id = $invoice->account_id_c;
+        $installer_id = $invoice->contact_id_c;
+        $installer=  new Contact();
+        $installer->retrieve($installer_id);
     }else if($worker_type == "Daikin installer" ){
         $installer_id = $invoice->account_id2_c;
+        $installer=  new Account();
+        $installer->retrieve($installer_id);
     }
-
-    $installer=  new Account();
-    $installer->retrieve($installer_id);
     $send_install_link ='';
     if ($worker_type == "Plumber") {
         $send_install_link = "<p>Send Installer link: <a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=APISendPhotoInstallToInstaller&invoice_id=".$invoice->id."&billing_account_id=".$invoice->billing_account_id."&installer_id=".$installer_id."&installer_name=Plumber&generateUUID=".$invoice->installation_pictures_c."' target='_blank'>Mail to ".$installer->name."</a></p>";
