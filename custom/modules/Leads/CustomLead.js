@@ -737,7 +737,7 @@ $(function () {
     // Generate uinique id
 
     //tuan code css 
-    $('div[field="product_type_c"]').css('height','85px');
+    // $('div[field="product_type_c"]').css('height','85px');
     $('div[field="product_type_c"]').parent().css('margin-bottom','50px');
     //dung code - button push quote date to solargain
     //$('#quote_date_c').parent().parent().append('<br> <button class="button primary" id="pushQuoteDateToSG"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Push to SG</button>');
