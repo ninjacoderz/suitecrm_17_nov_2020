@@ -95,6 +95,35 @@
         $invoice->electrician_install_date_c = explode(" ",$quote->proposed_install_date_c)[0];
         $plumber_account->retrieve($invoice->account_id1_c);
         $invoice->dispatch_date_c = $quote->proposed_dispatch_date_c;
+        $free_methven_array = json_decode(html_entity_decode($quote->quote_note_inputs_c));
+        if( $free_methven_array->quote_free_methven == 'Yes'){
+            $url = "https://pure-electric.com.au/pepromotion/APIv1?invoiceID=".$invoice->id."&invoiceNum=".$invoice->number."&method=create";
+            $url .= '&promo_1=1';
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+            $headers = array();
+            $headers[] = "Pragma: no-cache";
+            $headers[] = "Accept-Encoding: gzip, deflate, br";
+            $headers[] = "Accept-Language: en-US,en;q=0.9";
+            $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+            $headers[] = "Accept: application/json, text/plain, */*";
+            $headers[] = "Connection: keep-alive";
+            $headers[] = "Cache-Control: no-cache";
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        
+            $result = curl_exec($ch);
+            $data_json = json_decode($result,true);
+            if($invoice->id != ''){
+                $invoice->promo_methven_1_c = '1';
+                $invoice->handheld_1_c = $data_json['code1'];
+                $invoice->save();
+            }
+            curl_close ($ch);
+        }
         //tuan code plumping template default
         $template = file_get_contents('custom/modules/AOS_Invoices/json_plumbing_template.json');
         $template = json_decode($template);
