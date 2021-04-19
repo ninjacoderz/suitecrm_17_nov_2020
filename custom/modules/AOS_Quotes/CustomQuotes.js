@@ -1034,11 +1034,11 @@ $(document).ready(function () {
     if (module_sugar_grp1 == 'AOS_Quotes') {
         var address = $("#install_address_c").val() + ',' + $("#install_address_city_c").val() + ',' + $("#install_address_state_c").val() + ',' + $("#install_address_postalcode_c").val();
         $("div[data-label='LBL_INSTALL_ADDRESS']").append(
-            '<a style="float: right;cursor:pointer;" id="open_map_install_quote" title="open map" onClick=" $(document).find(\'#open_map_popup_install_quote\').fadeToggle();"><img src="themes/SuiteP/images/map.png" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"></a>');
+            '<a style="float: right;cursor:pointer;" id="open_map_install_quote" title="Google Maps" onClick=" $(document).find(\'#open_map_popup_install_quote\').fadeToggle();"><img src="themes/SuiteP/images/map.png" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"></a>');
         $("#install_address_c").before(
             '<div style="z-index:10;background-color: white;display:none;border:1px solid;position:absolute; padding:3px;margin-top:-15px;box-shadow: 0px 0px 4px rgb(15, 15, 15,0.5);" id="open_map_popup_install_quote" class="show-open-map hide_map">' +
             '<ul>' +
-            '<li><a style="cursor:pointer;" onclick="openInstallMap(); return false;">Open Map</a></li>' +
+            '<li><a style="cursor:pointer;" onclick="openInstallMap(); return false;">Google Maps</a></li>' +
             '<li><a style="cursor:pointer;" href="http://maps.nearmap.com?addr=' + address + '&z=22&t=roadmap" target="_blank">Near Map</a></li>' +
             '<li><a style="cursor:pointer;" id="get_link_realestate_and_domain" onclick="return false;">Realestate + Domain</a></li>' +
             '</ul>' +
@@ -4874,7 +4874,7 @@ $(function () {
                 $("#install_address_c").before(
                     '<div style="background-color: white;border:1px solid;display:none;position:absolute; padding:3px;margin-top:-16px;box-shadow: 0px 0px 4px rgb(15, 15, 15,0.5);" id="open_map_popup_site" class="show-open-map hide_map">' +
                     '<ul>' +
-                    '<li><a style="cursor:pointer;" onclick="openSiteMap(); return false;">Open Map</a></li>' +
+                    '<li><a style="cursor:pointer;" onclick="openSiteMap(); return false;">Google Maps</a></li>' +
                     '<li><a style="cursor:pointer;"  href="http://maps.nearmap.com?addr=' + address_site + '&z=22&t=roadmap" target="_blank">Near Map</a></li>' +
                     '</ul>' +
                     '</div>'
