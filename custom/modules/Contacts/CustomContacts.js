@@ -243,7 +243,7 @@ $(function () {
             $("#primary_address_street").before( 
                 '<div style="background-color: white;display:none;border:1px solid;position:absolute;padding:3px;margin-top:12px;box-shadow: 0px 0px 4px rgb(15, 15, 15,0.5);" id="open_map_popup_billing_leads" class="show-open-map hide_map">'+
                     '<ul>'+
-                    '<li><a id="open_map" target="_blank" class="various fancybox.iframe" href="' + urlMap + '">Open Map</a></li>'+
+                    '<li><a id="open_map" target="_blank" class="various fancybox.iframe" href="' + urlMap + '">Google Maps</a></li>'+
                     '<li><a style="cursor:pointer;" target="_blank" href="http://maps.nearmap.com?addr='+ address+'&z=22&t=roadmap">Near Map</a></li>'+
                     '<li><a style="cursor:pointer;" id="link_realestate_billing">Realestate</a></li>'+
                     '</ul>'+
@@ -338,7 +338,7 @@ $(function () {
             $("#alt_address_street").before( 
                 '<div style="background-color: white;display:none;border:1px solid;position:absolute;padding:3px;margin-top:12px;box-shadow: 0px 0px 4px rgb(15, 15, 15,0.5);" id="open_map_popup_install_add_contacts" class="show-open-map hide_map">'+
                     '<ul>'+
-                    '<li><a id="open_map_install_add" target="_blank" class="various fancybox.iframe" href="' + urlMap + '">Open Map</a></li>'+
+                    '<li><a id="open_map_install_add" target="_blank" class="various fancybox.iframe" href="' + urlMap + '">Google Maps</a></li>'+
                     '<li><a style="cursor:pointer;" target="_blank" href="http://maps.nearmap.com?addr='+ address+'&z=22&t=roadmap">Near Map</a></li>'+
                     '<li><a style="cursor:pointer;" id="link_realestate_install">Realestate</a></li>'+
                     '</ul>'+
