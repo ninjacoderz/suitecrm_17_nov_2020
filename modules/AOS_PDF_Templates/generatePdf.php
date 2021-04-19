@@ -535,7 +535,7 @@ if ($_REQUEST['module'] == 'PO_purchase_order' && ($_REQUEST['templateID']=='187
     } else if ($bean->po_type_c == "daikin_supply") {
         $text = str_replace("\$custom_title_install_date", 'Delivery Date', $text);
         $text = str_replace("\$date_follow_type_date", $bean->delivery_date_c, $text);
-    } else if ($bean->po_type_c == "installer") {
+    } else if ($bean->po_type_c == "installer" || $bean->po_type_c == "sanden_plumber" || $bean->po_type_c == "sanden_electrician") {
         $text = str_replace("\$custom_title_install_date", 'Install Date', $text);
         $text = str_replace("\$date_follow_type_date", $bean->install_date, $text);
     } else {
