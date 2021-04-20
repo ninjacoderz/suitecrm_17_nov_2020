@@ -1486,3 +1486,8 @@ $entry_point_registry['CRUD_Item_Xero'] = array(
     'file' => 'xero-php/CRUD_Item_Xero.php',
     'auth' => false
 );
+//VUT - create line item for Proposed PO Installer Sanden in Quote
+$entry_point_registry['APICreateLineItemProposedPO'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APICreateLineItemProposedPO.php',
+    'auth' => false
+);

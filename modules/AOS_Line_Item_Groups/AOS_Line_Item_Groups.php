@@ -98,6 +98,17 @@ class AOS_Line_Item_Groups extends AOS_Line_Item_Groups_sugar
                 $product_quote_group->currency_id = $parentCurrencyId;
                 $product_quote_group->parent_id = $parent->id;
                 $product_quote_group->parent_type = $parent->object_name;
+                //VUT - S - Proposed Plumber
+                switch ($key) {
+                    case 'plumber_group_': 
+                        $product_quote_group->parent_type = "";
+                        $product_quote_group->parent_include =  $parent->object_name;
+                        $product_quote_group->po_type =  'sanden_plumber';
+                        break;
+                    default:
+                        break;
+                }
+                //VUT - E - Proposed Plumber
                 $product_quote_group->save();
                 $post_data[$key . 'id'][$i] = $product_quote_group->id;
 
@@ -106,11 +117,18 @@ class AOS_Line_Item_Groups extends AOS_Line_Item_Groups_sugar
                 }
             }
         }
-
         require_once('modules/AOS_Products_Quotes/AOS_Products_Quotes.php');
         $productQuote = BeanFactory::newBean('AOS_Products_Quotes');
-        $productQuote->save_lines($post_data, $parent, $groups, 'product_');
-        $productQuote->save_lines($post_data, $parent, $groups, 'service_');
+        switch ($key) {
+            case 'plumber_group_':
+                $productQuote->save_lines($post_data, $parent, $groups, 'plumber_product_');
+                $productQuote->save_lines($post_data, $parent, $groups, 'plumber_service_');
+                break;
+            default:
+                $productQuote->save_lines($post_data, $parent, $groups, 'product_');
+                $productQuote->save_lines($post_data, $parent, $groups, 'service_');
+                break;
+        }
     }
 
     public function save($check_notify = false)
