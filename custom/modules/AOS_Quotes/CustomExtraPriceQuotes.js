@@ -236,10 +236,10 @@ $(function () {
         // for(var j = 0 ; j < suggested_val.length ; j++){
         //     $("#total_panels_"+i).trigger("change");
         // }
-       // total_kw();
+        // total_kw();
         save_values();
         getOwnSolarPricing($("#solar_pv_pricing_input_c").val(), 'solar_changed');
-    })
+    });
 
     //trigger change caculate price when click Double Storey
     $('body').on('change','#Double_Storey',function(){
@@ -340,10 +340,75 @@ $(function () {
             $("input[id*='sl_option_push_']").prop("checked",false);
         }
     });
+
+    // .:nhantv:. Auto change Panel Type on "PRICING PV SECTION"
+    $("#copy_Panel").on("change",function(){
+        if($(this).prop("checked") == true){
+            // warning
+            warningLineItem(0);
+
+            let panel_type_1 = $('#panel_type_1').val();
+            $('#panel_type_2').val(panel_type_1);
+            $('#panel_type_3').val(panel_type_1);
+
+            let panel_type_4 = $('#panel_type_4').val();
+            $('#panel_type_5').val(panel_type_4);
+            $('#panel_type_6').val(panel_type_4);
+
+            // Trigger max_panels calculate
+            $('#max_panels').trigger('click');
+        }
+    });
+    $('#solar_pv_pricing_table *[id*=panel_type_]:visible').on("change",function(){
+        if($("#copy_Panel").prop("checked") == true){
+            let panel_type = $(this).val();
+            let _id = $(this).attr('id');
+            let target = parseInt(_id.substr(_id.length - 1));
+            switch (target) {
+                case 1:
+                    $('#panel_type_2').val(panel_type);
+                    $('#panel_type_3').val(panel_type);
+                    break;
+                case 4:
+                    $('#panel_type_5').val(panel_type);
+                    $('#panel_type_6').val(panel_type);
+                    break;
+                default: break;
+            }
+            // warning
+            warningLineItem(target);
+            // Trigger max_panels calculate
+            $('#max_panels').trigger('click');
+        }
+    });
+
+    // .:nhantv:. Apply all value for PM input change
+    $('#solar_pv_pricing_table *[id*=pm_]:visible').on("change",function(){
+        // warning
+        warningLineItem(0);
+
+        let pmVal = $(this).val();
+        $('#solar_pv_pricing_table *[id*=pm_]:visible').each(function() {
+            $(this).val(pmVal);
+        });
+    });
 });
 
 
 ///// DECLARE FUNCTION /////
+    const warningLineItem = function(target) {
+        let isExistLineItem = $("#lineItems").find(".group_body").length != 0;
+        if(target == 0 && isExistLineItem){
+            alert('This action will affect LINE ITEM pricing. \nPlease click the "SAVE AND CREATE QUOTE" button again after making your changes');
+            return;
+        }
+
+        let id = parseInt($('#Own-Solar-PV-Pricing').find('input:checked').attr('data-attr'));
+        if(isExistLineItem && ((target == 1 && id < 4) || (target == 4 && (id < 7 && id > 3)))){
+            alert('This action will affect LINE ITEM pricing. \nPlease click the "SAVE AND CREATE QUOTE" button again after making your changes');
+        }
+        return;
+    }
     //////// MAKE A TABLE //////////
     function makeTable(container, data, tclass, tid) {
         var table = $("<table/>").addClass(tclass).attr("id",tid);
@@ -392,7 +457,7 @@ $(function () {
                 ,"<input data-attr='6' type='checkbox' class='sl_quote_option solar_pv_pricing_input' name='sl_quote_option' id='sl_option_6' style='margin-bottom:5px'>"],
             ["PM", makeInputBox("pm_1 solar_pv_pricing_input","pm_1"), makeInputBox("pm_2 solar_pv_pricing_input", "pm_2"), makeInputBox("pm_3 solar_pv_pricing_input", "pm_3"), makeInputBox("pm_4 solar_pv_pricing_input", "pm_4"), makeInputBox("pm_5 solar_pv_pricing_input", "pm_5"), makeInputBox("pm_6 solar_pv_pricing_input", "pm_6")],
             ["Total kW:", makeInputBox("total_kW_1 solar_pv_pricing_input", "total_kW_1", true), makeInputBox("total_kW_2 solar_pv_pricing_input", "total_kW_2", true), makeInputBox("total_kW_3 solar_pv_pricing_input", "total_kW_3",true), makeInputBox("total_kW_4 solar_pv_pricing_input", "total_kW_4",true), makeInputBox("total_kW_5 solar_pv_pricing_input", "total_kW_5",true), makeInputBox("total_kW_6 solar_pv_pricing_input", "total_kW_6",true)],
-            ["Panel Type", makeSelectBox(panel_type,"panel_type_1 solar_pv_pricing_input", "panel_type_1"), makeSelectBox(panel_type,"panel_type_2 solar_pv_pricing_input", "panel_type_2"), makeSelectBox(panel_type,"panel_type_3 solar_pv_pricing_input", "panel_type_3"), makeSelectBox(panel_type,"panel_type_4 solar_pv_pricing_input", "panel_type_4"), makeSelectBox(panel_type,"panel_type_5 solar_pv_pricing_input", "panel_type_5"), makeSelectBox(panel_type,"panel_type_6 solar_pv_pricing_input", "panel_type_6")],
+            ["Panel Type <input type='checkbox' id='copy_Panel' style='float: right; clear: both; margin-right: 15px;'>", makeSelectBox(panel_type,"panel_type_1 solar_pv_pricing_input", "panel_type_1"), makeSelectBox(panel_type,"panel_type_2 solar_pv_pricing_input", "panel_type_2"), makeSelectBox(panel_type,"panel_type_3 solar_pv_pricing_input", "panel_type_3"), makeSelectBox(panel_type,"panel_type_4 solar_pv_pricing_input", "panel_type_4"), makeSelectBox(panel_type,"panel_type_5 solar_pv_pricing_input", "panel_type_5"), makeSelectBox(panel_type,"panel_type_6 solar_pv_pricing_input", "panel_type_6")],
             ["Inverter Type", makeSelectBox(inverter_type,"inverter_type_1 solar_pv_pricing_input", "inverter_type_1"), makeSelectBox(inverter_type,"inverter_type_2 solar_pv_pricing_input", "inverter_type_2"), makeSelectBox(inverter_type,"inverter_type_3 solar_pv_pricing_input", "inverter_type_3"), makeSelectBox(inverter_type,"inverter_type_4 solar_pv_pricing_input", "inverter_type_4"), makeSelectBox(inverter_type,"inverter_type_5 solar_pv_pricing_input", "inverter_type_5"), makeSelectBox(inverter_type,"inverter_type_6 solar_pv_pricing_input", "inverter_type_6")],
             ["Total Panels", makeInputBox("total_panels_1 solar_pv_pricing_input","total_panels_1"), makeInputBox("total_panels_2 solar_pv_pricing_input", "total_panels_2"), makeInputBox("total_panels_3 solar_pv_pricing_input", "total_panels_3"), makeInputBox("total_panels_4 solar_pv_pricing_input", "total_panels_4"), makeInputBox("total_panels_5 solar_pv_pricing_input", "total_panels_5"), makeInputBox("total_panels_6 solar_pv_pricing_input", "total_panels_6")],
             ["Base Price", makeInputBox("base_price_1 solar_pv_pricing_input", "base_price_1"), makeInputBox("base_price_2 solar_pv_pricing_input", "base_price_2"), makeInputBox("base_price_3 solar_pv_pricing_input", "base_price_3"), makeInputBox("base_price_4 solar_pv_pricing_input", "base_price_4"), makeInputBox("base_price_5 solar_pv_pricing_input", "base_price_5"), makeInputBox("base_price_6 solar_pv_pricing_input", "base_price_6")],
