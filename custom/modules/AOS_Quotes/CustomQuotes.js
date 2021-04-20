@@ -5570,6 +5570,8 @@ $(window).load(function () {
                 });
             }
         });
+    } else {
+        showSubpanel('plumber','No');
     }
     //VUT - E - Proposed Plumber/Electrician PO in Quotes's Editview
 });
