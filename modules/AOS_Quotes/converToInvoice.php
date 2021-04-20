@@ -434,7 +434,11 @@
     }
     if ($invoiceBean->quote_type_c == 'quote_type_sanden' && $quote->proposed_install_date_c != '') {
         if ( $invoiceBean->account_id1_c != '' ) {
-            createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+            if (floatval($quote->plumber_total_amount) == 0) {
+                createPO('plumber', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+            } else {
+                createPO('plumber_quote', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+            }
         }
         if ($invoiceBean->account_id_c != '' ) {
             createPO('electrical', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
