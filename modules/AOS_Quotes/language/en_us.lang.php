@@ -226,4 +226,14 @@ $mod_strings = array(
     'LBL_EMAIL_SITE_DETAILS' => 'Email',
     'LBL_ADDRESS_SITE_DETAILS' => 'Site Address',
     'LBL_IMAGE_SITE_DETAILS' => 'Image Site Address',
+    //VUT - S - Label Line Item Proposed plumbers
+    'LBL_PLUMBER_LINE_ITEMS' => 'Plumber Line Items',
+    'LBL_PLUMBER_TOTAL_AMT' => 'Plumber Total',
+    'LBL_PLUMBER_DISCOUNT_AMOUNT' => 'Plumber Discount',
+    'LBL_PLUMBER_SUBTOTAL_AMOUNT' => 'Plumber Subtotal',
+    'LBL_PLUMBER_SHIPPING_AMOUNT' => 'Plumber Shipping',
+    'LBL_PLUMBER_SHIPPING_TAX_AMT' => 'Plumber Shipping Tax',
+    'LBL_PLUMBER_SHIPPING_TAX' => 'Plumber Shipping Tax',
+    'LBL_PLUMBER_TAX_AMOUNT' => 'Plumber Tax',
+    'LBL_PLUMBER_GRAND_TOTAL' => 'Grand Total',
 );

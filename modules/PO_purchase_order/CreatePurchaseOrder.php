@@ -24,7 +24,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     $purchaseOrder->assigned_user_id = $invoice->assigned_user_id;
     
     switch ($po_type) {
-        case 'plumber':
+        case 'plumber': case 'plumber_quote':
             $purchaseOrder->name .= " Plumbing";
             $purchaseOrder->install_date = $invoice->plumber_install_date_c;
             break;
@@ -66,7 +66,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     $purchaseOrder->aos_quotes_po_purchase_order_1_name = $quote_name;
     $purchaseOrder->aos_quotes_po_purchase_order_1aos_quotes_ida = $quote_id;
     $purchaseOrder->aos_invoices_po_purchase_order_1aos_invoices_ida = $invoice->id;
-    if($po_type == "plumber"){
+    if($po_type == "plumber" || $po_type == "plumber_quote"){
         $purchaseOrder->billing_account_id       = $invoice->account_id1_c;
     } elseif ($po_type == "electrical"){
         $purchaseOrder->billing_account_id       = $_GET['electrical_account_id']?$_GET['electrical_account_id']:$invoice->account_id_c;
@@ -83,7 +83,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $purchaseOrder->billing_account_id       = $invoice->account_id_c;
     }
     $purchaseOrder->shipping_account_id      = $invoice->billing_account_id;
-    if($po_type == "plumber"){
+    if($po_type == "plumber" || $po_type == "plumber_quote"){
         $supplier =  BeanFactory::getBean("Accounts", $invoice->account_id1_c);
     } elseif ($po_type == "electrical"){
         $supplier =  BeanFactory::getBean("Accounts", $invoice->account_id_c);
@@ -232,6 +232,80 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
         $purchaseOrder->installation_pdf_c = $purchase_installation;
         $purchaseOrder->save();
     }
+
+    //VUT - S - Create Plumber from Quote
+    if($is_sanden && $po_type == "plumber_quote" && isset($quote_id)){
+        $purchaseOrder->po_type_c = 'sanden_plumber';
+        //get data Quote
+        $quote = new AOS_Quotes();
+        $quote->retrieve($quote_id);
+        //get line group
+        $db = DBManagerFactory::getInstance();
+        $sql_grp = "    SELECT *
+                        FROM aos_line_item_groups 
+                        WHERE parent_include = '" . $quote->object_name . "' AND parent_id = '" . $quote->id . "' AND po_type = 'sanden_plumber' AND deleted = 0 
+                        ORDER BY number ASC";
+        $ret = $db->query($sql_grp);
+
+        while ($grp = $db->fetchByAssoc($ret)) {
+            $grp_old_id = '';
+            $sql_line = '';
+            if (isset($grp) && $grp != null) {
+                $grp_old_id = $grp['id'];
+                $group_quote = new AOS_Line_Item_Groups();
+
+                $grp['id'] = "";
+                $grp['assigned_user_id'] = $purchaseOrder->assigned_user_id;
+                $grp['parent_id'] = $purchaseOrder->id;
+                $grp['parent_type'] = 'PO_purchase_order';
+                $grp['parent_include'] = '';
+                $grp['po_type'] = '';
+                $group_quote->populateFromRow($grp);
+                $group_quote->save();
+                //get line item of group_invoice
+                $sql_line = "   SELECT *
+                                FROM aos_products_quotes pg
+                                WHERE group_id = '" . $grp_old_id . "' AND parent_include = '" . $quote->object_name . "' AND parent_id = '" . $quote->id . "' AND po_type = 'sanden_plumber' AND deleted = 0";
+                $ret_line = $db->query($sql_line);
+                $number_items = 1;
+                // $total_price = 0;
+                while ($line = $db->fetchByAssoc($ret_line)) {
+                    $line['id'] = '';
+                    $line['parent_id'] = $purchaseOrder->id;
+                    $line['parent_type'] = 'PO_purchase_order';
+                    //remove 
+                    $line['parent_include'] = '';
+                    $line['po_type'] = '';
+                    //remove 
+                    $line['assigned_user_id'] = $purchaseOrder->assigned_user_id;
+                    $line['number'] = $number_items;
+                    $line['group_id'] = $group_quote->id;
+                    // $total_price += $line['product_cost_price'];
+                    $prod_quote = new AOS_Products_Quotes();
+                    $prod_quote->populateFromRow($line);
+                    $prod_quote->save();
+                    $number_items++;
+                }
+
+            }
+        }
+        
+        // $meeting_installer = createMettingForPOInstaller($invoice, $purchaseOrder, 'plumber');
+        // $invoice->meeting_plumber = $meeting_installer;
+        // $purchaseOrder->meeting_id = $meeting_installer;
+        // //populate fields price
+        $purchaseOrder->total_amt           = $quote->plumber_total_amt;
+        $purchaseOrder->discount_amount     = $quote->plumber_discount_amount;
+        $purchaseOrder->subtotal_amount     = $quote->plumber_subtotal_amount;
+        $purchaseOrder->shipping_amount     = $quote->plumber_shipping_amount;
+        $purchaseOrder->shipping_tax_amt    = $quote->plumber_shipping_tax_amt;
+        $purchaseOrder->tax_amount          = $quote->plumber_tax_amount;
+        $purchaseOrder->total_amount        = $quote->plumber_total_amount;
+
+        $purchaseOrder->installation_pdf_c = $purchase_installation;
+        $purchaseOrder->save();
+    }
+    //VUT - E - Create Plumber from Quote
 
     if($is_daikin && $po_type == "plumber"){
         $purchaseOrder->po_type_c = 'installer';
@@ -958,7 +1032,7 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
     }
 
 
-    if($po_type == "plumber"){
+    if($po_type == "plumber" || $po_type == "plumber_quote"){
         $invoice->plumber_po_c = $purchaseOrder->id;
     } elseif($po_type == "electrical"){
         $invoice->electrical_po_c = $purchaseOrder->id;

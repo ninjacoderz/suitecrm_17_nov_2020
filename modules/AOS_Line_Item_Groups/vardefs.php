@@ -346,6 +346,48 @@ $dictionary['AOS_Line_Item_Groups'] = array(
     'bean_name'=>'AOS_Products_Quotes',
     'source'=>'non-db',
  ),
+  //VUT - S - add column for PO in Quote
+  'po_type' =>
+  array(
+    'required' => false,
+    'name' => 'po_type',
+    'vname' => 'LBL_PO_TYPE',
+    'type' => 'varchar',
+    'massupdate' => 0,
+    'comments' => '',
+    'help' => '',
+    'importable' => 'false',
+    'duplicate_merge' => 'disabled',
+    'duplicate_merge_dom_value' => 0,
+    'audited' => 0,
+    'reportable' => 0,
+    'options' => 'PO_type_list',
+    'len' => 100,
+    'dbType' => 'varchar',
+    'studio' => 'hidden',
+  ),
+  'parent_include' =>
+  array(
+    'required' => false,
+    'name' => 'parent_include',
+    'vname' => 'LBL_PARENT_INCLUDE',
+    'type' => 'parent_include',
+    'massupdate' => 0,
+    'comments' => '',
+    'help' => '',
+    'importable' => 'false',
+    'duplicate_merge' => 'disabled',
+    'duplicate_merge_dom_value' => 0,
+    'audited' => 0,
+    'reportable' => 0,
+    // 'options' => 'parent_line_items',
+    'len' => 100,
+    'dbType' => 'varchar',
+    'studio' => 'hidden',
+  ),
+  //VUT - E - add column for PO in Quote
+
+
  
 ),
 'relationships'=>array(

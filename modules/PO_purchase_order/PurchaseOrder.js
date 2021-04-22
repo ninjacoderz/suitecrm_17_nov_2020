@@ -385,11 +385,29 @@ $(function () {
             <span>30-60 Deg Tilts</span> <input type="number" id="deg_tilts" value="33" min="30" max="60"  name="30-60 Deg Tilts">\
             <div style="padding-top:10px"><button type="button"  class="button"  onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
         </div>';
+        //VUT - S - create line item Daikin Supply
+        var po_daikin_supply_input =    '<div id="po_daikin_supply_input">\
+                                    <span>US7 2.5kW</span><select name="FTXZ25N" id="US7_25" data-name="US7 2.5kW" data-id="3518d3a1-7c11-77c5-b9db-5694fed992e6" ><option value="0"></option>'+options_quatity+'</select>\
+                                    <span>US7 3.5kW</span><select name="FTXZ35N" id="US7_35" data-name="US7 3.5kW" data-id="571aa1b6-9abe-80ec-5cdd-56b4536a29d0" ><option value="0"></option>'+options_quatity+'</select>\
+                                    <span>US7 5kW</span><select name="FTXZ50N" id="US7_50" data-name="US7 5kW" data-id="ef81036f-9889-234d-02e5-57b2c0c71e79" ><option value="0"></option>'+options_quatity+'</select>\
+                                        <span>Alira 2kW</span><select name="FTXM20U" id="Alira_20" data-name="Alira 2kW" data-id="a80988f7-9871-05d8-3150-5def2f744305" ><option value="0"></option>'+options_quatity+'</select>\
+                                        <span>Alira 2.5kW</span><select name="FTXM25U" id="Alira_25" data-name="Alira 2.5kW" data-id="7a163038-6178-7479-65d2-5def2ea594ff" ><option value="0"></option>'+options_quatity+'</select>\
+                                    <span>Alira 3.5kW</span><select name="FTXM35U" id="Alira_35" data-name="Alira 3.5kW" data-id="c3f9a48a-03d1-8dbf-5f83-5def2f9ed532" ><option value="0"></option>'+options_quatity+'</select>\
+                                    <span>Alira 4.6kW</span><select name="FTXM46U" id="Alira_46" data-name="Alira 4.6kW" data-id="83e632ff-1a24-2710-3f18-5def30c7192b" ><option value="0"></option>'+options_quatity+'</select>\
+                                        <span>Alira 5kW</span><select name="FTXM50U" id="Alira_50" data-name="Alira 5kW" data-id="ae050682-3f62-6925-d056-5def30adfe5e" ><option value="0"></option>'+options_quatity+'</select>\
+                                        <span>Alira 6kW</span><select name="FTXM60U" id="Alira_60" data-name="Alira 6kW" data-id="947e6c72-cfa0-7a95-dc50-5def31501045" ><option value="0"></option>'+options_quatity+'</select>\
+                                        <span>Alira 7.1kW</span><select name="FTXM71U" id="Alira_71" data-name="Alira 7.1kW" data-id="4f552ea4-da55-cac2-1069-5def32ef431d" ><option value="0"></option>'+options_quatity+'</select>\
+                                    <div style="padding-top:10px"><button type="button" class="button" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
+                                        </div>';
+        //VUT - E - create line item Daikin Supply
         if( $('#po_type_c').val() =="sanden_supply"){
             $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
             LoadJSONPOInput();
         }else if($('#po_type_c').val() =="SolarBOS"){
             $('#create_sanden_quote_fqs_c').after(po_solar_pv_bos_input);
+            LoadJSONPOInput();
+        } else if ($('#po_type_c').val() =="daikin_supply") {
+            $('#create_sanden_quote_fqs_c').after(po_daikin_supply_input);
             LoadJSONPOInput();
         }
         $('#po_type_c').change(function(){
@@ -1399,6 +1417,122 @@ async function generatePOLineItem(){
                 }, 800);
             },500);
         }
+    } else if ($('#po_type_c').val() == "daikin_supply") {
+        saveJSONPOInput();
+        SUGAR.ajaxUI.showLoadingPanel();
+        switch ($('#shipping_address_state').val()) {
+            case "VIC":
+                $('#shipping_account').val('PureElectric VIC');
+                $('#shipping_account_id').val("7a36afbe-04a1-2830-eaa8-5ae65dc8c4ba"); // Unit 7, 23 Mildura Street,Fyshwick, Australian Capital Territory 2609
+            break;
+            case "ACT":
+                $('#shipping_account').val('PureElectric ACT');
+                $('#shipping_account_id').val("8cdef336-2c50-6355-5101-5af0fea48795");//53 Britton Street,Smithfield, New South Wales 2164
+            break;
+            case "QLD":
+                $('#shipping_account').val('PureElectric QLD');
+                $('#shipping_account_id').val("4485ecd2-33fa-f128-a171-5add589966cd");//2 Stephens Way,Luscombe, Queensland 4207
+            break;
+            case "SA":
+                $('#shipping_account').val('PureElectric SA');
+                $('#shipping_account_id').val("bfdb9053-635c-b212-6958-5af0fe72edd4"); //1A Symonds Street, Royal Park, South Australia 5014
+            break;
+            case "WA":
+                $('#shipping_account').val('PureElectric WA');
+                $('#shipping_account_id').val("60a92cda-3c50-018b-73df-5cf613950c25");//40 Fulton Drive,Derrimut, Victoria 3030
+            break;
+            case "NSW":
+                $('#shipping_account').val('PureElectric NSW');
+                $('#shipping_account_id').val("13f3384a-36a1-e053-4d9e-5b3c509c427d"); //15 Modal Crescent,Canning Vale, West Australia 6155
+            break;
+        }
+        if($("#lineItems").find(".group_body").length == 0){
+            insertGroup(0);
+            $("#group0name").val("Daikin");
+        }else{
+            $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
+        }
+
+        var new_name = "Daikin ";
+        // var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
+        var select_inputs = $("#po_daikin_supply_input").find("select");
+        var total_wifi_US7 = 0;
+        var total_wifi_alira_Under46 = 0 ;
+        var total_wifi_alira_Over46 = 0;
+        try {
+            // await autoCreateLineItem('c4f1979b-d540-53ca-d95b-56951023eaf9',1); //Add DAIKIN_MEL_METRO_DELIVERY	
+
+            for (i = 0; i < select_inputs.length; i++){
+                var el = select_inputs[i];
+                if(parseInt($(el).val()) > 0){
+                    console.log('Start ' + $(el).attr('data-name'));
+                    // await autoCreateLineItem($(el).attr('data-id'),parseInt($(el).val()));
+                    
+                    switch ($(el).attr("id")) {
+                        case 'US7_25':
+                                await autoCreateLineItem('3518d3a1-7c11-77c5-b9db-5694fed992e6',parseInt($(el).val())); //US7 2.5
+                                total_wifi_US7 += parseInt($(el).val());
+                            break;
+                        case 'US7_35':
+                                await autoCreateLineItem('571aa1b6-9abe-80ec-5cdd-56b4536a29d0',parseInt($(el).val()));//US7 3.5
+                                total_wifi_US7 += parseInt($(el).val());
+                            break;
+                        case 'US7_50':
+                                await autoCreateLineItem('ef81036f-9889-234d-02e5-57b2c0c71e79',parseInt($(el).val()));//US7 5
+                                total_wifi_US7 += parseInt($(el).val());
+                            break;
+                        case 'Alira_20':
+                                await autoCreateLineItem('a80988f7-9871-05d8-3150-5def2f744305',parseInt($(el).val()));//Alira 2.0
+                                total_wifi_alira_Under46 += parseInt($(el).val());
+                            break;
+                        case 'Alira_25':
+                                await autoCreateLineItem('7a163038-6178-7479-65d2-5def2ea594ff',parseInt($(el).val()));//Alira 2.5
+                                total_wifi_alira_Under46 += parseInt($(el).val());
+                            break;
+                        case 'Alira_35':
+                            await autoCreateLineItem('c3f9a48a-03d1-8dbf-5f83-5def2f9ed532',parseInt($(el).val()));//Alira 3.5
+                            total_wifi_alira_Under46 += parseInt($(el).val());
+                        break;
+                        case 'Alira_46':
+                            await autoCreateLineItem('83e632ff-1a24-2710-3f18-5def30c7192b',parseInt($(el).val()));//Alira 4.6
+                            total_wifi_alira_Under46 += parseInt($(el).val());
+                        break;
+                        case 'Alira_50':
+                            await autoCreateLineItem('ae050682-3f62-6925-d056-5def30adfe5e',parseInt($(el).val()));//Alira 5
+                            total_wifi_alira_Over46 += parseInt($(el).val());
+                        break;
+                        case 'Alira_60':
+                            await autoCreateLineItem('947e6c72-cfa0-7a95-dc50-5def31501045',parseInt($(el).val()));//Alira 6
+                            total_wifi_alira_Over46 += parseInt($(el).val());
+                        break;
+                        case 'Alira_71':
+                            await autoCreateLineItem('4f552ea4-da55-cac2-1069-5def32ef431d',parseInt($(el).val()));//Alira 7.1
+                            total_wifi_alira_Over46 += parseInt($(el).val());
+                        break;
+                    }
+                    new_name += $(el).val()+"x "+$(el).attr("data-name")+" ";
+                }
+            }
+            // if (total_wifi_US7 > 0) {
+            //     await autoCreateLineItem("4b5032ca-8aab-60eb-2837-56b82333ea38",1); //BRP072C42 - Daikin Wi-Fi Mobile Controller Interface
+            // }
+            // if (total_wifi_alira_Under46 > 0) {
+            //     await autoCreateLineItem("8e92f333-2603-5734-e2fb-5deec69327d0",1); //BRP067A42 - Daikin Wi-Fi Remote control PC board set (to suit Daikin Alira 2 - 4.6kW)
+            // }
+            // if (total_wifi_alira_Over46 > 0) {
+            //     await autoCreateLineItem("e9d1a72a-cf0d-f031-74ec-6003785495a5",1); //BRP980B42 - Daikin Wi-Fi Remote control PC board set (to suit Daikin Alira 5- 7.1kW)
+            // }
+        } catch(err) {
+            console.log(err);
+        }
+        new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#delivery_date_c").val() != '') ? formatTimeforPOname($("#delivery_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
+        $('#name').val(new_name);
+        setTimeout(function (){
+            SUGAR.ajaxUI.hideLoadingPanel();
+            $('html, body').animate({
+                scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
+            }, 800);
+        },500);
     }
 }
 
@@ -1411,6 +1545,11 @@ function saveJSONPOInput(){
         });
     }else if($('#po_type_c').val() =="SolarBOS"){
         $(document).find('#po_sanden_pv_bos_input input').each(function (){
+            var id_name = $(this).attr("id");
+            values[id_name] = $(this).val();
+        });
+    }else if (($('#po_type_c').val() =="daikin_supply")) {
+        $(document).find('#po_daikin_supply_input select').each(function (){
             var id_name = $(this).attr("id");
             values[id_name] = $(this).val();
         });

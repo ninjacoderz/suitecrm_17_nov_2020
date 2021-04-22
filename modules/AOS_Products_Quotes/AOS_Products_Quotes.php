@@ -118,7 +118,16 @@ class AOS_Products_Quotes extends AOS_Products_Quotes_sugar
                     }
 
                     $product_quote->currency_id = $parentCurrencyId;
-                    $product_quote->parent_type = $parent->object_name;
+                    switch ($key) {
+                        case 'plumber_product_': case 'plumber_service_': /**proposed po in quote */
+                            $product_quote->parent_type = "";
+                            $product_quote->parent_include = $parent->object_name;
+                            $product_quote->po_type =  'sanden_plumber';
+                            break;
+                        default:
+                            $product_quote->parent_type = $parent->object_name;
+                            break;
+                    }
                     $product_quote->save();
                     $_POST[$key . 'id'][$i] = $product_quote->id;
                 }

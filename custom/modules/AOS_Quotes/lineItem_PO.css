@@ -1,0 +1,450 @@
+/* #plumber_lineItems  .edit-view-row-item {
+    width: 100%;
+} */
+
+#plumber_lineItems {
+    display: inline;
+    font-size: 11px;
+    font-weight: 700;
+    color: #534d64;
+    padding: 0 0 0 8px;
+    text-align: left;
+    vertical-align: baseline;
+    white-space: nowrap
+}
+
+
+#plumber_lineItems #service_head {
+    background: none
+}
+
+#plumber_lineItems #product_head {
+    background: none
+}
+
+#plumber_lineItems table > thead:nth-child(1) > tr > td:nth-child(1) [type="text"] {
+    width: 50%
+}
+
+#plumber_lineItems table {
+    font-size: 10px
+}
+
+[field=plumber_line_items] {
+    float: none;
+    width: 100%;
+    clear: both
+}
+
+[field=plumber_line_items] {
+    display: block
+}
+
+#plumber_line_items_span {
+    display: block
+}
+
+table#plumber_lineItems {
+    display: block
+}
+
+#plumber_line_items_span {
+    width: 100%;
+    white-space: normal
+}
+
+#plumber_lineItems .button {
+    padding: 0px;
+}
+
+table#plumber_lineItems tr td table tfoot tr td span {
+    width: 20%
+}
+
+#plumber_lineItems .totals {
+    float: right;
+    width: 256px;
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+#plumber_lineItems .totals label {
+    width: 50%;
+    line-height: 20px
+}
+
+#plumber_lineItems .totals input {
+    width: 50%
+}
+
+/* #plumber_lineItems #plumber_shipping_tax_amt {
+}
+
+#plumber_lineItems #plumber_shipping_tax {
+} */
+
+#plumber_lineItems .group_plumber {
+    width: 100%
+}
+
+#plumber_lineItems .group_body_plumber {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#plumber_lineItems .group_body_plumber > td {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#plumber_lineItems .group_plumber > thead {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#plumber_lineItems .group_plumber > thead > tr {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#plumber_lineItems .group_plumber > thead {
+    background-color: #f5f5f5;
+    min-height: 52px
+}
+
+#plumber_lineItems .group_plumber > thead > tr {
+    background-color: #f5f5f5;
+    min-height: 52px
+}
+
+#plumber_lineItems .group_plumber > thead > tr > td {
+    background-color: #f5f5f5;
+    min-height: 52px
+}
+
+#plumber_lineItems .group_plumber > thead > tr > td:nth-of-type(1) {
+    display: inline-block;
+    width: 80%
+}
+
+#plumber_lineItems .group_plumber > thead > tr > td:nth-of-type(2) {
+    display: inline-block;
+    width: 20%
+}
+
+#plumber_lineItems .group_plumber > thead > tr > td[colspan="100"] {
+    width: 100%
+}
+
+#plumber_lineItems .group_plumber button {
+    padding: 0;
+    line-height: 0;
+    width: 32px;
+    height: 32px
+}
+
+#plumber_lineItems .alignedLabel {
+    display: none;
+    visibility: collapse
+}
+
+#plumber_lineItems #product_head td {
+    padding: 0;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#plumber_lineItems .plumber_product_group {
+    background: none
+}
+
+#plumber_lineItems .plumber_product_group thead {
+    background: none
+}
+
+#plumber_lineItems .plumber_product_group tr {
+    background: none
+}
+
+#plumber_lineItems .plumber_product_group td {
+    background: none
+}
+
+#plumber_lineItems #product_head > td:nth-of-type(1) {
+    width: 40px
+}
+
+#plumber_lineItems .plumber_product_group {
+    width: 100%
+}
+
+#plumber_lineItems .plumber_product_group > tbody > tr:nth-of-type(2) > td {
+    padding-bottom: 32px;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#plumber_lineItems .product_qty {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .product_name {
+    margin: 0 5px 0 0;
+    width: 98%
+}
+
+#plumber_lineItems .product_part_number {
+    margin: 0 5px 0 0;
+    width: 100%;
+}
+
+#plumber_lineItems .product_part_number_button {
+    margin: 0 15px 0 5px
+}
+
+#plumber_lineItems .product_list_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .product_discount_text {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .product_discount_amount_select {
+    margin: 0 5px 0 0
+}
+
+#plumber_lineItems .product_unit_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .product_vat_amt_text {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .product_vat_amt_select {
+    margin: 0 5px 0 0
+}
+
+#plumber_lineItems .product_total_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .plumber_product_delete_line {
+    margin: 0 15px 0 5px
+}
+
+#plumber_lineItems .product_item_description_label {
+    display: block
+}
+
+#plumber_lineItems .product_item_description {
+    width: 95%;
+    height: 50px
+}
+
+#plumber_lineItems .product_description_label {
+    display: block
+}
+
+#plumber_lineItems .product_description {
+    width: 95%;
+    height: 50px
+}
+
+#plumber_lineItems #service_head td {
+    padding: 0;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#plumber_lineItems .service_group > tbody > tr > td {
+    padding-bottom: 32px;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#plumber_lineItems .service_group {
+    background: none
+}
+
+#plumber_lineItems .service_group thead {
+    background: none
+}
+
+#plumber_lineItems .service_group tr {
+    background: none
+}
+
+#plumber_lineItems .service_group td {
+    background: none
+}
+
+#plumber_lineItems .service_group {
+    width: 100%
+}
+
+#plumber_lineItems .service_name {
+    margin: 0 5px 0 0;
+    width: 95%;
+    height: 50px
+}
+
+#plumber_lineItems .service_list_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .service_discount_text {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .service_discount_select {
+    margin: 0 5px 0 0
+}
+
+#plumber_lineItems .service_unit_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .service_vat_text {
+    width: 40px
+}
+
+#plumber_lineItems .service_vat_select {
+    margin: 0 5px 0 5px
+}
+
+#plumber_lineItems .service_total_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#plumber_lineItems .service_delete_line {
+    margin: 0 5px 0 0
+}
+
+#plumber_lineItems select {
+    line-height: 18px
+}
+
+#EditView #plumber_total_amt {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #plumber_discount_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #plumber_subtotal_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #plumber_shipping_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #plumber_shipping_tax_amt {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #plumber_tax_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #plumber_total_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #plumber_shipping_tax {
+    margin-left: 8px
+}
+
+@media (min-width: 1350px) {
+    #plumber_lineItems {
+        font-size:13px
+    }
+
+    #plumber_lineItems table {
+        font-size: 13px
+    }
+
+    #plumber_lineItems #product_head > td:nth-of-type(1) {
+        width: 80px
+    }
+
+    #plumber_lineItems .product_qty {
+        width: 80px
+    }
+
+    #plumber_lineItems .product_list_price {
+        width: 80px
+    }
+
+    #plumber_lineItems .product_discount_text {
+        width: 80px
+    }
+
+    #plumber_lineItems .product_unit_price {
+        width: 80px
+    }
+
+    #plumber_lineItems .product_vat_amt_text {
+        width: 80px
+    }
+
+    #plumber_lineItems .product_total_price {
+        width: 80px
+    }
+
+    #plumber_lineItems .service_list_price {
+        width: 80px
+    }
+
+    #plumber_lineItems .service_discount_text {
+        width: 80px
+    }
+
+    #plumber_lineItems .service_unit_price {
+        width: 80px
+    }
+
+    #plumber_lineItems .service_vat_text {
+        width: 80px
+    }
+
+    #plumber_lineItems .service_total_price {
+        width: 80px
+    }
+}
+
+
+@media (max-width: 1700px) {
+    table#plumber_lineItems table tr td table tbody tr td span.hidden.alignedLabel {
+        display:inline
+    }
+}
+

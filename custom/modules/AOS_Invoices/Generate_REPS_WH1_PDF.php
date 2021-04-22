@@ -248,7 +248,7 @@ function Generate_Solar_Hot_Water_Rebate($Invoice){
     // add a page
     $pdf->AddPage();
     // set the source file
-    $pdf->setSourceFile(__DIR__.'/text/solarHotWater.pdf');
+    $pdf->setSourceFile(__DIR__.'/text/SolarHotWaterProvide.pdf');
     // import page 1
     $tplIdx = $pdf->importPage(1);
     // use the imported page and place it at position 10,10 with a width of 100 mm
@@ -256,7 +256,7 @@ function Generate_Solar_Hot_Water_Rebate($Invoice){
     
     // now write some text above the imported page
     $pdf->SetFont('Helvetica');
-    $pdf->SetFontSize(13);
+    $pdf->SetFontSize(10);
     $pdf->SetTextColor(0, 0, 0);
     
     //Installation date:
@@ -267,10 +267,19 @@ function Generate_Solar_Hot_Water_Rebate($Invoice){
         $dateInfos = '';
     }
   
-    $pdf->Write($pdf->SetXY(13, 167.3), html_entity_decode($dateInfos,ENT_QUOTES));
+   // $pdf->Write($pdf->SetXY(13, 167.3), html_entity_decode($dateInfos,ENT_QUOTES));
     
-    //Solar Hot Water retailer name:
-    $pdf->Write($pdf->SetXY(13,189.3), html_entity_decode('Beyond the Grid Pty Ltd',ENT_QUOTES));
+    //Solar hot water provider details:
+    $pdf->Write($pdf->SetXY(42  ,89), html_entity_decode('Beyond the Grid Pty Ltd',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(22,97), html_entity_decode('67603174661',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(16,112), html_entity_decode('Pure Electric Solutions',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(36,120), html_entity_decode('38 Ewing Street',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(28,135), html_entity_decode('BRUNSWICH',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(28,143), html_entity_decode('VIC',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(80,143), html_entity_decode('3056',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(36,151), html_entity_decode('Paul Szuster',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(43,158), html_entity_decode('1300 86 78 73',ENT_QUOTES));
+    $pdf->Write($pdf->SetXY(39,166), html_entity_decode('info@pure-electric.com.au',ENT_QUOTES));
 
     //Customer‘s details
     $contact_bean = new Contact;
@@ -281,50 +290,172 @@ function Generate_Solar_Hot_Water_Rebate($Invoice){
     $pdf->SetFontSize(10);
     $pdf->SetTextColor(0, 0, 0);
 
-    $pdf->Write($pdf->SetXY(13,211.5), html_entity_decode('1',ENT_QUOTES)); 
-    $pdf->Write($pdf->SetXY(29,220), html_entity_decode($contact_bean->first_name,ENT_QUOTES)); // first name
-    $pdf->Write($pdf->SetXY(29,227.8), html_entity_decode($contact_bean->last_name,ENT_QUOTES)); // last name
-    $pdf->Write($pdf->SetXY(33,235), html_entity_decode($contact_bean->email1 ,ENT_QUOTES)); //Email address
-    // install address
-    $pdf->Write($pdf->SetXY(35.5,249), html_entity_decode($Invoice->install_address_c,ENT_QUOTES)); // install address 1
-    // $pdf->Write($pdf->SetXY(35.5,256), html_entity_decode($Invoice->install_address_c,ENT_QUOTES)); // install address 2
-    $pdf->Write($pdf->SetXY(30,264), html_entity_decode($Invoice->install_address_city_c,ENT_QUOTES)); // suburd
-    $pdf->Write($pdf->SetXY(25,272), html_entity_decode($Invoice->install_address_state_c,ENT_QUOTES)); // state
-    $pdf->Write($pdf->SetXY(80,272), html_entity_decode($Invoice->install_address_postalcode_c,ENT_QUOTES)); // postcode
-
     //Documentation of installation
-    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,170,106,5,5);
-    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,170,120,5,5);
-    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,170,131,5,5);
-    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,170,141,5,5);
-    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,170,161,5,5);
+    //Does the installation address have an existing PV system with capacity greater than 2.5kW?
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,107.8,128.3,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,122,128.3,4,4);
+    // Is the installation address connected to reticulated natural gas?
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,107.8,140.5,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,122,140.5,4,4);
 
-    //Emergency Installations
-    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,124,255,5,5);
+      
+    //Applicant details (primary home owner)
+    $pdf->Write($pdf->SetXY(29,220.5), html_entity_decode($contact_bean->first_name,ENT_QUOTES)); // first name
+    $pdf->Write($pdf->SetXY(29,228.5), html_entity_decode($contact_bean->last_name,ENT_QUOTES)); // last name
+    // $pdf->Write($pdf->SetXY(41,235.8), html_entity_decode($contact_bean->email1 ,ENT_QUOTES)); //Address (unit/floor)
+    // install address
+    $pdf->Write($pdf->SetXY(35.5,244.3), html_entity_decode($Invoice->install_address_c,ENT_QUOTES)); // install address 1
+    $pdf->Write($pdf->SetXY(30,251.3), html_entity_decode($Invoice->install_address_city_c,ENT_QUOTES)); // suburd
+    $pdf->Write($pdf->SetXY(25,260.1), html_entity_decode($Invoice->install_address_state_c,ENT_QUOTES)); // state
+    $pdf->Write($pdf->SetXY(80,260.1), html_entity_decode($Invoice->install_address_postalcode_c,ENT_QUOTES)); // postcode
+    
+    //Quote number 
+    $pdf->Write($pdf->SetXY(130,84), html_entity_decode($Invoice->quote_number,ENT_QUOTES)); 
 
-    //Solar retailer payment details 
-    $pdf->Write($pdf->SetXY(130,211.5), html_entity_decode('Beyond the Grid Pty Ltd',ENT_QUOTES)); //Account name 
-    $pdf->Write($pdf->SetXY(128,220), html_entity_decode('814282',ENT_QUOTES)); //BSB number 
-    $pdf->Write($pdf->SetXY(140,227.8), html_entity_decode('50514152',ENT_QUOTES)); //Bank account number 
+    $Invoice_Total_Amount = $Invoice->total_amount;
+    $Invoice_Total_Including_GST = 0;
 
+    $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = '" . $Invoice->object_name . "' AND parent_id = '".$Invoice->id."' AND deleted = 0";
+    $result = $Invoice->db->query($sql);
+    while ($row = $Invoice->db->fetchByAssoc($result)) {
+        if (strpos($row['part_number'],'STC') !== false || strpos($row['part_number'],'VEEC') !== false  ) { 
+            $product_total_price  = abs($row['product_total_price']);
+            $Invoice_Total_Including_GST += $product_total_price;
+        }
+    }
+    $Invoice_Total_Including_GST += $Invoice_Total_Amount;
+    $Invoice_Total_Including_GST = number_format($Invoice_Total_Including_GST,2);
+    $Invoice_Total_Amount = number_format($Invoice_Total_Amount,2);
 
+    //Total cost of system including GST 
+    $pdf->Write($pdf->SetXY(160,101), html_entity_decode($Invoice_Total_Including_GST,ENT_QUOTES)); 
+    // Net amount payable by customer 
+    $pdf->Write($pdf->SetXY(160,109), html_entity_decode($Invoice_Total_Amount,ENT_QUOTES)); 
 
-    // add a page
+    //Confirm the main power source for the existing hot water system to be replaced:
+        // Electric storage
+    if($Invoice->old_tank_fuel_c == 'electric_storage'){
+        $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,107.8,168.3,4,4);
+    }else{
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,107.8,168.3,4,4);
+    }
+        //Electric instantaneous
+    if($Invoice->old_tank_fuel_c == 'instant_electric'){
+        $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,151.2,168.3,4,4);
+    }else{
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,151.2,168.3,4,4);
+    }
+
+        //Gas storage
+    if($Invoice->old_tank_fuel_c == 'gas_storage'){
+        $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,107.8,173.3,4,4);
+    }else{
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,107.8,173.3,4,4);
+    }
+        //Gas instantaneous
+    if($Invoice->old_tank_fuel_c == 'gas_instant'){
+        $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,151.2,173.3,4,4);
+    }else{
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,151.2,173.3,4,4);
+    }
+        //LPG
+    if($Invoice->old_tank_fuel_c == 'lpg'){
+        $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,107.8,178.5,4,4);
+    }else{
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,107.8,178.5,4,4);
+    }
+        //Solid fuel
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,151.2,178.3,4,4);
+
+        //Electric boosted solar
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,107.8,184.3,4,4);
+    
+        //Gas boosted solar
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,151.2,184.3,4,4);
+
+        //Heat pump
+    if($Invoice->old_tank_fuel_c == 'heatpump'){
+        $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,107.8,190.3,4,4);
+    }else{
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,107.8,190.3,4,4);
+    }
+
+    //Be conducted by an appropriately licensed plumber
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,109.8,241.3,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,124.8,241.3,4,4);
+    
+
+    // add Secord Page 
     $pdf->AddPage();
     // set the source file
-    $pdf->setSourceFile(__DIR__.'/text/solarHotWater.pdf');
+    $pdf->setSourceFile(__DIR__.'/text/SolarHotWaterProvide.pdf');
     // import page 2
     $tplIdx = $pdf->importPage(2);
     // use the imported page and place it at position 10,10 with a width of 100 mm
     $pdf->useTemplate($tplIdx);
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,17,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,17,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,42,17,4,4);
 
- 
-    //Solar retailer declaration
-    $today_Date =  date('d M Y', time());
-    $pdf->Write($pdf->SetXY(30, 100), html_entity_decode('Paul Szuster',ENT_QUOTES)); //Print name
-    $pdf->Write($pdf->SetXY(23, 107), html_entity_decode($today_Date,ENT_QUOTES)); //Date
+    // Be conducted by an installer that has no prosecutions
+    // registered with Worksafe Victoria or an equivalent
+    // authority in Australia in the past 3 years.
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,48,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,48,4,4);
+    
+    // Be conducted by an installer that ensures safe work methods
+    // and fall prevention measures are in place as per the
+    // Occupational Health and Safety Regulations 2017 (S.R. No.
+    // 22/17) and otherwise ensures all other applicable occupational
+    // health and safety laws and requirements are complied with.
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,74,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,74,4,4);
+
+    // Have products that are on both the Clean Energy Regulator
+    // List of Registered Solar Hot Water Heaters, and on the Victorian
+    // Essential Services Commission Registered Products List
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,94,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,94,4,4);
+
+    // Have installation completed by the installer and have a
+    // date certified on the Plumbing Certificate of Compliance
+    // and the CES prescribed or non-prescribed.
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,113,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,113,4,4);
+
+    // Provide a minimum of 5 years’ warranty on all major
+    // components
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,128,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,128,4,4);
+
+    //Ensure that the volumetric storage capacity of the installed
+    // heater is appropriate for the premises at which the heater
+    // is to be installed and the purposes for which the heater,
+    // and the hot water produced by the heater, are to be used.
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,152,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,152,4,4);
+
+    // Ensure that the installed system replaces a previous
+    // system that is at least three years old, unless faulty or out
+    // of warranty as assessed by a licensed plumber.
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,172,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,172,4,4);
+
+    // Do you agree as the Solar Hot Water Provider to provide all
+    // the required installation documentation to the applicant
+    // post installation? 
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,16,190,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,30,190,4,4);
+
+    // Has a replacement solar hot water system already been
+    // installed due to an emergency breakdown or fault with the
+    // original hot water system?
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,109.8,35.3,4,4);
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,124.8,35.3,4,4);
+    //Print name:
+    $pdf->Write($pdf->SetXY(136,121), html_entity_decode('Paul Szuster',ENT_QUOTES));
+
     $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name));
-
     $fp = fopen($ds_dir.'/'.$pre_file.'_Solar_Hot_Water_Rebate.pdf', 'wb');
     fclose($fp);
     $pdf->Output($ds_dir.'/'.$pre_file.'_Solar_Hot_Water_Rebate.pdf', 'F');
