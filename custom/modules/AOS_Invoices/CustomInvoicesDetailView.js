@@ -2,7 +2,7 @@ $(function () {
     'use strict';
     // Generate uinique id
 
-    $('#tab-actions').after('<input type="button" name="Email Invoice" value="Email Invoice" class="button primary" onclick="document.getElementById(\'popupDivBack_ara\').style.display=\'none\';document.getElementById(\'popupDiv_ara\').style.display=\'none\';var form=document.getElementById(\'popupForm\');if(form!=null){$(form).attr(\'target\', \'_blank\');form.task.value=\'emailpdf\'; form.templateID.value=\'91964331-fd45-e2d8-3f1b-57bbe4371f9c\';form.submit();}else{alert(\'Error!\');}" />');
+    $('#tab-actions').after('<input type="button" name="Email Invoice" value="Email Invoice" class="button primary" onclick="SUGAR.email_invoice(this)" />');
     // $('#tab-actions').after($('#tab-actions li:first').clone());
     $('#tab-actions').after('<li><input type="button" id="send_trustpilop" value="TrustPilot" class="button primary"/></li>');
     $('#tab-actions').after('<li><input type="button" id="product_review" value="Product Review" class="button primary" data-email-type="product_review" onclick="$(document).openComposeViewModal(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
@@ -21,6 +21,20 @@ $(function () {
     //fix task Luyen
     if( $("#quote_type_c").val() == 'quote_type_solar' || $("#quote_type_c").val() == 'quote_type_tesla'){
         $('#tab-actions').after('<input type="button" name="Email Invoice Solar" value="Email Invoice Solar" class="button primary" onclick="document.getElementById(\'popupDivBack_ara\').style.display=\'none\';document.getElementById(\'popupDiv_ara\').style.display=\'none\';var form=document.getElementById(\'popupForm\');if(form!=null){$(form).attr(\'target\', \'_blank\');form.task.value=\'emailpdf\'; form.templateID.value=\'13e05dc5-5d61-9898-6a07-5918de5ff9e4\';form.submit();}else{alert(\'Error!\');}" />');
+    }
+    SUGAR.email_invoice = function(e){
+        if( $('#quote_type_c').val() == 'quote_type_sanden' &&   
+            ($('#status').val() == 'Variation_Unpaid' || $('#status').val() == 'STC_VEEC_Unpaid' || $('#status').val() == 'STC_Unpaid' || $('#status').val() == 'VEEC_Unpaid') &&
+            ( $("#handheld_1_c").text() != "" || $("#handheld_2_c").text() != "" || $("#handheld_3_c").text() != "") ){ 
+            alert('Email Free Methven Promo Code to Customer')
+        }
+        document.getElementById('popupDivBack_ara').style.display='none';
+        document.getElementById('popupDiv_ara').style.display='none';
+        var form=document.getElementById('popupForm');
+        if(form!=null){$(form).attr('target', '_blank');
+        form.task.value='emailpdf';
+        form.templateID.value='91964331-fd45-e2d8-3f1b-57bbe4371f9c';
+        form.submit();}else{alert('Error!');}
     }
     SUGAR.CRUD_Xero_Invoice= function(elemt){
         var html_alert = '';
