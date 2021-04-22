@@ -2185,10 +2185,12 @@ function get_lead_source_company(module_get,record){
             custom_action : 'get_sms_signture'
         },
         async: true,
-        success: function(result) {                   
+        success: function(result) {   
+          debugger                
             render_select_sms_signture(result);
             //Select PE Account sms'signture  for Send Geo Reminder in Invoice
             setTimeout(function(){
+              debugger
                 if ($('#emails_pe_smstemplate_idb').val() == '5fcde64f-63ac-dc94-21fb-5e5ef5cf4c70') {
                     $('#select_sms_signture').val('_1588918966').change();
                 }
@@ -2198,6 +2200,13 @@ function get_lead_source_company(module_get,record){
                     $('#select_sms_signture').val('_1588918966').change(); // PE Account signature
                   }
                   if ($('#emails_pe_smstemplate_idb').val() == "ca646f5f-399a-d408-7536-601102429ed6" || $('#emails_pe_smstemplate_idb').val() == 'ab4b8f77-4bb5-a00d-9c55-5f9b4ad921b6' /**Calendar Date SMS Notification*/) {
+                    $('#select_sms_signture').val('_1588651777').change(); // PE Account operation
+                  }
+                }else if ($('input[name="return_module"]').val() == 'AOS_Quotes') {
+                  // if ($("input[name='pdf_id']").val() == '4fbfbfa6-0bc9-3dbb-0d5e-57ce330802c5' /**Email Quote - DetailView */) {
+                  //   $('#select_sms_signture').val('_1588918966').change(); // PE Account signature
+                  // }
+                  if ($('#emails_pe_smstemplate_idb').val() == "4cfa35e8-c49c-6b3c-b6de-5de8b14da844" ) {
                     $('#select_sms_signture').val('_1588651777').change(); // PE Account operation
                   }
                 }
