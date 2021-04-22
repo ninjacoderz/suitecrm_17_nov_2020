@@ -3212,11 +3212,11 @@ $(document).ready(function () {
         //Travel option and Price option
         var count_option = 0;
         var option_models = {
-            'Jinko 330W Mono PERC HC': '149',
+            'Jinko Tiger P-type Mono 370': '195',
             // 'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
             //'Longi Hi-MO X 350W':'162',
             // 'Q CELLS Q.MAXX 330W':'156',
-            'Q CELLS Q.MAXX-G2 350W': '185',
+            'Q CELLS Q.MAXX-G3 385W': '202',
             // 'Q CELLS Q.PEAK DUO G6+ 350W':'173',
             // 'Sunpower Maxeon 2 350':'144',
             // 'Sunpower Maxeon 3 395':'167',
