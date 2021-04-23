@@ -558,7 +558,9 @@ $(function () {
         +'</div>'
         +'</div>';
 
-        $('#solar_pv_pricing_table').parent().before(html_checkbox_Convert_Solar_Opportunity); 
+        $('#solar_pv_pricing_table').parent().before(html_checkbox_Convert_Solar_Opportunity);
+        // .:nhantv:. Add class to prevent zoom event
+        $('#solar_pv_pricing_table').parent().addClass('col-xs-12 col-sm-12');
 
     }
     ///////////// END MAKE A TABLE //////////////////
