@@ -723,6 +723,17 @@ $(document).ready(function () {
         $('#opportunity ,#approval_status, #approval_issue').closest('.edit-view-row-item').hide();
         //VUT - hidden subpanel SOLAR PV PRICING >> https://trello.com/c/W3QKyBI7/3023-suite-solar-quote-look-for-hiding-the-inputs-coding?menu=filter&filter=member:paulszuster1,mode:and
         $('#solar_pv_pricing_input_c').closest('.panel.panel-default').hide();
+        if ( $('#quote_type_c').val() != 'quote_type_solar' ){
+            $('#pvwatts_nrel_gov_c').closest('.panel.panel-default').hide();
+        }else {
+            var install_addr = $('#install_address_c').val() +' '+ $('#install_address_city_c').val() +' '+ $('#install_address_state_c').val() +' '+ $('#install_address_postalcode_c').val();
+            $('#pvwatts_nrel_gov_c').val(install_addr);
+            $('#pvwatts_nrel_gov_c').after('<a class="copy-email-link" data-email-address="'+install_addr+'" \
+            title="Copy '+install_addr+'" onclick="$(document).copy_email_address(this);"\
+            style="cursor: pointer; position: relative;display: inline-block;border-bottom: 1px dotted black;" data-toggle="tooltip">&nbsp;<span class="glyphicon glyphicon-copy"></span>\
+            <span class="tooltiptext" style="display:none;width:200px;background:#94a6b5;color:#fff;text-align: center;border-radius: 6px;padding: 5px 0; position: absolute;z-index: 1;">Copied '+install_addr+'</span></a>')
+            $('#pvwatts_nrel_gov_c').parent().append("<a  href='https://pvwatts.nrel.gov/' target='_blank'>Open NREL's PVWatts® Calculator</a>");
+        }
     }
     $('input[id="SAVE"]').prop('onclick', null).off('click');
     $('input[id="SAVE"]').click(function (event) {
