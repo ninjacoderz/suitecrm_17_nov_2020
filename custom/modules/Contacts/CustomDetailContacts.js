@@ -37,6 +37,8 @@ $(document).ready(function(){
     
     })
 
+    //hide Contact GG 
+    $(document).find('#create_GG_contact').hide();
     
     //add SEND REVIEW button 
     $('#tab-actions').after('<li><button style="background:#46a049;" type="button" name="send_review" value="Send Review" id="send_review" class="button primary"><i class="glyphicon glyphicon-star"></i>Send Review</button></li>');
