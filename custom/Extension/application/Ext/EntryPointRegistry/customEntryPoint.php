@@ -1491,3 +1491,9 @@ $entry_point_registry['APICreateLineItemProposedPO'] = array(
     'file' => 'custom/modules/AOS_Quotes/APICreateLineItemProposedPO.php',
     'auth' => false
 );
+
+//VUT - Create Google Contacts in Contacts
+$entry_point_registry['createGoogleContact'] = array(
+    'file' => 'custom/modules/Contacts/createGoogleContact.php',
+    'auth' => false
+);

@@ -1,0 +1,15 @@
+{
+  "web": {
+    "client_id": "563213458118-ep64cvea1q3e31m037hro3mcgcia10kh.apps.googleusercontent.com",
+    "project_id": "vutrantest",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "1UhcNk_fiXrTDHXRJGuuR4Ca",
+    "redirect_uris": [
+      "http://localhost/index.php?entryPoint=createGoogleContact",
+      "https://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=createGoogleContact",
+      "https://suitecrm.pure-electric.com.au/index.php?entryPoint=createGoogleContact"
+    ]
+  }
+}
