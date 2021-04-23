@@ -42,6 +42,7 @@ if (isset($product_id) && $type=='gp_profit') {
       $res = array(
         'price' => $product->price,
         'cost' => $product->cost,
+        'ex_price' => $product->expected_price,
       );
       echo json_encode($res);
   }

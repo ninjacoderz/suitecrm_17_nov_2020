@@ -88,5 +88,7 @@ $mod_strings = array(
     'LBL_AOS_QUOTE_NAME' => 'Quote',
     'LBL_ACCOUNT_NAME' => 'Account',
     'LBL_ITEM_CODE_XERO' => 'Item Code Xero',
-    'LBL_ID_PRODUCT_DRUPAL' => 'ID Product Drupal'
+    'LBL_ID_PRODUCT_DRUPAL' => 'ID Product Drupal',
+    'LBL_EXPECTED_PRICE' => 'Expected Price',
+
 );

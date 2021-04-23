@@ -6052,16 +6052,34 @@ $(function () {
     function getSTCsLineItem() {
         let products = $('#line_items_span').find('.product_group').children('tbody');
         let i;
-        let qty = {
-            STCs: 0,
-            VEECs: 0,
+        let qty={
+            STCs : 0,
+            ex_STCs: 0,
+            VEECs : 0,
+            ex_VEECs: 0,
         };
         for (i = 0; i < products.length; i++) {
             if ($(`#product_name${i}`).val() == 'STCs') {
                 qty['STCs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+                $.ajax({
+                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+                    async:false
+                }).done(function (data) {
+                    if(data == '' || typeof data === 'undefined') return;
+                    let jsonObj = JSON.parse(data);
+                    qty['ex_STCs'] = jsonObj.ex_price;
+                });
             }
             if ($(`#product_name${i}`).val() == 'VEECs') {
                 qty['VEECs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+                $.ajax({
+                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+                    async:false
+                }).done(function (data) {
+                    if(data == '' || typeof data === 'undefined') return;
+                    let jsonObj = JSON.parse(data);
+                    qty['ex_VEECs'] = jsonObj.ex_price;
+                });
             }
         }
         return qty;
@@ -6129,8 +6147,8 @@ $(function () {
     function calculateGP() {
         //STC = $36.55 && VEECs = $30 :: fixed
         var qty = getSTCsLineItem();
-        var sanden_STCs_revenue = parseFloat(qty.STCs * 36.55);
-        var sanden_VEECs_revenue = parseFloat(qty.VEECs * 30);
+        var sanden_STCs_revenue = parseFloat(qty.STCs)*parseFloat(qty.ex_STCs);
+        var sanden_VEECs_revenue = parseFloat(qty.VEECs)*parseFloat(qty.ex_VEECs);
         $('#sanden_stcs').val(sanden_STCs_revenue);
         $('#veec_revenue').val(sanden_VEECs_revenue);
         //field "sanden_supply_bill_c" Sanden Equipment Cost
