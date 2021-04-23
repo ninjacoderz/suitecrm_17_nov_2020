@@ -84,6 +84,7 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
         }
     }
 
+
     // Check Add VEEC 
     if($quote->billing_address_state == 'VIC' && $_REQUEST['quote_choice_type_product'] == 'Electric') {
         if($_REQUEST['product_choice_type_electric'] == 'Electric Storage' || $_REQUEST['product_choice_type_electric'] == 'Gravity Feed') {
@@ -146,6 +147,346 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
     if($_REQUEST['quote_hot_water_rebate'] == 'Yes') {
         array_push($part_numbers,'SV_SHWR');
     };
+
+    $extraAddedArr = [];
+    $extraValueArr = [];
+    $extraItemiseArr = [];
+    // Add Extra Using PartNumber
+    foreach($_REQUEST['quote_sanden_extra'] as $key => $arrExtra) {
+        foreach ($arrExtra as $k => $value) {
+            // $valueExtra = 
+            if (strpos($k, '_add') !== false && $value === 'yes') {
+                array_push($part_numbers, $arrExtra['partnumber']);
+                array_push($extraAddedArr, $arrExtra['partnumber']);
+                $extraValueArr[$arrExtra['partnumber']] = intval($arrExtra[$key.'_value']);
+            };
+            if (strpos($k, '_itemise') !== false && $value === 'yes') {
+                array_push($extraItemiseArr, $arrExtra['partnumber']);
+            };
+            
+        }
+    }
+    
+
+    // WARNING
+
+    $part_numbers_display_first = ['e5bc1aa4-b965-8a76-debe-5e2681ba55f7'];
+    $part_numbers_tax_0 = ['4efbea92-c52f-d147-3308-569776823b19'];
+    $array_id_part_numbers_not_use = ['1455e1e9-38a6-22e2-f898-57e8966e5256', '4e6ea564-761a-7482-76d0-582c0ca119e0'];
+
+    //delele all line items
+    $db = DBManagerFactory::getInstance();
+    $sql_delele = "UPDATE aos_products_quotes pg
+            LEFT JOIN aos_line_item_groups lig ON pg.group_id = lig.id 
+            SET pg.deleted = 1
+            WHERE pg.parent_type = 'AOS_Quotes' AND pg.parent_id = '" . $quote->id . "' AND pg.deleted = 0";
+    $res = $db->query($sql_delele);
+
+    $sql_delete_group = "UPDATE aos_line_item_groups lig SET lig.deleted = 1 WHERE lig.parent_type = 'AOS_Quotes' AND lig.parent_id = '" . $quote->id . "' AND lig.deleted = 0";
+    $resdb = $db->query($sql_delete_group);
+    // $quote_post_new_code = $quote->install_address_postalcode_c;
+    $array_stc_veec = get_value_stc_veec($quote->install_address_postalcode_c,$partNumber);
+
+    // create new group product
+    $product_quote_group = new AOS_Line_Item_Groups();
+    $product_quote_group->name = 'Sanden';//$map_quote_type[$quote->quote_type_c];
+    $product_quote_group->created_by = $quote->assigned_user_id;
+    $product_quote_group->assigned_user_id = $quote->assigned_user_id;
+    $product_quote_group->parent_type = 'AOS_Quotes';
+    $product_quote_group->parent_id = $quote->id;
+    $product_quote_group->number = '1';
+    $product_quote_group->currency_id = '-99';
+    $product_quote_group->save();
+
+    //create new products 
+
+    $part_numbers_implode = implode("','", $part_numbers);
+    $db = DBManagerFactory::getInstance();
+    $sql = "SELECT * FROM aos_products WHERE part_number IN ('".$part_numbers_implode."') AND deleted = 0 ORDER BY price ASC";
+    $ret = $db->query($sql);
+
+    while ($row = $db->fetchByAssoc($ret))
+    {   
+        if(!in_array($row['id'],$array_id_part_numbers_not_use)) {
+            $product_line = new AOS_Products_Quotes();
+            $product_line->currency_id = $row['currency_id'];
+            $product_line->item_description = $row['description'];
+            $product_line->name = $row['name'];
+            $product_line->part_number = $row['part_number'];
+            $product_line->product_cost_price = $row['cost'];
+            $product_line->product_id = $row['id'];
+            $product_line->group_id = $product_quote_group->id;
+            $product_line->parent_id = $quote->id;
+            $product_line->parent_type = 'AOS_Quotes';
+            $product_line->discount = 'Percentage';
+
+            //logic product quantity ,price
+            if($row['part_number'] == 'STC Rebate Certificate'){
+                $product_line->product_qty = $array_stc_veec['stcs_number'];
+                if((int)$array_stc_veec['stc'] == '' || (int)$array_stc_veec['stc'] == 0 || (int)$array_stc_veec['stc'] == -1) {
+                    $product_line->product_list_price = ($row['cost'] + 1);
+                } else {
+                    $product_line->product_list_price = ((int)$array_stc_veec['stc'] -1)*(-1);
+                }
+            }elseif($row['part_number'] == 'VEEC Rebate Certificate'){
+                $total_veecs = 0;
+                foreach ($array_stc_veec['eligible_veecs'] as $key => $value) {
+                    $total_veecs += $value;
+                }
+                $product_line->product_qty =$total_veecs;
+                if((int)$array_stc_veec['veec'] == '' || (int)$array_stc_veec['veec'] == 0 || (int)$array_stc_veec['veec'] == -1) {
+                    $product_line->product_list_price = ($row['cost'] + 1);
+                } else {
+                    $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
+                } 
+            }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+                $product_line->product_qty =1; 
+                $product_line->product_list_price = $row['cost'];
+            }elseif($row['part_number'] == 'SA_REES'){
+                $product_line->product_qty =1; 
+                $product_line->product_list_price = $row['cost'];
+            }elseif($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
+                $product_line->product_qty = 1;
+                $product_line->product_list_price = $row['cost'];
+            }elseif($row['part_number'] == 'PB'){
+                $product_line->product_qty = $quantityPB; 
+                $product_line->product_list_price = $row['cost'];
+            } else{
+                $product_line->product_qty = 1;
+                $product_line->product_list_price = $row['cost'];
+            }
+            foreach($extraValueArr as $key => $value) {
+                if($key == $row['part_number']) {
+                    $product_line->product_qty = 1; 
+                    $product_line->product_list_price = $value;
+                }
+            }
+            //// Extra ////
+
+            $product_line->product_total_price = $product_line->product_list_price*$product_line->product_qty; 
+
+            if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'VEEC Rebate Certificate'){
+                $price_veec_stc += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+                // $price_veec_stc += -1023;
+            } elseif($row['part_number'] == 'SV_SHWR'){
+                $priceHotWater += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+            } elseif($row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+                $priceSA_REPS += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+            } elseif($row['part_number'] == 'SA_REES'){
+                $priceReticulated_gas += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+            }else {
+                $price_include_admin += $product_line->product_total_price;
+            }
+
+            if ($row['part_number'] == 'SSI' || $row['part_number'] == 'SANDEN_SUPPLY_ONLY' || $row['part_number'] == 'SSPI') {
+                $product_line->number = 1;
+            } elseif ($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
+                $product_line->number = 2;
+            } elseif ($row['part_number'] == 'QIK15−HPUMP' || $row['part_number'] == 'QIK25−HPUMP' || $row['part_number'] == 'QIK20−HPUMP') {
+                $product_line->number = 3;
+            } elseif($row['part_number'] == 'Sanden_Plb_Install_Std' || $row['part_number'] == 'Sanden_Elec_Install_Std') {
+                $product_line->number = 4;
+            } elseif(in_array($row['part_number'], $extraAddedArr)) {
+                $product_line->number = 5;
+            } elseif($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'VEEC Rebate Certificate') {
+                $product_line->number = 6;
+            } else {
+                $product_line->number = 7;
+            }
+            
+            $total_amt += $product_line->product_total_price;
+            $tax_amount += $product_line->vat_amt;
+            if($row['part_number'] != 'PizzaBase' && $row['part_number'] != 'PB') {
+                if(in_array($row['part_number'], $extraAddedArr)) {
+                    if(in_array($row['part_number'], $extraItemiseArr)) {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    }
+                } else {
+                    $products_return[$row['part_number']] = array (
+                        'Quantity' =>$product_line->product_qty,
+                        'Product' =>  $product_line->name,
+                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                        'List' =>  number_format($product_line->product_cost_price, 2),
+                        'Sale_Price' => number_format($product_line->product_list_price, 2),
+                        'Tax_Amount' => $product_line->vat_amt,
+                        'Discount' => 0,
+                        'Total' => $product_line->product_total_price,
+                        'index' => $product_line->number,
+                    );
+                }
+            }
+            //logic product quantity ,price
+            if($row['part_number'] == 'STC Rebate Certificate'){
+                $product_line->product_qty = $array_stc_veec['stcs_number'];
+                if((int)$array_stc_veec['stc'] == '' || (int)$array_stc_veec['stc'] == 0 || (int)$array_stc_veec['stc'] == -1) {
+                    $product_line->product_list_price = $row['cost'] + 1;
+                    $product_line->product_unit_price = $row['cost'] + 1;
+                } else {
+                    $product_line->product_list_price = ((int)$array_stc_veec['stc'] -1)*(-1);
+                    $product_line->product_unit_price = ((int)$array_stc_veec['stc'] -1)*(-1);
+                }
+                
+                
+            }elseif($row['part_number'] == 'VEEC Rebate Certificate'){
+                $total_veecs = 0;
+                foreach ($array_stc_veec['eligible_veecs'] as $key => $value) {
+                    $total_veecs += $value;
+                }
+                $product_line->product_qty =$total_veecs; 
+                if((int)$array_stc_veec['veec'] == '' || (int)$array_stc_veec['veec'] == 0 || (int)$array_stc_veec['veec'] == -1) {
+                    $product_line->product_list_price = ($row['cost'] + 1);
+                    $product_line->product_unit_price = ($row['cost'] + 1);
+                } else {
+                    $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
+                    $product_line->product_unit_price = ((int)$array_stc_veec['veec'] -2)*(-1);
+                }
+            }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+                $product_line->product_qty =1; 
+                $product_line->product_list_price = $row['cost'];
+                $product_line->product_unit_price = $row['cost'];
+            }elseif($row['part_number'] == 'SA_REES'){
+                $product_line->product_qty =1; 
+                $product_line->product_list_price = $row['cost'];
+                $product_line->product_unit_price = $row['cost'];
+            } else{
+                $product_line->product_qty = 1;
+                $product_line->product_list_price = 0;
+                $product_line->product_cost_price = 0;
+                $product_line->product_cost_price_usdollar = 0;
+                $product_line->product_total_price = 0;
+            }
+
+            if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'VEEC Rebate Certificate' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+                $product_line->vat = '0';
+                $product_line->vat_amt = 0;
+            } else {
+                $product_line->vat = '10.0';
+                $product_line->vat_amt = 10.0;
+            }
+
+            if($row['part_number'] != 'PizzaBase' && $row['part_number'] != 'PB') {
+                if(in_array($row['part_number'], $extraAddedArr)) {
+                    if(in_array($row['part_number'], $extraItemiseArr)) {
+                        $product_line->save();
+                    }
+                } else {
+                    $product_line->save();
+                }
+            }               
+            
+            if ($row['part_number'] == 'SSI' || $row['part_number'] == 'SANDEN_SUPPLY_ONLY' || $row['part_number'] == 'SSPI') {
+                $id_special = $product_line->id;
+            }
+        }
+    }
+
+    $index = array();
+    foreach ($products_return as $key => $row)
+    {
+        $index[$key] = $row['index'];
+    }
+    array_multisort($index, SORT_ASC, $products_return);
+        
+    $discount_amount = 0;
+    $extraPrice = ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $priceSA_REPS + ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $Tank_slab + $priceSA_REPS + $Pavers)*0.1);
+    $price_include_admin_20 = ($price_include_admin + $price_state) + ($price_include_admin + $price_state)*0.19;
+    $gst = $price_include_admin_20*0.1;
+    $subTotal = $price_include_admin_20 + $price_veec_stc + $priceHotWater + $priceReticulated_gas + $extraPrice;
+    $old_group_total = $gst + $subTotal;
+    $group_tmp = explode('.',($gst + $subTotal));
+    $new_group_total = '';
+    $group_price_1 = '';
+    if(substr($group_tmp[0], -2) <= '90') {
+        $arr_str = explode('.', $group_tmp[0]);
+        $group_price_1 = substr($arr_str[0], 0, strlen($arr_str[0]) - 2) . '90';
+        $new_group_total = $group_price_1.'.00';
+    } else {
+        $arr_str = explode('.', $group_tmp[0]);
+        $group_price_1 = substr($arr_str[0], 0, strlen($arr_str[0]) - 2) . '90';
+        $new_group_total = $group_price_1.'.00';
+    }
+    $different = $old_group_total - $new_group_total;
+    $delta = $different/1.1; 
+    $price_include_admin_20 = round($price_include_admin_20 - $delta,2);
+    $gst = round($gst - ($different - $delta), 2);
+    $subTotal = $price_include_admin_20 + $price_veec_stc + $priceHotWater + $priceReticulated_gas + $extraPrice;
+    $subTotal =  round($subTotal ,2);
+
+    $groupTotal = $new_group_total; 
+
+
+    $total_amount = $total_amt + $tax_amount;
+    $subtotal_amount= $total_amt;
+
+    $quote->total_amt = round($subTotal , 2);
+    $quote->subtotal_amount = round($subTotal , 2);
+    $quote->discount_amount = round($discount_amount , 2);
+    $quote->tax_amount = round($gst , 2);
+    $quote->total_amount = round($groupTotal , 2);
+
+    $quote->group_total_amt[] = round($subTotal , 2);
+    $quote->group_subtotal_amount[] = round($subTotal , 2);
+    $quote->discount_amount = round($discount_amount , 2);
+    $quote->group_tax_amount[] = round($gst , 2);
+    $quote->group_total_amount[] = round($groupTotal , 2);
+
+    $quote->save();
+
+    $product_quote_group->total_amt = round($subTotal , 2);
+    $product_quote_group->tax_amount = round($gst , 2);
+    $product_quote_group->total_amount = round($groupTotal , 2);
+    $product_quote_group->subtotal_amount = round($subTotal , 2);
+    $product_quote_group->save();
+
+    if($id_special) {
+        $line_item = new AOS_Products_Quotes();
+        $line_item->retrieve($id_special);
+        $line_item->product_cost_price = $price_include_admin_20;
+        $line_item->product_list_price = $price_include_admin_20;
+        $line_item->product_unit_price = $price_include_admin_20;
+        $line_item->product_total_price = $price_include_admin_20;
+        $line_item->save();
+        $products_return[$line_item->part_number] = array (
+            'Quantity' => 1,
+            'Product' =>  $line_item->name,
+            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$line_item->item_description),
+            'List' =>  number_format($line_item->product_cost_price, 2),
+            'Sale_Price' => number_format($line_item->product_list_price, 2),
+            'Tax_Amount' => $line_item->vat_amt,
+            'Discount' => 0,
+            'Total' => $line_item->product_total_price,
+            'index' => 1,
+        );
+    }
+
+
+    //data return
+    $data_return = array (
+        'quote_id' => $quote->id,
+        'assinged_user' => '61e04d4b-86ef-00f2-c669-579eb1bb58fa',
+        'products' => $products_return,
+        'pre_install_photos_c' => $quote->pre_install_photos_c,
+        'Product_include_admin' => $price_include_admin_20,
+        'groupProducts' => array(
+            'Group_Name' => $product_quote_group->name,
+            'Total' => $product_quote_group->total_amount,
+            'Discount' => 0,
+            'Subtotal' => $subTotal,
+            'GST' => $gst,
+            'Tax' => $product_quote_group->tax_amount,
+            'Group_Total' => $groupTotal,
+        )
+    );
 
 
 } else {
@@ -329,544 +670,544 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
         $price_state = 100;
     }
 
-}
+    $part_numbers_display_first = ['e5bc1aa4-b965-8a76-debe-5e2681ba55f7'];
+    $part_numbers_tax_0 = ['4efbea92-c52f-d147-3308-569776823b19'];
+    $array_id_part_numbers_not_use = ['1455e1e9-38a6-22e2-f898-57e8966e5256', '4e6ea564-761a-7482-76d0-582c0ca119e0'];
 
-$part_numbers_display_first = ['e5bc1aa4-b965-8a76-debe-5e2681ba55f7'];
-$part_numbers_tax_0 = ['4efbea92-c52f-d147-3308-569776823b19'];
-$array_id_part_numbers_not_use = ['1455e1e9-38a6-22e2-f898-57e8966e5256', '4e6ea564-761a-7482-76d0-582c0ca119e0'];
+    //delele all line items
+    $db = DBManagerFactory::getInstance();
+    $sql_delele = "UPDATE aos_products_quotes pg
+            LEFT JOIN aos_line_item_groups lig ON pg.group_id = lig.id 
+            SET pg.deleted = 1
+            WHERE pg.parent_type = 'AOS_Quotes' AND pg.parent_id = '" . $quote->id . "' AND pg.deleted = 0";
+    $res = $db->query($sql_delele);
 
-//delele all line items
-$db = DBManagerFactory::getInstance();
-$sql_delele = "UPDATE aos_products_quotes pg
-        LEFT JOIN aos_line_item_groups lig ON pg.group_id = lig.id 
-        SET pg.deleted = 1
-        WHERE pg.parent_type = 'AOS_Quotes' AND pg.parent_id = '" . $quote->id . "' AND pg.deleted = 0";
-$res = $db->query($sql_delele);
+    $sql_delete_group = "UPDATE aos_line_item_groups lig SET lig.deleted = 1 WHERE lig.parent_type = 'AOS_Quotes' AND lig.parent_id = '" . $quote->id . "' AND lig.deleted = 0";
+    $resdb = $db->query($sql_delete_group);
+    // $quote_post_new_code = $quote->install_address_postalcode_c;
+    $array_stc_veec = get_value_stc_veec($quote->install_address_postalcode_c,$partNumber);
 
-$sql_delete_group = "UPDATE aos_line_item_groups lig SET lig.deleted = 1 WHERE lig.parent_type = 'AOS_Quotes' AND lig.parent_id = '" . $quote->id . "' AND lig.deleted = 0";
-$resdb = $db->query($sql_delete_group);
-// $quote_post_new_code = $quote->install_address_postalcode_c;
-$array_stc_veec = get_value_stc_veec($quote->install_address_postalcode_c,$partNumber);
+    // create new group product
+    $product_quote_group = new AOS_Line_Item_Groups();
+    $product_quote_group->name = 'Sanden';//$map_quote_type[$quote->quote_type_c];
+    $product_quote_group->created_by = $quote->assigned_user_id;
+    $product_quote_group->assigned_user_id = $quote->assigned_user_id;
+    $product_quote_group->parent_type = 'AOS_Quotes';
+    $product_quote_group->parent_id = $quote->id;
+    $product_quote_group->number = '1';
+    $product_quote_group->currency_id = '-99';
+    $product_quote_group->save();
 
-// create new group product
-$product_quote_group = new AOS_Line_Item_Groups();
-$product_quote_group->name = 'Sanden';//$map_quote_type[$quote->quote_type_c];
-$product_quote_group->created_by = $quote->assigned_user_id;
-$product_quote_group->assigned_user_id = $quote->assigned_user_id;
-$product_quote_group->parent_type = 'AOS_Quotes';
-$product_quote_group->parent_id = $quote->id;
-$product_quote_group->number = '1';
-$product_quote_group->currency_id = '-99';
-$product_quote_group->save();
+    //create new products 
 
-//create new products 
+    $part_numbers_implode = implode("','", $part_numbers);
+    $db = DBManagerFactory::getInstance();
+    $sql = "SELECT * FROM aos_products WHERE part_number IN ('".$part_numbers_implode."') AND deleted = 0 ORDER BY price ASC";
+    $ret = $db->query($sql);
 
-$part_numbers_implode = implode("','", $part_numbers);
-$db = DBManagerFactory::getInstance();
-$sql = "SELECT * FROM aos_products WHERE part_number IN ('".$part_numbers_implode."') AND deleted = 0 ORDER BY price ASC";
-$ret = $db->query($sql);
+    while ($row = $db->fetchByAssoc($ret))
+    {   
+        if(!in_array($row['id'],$array_id_part_numbers_not_use)) {
+            $product_line = new AOS_Products_Quotes();
+            $product_line->currency_id = $row['currency_id'];
+            $product_line->item_description = $row['description'];
+            $product_line->name = $row['name'];
+            $product_line->part_number = $row['part_number'];
+            $product_line->product_cost_price = $row['cost'];
+            $product_line->product_id = $row['id'];
+            $product_line->group_id = $product_quote_group->id;
+            $product_line->parent_id = $quote->id;
+            $product_line->parent_type = 'AOS_Quotes';
+            $product_line->discount = 'Percentage';
 
-while ($row = $db->fetchByAssoc($ret))
-{   
-    if(!in_array($row['id'],$array_id_part_numbers_not_use)) {
-        $product_line = new AOS_Products_Quotes();
-        $product_line->currency_id = $row['currency_id'];
-        $product_line->item_description = $row['description'];
-        $product_line->name = $row['name'];
-        $product_line->part_number = $row['part_number'];
-        $product_line->product_cost_price = $row['cost'];
-        $product_line->product_id = $row['id'];
-        $product_line->group_id = $product_quote_group->id;
-        $product_line->parent_id = $quote->id;
-        $product_line->parent_type = 'AOS_Quotes';
-        $product_line->discount = 'Percentage';
-
-        //logic product quantity ,price
-        if($row['part_number'] == 'STC Rebate Certificate'){
-            $product_line->product_qty = $array_stc_veec['stcs_number'];
-            if((int)$array_stc_veec['stc'] == '' || (int)$array_stc_veec['stc'] == 0 || (int)$array_stc_veec['stc'] == -1) {
-                $product_line->product_list_price = ($row['cost'] + 1);
-            } else {
-                $product_line->product_list_price = ((int)$array_stc_veec['stc'] -1)*(-1);
-            }
-        }elseif($row['part_number'] == 'VEEC Rebate Certificate'){
-            $total_veecs = 0;
-            foreach ($array_stc_veec['eligible_veecs'] as $key => $value) {
-                $total_veecs += $value;
-            }
-            $product_line->product_qty =$total_veecs;
-            if((int)$array_stc_veec['veec'] == '' || (int)$array_stc_veec['veec'] == 0 || (int)$array_stc_veec['veec'] == -1) {
-                $product_line->product_list_price = ($row['cost'] + 1);
-            } else {
-                $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
-            } 
-        }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
-            $product_line->product_qty =1; 
-            $product_line->product_list_price = $row['cost'];
-        }elseif($row['part_number'] == 'SA_REES'){
-            $product_line->product_qty =1; 
-            $product_line->product_list_price = $row['cost'];
-        }elseif($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
-            $product_line->product_qty = 1;
-            $product_line->product_list_price = $row['cost'];
-        }elseif($row['part_number'] == 'PB'){
-            $product_line->product_qty = $quantityPB; 
-            $product_line->product_list_price = $row['cost'];
-        } else{
-            $product_line->product_qty = 1;
-            $product_line->product_list_price = $row['cost'];
-        }
-        if($_REQUEST['quote_generate_type'] == "byPure") {
-            if($row['part_number'] == 'Sanden_Complex_Install'){
-                $product_line->product_qty =1; 
-                if($_REQUEST['extra_field']['price_plumbing_extra'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
+            //logic product quantity ,price
+            if($row['part_number'] == 'STC Rebate Certificate'){
+                $product_line->product_qty = $array_stc_veec['stcs_number'];
+                if((int)$array_stc_veec['stc'] == '' || (int)$array_stc_veec['stc'] == 0 || (int)$array_stc_veec['stc'] == -1) {
+                    $product_line->product_list_price = ($row['cost'] + 1);
                 } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_plumbing_extra'];
+                    $product_line->product_list_price = ((int)$array_stc_veec['stc'] -1)*(-1);
+                }
+            }elseif($row['part_number'] == 'VEEC Rebate Certificate'){
+                $total_veecs = 0;
+                foreach ($array_stc_veec['eligible_veecs'] as $key => $value) {
+                    $total_veecs += $value;
+                }
+                $product_line->product_qty =$total_veecs;
+                if((int)$array_stc_veec['veec'] == '' || (int)$array_stc_veec['veec'] == 0 || (int)$array_stc_veec['veec'] == -1) {
+                    $product_line->product_list_price = ($row['cost'] + 1);
+                } else {
+                    $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
+                } 
+            }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+                $product_line->product_qty =1; 
+                $product_line->product_list_price = $row['cost'];
+            }elseif($row['part_number'] == 'SA_REES'){
+                $product_line->product_qty =1; 
+                $product_line->product_list_price = $row['cost'];
+            }elseif($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
+                $product_line->product_qty = 1;
+                $product_line->product_list_price = $row['cost'];
+            }elseif($row['part_number'] == 'PB'){
+                $product_line->product_qty = $quantityPB; 
+                $product_line->product_list_price = $row['cost'];
+            } else{
+                $product_line->product_qty = 1;
+                $product_line->product_list_price = $row['cost'];
+            }
+            if($_REQUEST['quote_generate_type'] == "byPure") {
+                if($row['part_number'] == 'Sanden_Complex_Install'){
+                    $product_line->product_qty =1; 
+                    if($_REQUEST['extra_field']['price_plumbing_extra'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_plumbing_extra'];
+                    }
+                    
+                }elseif($row['part_number'] == 'SANDEN_ELEC_EXTRA'){
+                    $product_line->product_qty =1; 
+                    if($_REQUEST['extra_field']['price_electrical_extra'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_electrical_extra'];
+                    }
+                }elseif($row['part_number'] == 'RCBO') {
+                    $product_line->product_qty = 1;
+                    if($_REQUEST['extra_field']['price_rcd_upgrade'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_rcd_upgrade'];
+                    }
+                }elseif($row['part_number'] == 'SwitchUpgrade'){
+                    $product_line->product_qty = 1; 
+                    if($_REQUEST['extra_field']['price_switchboard_upgrade'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_switchboard_upgrade'];
+                    }
+                }elseif($row['part_number'] == 'HWS_R'){
+                    $product_line->product_qty =1; 
+                    if($_REQUEST['extra_field']['price_hws_relocation'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_hws_relocation'];
+                    }
+                }elseif($row['part_number'] == 'Sanden_Tank_Slab') {
+                    $product_line->product_qty = 1;
+                    if($_REQUEST['extra_field']['price_sanden_tank_slab'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_tank_slab'];
+                    }
+                }elseif($row['part_number'] == 'Sanden_HP_Pavers'){
+                    $product_line->product_qty = 1; 
+                    if($_REQUEST['extra_field']['price_sanden_pavers'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_pavers'];
+                    }
+                    // End Extra
+                }elseif($row['part_number'] == 'Site_Delivery'){
+                    $product_line->product_qty = 1; 
+                    if($_REQUEST['extra_field']['price_site_delivery'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_site_delivery'];
+                    }
+                    // End Extra
+                }elseif($row['part_number'] == 'Spec_Trade_Disc'){
+                    $product_line->product_qty = 1; 
+                    if($_REQUEST['extra_field']['price_trade_price_discount'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_trade_price_discount'];
+                    }
+                    // End Extra
+                } elseif($row['part_number'] == 'san_wall_bracket'){
+                    $product_line->product_qty = 1; 
+                    if($_REQUEST['extra_field']['price_san_wall_bracket'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_san_wall_bracket'];
+                    }
+                    // End Extra
+                } elseif($row['part_number'] == 'Travel'){
+                    $product_line->product_qty = 1; 
+                    if($_REQUEST['extra_field']['price_travel'] == $row['cost']) {
+                        $product_line->product_list_price = $row['cost'];
+                    } else {
+                        $product_line->product_list_price = $_REQUEST['extra_field']['price_travel'];
+                    }
+                    // End Extra
+                }
+            }
+            //// Extra ////
+
+            $product_line->product_total_price = $product_line->product_list_price*$product_line->product_qty; 
+
+            if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'VEEC Rebate Certificate'){
+                $price_veec_stc += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+                // $price_veec_stc += -1023;
+            } elseif($row['part_number'] == 'SV_SHWR'){
+                $priceHotWater += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+            } elseif($row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+                $priceSA_REPS += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+            } elseif($row['part_number'] == 'SA_REES'){
+                $priceReticulated_gas += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
+            }else {
+                $price_include_admin += $product_line->product_total_price;
+            }
+
+            if ($row['part_number'] == 'SSI' || $row['part_number'] == 'SANDEN_SUPPLY_ONLY' || $row['part_number'] == 'SSPI') {
+                $product_line->number = 1;
+            } elseif ($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
+                $product_line->number = 2;
+            } elseif ($row['part_number'] == 'QIK15−HPUMP' || $row['part_number'] == 'QIK25−HPUMP' || $row['part_number'] == 'QIK20−HPUMP') {
+                $product_line->number = 3;
+            } elseif($row['part_number'] == 'Sanden_Plb_Install_Std' || $row['part_number'] == 'Sanden_Elec_Install_Std') {
+                $product_line->number = 4;
+            } elseif($row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Site_Delivery' || $row['part_number'] == 'Spec_Trade_Disc' || $row['part_number'] == 'san_wall_bracket' || $row['part_number'] == 'Travel') {
+                $product_line->number = 5;
+            } elseif($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'VEEC Rebate Certificate') {
+                $product_line->number = 6;
+            } else {
+                $product_line->number = 7;
+            }
+            
+            $total_amt += $product_line->product_total_price;
+            $tax_amount += $product_line->vat_amt;
+            if($row['part_number'] != 'PizzaBase' && $row['part_number'] != 'PB') {
+                if($row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Site_Delivery' || $row['part_number'] == 'Spec_Trade_Disc' || $row['part_number'] == 'san_wall_bracket' || $row['part_number'] == 'Travel') {
+                    if($row['part_number'] == 'Sanden_Complex_Install' && $_REQUEST['extra_field']['itemise_plumbing'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'HWS_R' && $_REQUEST['extra_field']['itemise_relocation'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'SANDEN_ELEC_EXTRA' && $_REQUEST['extra_field']['itemise_electrical'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'RCBO' && $_REQUEST['extra_field']['itemise_rcd_upgrade'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'SwitchUpgrade' && $_REQUEST['extra_field']['itemise_switchboard'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'Sanden_Tank_Slab' && $_REQUEST['extra_field']['itemise_slab'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'Sanden_HP_Pavers' && $_REQUEST['extra_field']['itemise_pavers'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'Site_Delivery' && $_REQUEST['extra_field']['itemise_site_delivery'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'Spec_Trade_Disc' && $_REQUEST['extra_field']['itemise_trade_price_discount'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'san_wall_bracket' && $_REQUEST['extra_field']['itemise_san_wall_bracket'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    } else if($row['part_number'] == 'Travel' && $_REQUEST['extra_field']['itemise_travel'] == 'Yes') {
+                        $products_return[$row['part_number']] = array (
+                            'Quantity' =>$product_line->product_qty,
+                            'Product' =>  $product_line->name,
+                            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                            'List' =>  number_format($product_line->product_cost_price, 2),
+                            'Sale_Price' => number_format($product_line->product_list_price, 2),
+                            'Tax_Amount' => $product_line->vat_amt,
+                            'Discount' => 0,
+                            'Total' => $product_line->product_total_price,
+                            'index' => $product_line->number,
+                        );
+                    }
+                } else {
+                    $products_return[$row['part_number']] = array (
+                        'Quantity' =>$product_line->product_qty,
+                        'Product' =>  $product_line->name,
+                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
+                        'List' =>  number_format($product_line->product_cost_price, 2),
+                        'Sale_Price' => number_format($product_line->product_list_price, 2),
+                        'Tax_Amount' => $product_line->vat_amt,
+                        'Discount' => 0,
+                        'Total' => $product_line->product_total_price,
+                        'index' => $product_line->number,
+                    );
+                }
+            }
+            //logic product quantity ,price
+            if($row['part_number'] == 'STC Rebate Certificate'){
+                $product_line->product_qty = $array_stc_veec['stcs_number'];
+                if((int)$array_stc_veec['stc'] == '' || (int)$array_stc_veec['stc'] == 0 || (int)$array_stc_veec['stc'] == -1) {
+                    $product_line->product_list_price = $row['cost'] + 1;
+                    $product_line->product_unit_price = $row['cost'] + 1;
+                } else {
+                    $product_line->product_list_price = ((int)$array_stc_veec['stc'] -1)*(-1);
+                    $product_line->product_unit_price = ((int)$array_stc_veec['stc'] -1)*(-1);
                 }
                 
-            }elseif($row['part_number'] == 'SANDEN_ELEC_EXTRA'){
+                
+            }elseif($row['part_number'] == 'VEEC Rebate Certificate'){
+                $total_veecs = 0;
+                foreach ($array_stc_veec['eligible_veecs'] as $key => $value) {
+                    $total_veecs += $value;
+                }
+                $product_line->product_qty =$total_veecs; 
+                if((int)$array_stc_veec['veec'] == '' || (int)$array_stc_veec['veec'] == 0 || (int)$array_stc_veec['veec'] == -1) {
+                    $product_line->product_list_price = ($row['cost'] + 1);
+                    $product_line->product_unit_price = ($row['cost'] + 1);
+                } else {
+                    $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
+                    $product_line->product_unit_price = ((int)$array_stc_veec['veec'] -2)*(-1);
+                }
+            }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
                 $product_line->product_qty =1; 
-                if($_REQUEST['extra_field']['price_electrical_extra'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_electrical_extra'];
-                }
-            }elseif($row['part_number'] == 'RCBO') {
-                $product_line->product_qty = 1;
-                if($_REQUEST['extra_field']['price_rcd_upgrade'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_rcd_upgrade'];
-                }
-            }elseif($row['part_number'] == 'SwitchUpgrade'){
-                $product_line->product_qty = 1; 
-                if($_REQUEST['extra_field']['price_switchboard_upgrade'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_switchboard_upgrade'];
-                }
-            }elseif($row['part_number'] == 'HWS_R'){
+                $product_line->product_list_price = $row['cost'];
+                $product_line->product_unit_price = $row['cost'];
+            }elseif($row['part_number'] == 'SA_REES'){
                 $product_line->product_qty =1; 
-                if($_REQUEST['extra_field']['price_hws_relocation'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_hws_relocation'];
-                }
-            }elseif($row['part_number'] == 'Sanden_Tank_Slab') {
+                $product_line->product_list_price = $row['cost'];
+                $product_line->product_unit_price = $row['cost'];
+            } else{
                 $product_line->product_qty = 1;
-                if($_REQUEST['extra_field']['price_sanden_tank_slab'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_tank_slab'];
-                }
-            }elseif($row['part_number'] == 'Sanden_HP_Pavers'){
-                $product_line->product_qty = 1; 
-                if($_REQUEST['extra_field']['price_sanden_pavers'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_sanden_pavers'];
-                }
-                // End Extra
-            }elseif($row['part_number'] == 'Site_Delivery'){
-                $product_line->product_qty = 1; 
-                if($_REQUEST['extra_field']['price_site_delivery'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_site_delivery'];
-                }
-                // End Extra
-            }elseif($row['part_number'] == 'Spec_Trade_Disc'){
-                $product_line->product_qty = 1; 
-                if($_REQUEST['extra_field']['price_trade_price_discount'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_trade_price_discount'];
-                }
-                // End Extra
-            } elseif($row['part_number'] == 'san_wall_bracket'){
-                $product_line->product_qty = 1; 
-                if($_REQUEST['extra_field']['price_san_wall_bracket'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_san_wall_bracket'];
-                }
-                // End Extra
-            } elseif($row['part_number'] == 'Travel'){
-                $product_line->product_qty = 1; 
-                if($_REQUEST['extra_field']['price_travel'] == $row['cost']) {
-                    $product_line->product_list_price = $row['cost'];
-                } else {
-                    $product_line->product_list_price = $_REQUEST['extra_field']['price_travel'];
-                }
-                // End Extra
+                $product_line->product_list_price = 0;
+                $product_line->product_cost_price = 0;
+                $product_line->product_cost_price_usdollar = 0;
+                $product_line->product_total_price = 0;
             }
-        }
-        //// Extra ////
 
-        $product_line->product_total_price = $product_line->product_list_price*$product_line->product_qty; 
-
-        if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'VEEC Rebate Certificate'){
-            $price_veec_stc += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
-            // $price_veec_stc += -1023;
-        } elseif($row['part_number'] == 'SV_SHWR'){
-            $priceHotWater += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
-        } elseif($row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
-            $priceSA_REPS += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
-        } elseif($row['part_number'] == 'SA_REES'){
-            $priceReticulated_gas += str_replace($product_line->product_total_price, $product_line->product_total_price.'.00', $product_line->product_total_price);
-        }else {
-            $price_include_admin += $product_line->product_total_price;
-        }
-
-        if ($row['part_number'] == 'SSI' || $row['part_number'] == 'SANDEN_SUPPLY_ONLY' || $row['part_number'] == 'SSPI') {
-            $product_line->number = 1;
-        } elseif ($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
-            $product_line->number = 2;
-        } elseif ($row['part_number'] == 'QIK15−HPUMP' || $row['part_number'] == 'QIK25−HPUMP' || $row['part_number'] == 'QIK20−HPUMP') {
-            $product_line->number = 3;
-        } elseif($row['part_number'] == 'Sanden_Plb_Install_Std' || $row['part_number'] == 'Sanden_Elec_Install_Std') {
-            $product_line->number = 4;
-        } elseif($row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Site_Delivery' || $row['part_number'] == 'Spec_Trade_Disc' || $row['part_number'] == 'san_wall_bracket' || $row['part_number'] == 'Travel') {
-            $product_line->number = 5;
-        } elseif($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'VEEC Rebate Certificate') {
-            $product_line->number = 6;
-        } else {
-            $product_line->number = 7;
-        }
-        
-        $total_amt += $product_line->product_total_price;
-        $tax_amount += $product_line->vat_amt;
-        if($row['part_number'] != 'PizzaBase' && $row['part_number'] != 'PB') {
-            if($row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Site_Delivery' || $row['part_number'] == 'Spec_Trade_Disc' || $row['part_number'] == 'san_wall_bracket' || $row['part_number'] == 'Travel') {
-                if($row['part_number'] == 'Sanden_Complex_Install' && $_REQUEST['extra_field']['itemise_plumbing'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'HWS_R' && $_REQUEST['extra_field']['itemise_relocation'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'SANDEN_ELEC_EXTRA' && $_REQUEST['extra_field']['itemise_electrical'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'RCBO' && $_REQUEST['extra_field']['itemise_rcd_upgrade'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'SwitchUpgrade' && $_REQUEST['extra_field']['itemise_switchboard'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'Sanden_Tank_Slab' && $_REQUEST['extra_field']['itemise_slab'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'Sanden_HP_Pavers' && $_REQUEST['extra_field']['itemise_pavers'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'Site_Delivery' && $_REQUEST['extra_field']['itemise_site_delivery'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'Spec_Trade_Disc' && $_REQUEST['extra_field']['itemise_trade_price_discount'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'san_wall_bracket' && $_REQUEST['extra_field']['itemise_san_wall_bracket'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                } else if($row['part_number'] == 'Travel' && $_REQUEST['extra_field']['itemise_travel'] == 'Yes') {
-                    $products_return[$row['part_number']] = array (
-                        'Quantity' =>$product_line->product_qty,
-                        'Product' =>  $product_line->name,
-                        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                        'List' =>  number_format($product_line->product_cost_price, 2),
-                        'Sale_Price' => number_format($product_line->product_list_price, 2),
-                        'Tax_Amount' => $product_line->vat_amt,
-                        'Discount' => 0,
-                        'Total' => $product_line->product_total_price,
-                        'index' => $product_line->number,
-                    );
-                }
+            if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'VEEC Rebate Certificate' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
+                $product_line->vat = '0';
+                $product_line->vat_amt = 0;
             } else {
-                $products_return[$row['part_number']] = array (
-                    'Quantity' =>$product_line->product_qty,
-                    'Product' =>  $product_line->name,
-                    'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$product_line->item_description),
-                    'List' =>  number_format($product_line->product_cost_price, 2),
-                    'Sale_Price' => number_format($product_line->product_list_price, 2),
-                    'Tax_Amount' => $product_line->vat_amt,
-                    'Discount' => 0,
-                    'Total' => $product_line->product_total_price,
-                    'index' => $product_line->number,
-                );
+                $product_line->vat = '10.0';
+                $product_line->vat_amt = 10.0;
             }
-        }
-        //logic product quantity ,price
-        if($row['part_number'] == 'STC Rebate Certificate'){
-            $product_line->product_qty = $array_stc_veec['stcs_number'];
-            if((int)$array_stc_veec['stc'] == '' || (int)$array_stc_veec['stc'] == 0 || (int)$array_stc_veec['stc'] == -1) {
-                $product_line->product_list_price = $row['cost'] + 1;
-                $product_line->product_unit_price = $row['cost'] + 1;
-            } else {
-                $product_line->product_list_price = ((int)$array_stc_veec['stc'] -1)*(-1);
-                $product_line->product_unit_price = ((int)$array_stc_veec['stc'] -1)*(-1);
-            }
+
+            if($row['part_number'] != 'PizzaBase' && $row['part_number'] != 'PB') {
+                if($row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Travel' || $row['part_number'] == 'Site_Delivery') {
+                    if($row['part_number'] == 'Sanden_Complex_Install' && $_REQUEST['extra_field']['itemise_plumbing'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'HWS_R' && $_REQUEST['extra_field']['itemise_relocation'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'SANDEN_ELEC_EXTRA' && $_REQUEST['extra_field']['itemise_electrical'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'RCBO' && $_REQUEST['extra_field']['itemise_rcd_upgrade'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'SwitchUpgrade' && $_REQUEST['extra_field']['itemise_switchboard'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'Sanden_Tank_Slab' && $_REQUEST['extra_field']['itemise_slab'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'Sanden_HP_Pavers' && $_REQUEST['extra_field']['itemise_pavers'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'Travel' && $_REQUEST['extra_field']['itemise_travel'] == 'Yes') {
+                        $product_line->save();
+                    } else if($row['part_number'] == 'Site_Delivery' && $_REQUEST['extra_field']['itemise_site_delivery'] == 'Yes') {
+                        $product_line->save();
+                    }
+                } else {
+                    $product_line->save();
+                }
+            }               
             
-            
-        }elseif($row['part_number'] == 'VEEC Rebate Certificate'){
-            $total_veecs = 0;
-            foreach ($array_stc_veec['eligible_veecs'] as $key => $value) {
-                $total_veecs += $value;
+            // if ($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
+            //     $id_special = $product_line->id;
+            // }
+            if ($row['part_number'] == 'SSI' || $row['part_number'] == 'SANDEN_SUPPLY_ONLY' || $row['part_number'] == 'SSPI') {
+                $id_special = $product_line->id;
             }
-            $product_line->product_qty =$total_veecs; 
-            if((int)$array_stc_veec['veec'] == '' || (int)$array_stc_veec['veec'] == 0 || (int)$array_stc_veec['veec'] == -1) {
-                $product_line->product_list_price = ($row['cost'] + 1);
-                $product_line->product_unit_price = ($row['cost'] + 1);
-            } else {
-                $product_line->product_list_price = ((int)$array_stc_veec['veec'] -2)*(-1);
-                $product_line->product_unit_price = ((int)$array_stc_veec['veec'] -2)*(-1);
-            }
-        }elseif($row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
-            $product_line->product_qty =1; 
-            $product_line->product_list_price = $row['cost'];
-            $product_line->product_unit_price = $row['cost'];
-        }elseif($row['part_number'] == 'SA_REES'){
-            $product_line->product_qty =1; 
-            $product_line->product_list_price = $row['cost'];
-            $product_line->product_unit_price = $row['cost'];
-        } else{
-            $product_line->product_qty = 1;
-            $product_line->product_list_price = 0;
-            $product_line->product_cost_price = 0;
-            $product_line->product_cost_price_usdollar = 0;
-            $product_line->product_total_price = 0;
-        }
-
-        if($row['part_number'] == 'STC Rebate Certificate' || $row['part_number'] == 'SV_SHWR' || $row['part_number'] == 'VEEC Rebate Certificate' || $row['part_number'] == 'SA_REPS_Cl1_Reti_Gas_Conn' || $row['part_number'] == 'SA_REPS_Cl1_No_Gas_Cl2'){
-            $product_line->vat = '0';
-            $product_line->vat_amt = 0;
-        } else {
-            $product_line->vat = '10.0';
-            $product_line->vat_amt = 10.0;
-        }
-
-        if($row['part_number'] != 'PizzaBase' && $row['part_number'] != 'PB') {
-            if($row['part_number'] == 'Sanden_Complex_Install' || $row['part_number'] == 'HWS_R' || $row['part_number'] == 'SANDEN_ELEC_EXTRA' || $row['part_number'] == 'RCBO' || $row['part_number'] == 'SwitchUpgrade' || $row['part_number'] == 'Sanden_Tank_Slab' || $row['part_number'] == 'Sanden_HP_Pavers' || $row['part_number'] == 'Travel' || $row['part_number'] == 'Site_Delivery') {
-                if($row['part_number'] == 'Sanden_Complex_Install' && $_REQUEST['extra_field']['itemise_plumbing'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'HWS_R' && $_REQUEST['extra_field']['itemise_relocation'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'SANDEN_ELEC_EXTRA' && $_REQUEST['extra_field']['itemise_electrical'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'RCBO' && $_REQUEST['extra_field']['itemise_rcd_upgrade'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'SwitchUpgrade' && $_REQUEST['extra_field']['itemise_switchboard'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'Sanden_Tank_Slab' && $_REQUEST['extra_field']['itemise_slab'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'Sanden_HP_Pavers' && $_REQUEST['extra_field']['itemise_pavers'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'Travel' && $_REQUEST['extra_field']['itemise_travel'] == 'Yes') {
-                    $product_line->save();
-                } else if($row['part_number'] == 'Site_Delivery' && $_REQUEST['extra_field']['itemise_site_delivery'] == 'Yes') {
-                    $product_line->save();
-                }
-            } else {
-                $product_line->save();
-            }
-        }               
-        
-        // if ($row['part_number'] == 'GAUS-315FQS' || $row['part_number'] == 'GAUS-300FQS' || $row['part_number'] == 'GAUS-250FQS' || $row['part_number'] == 'GAUS-315FQV' || $row['part_number'] == 'GAUS-160FQS') {
-        //     $id_special = $product_line->id;
-        // }
-        if ($row['part_number'] == 'SSI' || $row['part_number'] == 'SANDEN_SUPPLY_ONLY' || $row['part_number'] == 'SSPI') {
-            $id_special = $product_line->id;
         }
     }
-}
 
-$index = array();
-foreach ($products_return as $key => $row)
-{
-    $index[$key] = $row['index'];
-}
-array_multisort($index, SORT_ASC, $products_return);
-    
-$discount_amount = 0;
-$extraPrice = ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $priceSA_REPS + ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $Tank_slab + $priceSA_REPS + $Pavers)*0.1);
-$price_include_admin_20 = ($price_include_admin + $price_state) + ($price_include_admin + $price_state)*0.19;
-$gst = $price_include_admin_20*0.1;
-$subTotal = $price_include_admin_20 + $price_veec_stc + $priceHotWater + $priceReticulated_gas + $extraPrice;
-$old_group_total = $gst + $subTotal;
-$group_tmp = explode('.',($gst + $subTotal));
-$new_group_total = '';
-$group_price_1 = '';
-if(substr($group_tmp[0], -2) <= '90') {
-    $arr_str = explode('.', $group_tmp[0]);
-    $group_price_1 = substr($arr_str[0], 0, strlen($arr_str[0]) - 2) . '90';
-    $new_group_total = $group_price_1.'.00';
-} else {
-    $arr_str = explode('.', $group_tmp[0]);
-    $group_price_1 = substr($arr_str[0], 0, strlen($arr_str[0]) - 2) . '90';
-    $new_group_total = $group_price_1.'.00';
-}
-$different = $old_group_total - $new_group_total;
-$delta = $different/1.1; 
-$price_include_admin_20 = round($price_include_admin_20 - $delta,2);
-$gst = round($gst - ($different - $delta), 2);
-$subTotal = $price_include_admin_20 + $price_veec_stc + $priceHotWater + $priceReticulated_gas + $extraPrice;
-$subTotal =  round($subTotal ,2);
+    $index = array();
+    foreach ($products_return as $key => $row)
+    {
+        $index[$key] = $row['index'];
+    }
+    array_multisort($index, SORT_ASC, $products_return);
+        
+    $discount_amount = 0;
+    $extraPrice = ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $priceSA_REPS + ($priceHWS + $plumbingExtra + $ElecExtra + $RCBExtra + $SwitchExtra + $Tank_slab + $priceSA_REPS + $Pavers)*0.1);
+    $price_include_admin_20 = ($price_include_admin + $price_state) + ($price_include_admin + $price_state)*0.19;
+    $gst = $price_include_admin_20*0.1;
+    $subTotal = $price_include_admin_20 + $price_veec_stc + $priceHotWater + $priceReticulated_gas + $extraPrice;
+    $old_group_total = $gst + $subTotal;
+    $group_tmp = explode('.',($gst + $subTotal));
+    $new_group_total = '';
+    $group_price_1 = '';
+    if(substr($group_tmp[0], -2) <= '90') {
+        $arr_str = explode('.', $group_tmp[0]);
+        $group_price_1 = substr($arr_str[0], 0, strlen($arr_str[0]) - 2) . '90';
+        $new_group_total = $group_price_1.'.00';
+    } else {
+        $arr_str = explode('.', $group_tmp[0]);
+        $group_price_1 = substr($arr_str[0], 0, strlen($arr_str[0]) - 2) . '90';
+        $new_group_total = $group_price_1.'.00';
+    }
+    $different = $old_group_total - $new_group_total;
+    $delta = $different/1.1; 
+    $price_include_admin_20 = round($price_include_admin_20 - $delta,2);
+    $gst = round($gst - ($different - $delta), 2);
+    $subTotal = $price_include_admin_20 + $price_veec_stc + $priceHotWater + $priceReticulated_gas + $extraPrice;
+    $subTotal =  round($subTotal ,2);
 
-$groupTotal = $new_group_total; 
+    $groupTotal = $new_group_total; 
 
 
-$total_amount = $total_amt + $tax_amount;
-$subtotal_amount= $total_amt;
+    $total_amount = $total_amt + $tax_amount;
+    $subtotal_amount= $total_amt;
 
-$quote->total_amt = round($subTotal , 2);
-$quote->subtotal_amount = round($subTotal , 2);
-$quote->discount_amount = round($discount_amount , 2);
-$quote->tax_amount = round($gst , 2);
-$quote->total_amount = round($groupTotal , 2);
+    $quote->total_amt = round($subTotal , 2);
+    $quote->subtotal_amount = round($subTotal , 2);
+    $quote->discount_amount = round($discount_amount , 2);
+    $quote->tax_amount = round($gst , 2);
+    $quote->total_amount = round($groupTotal , 2);
 
-$quote->group_total_amt[] = round($subTotal , 2);
-$quote->group_subtotal_amount[] = round($subTotal , 2);
-$quote->discount_amount = round($discount_amount , 2);
-$quote->group_tax_amount[] = round($gst , 2);
-$quote->group_total_amount[] = round($groupTotal , 2);
+    $quote->group_total_amt[] = round($subTotal , 2);
+    $quote->group_subtotal_amount[] = round($subTotal , 2);
+    $quote->discount_amount = round($discount_amount , 2);
+    $quote->group_tax_amount[] = round($gst , 2);
+    $quote->group_total_amount[] = round($groupTotal , 2);
 
-$quote->save();
+    $quote->save();
 
-$product_quote_group->total_amt = round($subTotal , 2);
-$product_quote_group->tax_amount = round($gst , 2);
-$product_quote_group->total_amount = round($groupTotal , 2);
-$product_quote_group->subtotal_amount = round($subTotal , 2);
-$product_quote_group->save();
+    $product_quote_group->total_amt = round($subTotal , 2);
+    $product_quote_group->tax_amount = round($gst , 2);
+    $product_quote_group->total_amount = round($groupTotal , 2);
+    $product_quote_group->subtotal_amount = round($subTotal , 2);
+    $product_quote_group->save();
 
-if($id_special) {
-    $line_item = new AOS_Products_Quotes();
-    $line_item->retrieve($id_special);
-    $line_item->product_cost_price = $price_include_admin_20;
-    $line_item->product_list_price = $price_include_admin_20;
-    $line_item->product_unit_price = $price_include_admin_20;
-    $line_item->product_total_price = $price_include_admin_20;
-    $line_item->save();
-    $products_return[$line_item->part_number] = array (
-        'Quantity' => 1,
-        'Product' =>  $line_item->name,
-        'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$line_item->item_description),
-        'List' =>  number_format($line_item->product_cost_price, 2),
-        'Sale_Price' => number_format($line_item->product_list_price, 2),
-        'Tax_Amount' => $line_item->vat_amt,
-        'Discount' => 0,
-        'Total' => $line_item->product_total_price,
-        'index' => 1,
+    if($id_special) {
+        $line_item = new AOS_Products_Quotes();
+        $line_item->retrieve($id_special);
+        $line_item->product_cost_price = $price_include_admin_20;
+        $line_item->product_list_price = $price_include_admin_20;
+        $line_item->product_unit_price = $price_include_admin_20;
+        $line_item->product_total_price = $price_include_admin_20;
+        $line_item->save();
+        $products_return[$line_item->part_number] = array (
+            'Quantity' => 1,
+            'Product' =>  $line_item->name,
+            'Description' =>  str_replace(["\r\n","\n\r","\n","\r"],"<br>",$line_item->item_description),
+            'List' =>  number_format($line_item->product_cost_price, 2),
+            'Sale_Price' => number_format($line_item->product_list_price, 2),
+            'Tax_Amount' => $line_item->vat_amt,
+            'Discount' => 0,
+            'Total' => $line_item->product_total_price,
+            'index' => 1,
+        );
+    }
+
+
+    //data return
+    $data_return = array (
+        'quote_id' => $quote->id,
+        'assinged_user' => '61e04d4b-86ef-00f2-c669-579eb1bb58fa',
+        'products' => $products_return,
+        'pre_install_photos_c' => $quote->pre_install_photos_c,
+        'Product_include_admin' => $price_include_admin_20,
+        'groupProducts' => array(
+            'Group_Name' => $product_quote_group->name,
+            'Total' => $product_quote_group->total_amount,
+            'Discount' => 0,
+            'Subtotal' => $subTotal,
+            'GST' => $gst,
+            'Tax' => $product_quote_group->tax_amount,
+            'Group_Total' => $groupTotal,
+        )
     );
+
 }
-
-
-//data return
-$data_return = array (
-    'quote_id' => $quote->id,
-    'assinged_user' => '61e04d4b-86ef-00f2-c669-579eb1bb58fa',
-    'products' => $products_return,
-    'pre_install_photos_c' => $quote->pre_install_photos_c,
-    'Product_include_admin' => $price_include_admin_20,
-    'groupProducts' => array(
-        'Group_Name' => $product_quote_group->name,
-        'Total' => $product_quote_group->total_amount,
-        'Discount' => 0,
-        'Subtotal' => $subTotal,
-        'GST' => $gst,
-        'Tax' => $product_quote_group->tax_amount,
-        'Group_Total' => $groupTotal,
-    )
-);
 
 echo json_encode($data_return);
 

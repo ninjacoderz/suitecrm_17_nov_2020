@@ -1497,3 +1497,10 @@ $entry_point_registry['createGoogleContact'] = array(
     'file' => 'custom/modules/Contacts/createGoogleContact.php',
     'auth' => false
 );
+
+//Tri code --   
+$entry_point_registry['APIRenderExtraField'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIRenderExtraField.php',
+    'auth' => false
+);
+
