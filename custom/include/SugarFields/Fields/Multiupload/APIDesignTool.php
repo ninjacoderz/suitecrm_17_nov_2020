@@ -21,7 +21,6 @@
     if($type == 'save'){
         $quote->design_tool_json_c = $design_json;
         $quote->save();
-
         $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
         $files = scandir($path,SCANDIR_SORT_DESCENDING);
         $filename = '';
@@ -38,11 +37,9 @@
             $quoteType = 'Daikin';
             for($i = 0 ; $i < count($dataURL); $i++){
                 foreach($dataURL[$i] as $key =>$val){
-                    if($key == "floorplan"){
-                        $designType = '_'.$key;
-                    }else{
-                        $designType = '_'.$i.'_'.$key;
-                    }
+                    if($key == "tabname") continue;
+                    if($key =='floorplan')$key = '';
+                    $designType = '_'.str_replace(" ","_",$dataURL[$i]['tabname']).'_'.$key;
                     createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status);
                 }
             }

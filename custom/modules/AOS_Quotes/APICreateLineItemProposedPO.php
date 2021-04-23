@@ -103,6 +103,7 @@ if ($quote_id != '' && isset($quote_id)) {
             $row['id'] = '';
             $row['parent_id'] = $focus->id;
             $row['parent_include'] = 'AOS_Quotes';
+            $row['po_type'] = 'sanden_plumber';
             //Sanden Standard Plumbing Install
             $row['name'] = $product['product_name'];
             $row['assigned_user_id'] = $focus->assigned_user_id;

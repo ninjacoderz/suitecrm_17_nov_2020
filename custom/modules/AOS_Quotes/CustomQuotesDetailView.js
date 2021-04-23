@@ -1012,9 +1012,23 @@ $(function () {
                 });
                 return $(self);
         }
-        
+
+        //add link Solargain LEAD/QUOTE
+        showLinkSG('#solargain_lead_number_c', 'lead');
+        showLinkSG('#solargain_quote_number_c', 'quote');
     });
 });
+
+/**
+ * VUT - show link SG in Quote Detail
+ * @param {string} id : id element textfield
+ * @param {string} type : lead/quote SG
+ */
+function showLinkSG(id, type) {
+    let number = $(document).find(id).text();
+    let link = `<a href="https://crm.solargain.com.au/${type}/edit/${number}" target="_blank">${number}</a>`;
+    $(document).find(id).empty().append(link);
+}
 
 function create_generateUUID() {
     var d = new Date().getTime();

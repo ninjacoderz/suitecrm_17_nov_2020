@@ -829,8 +829,17 @@ if ($task == 'pdf' || $task == 'emailpdf') {
 
                     $message_dir = '/var/www/message';
                     $admin_name = "Paul";
+                    if($_REQUEST['list_infomation']['prepared_by'] == 'Matthew Wright') {
+                        $admin_name = "Matthew Wright";
+                    } else if($_REQUEST['list_infomation']['prepared_by'] == 'Paul Szuster') {
+                        $admin_name = "Paul Szuster";
+                    } else if($_REQUEST['list_infomation']['prepared_by'] == 'Michael Golden') {
+                        $admin_name = "Michael Golden";
+                    } else if($_REQUEST['list_infomation']['prepared_by'] == 'PE Admin') {
+                        $admin_name = "Pure Electric";
+                    }
 
-                    $sms_body = $body;
+                    $sms_body = $body.'-'.$admin_name;
                     
                     exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." ".escapeshellarg($sms_body));
 

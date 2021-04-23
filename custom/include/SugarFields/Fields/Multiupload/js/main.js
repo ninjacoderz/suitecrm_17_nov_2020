@@ -48,7 +48,7 @@ function genRebateNumberFunc(elem){
         $(elem).find('span.glyphicon-refresh').addClass('hidden'); 
         return;
     }
-    if($("#product_part_number0").val() == 'SSI' || $("#product_part_number0").val() == 'SANDEN_SUPPLY_ONLY'){
+    if($("#product_part_number0").val() == 'SSI' || $("#product_part_number0").val() == 'SANDEN_SUPPLY_ONLY' || $("#product_part_number0").val() == 'SSPI'){
         var partnumber = $("#product_part_number1").val();
     }else{
         var partnumber = $("#product_part_number0").val();
