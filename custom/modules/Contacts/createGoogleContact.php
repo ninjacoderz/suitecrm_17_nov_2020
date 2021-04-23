@@ -16,8 +16,8 @@ if (!file_exists($oauth_creds)) {
     return;
 }
 
-$redirect_uri = 'http://localhost/index.php?entryPoint=createGoogleContact';
-// $redirect_uri = 'https://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=createGoogleContact';
+// $redirect_uri = 'http://localhost/index.php?entryPoint=createGoogleContact';
+$redirect_uri = 'https://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=createGoogleContact';
 // $redirect_uri = 'http://localhost/index.php?entryPoint=createGoogleContact';
 $scopes = [
     Google_Service_Oauth2::USERINFO_EMAIL,
