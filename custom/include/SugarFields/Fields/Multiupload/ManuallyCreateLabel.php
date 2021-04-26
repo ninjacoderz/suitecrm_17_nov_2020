@@ -200,7 +200,7 @@
     if(!empty($regex_parcel_collect)){
         if(isset($regex_parcel_collect['type_to']) && isset($regex_parcel_collect['apcn'])){
             $shipments['shipments'][0]['to']['type'] = $regex_parcel_collect['type_to'];
-            $shipments['shipments'][0]['to']['apcn'] =  $regex_parcel_collect['apcn']; 
+            $shipments['shipments'][0]['to']['apcn'] =  str_replace(' ','',$regex_parcel_collect['apcn']); 
             $shipments['shipments'][0]['to']['lines'][0] =  $regex_parcel_collect['lines_address'];    
         } 
     }
@@ -241,10 +241,15 @@ function regex_parcel_collect($str){
         //get type_to
         $str_lowercase = strtolower($str);
         if(strpos($str_lowercase,'parcel') !== false){
-            $return_data['type_to'] = 'PARCEL_COLLECT';
+            if(strpos($str_lowercase,'collect') !== false){
+                $return_data['type_to'] = 'PARCEL_COLLECT';
+            }
+            if(strpos($str_lowercase,'locker') !== false){ 
+                $return_data['type_to'] = 'PARCEL_LOCKER';
+            }
         }
         //get apcn
-        preg_match('/[\d]{10,10}/s',$str,$match);
+        preg_match('/[\d]{10}|[\d]{5}\s[\d]{5}/s',$str,$match);
         if(isset($match[0])){
             $return_data['apcn'] = $match[0];
         //get lines_address
