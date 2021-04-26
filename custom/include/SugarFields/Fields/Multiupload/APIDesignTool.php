@@ -39,7 +39,7 @@
                 foreach($dataURL[$i] as $key =>$val){
                     if($key == "tabname") continue;
                     $designType = '_'.str_replace(" ","_",$dataURL[$i]['tabname']).'_'.(($key!='floorplan')?$key:'');
-                    createImage($quote,$val,$key,$designType,$quoteType,$status);
+                    createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status);
                 }
             }
     
