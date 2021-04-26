@@ -146,6 +146,8 @@ if($_POST['content_messager'] == '') return;
 $phone_number_customer = $_POST['phone_number_customer'];
 $from_phone_number = $_POST['from_phone_number'];
 $content_messager = $_POST['content_messager'];
+//thienpb fix 
+$content_messager = preg_replace("/&#?[a-z0-9]{2,8};/i"," ", strip_tags($content_messager));
 $content_messager = str_replace("$", "\\$", html_entity_decode($content_messager, ENT_QUOTES));
 $module =$_POST['module'];
 $record_id = $_POST['record_id'];

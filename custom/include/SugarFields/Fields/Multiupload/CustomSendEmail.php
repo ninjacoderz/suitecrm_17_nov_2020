@@ -662,6 +662,7 @@ if($messagetype == "sms/mms"){
     // cd to message and use send message command
     global $sugar_config;
     $sms_body = strip_tags($body);
+    $sms_body = preg_replace("/&#?[a-z0-9]{2,8};/i"," ", $sms_body);
     //$command = "cd ".$sugar_config["message_command_dir"]."; php send-message.php sms ".$phone_number.' "'.$sms_body.'"';
     if(is_array($phone_number) && count($phone_number)>0){
         foreach ($phone_number as $phone){
