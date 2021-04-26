@@ -605,7 +605,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var id_nearest = infor[0][2];
@@ -635,7 +635,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var str_dis =  infor[0][3];
@@ -1337,7 +1337,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var id_nearest = infor[0][2];
@@ -1367,7 +1367,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var str_dis =  infor[0][3];
@@ -5532,6 +5532,12 @@ $(document).ready(function(){
             Ajax_Generate_File_PDF_REPS('Solar_Hot_Water_Rebate');
         })
 
+        //VUT - S - Button create Generate_Solar_Hot_Water_Proof_Install_Rebate
+        $("#get_all_files_invoice").after('<button type="button" style="margin-left:2px; background: #ff9900;" id="Generate_Solar_Hot_Water_Proof_Install_Rebate" class="button primary" title="Create Proof of Installation"><span class="glyphicon glyphicon-file"></span>Create Proof of Installation</button>');
+        $("#Generate_Solar_Hot_Water_Proof_Install_Rebate").click(function(){
+            Ajax_Generate_File_PDF_REPS('Solar_Hot_Water_Proof');
+        })
+        //VUT - E - Button create Generate_Solar_Hot_Water_Proof_Install_Rebate
          //VUT-S-Get all files sms
          $("#get_files_from_s3_invoice").after('<button type="button" id="get_all_files_sms" class="button primary" title="Get all files from SMS">GET ALL FILES FROM SMS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
          $('#get_all_files_sms').click(function(){
@@ -8542,7 +8548,8 @@ function Ajax_Generate_File_PDF_REPS(action=''){
             case 'Solar_Hot_Water_Rebate':
                 url_generate_pdf += '&action=Solar_Hot_Water_Rebate';
                 break;
-    
+            case 'Solar_Hot_Water_Proof':
+                url_generate_pdf += '&action=Solar_Hot_Water_Proof';
             default:
                 break;
         }

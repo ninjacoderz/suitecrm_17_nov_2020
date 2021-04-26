@@ -545,7 +545,11 @@ $entry_point_registry['update_invoice'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/update_invoice.php',
     'auth' => true
 );
-
+//tuan
+$entry_point_registry['APIrederectToPVwatts'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIrederectToPVwatts.php',
+    'auth' => true
+);
 //dung code - button "Resize All" in file upload
 $entry_point_registry['ResizeAllFile'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/ResizeAllFile.php',

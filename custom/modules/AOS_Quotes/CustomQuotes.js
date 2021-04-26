@@ -732,7 +732,13 @@ $(document).ready(function () {
             title="Copy '+install_addr+'" onclick="$(document).copy_email_address(this);"\
             style="cursor: pointer; position: relative;display: inline-block;border-bottom: 1px dotted black;" data-toggle="tooltip">&nbsp;<span class="glyphicon glyphicon-copy"></span>\
             <span class="tooltiptext" style="display:none;width:200px;background:#94a6b5;color:#fff;text-align: center;border-radius: 6px;padding: 5px 0; position: absolute;z-index: 1;">Copied '+install_addr+'</span></a>')
-            $('#pvwatts_nrel_gov_c').parent().append("<a  href='https://pvwatts.nrel.gov/' target='_blank'>Open NREL's PVWatts® Calculator</a>");
+            $.ajax({
+                url: "index.php?entryPoint=APIrederectToPVwatts&mylocation="+install_addr,
+                success: function (data) {
+                    $('#pvwatts_nrel_gov_c').parent().append("<a  href='https://pvwatts.nrel.gov"+data+"' target='_blank'>Open NREL's PVWatts® Calculator</a>");
+                },
+                error: function (response) { },
+            });
         }
     }
     $('input[id="SAVE"]').prop('onclick', null).off('click');
