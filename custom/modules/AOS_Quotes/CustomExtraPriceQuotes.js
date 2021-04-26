@@ -438,7 +438,7 @@ $(function () {
 
     function init(state,installYear){
 
-        var panel_type = ['',/*'Jinko 370W Cheetah Plus JKM370M-66H'*/'Jinko 330W Mono PERC HC','Q CELLS Q.MAXX-G2 350W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W','Sunpower P3 325 BLACK'*/'Sunpower P3 370 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
+        var panel_type = ['','Jinko Tiger P-type Mono 370',/*'Jinko 330W Mono PERC HC',*/'Q CELLS Q.MAXX-G3 385W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W','Sunpower P3 325 BLACK'*/'Sunpower P3 370 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
         var inverter_type = ['','Primo 3','Primo 4','Primo 5','Primo 6','Primo 8.2','Symo 5','Symo 6','Symo 8.2','Symo 10','Symo 15','SYMO 20','S Edge 3G','S Edge 5G','S Edge 6G','S Edge 8G','S Edge 8 3P','S Edge 10G','IQ7 plus',/*'IQ7',*/'IQ7X',/*'Growatt 3','Growatt 5','Growatt 6','Growatt8','Growatt 8.2',*/'Sungrow 3','Sungrow 5','Sungrow 8','Sungrow 10 3P','Sungrow 15 3P'];
         var extra_1 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
         var extra_2 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
@@ -558,7 +558,9 @@ $(function () {
         +'</div>'
         +'</div>';
 
-        $('#solar_pv_pricing_table').parent().before(html_checkbox_Convert_Solar_Opportunity); 
+        $('#solar_pv_pricing_table').parent().before(html_checkbox_Convert_Solar_Opportunity);
+        // .:nhantv:. Add class to prevent zoom event
+        $('#solar_pv_pricing_table').parent().addClass('col-xs-12 col-sm-12');
 
     }
     ///////////// END MAKE A TABLE //////////////////
@@ -618,10 +620,15 @@ $(function () {
 
         if(dataJSON == '') return;
 
-        if(panel_type == 'Sunpower Maxeon 3 400W'){
-            panel_type = 'Sunpower Maxeon 3 400';
+        switch (panel_type) {
+            case 'Sunpower Maxeon 3 400W':
+                panel_type = 'Sunpower Maxeon 3 400';
+                break;
+            case 'Jinko Tiger P-type Mono 370':
+                panel_type = 'Jinko 370W Tiger P-type JKM370M-6HLM';
+                break;
         }
-        
+
         var list_panel = dataJSON[panel_type];
         var list_suggest = '';
         var temp = [];
@@ -678,8 +685,13 @@ $(function () {
         
         if(dataJSON == '') return;
 
-        if(panel_type == 'Sunpower Maxeon 3 400W'){
-            panel_type = 'Sunpower Maxeon 3 400';
+        switch (panel_type) {
+            case 'Sunpower Maxeon 3 400W':
+                panel_type = 'Sunpower Maxeon 3 400';
+                break;
+            case 'Jinko Tiger P-type Mono 370':
+                panel_type = 'Jinko 370W Tiger P-type JKM370M-6HLM';
+                break;
         }
         
         var list_panel = dataJSON[panel_type];
@@ -1298,11 +1310,11 @@ $(function () {
             build_url_quote_price += '&state='+ encodeURIComponent($("#install_address_state_c").val());
         }
         var option_models =    {
-                                'Jinko 330W Mono PERC HC':'149',
+                                'Jinko Tiger P-type Mono 370': '195',
                                 // 'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
                                 //'Longi Hi-MO X 350W':'162',
                                 // 'Q CELLS Q.MAXX 330W':'156',
-                                'Q CELLS Q.MAXX-G2 350W':'185',
+                                'Q CELLS Q.MAXX-G3 385W': '202',
                                 // 'Q CELLS Q.PEAK DUO G6+ 350W':'173',
                                 // 'Sunpower Maxeon 2 350':'144',
                                 // 'Sunpower Maxeon 3 395':'167',

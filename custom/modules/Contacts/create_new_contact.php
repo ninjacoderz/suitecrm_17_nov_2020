@@ -1,6 +1,6 @@
 <?php
-$account_id = $_GET['account_id'];
-$contact_id = $_GET['contact_id'];
+$account_id = trim($_GET['account_id']);
+$contact_id = trim($_GET['contact_id']);
 if($account_id != ''){
     $account = new Account();
     $account->retrieve($account_id);
@@ -29,14 +29,18 @@ if($account_id != ''){
 if($contact_id != ''){
     $contact = new Contact();
     $contact->retrieve($contact_id);
-    if( isset($_GET['plumber_license_number'])){
-        $contact->plumber_license_number_c =  $_GET['plumber_license_number'];
-        $contact->check_contact_type_c = 'Plumber' ;
+    if($contact->id){
+        if( isset($_GET['plumber_license_number'])){
+            $contact->plumber_license_number_c =  $_GET['plumber_license_number'];
+            $contact->check_contact_type_c = 'Plumber' ;
+        }
+        if( isset($_GET['electrician_license_number'])){
+            $contact->electrician_license_number_c =  $_GET['electrician_license_number'];
+            $contact->check_contact_type_c = 'Electrician' ;
+        }
+        $contact->save();
+        echo  $contact->id;
+    }else{
+        echo '';
     }
-    if( isset($_GET['electrician_license_number'])){
-        $contact->electrician_license_number_c =  $_GET['electrician_license_number'];
-        $contact->check_contact_type_c = 'Electrician' ;
-    }
-    $contact->save();
-    echo  $contact->id;
 }

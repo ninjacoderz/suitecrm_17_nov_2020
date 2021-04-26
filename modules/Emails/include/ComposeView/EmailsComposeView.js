@@ -2749,6 +2749,7 @@ $(function(){
   $('#btn_copy_email_to_sms').click(function(e){
   /**s */
   var content_email = '';
+  var content_sms;
     if (action_email == 'ComposeView') {
         content_emails = $('.html_preview').children();
         $.each(content_emails,function(k,v){
@@ -2759,6 +2760,7 @@ $(function(){
     } 
     else { //don't get table infomation Quote in email content 
       content_email = $('.html_preview table:first-child td').html();
+      content_sms = content_email;
       if (content_email != undefined) {
         content_email= content_email.replace(/<[^>]*>?/gm, '');
       } else {
@@ -2768,11 +2770,11 @@ $(function(){
         }
       }
     }
-    var content_sms;
     // $('textarea#sms_content').change();.replace(/<[^>]*>?/gm, '')
     $('textarea#sms_content').val(content_email);
-    content_sms = $('textarea#sms_content').val() + "\n" +$('textarea#sms_signture').val();
-    $('textarea#sms_message').val(content_sms.replace('\n\n', '\n'));
+    content_sms = content_sms.replaceAll('<br>', ' ') + "\n" +$('textarea#sms_signture').val();
+    content_sms = content_sms.replace(/\s\s+/g, ' ');
+    $('textarea#sms_message').val(content_sms);
     /**s */
   });
   //VUT-E-Add button copy email content to sms content

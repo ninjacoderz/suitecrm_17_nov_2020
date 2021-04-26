@@ -7,12 +7,14 @@
     $state = $_REQUEST['state'];
     $csv = array_map('str_getcsv', file('price_csv/Price_Sheet_'.$state.'.csv'));
     $csv1 = array_map('str_getcsv', file('price_csv/Price_Sheet_'.$state.'1.csv'));
-    $arr = array(   'Jinko 330W Mono PERC HC',
+    $arr = array(   //'Jinko 330W Mono PERC HC',
                     //'Longi Hi-MO X 350W',
                     //'Jinko 370W Cheetah Plus JKM370M-66H',
-                    'Q CELLS Q.MAXX-G2 350W',
+                    //'Q CELLS Q.MAXX-G2 350W',
                     // 'Q CELLS Q.PEAK DUO G6+ 350W',
                     // 'Sunpower X22 360W',
+                    'Jinko 370W Tiger P-type JKM370M-6HLM',
+                    'Q CELLS Q.MAXX-G3 385W',
                     'Sunpower P3 370 BLACK',
                     'Sunpower Maxeon 3 400');
     $json_file  = array();

@@ -723,6 +723,17 @@ $(document).ready(function () {
         $('#opportunity ,#approval_status, #approval_issue').closest('.edit-view-row-item').hide();
         //VUT - hidden subpanel SOLAR PV PRICING >> https://trello.com/c/W3QKyBI7/3023-suite-solar-quote-look-for-hiding-the-inputs-coding?menu=filter&filter=member:paulszuster1,mode:and
         $('#solar_pv_pricing_input_c').closest('.panel.panel-default').hide();
+        if ( $('#quote_type_c').val() != 'quote_type_solar' ){
+            $('#pvwatts_nrel_gov_c').closest('.panel.panel-default').hide();
+        }else {
+            var install_addr = $('#install_address_c').val() +' '+ $('#install_address_city_c').val() +' '+ $('#install_address_state_c').val() +' '+ $('#install_address_postalcode_c').val();
+            $('#pvwatts_nrel_gov_c').val(install_addr);
+            $('#pvwatts_nrel_gov_c').after('<a class="copy-email-link" data-email-address="'+install_addr+'" \
+            title="Copy '+install_addr+'" onclick="$(document).copy_email_address(this);"\
+            style="cursor: pointer; position: relative;display: inline-block;border-bottom: 1px dotted black;" data-toggle="tooltip">&nbsp;<span class="glyphicon glyphicon-copy"></span>\
+            <span class="tooltiptext" style="display:none;width:200px;background:#94a6b5;color:#fff;text-align: center;border-radius: 6px;padding: 5px 0; position: absolute;z-index: 1;">Copied '+install_addr+'</span></a>')
+            $('#pvwatts_nrel_gov_c').parent().append("<a  href='https://pvwatts.nrel.gov/' target='_blank'>Open NREL's PVWatts® Calculator</a>");
+        }
     }
     $('input[id="SAVE"]').prop('onclick', null).off('click');
     $('input[id="SAVE"]').click(function (event) {
@@ -3212,11 +3223,11 @@ $(document).ready(function () {
         //Travel option and Price option
         var count_option = 0;
         var option_models = {
-            'Jinko 330W Mono PERC HC': '149',
+            'Jinko Tiger P-type Mono 370': '195',
             // 'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
             //'Longi Hi-MO X 350W':'162',
             // 'Q CELLS Q.MAXX 330W':'156',
-            'Q CELLS Q.MAXX-G2 350W': '185',
+            'Q CELLS Q.MAXX-G3 385W': '202',
             // 'Q CELLS Q.PEAK DUO G6+ 350W':'173',
             // 'Sunpower Maxeon 2 350':'144',
             // 'Sunpower Maxeon 3 395':'167',
@@ -6041,16 +6052,34 @@ $(function () {
     function getSTCsLineItem() {
         let products = $('#line_items_span').find('.product_group').children('tbody');
         let i;
-        let qty = {
-            STCs: 0,
-            VEECs: 0,
+        let qty={
+            STCs : 0,
+            ex_STCs: 0,
+            VEECs : 0,
+            ex_VEECs: 0,
         };
         for (i = 0; i < products.length; i++) {
             if ($(`#product_name${i}`).val() == 'STCs') {
                 qty['STCs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+                $.ajax({
+                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+                    async:false
+                }).done(function (data) {
+                    if(data == '' || typeof data === 'undefined') return;
+                    let jsonObj = JSON.parse(data);
+                    qty['ex_STCs'] = jsonObj.ex_price;
+                });
             }
             if ($(`#product_name${i}`).val() == 'VEECs') {
                 qty['VEECs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+                $.ajax({
+                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+                    async:false
+                }).done(function (data) {
+                    if(data == '' || typeof data === 'undefined') return;
+                    let jsonObj = JSON.parse(data);
+                    qty['ex_VEECs'] = jsonObj.ex_price;
+                });
             }
         }
         return qty;
@@ -6118,8 +6147,8 @@ $(function () {
     function calculateGP() {
         //STC = $36.55 && VEECs = $30 :: fixed
         var qty = getSTCsLineItem();
-        var sanden_STCs_revenue = parseFloat(qty.STCs * 36.55);
-        var sanden_VEECs_revenue = parseFloat(qty.VEECs * 30);
+        var sanden_STCs_revenue = parseFloat(qty.STCs)*parseFloat(qty.ex_STCs);
+        var sanden_VEECs_revenue = parseFloat(qty.VEECs)*parseFloat(qty.ex_VEECs);
         $('#sanden_stcs').val(sanden_STCs_revenue);
         $('#veec_revenue').val(sanden_VEECs_revenue);
         //field "sanden_supply_bill_c" Sanden Equipment Cost

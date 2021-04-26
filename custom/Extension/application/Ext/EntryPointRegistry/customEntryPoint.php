@@ -675,7 +675,7 @@ $entry_point_registry['customCheckPostalCodeSandenWater'] = array(
 );
 $entry_point_registry['customFilterPlumber'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomFilterPlumber.php',
-    'auth' => true
+    'auth' => false
 );
 $entry_point_registry['createMettingWHLog'] = array(
     'file' => 'custom/modules/pe_warehouse_log/createMettingWHLog.php',
@@ -1491,3 +1491,16 @@ $entry_point_registry['APICreateLineItemProposedPO'] = array(
     'file' => 'custom/modules/AOS_Quotes/APICreateLineItemProposedPO.php',
     'auth' => false
 );
+
+//VUT - Create Google Contacts in Contacts
+$entry_point_registry['createGoogleContact'] = array(
+    'file' => 'custom/modules/Contacts/createGoogleContact.php',
+    'auth' => false
+);
+
+//Tri code --   
+$entry_point_registry['APIRenderExtraField'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIRenderExtraField.php',
+    'auth' => false
+);
+
