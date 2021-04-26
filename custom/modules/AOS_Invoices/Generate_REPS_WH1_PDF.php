@@ -25,6 +25,10 @@ if($Invoice->id != '') {
             // generate PDF Solar_Hot_Water_Rebate
             echo Generate_Solar_Hot_Water_Rebate($Invoice);
             break;
+        case 'Solar_Hot_Water_Proof' : 
+            // generate PDF Solar_Hot_Water_Proof
+            echo Generate_Solar_Hot_Water_Proof_Install_Rebate($Invoice);
+            break;
         default:
             // generate PDF REPS_WH1_PDF
             echo generatePDF($Invoice);
@@ -459,6 +463,97 @@ function Generate_Solar_Hot_Water_Rebate($Invoice){
     $fp = fopen($ds_dir.'/'.$pre_file.'_Solar_Hot_Water_Rebate.pdf', 'wb');
     fclose($fp);
     $pdf->Output($ds_dir.'/'.$pre_file.'_Solar_Hot_Water_Rebate.pdf', 'F');
+    return 'Finish';
+}
+
+/**
+ * VUT - Create pdf file
+ */
+function Generate_Solar_Hot_Water_Proof_Install_Rebate($Invoice){
+    $foldeId = $Invoice->installation_pictures_c;
+    $ds_dir =  $_SERVER['DOCUMENT_ROOT'] . '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' .$foldeId;
+    $pdf = new Fpdi();
+    // add a page
+    $pdf->AddPage();
+    // set the source file
+    $pdf->setSourceFile(__DIR__.'/text/solarHotWater_Proof.pdf');
+    // import page 1
+    $tplIdx = $pdf->importPage(1);
+    // use the imported page and place it at position 10,10 with a width of 100 mm
+    $pdf->useTemplate($tplIdx);
+    
+    // now write some text above the imported page
+    $pdf->SetFont('Helvetica');
+    $pdf->SetFontSize(10);
+    $pdf->SetTextColor(0, 0, 0);
+    
+    //Installation date:
+    if($Invoice->installation_date_c != ''){
+        $dateInfos_explode = explode(" ",$Invoice->installation_date_c);
+        $dateInfos = $dateInfos_explode[0];
+    }else{
+        $dateInfos = '';
+    }
+  
+    $pdf->Write($pdf->SetXY(13, 167.3), html_entity_decode($dateInfos,ENT_QUOTES));
+    
+    //Solar Hot Water retailer name:
+    $pdf->Write($pdf->SetXY(13,189.3), html_entity_decode('Beyond the Grid Pty Ltd',ENT_QUOTES));
+
+    //Customer‘s details
+    $contact_bean = new Contact;
+    $contact_bean->retrieve($Invoice->billing_contact_id);
+
+    // now write some text above the imported page
+    $pdf->SetFont('Helvetica');
+    $pdf->SetFontSize(10);
+    $pdf->SetTextColor(0, 0, 0);
+
+    $pdf->Write($pdf->SetXY(13,211.5), html_entity_decode('1',ENT_QUOTES)); 
+    $pdf->Write($pdf->SetXY(29,219.5), html_entity_decode($contact_bean->first_name,ENT_QUOTES)); // first name
+    $pdf->Write($pdf->SetXY(29,227), html_entity_decode($contact_bean->last_name,ENT_QUOTES)); // last name
+    $pdf->Write($pdf->SetXY(35,235), html_entity_decode($contact_bean->email1 ,ENT_QUOTES)); //Email address
+    // install address
+    $pdf->Write($pdf->SetXY(36.5,248.5), html_entity_decode($Invoice->install_address_c,ENT_QUOTES)); // install address 1
+    // $pdf->Write($pdf->SetXY(35.5,256), html_entity_decode($Invoice->install_address_c,ENT_QUOTES)); // install address 2
+    $pdf->Write($pdf->SetXY(30,263.5), html_entity_decode($Invoice->install_address_city_c,ENT_QUOTES)); // suburd
+    $pdf->Write($pdf->SetXY(25,271.5), html_entity_decode($Invoice->install_address_state_c,ENT_QUOTES)); // state
+    $pdf->Write($pdf->SetXY(81,271.5), html_entity_decode($Invoice->install_address_postalcode_c,ENT_QUOTES)); // postcode
+
+    //Documentation of installation
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,106,5,5);
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,115,5,5); //120
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,127,5,5); //131
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,139,5,5); //141
+    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,150,5,5); //161
+
+    //Emergency Installations
+    $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,124,255,5,5);
+
+    //Solar retailer payment details 
+    $pdf->Write($pdf->SetXY(130,212), html_entity_decode('Beyond the Grid Pty Ltd',ENT_QUOTES)); //Account name 
+    $pdf->Write($pdf->SetXY(128,220), html_entity_decode('814282',ENT_QUOTES)); //BSB number 
+    $pdf->Write($pdf->SetXY(141,227.8), html_entity_decode('50514152',ENT_QUOTES)); //Bank account number 
+
+    // add a page
+    $pdf->AddPage();
+    // set the source file
+    $pdf->setSourceFile(__DIR__.'/text/solarHotWater_Proof.pdf');
+    // import page 2
+    $tplIdx = $pdf->importPage(2);
+    // use the imported page and place it at position 10,10 with a width of 100 mm
+    $pdf->useTemplate($tplIdx);
+ 
+    //Solar retailer declaration
+    $today_Date =  date('d F Y', time());
+    $today_name =  date('dMY', time());
+    $pdf->Write($pdf->SetXY(30, 99.2), html_entity_decode('Paul Szuster',ENT_QUOTES)); //Print name
+    $pdf->Write($pdf->SetXY(23, 107), html_entity_decode($today_Date,ENT_QUOTES)); //Date
+    $pre_file = str_replace(' ' ,'_',trim($contact_bean->first_name .' '. $contact_bean->last_name.' signed '.$today_name));
+    $pre_name = 'SolarHotWater-Proof-of-Install-and-Rebate-Claim-Form';
+    $fp = fopen($ds_dir.'/SolarHotWater-Proof-of-Install-and-Rebate-Claim-Form_'.$pre_file.'.pdf', 'wb');
+    fclose($fp);
+    $pdf->Output($ds_dir.'/SolarHotWater-Proof-of-Install-and-Rebate-Claim-Form_'.$pre_file.'.pdf', 'F');
     return 'Finish';
 }
 

@@ -8,6 +8,8 @@ $(document).ready(function(){
     $('#tab-actions').after('<li><input hidden type="button" id="facebook" value="Facebook Review" class="button primary" data-email-type="facebook" onclick="$(document).openComposeViewModal(this);" data-module="Contacts" data-module-name="'+ $("#first_name").text()+' '+$("#last_name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
     $('#tab-actions').after('<li><input hidden type="button" id="methven_review" value="Methven Review" class="button primary" data-email-type="methven_review" onclick="$(document).openComposeViewModal(this);" data-module="Contacts" data-module-name="'+ $("#first_name").text()+' '+$("#last_name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
     $('#tab-actions').after('<li><input hidden type="button" id="pe_methven_review" value="PE + Methven Review" class="button primary" data-email-type="pe_methven_review" onclick="$(document).openComposeViewModal(this);" data-module="Contacts" data-module-name="'+ $("#first_name").text()+' '+$("#last_name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
+    //VUT - Add button create Google Contact
+    $('#tab-actions').after('<li><input type="button" id="create_GG_contact" onclick="createContactGoogle(this);" value="Create Google Contact" class="button primary" data-module="Contacts" data-record-id="'+ $("input[name='record']").val() +'"/></li>');
     //dung code -button US7 TIPS 
     $('#tab-actions').after('<li><input type="button" id="email_us7_tips" value="US7 Tips" class="button primary" data-email-type="us7_tips" onclick="$(document).openComposeViewModal(this);" data-module="Contacts" data-module-name="'+ $("#first_name").text()+' '+$("#last_name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
     //dung code -button Sanden TIPS 
@@ -35,6 +37,8 @@ $(document).ready(function(){
     
     })
 
+    //hide Contact GG 
+    $(document).find('#create_GG_contact').hide();
     
     //add SEND REVIEW button 
     $('#tab-actions').after('<li><button style="background:#46a049;" type="button" name="send_review" value="Send Review" id="send_review" class="button primary"><i class="glyphicon glyphicon-star"></i>Send Review</button></li>');
@@ -230,3 +234,20 @@ function popupSandenProduct(e) {
     });
 }
 //VUT-S-Create popup when click Sandan Tip
+
+/**
+ * VUT - create Contact Google
+ */
+function createContactGoogle(e) {
+    let module = $(e).attr('data-module');
+    let record_id = $(e).attr('data-record-id');
+    $.ajax({
+        url : `?entryPoint=createGoogleContact&record_id=${record_id}`,
+        success: function (data) {
+            var newWindow = window.open(data, 'name', 'height=600,width=450');
+            if (window.focus) {
+              newWindow.focus();
+            }        
+        }
+    });
+}

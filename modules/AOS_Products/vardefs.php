@@ -328,6 +328,26 @@ $dictionary['AOS_Products'] = array(
                 'reportable' => false,
                 'comment' => 'Path to file (can be URL)'
             ),
+        //VUT - add field 
+        'expected_price' =>
+            array(
+                'required' => '0',
+                'name' => 'expected_price',
+                'vname' => 'LBL_EXPECTED_PRICE',
+                'type' => 'currency',
+                'len' => '26,6',
+                'massupdate' => 0,
+                'comments' => '',
+                'help' => '',
+                'importable' => 'true',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => '0',
+                'audited' => 1,
+                'reportable' => true,
+                'enable_range_search' => true,
+                'options' => 'numeric_range_search_dom',
+            ),
+        //VUT - add field
         "aos_product_category" => array(
             'name' => 'aos_product_category',
             'type' => 'link',
