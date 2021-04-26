@@ -13,11 +13,13 @@ const PEAdminPercent = 0.3;
     $(function () {
         'use strict';
         // .:nhantv:. Update to show "Choose combination" field
-        $("#quote_note_inputs_c").closest('.edit-view-row-item').hide();
+        $("#quote_note_inputs_c, #quote_input_daikin_data_c").closest('.edit-view-row-item').hide();
         var html_group_custom_quote_inputs = 
         '<div id="group_custom_quote_inputs_checklist" class="row detail-view-row"></div>';
+        var html_group_custom_quote_extra = 
+        '<div id="group_custom_quote_inputs_checklist_extra" class="row detail-view-row"></div>';
         // .:nhantv:. Update to set order before "Choose combination" field
-        $("#quote_note_inputs_c").closest('.tab-content').prepend(html_group_custom_quote_inputs);
+        $("#quote_note_inputs_c").closest('.tab-content').prepend(html_group_custom_quote_inputs, html_group_custom_quote_extra);
         var btn_generate_quote = '<button type="button" id="generate_quote" class="button primary">Save and Generate Quote</button>';
         $("#quote_note_inputs_c").closest('.tab-content').append(btn_generate_quote);
         
@@ -25,6 +27,7 @@ const PEAdminPercent = 0.3;
             renderQuoteInputHTML('quote_type_solar');
         }else if($("#quote_type_c").val() == "quote_type_sanden"){
             renderQuoteInputHTML('quote_type_sanden');
+            renderQuoteInputExtra('quote_type_sanden');
         }
 
         $("#quote_type_c").on("change", function(){
@@ -75,6 +78,9 @@ const PEAdminPercent = 0.3;
             let old_price = get_value($(product0).find('input[id*=product_product_list_price]').attr('id'));
             set_value(list0.attr('id'), old_price - (((old_total_amount - new_total_amount) / 1.1)/qty));
             list0.trigger("blur");
+        });
+        $('#group_custom_quote_inputs_checklist_extra .edit-view-field').each((index, item) =>{
+            
         });
     });
     // .:nhantv:. Init select Option checkbox and line item
@@ -335,16 +341,56 @@ const PEAdminPercent = 0.3;
             SUGAR.ajaxUI.hideLoadingPanel();
         });
     }
+    function renderQuoteInputExtra(type){
+        $.ajax({
+            url: '/index.php?entryPoint=APIRenderExtraField&type='+type,
+            success: function (result) {
+                try {
+                    var json_data = JSON.parse(result);
+                    $("#group_custom_quote_inputs_checklist_extra").empty().append(json_data['template_html']);
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }).done(function (data) {
+            parseJSONValueToFieldsExtra();
+            SUGAR.ajaxUI.hideLoadingPanel();
+        });
+    }
 
     function generate_quote_by_input(dataType){
         SUGAR.ajaxUI.showLoadingPanel();
         if(dataType == "quote_type_sanden") {
+            debugger;
             var data = new Object();
             var checkList =  $("#group_custom_quote_inputs_checklist .custom_fields");
             data['quote_generate_type'] = 'bySuite';
             data['quote_id'] = $('input[name=record]').val();
             checkList.each(function() {
                 data[$(this).attr('id')] = $(this).val();
+            });
+            data['quote_sanden_extra'] = {};
+            $("#group_custom_quote_inputs_checklist_extra .item-extras").each(function (){
+                var id = $(this).attr('id');
+                var partNumber = $(this).attr('data-partnumber');
+                data['quote_sanden_extra'][id] = {};
+                data['quote_sanden_extra'][id]['partnumber'] = partNumber;
+                $('#'+id+' .custom_fields').each(function (){
+                    // data['quote_sanden_extra'][id] = {};
+                    var id_extra = $(this).attr('id');
+                    if($('#'+id_extra).attr('type') == 'checkbox') {
+                        if( $('#'+id_extra).is(":checked") == true){
+                            var ob = {[id_extra]: 'yes'};
+                            data['quote_sanden_extra'][id] = Object.assign(data['quote_sanden_extra'][id], ob);
+                        } else {
+                            var ob = {[id_extra]: 'no'};
+                            data['quote_sanden_extra'][id] =  Object.assign(data['quote_sanden_extra'][id], ob);
+                        }
+                    } else {
+                        var ob = {[id_extra]: $('#'+id_extra).val()};
+                        data['quote_sanden_extra'][id] =  Object.assign(data['quote_sanden_extra'][id], ob);
+                    }
+                })
             });
             if(data != '') {
                 $.ajax({
@@ -374,6 +420,20 @@ const PEAdminPercent = 0.3;
                 $("#"+key).prop('checked', dataJSON[key]);
             } else {
                 $("#"+key).val(dataJSON[key]);
+            }
+        }
+    }
+    function parseJSONValueToFieldsExtra(){
+        debugger;
+        if ($("#quote_note_inputs_c").val() == '')  return;
+        var dataJSON = JSON.parse($("#quote_note_inputs_c").val());
+        for (let key in dataJSON['quote_sanden_extra']) {
+            for (let k in dataJSON['quote_sanden_extra'][key]) {
+                if((dataJSON['quote_sanden_extra'][key][k]) === 'yes'){
+                    $("#"+k).prop('checked', true);
+                } else {
+                    $("#"+k).val(dataJSON['quote_sanden_extra'][key][k]);
+                }
             }
         }
     }

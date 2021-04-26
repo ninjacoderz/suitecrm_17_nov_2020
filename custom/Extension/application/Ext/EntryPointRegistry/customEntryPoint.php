@@ -545,7 +545,11 @@ $entry_point_registry['update_invoice'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/update_invoice.php',
     'auth' => true
 );
-
+//tuan
+$entry_point_registry['APIrederectToPVwatts'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIrederectToPVwatts.php',
+    'auth' => true
+);
 //dung code - button "Resize All" in file upload
 $entry_point_registry['ResizeAllFile'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/ResizeAllFile.php',
@@ -675,7 +679,7 @@ $entry_point_registry['customCheckPostalCodeSandenWater'] = array(
 );
 $entry_point_registry['customFilterPlumber'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomFilterPlumber.php',
-    'auth' => true
+    'auth' => false
 );
 $entry_point_registry['createMettingWHLog'] = array(
     'file' => 'custom/modules/pe_warehouse_log/createMettingWHLog.php',
@@ -1497,3 +1501,10 @@ $entry_point_registry['createGoogleContact'] = array(
     'file' => 'custom/modules/Contacts/createGoogleContact.php',
     'auth' => false
 );
+
+//Tri code --   
+$entry_point_registry['APIRenderExtraField'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIRenderExtraField.php',
+    'auth' => false
+);
+
