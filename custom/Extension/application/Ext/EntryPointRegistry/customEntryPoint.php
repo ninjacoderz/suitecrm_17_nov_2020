@@ -675,7 +675,7 @@ $entry_point_registry['customCheckPostalCodeSandenWater'] = array(
 );
 $entry_point_registry['customFilterPlumber'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/CustomFilterPlumber.php',
-    'auth' => true
+    'auth' => false
 );
 $entry_point_registry['createMettingWHLog'] = array(
     'file' => 'custom/modules/pe_warehouse_log/createMettingWHLog.php',
