@@ -841,7 +841,7 @@ if ($task == 'pdf' || $task == 'emailpdf') {
 
                     $sms_body = $body.'-'.$admin_name;
                     //thienpb fix
-                    $sms_body = preg_replace("/&#?[a-z0-9]{2,8};/i"," ", $sms_bodys);
+                    $sms_body = preg_replace("/&#?[a-z0-9]{2,8};/i"," ", $sms_body);
                     exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." ".escapeshellarg($sms_body));
 
                     if($_REQUEST['type_form'] == 'sanden_sms') {
