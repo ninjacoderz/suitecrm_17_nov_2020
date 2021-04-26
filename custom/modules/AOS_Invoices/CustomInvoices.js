@@ -605,7 +605,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var id_nearest = infor[0][2];
@@ -635,7 +635,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var str_dis =  infor[0][3];
@@ -1337,7 +1337,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var id_nearest = infor[0][2];
@@ -1367,7 +1367,7 @@ $(function () {
                             infor.sort(function(a,b){
                                 return a.distance - b.distance;
                             });
-                            for ( var i = 0 ; i < 3 ; i++){  
+                            for ( var i = 0 ; i < 5 ; i++){  
                                 var addr = infor[0][0];
                                 var name_lum =infor[0][1];
                                 var str_dis =  infor[0][3];
