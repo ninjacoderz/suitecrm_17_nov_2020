@@ -546,7 +546,8 @@
         if($pricing_options != ''){
             $pricings = json_decode(html_entity_decode($pricing_options));
 
-            $solar_pricing_options = '';
+            // $solar_pricing_options = '';
+            $solar_pricing_options = '<div style="margin: 0;padding:0;box-sizing:border-box;max-width: 100%;width:1125px;line-height:1.8;font-family: sans-serif;font-size:16px;">';
             for ($i=1; $i < 7 ; $i++) { 
                 if($pricings->{'base_price_'.$i} != "" || $pricings->{'base_price_'.$i} != 0){
                     switch ( $pricings->{'inverter_type_'.$i} ){
@@ -629,121 +630,150 @@
                             $inverter = "Sungrow SG-15KTL-M 15kW Three Phase";
                             break;
                     }
-                    if($i == 4 ){
-                        $solar_pricing_options .= '<div style="clear:left"></div>';
-                    }
-                    $pm = 100;
+                    // if($i == 4 ){
+                    //     $solar_pricing_options .= '<div style="clear:left"></div>';
+                    // }
+                    // $pm = 100;
                     $price_kw = round($pricings->{'customer_price_'.$i}/($pricings->{'total_kW_'.$i}*1000), 2);
+                    
+                    // .:nhantv:. Initial price
+                    $str_vicreabte = $reabte_price = $loan_price = 0;
+
+                    // .:nhantv:. Render Option Num and Solar Panel Type Group
+                    $solar_pricing_options .= '<div class="card-premium" style="float:left; padding: 0;width: 30%;background:#fff;color:#444;text-align:center;overflow:hidden;margin:0;">
+                    <div style="margin: 0.5rem;border-radius: 1.5rem;border: 3px solid rgb(235, 235, 235);">
+                      <div class="card-header" style="position: relative;border-top-left-radius: 1.5rem;border-top-right-radius: 1.5rem;clear: both;margin: 0;font-weight:bold;padding:1rem 0;color:#fff;background:linear-gradient(135deg, #ffc64b, #fb7020);">
+                        <span style="margin: 0;padding:0;box-sizing:border-box;position:absolute;top:-1.2rem;left:1rem;opacity: .25;color:white;font-size:5rem;">'. $i .'</span>
+                        <h1 style="margin: 0;padding:0;box-sizing:border-box;">'. $pricings->{'total_kW_'.$i} .' kW</h1>
+                    </div>
+                      <div class="card-body" style="margin: 0;padding: 0.5rem;">
+                        <div class="card-element-container" style="padding:0;color: #444;list-style:none;text-align:left;margin:0;height:7rem;display:flex;flex-direction:column;justify-content:center;">
+                            <h1 style="margin: 0 0 0.25rem 0;padding:0;font-size:1rem;font-weight: bold;">'. $pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i} .'</h1>
+                            <div style="margin: 0;padding:0;font-size:0.8rem;">&bull;&nbsp;'. $inverter .'</div>
+                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_1_'.$i}) ? '&bull;&nbsp;'.$pricings->{'extra_1_'.$i} : '') .'</div>
+                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_2_'.$i})? '&bull;&nbsp;'.$pricings->{'extra_2_'.$i} : '') .'</div>
+                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_3_'.$i})? '&bull;&nbsp;'.$pricings->{'extra_3_'.$i} : '') .'</div>
+                        </div>
+                        <div class="card-element-extra" style="color: #444;text-align:left;margin:0.5rem 0 0 0;padding: 0.5rem 0 0 0;border-top:1px solid rgb(235, 235, 235);">
+                          <table style="width: 100%;font-weight: bold;">
+                            <tbody>';
+
+                    // .:nhantv:. Case Rebase = YES
                     if( $vic_rebate == 'yes_rebate'){
                         $str_vicreabte = 1850;
+                        $reabte_price = (Int)$pricings->{'customer_price_'.$i} - $str_vicreabte;
+                        // .:nhantv:. Case Loan = YES
                         if( $vic_loan == 'yes_loan'){
-                            $reabte_price = (Int)$pricings->{'customer_price_'.$i} - $str_vicreabte;
                             $loan_price = (Int)$pricings->{'customer_price_'.$i} - $str_vicreabte - $str_vicreabte;
-                            // $solar_pricing_options .= '<p style="font-size: medium;" data-mce-style="font-size: medium;"></br><strong>Option #'.$i.':</strong> '.$pricings->{'total_kW_'.$i}.'kW = '.$pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i}.' + '.$pricings->{'inverter_type_'.$i}.(($pricings->{'extra_1_'.$i})? ' + '.$pricings->{'extra_1_'.$i} : '').(($pricings->{'extra_2_'.$i})? ' + '.$pricings->{'extra_2_'.$i} : '').' = $'.$pricings->{'customer_price_'.$i}.' - $1888 (Solar VIC Rebate)'.' - $1888 (Solar VIC Loan) = $'. $loan_price.' ($'.$price_kw.'/W)</p>';
-                            $solar_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float:left;width:290px;border: 1px solid #f6ebd9;margin-top: 25px;margin-right: 10px;padding: 5px;">
-                                                            <div class="op_header" style="width: 100%;position: inherit;">
-                                                                <div class="number-options" style="float: left;border: 2px solid #efb352;width: 9%;height: 25px;text-align: center;line-height: 27px;"><p style="margin: unset;">' . $i . '</p></div>
-                                                                <div class="p" style="background-color: #efb352;float: right;width: 88.7%;border-radius: 0 20px 20px 0;height: 27px;    background-image: linear-gradient(90deg,#ea9e23,white,#efb352);position: relative;border: 1px solid #efb352;text-align: center;line-height: 27px;">
-                                                                    <p style="color: red;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 2px;">' . $pricings->{'total_kW_'.$i} . ' kW</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="select-inverter" style="clear: both;padding: 10px;;z-index: 7;position: relative;">
-                                                                <div style="font-size: 15px;">' .$pricings->{'total_panels_'.$i}. ' x ' . $pricings->{'panel_type_'.$i} . '</div>
-                                                                <div style="font-size: 13px;">' . $inverter . '</div>
-                                                                <div style="font-size: 13px;">' . (($pricings->{'extra_1_'.$i})? $pricings->{'extra_1_'.$i} : '<br>') . '</div>
-                                                                <div style="font-size: 13px;">' . (($pricings->{'extra_2_'.$i})? $pricings->{'extra_2_'.$i} : '<br>') . '</div>
-                                                                <div style="font-size: 13px;">' . (($pricings->{'extra_3_'.$i})? $pricings->{'extra_3_'.$i} : '<br>') . '</div>
-                                                            </div>
-                                                            <div class="total-price-item" style="background-color: #fef9f2;padding: 10px;color: #333;font-size: 12px;font-weight: 600;">
-                                                                        <div><span >Full Purchase Price (inc GST)</span><span style="float: right;">$' . $pricings->{'sgp_system_price_'.$i} . '</span></div>
-                                                                        <div><span >Less STCs (GST N/A)</span><span  style="float: right;color:red">$-' . $pricings->{'stc_value_'.$i} . '</span></div>
-                                                                        <div style="border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
-                                                                        <div><span >Discounted Purchase Price</span><span  style="float:right;">$' . $pricings->{'customer_price_'.$i} . '</span></div>
-                                                                        <div><span >Solar VIC Rebate</span><span  style="float: right;color:red">$-' .$str_vicreabte.'</span></div>
-                                                                        <div><small>* Where eligible for the Solar VIC Rebate</small></div>
-                                                                        <div style="border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
-                                                                        <div><span style="margin-top:8px;">Out of Pocket Price <small>(inc. GST)</small></span><span  style="float: right;">$'.$reabte_price.'</span></div>
-                                                                        <div><span >Interest Free Loan <small>(inc. GST)</small></span><span  style="float:right;color:red;">$-'.$str_vicreabte.'</span></div>
-                                                                        <div><small>Payable to Solar VIC</small></div>
-                                                                        <div style="border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
-                                                                        <div><span >Up-front Price <small>(inc. GST)</small></span></div>
-                                                                        <div class="total-price" style="text-align: center;border: 1px solid #ea9e23;margin-top: 15px;">
-                                                                            <span class="symbol" style="font-size: 20px;color: #3b3b3b;font-weight: 600;">$</span>
-                                                                            <span class="amount" style="letter-spacing: -2px;font-size: 35px;color: #ea9e23;">'.$loan_price.'</span>
-                                                                        </div>
-                                                            </div>
-                                                            <div class="op_footer" style="text-align: center;padding: 5px;background-color: #efb352;">
-                                                            </div>
-                                                    </div>';// <span class="after" style="color: #3b3b3b;font-weight: 600;">AUD</span>
-
-                        }else {
-                            $reabte_price = (Int)$pricings->{'customer_price_'.$i} - $str_vicreabte;
-                            // $solar_pricing_options .= '<p style="font-size: medium;" data-mce-style="font-size: medium;"></br><strong>Option #'.$i.':</strong> '.$pricings->{'total_kW_'.$i}.'kW = '.$pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i}.' + '.$pricings->{'inverter_type_'.$i}.(($pricings->{'extra_1_'.$i})? ' + '.$pricings->{'extra_1_'.$i} : '').(($pricings->{'extra_2_'.$i})? ' + '.$pricings->{'extra_2_'.$i} : '').' = $'.$pricings->{'customer_price_'.$i}.' - $1888 (Solar VIC Rebate) = $'. $reabte_price.' ($'.$price_kw.'/W)</p>';
-                            $solar_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float:left;width:290px;border: 1px solid #f6ebd9;margin-top: 25px;margin-right: 10px;padding: 5px;">
-                                                            <div class="op_header" style="width: 100%;position: inherit;">
-                                                                <div class="number-options" style="float: left;border: 2px solid #efb352;width: 9%;height: 25px;text-align: center;line-height: 27px;"><p style="margin: unset;">' . $i . '</p></div>
-                                                                <div class="p" style="background-color: #efb352;float: right;width: 88.7%;border-radius: 0 20px 20px 0;height: 27px;    background-image: linear-gradient(90deg,#ea9e23,white,#efb352);position: relative;border: 1px solid #efb352;text-align: center;line-height: 27px;">
-                                                                    <p style="color: red;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 2px;">' . $pricings->{'total_kW_'.$i} . ' kW</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="select-inverter" style="clear: both;padding: 10px;;z-index: 7;position: relative;">
-                                                                <div style="font-size: 15px;">' .$pricings->{'total_panels_'.$i}. ' x ' . $pricings->{'panel_type_'.$i} . '</div>
-                                                                <div style="font-size: 13px;">' . $inverter . '</div>
-                                                                <div style="font-size: 13px;">' . (($pricings->{'extra_1_'.$i})? $pricings->{'extra_1_'.$i} : '<br>') . '</div>
-                                                                <div style="font-size: 13px;">' . (($pricings->{'extra_2_'.$i})? $pricings->{'extra_2_'.$i} : '<br>') . '</div>
-                                                                <div style="font-size: 13px;">' . (($pricings->{'extra_3_'.$i})? $pricings->{'extra_3_'.$i} : '<br>') . '</div>
-                                                            </div>
-                                                            <div class="total-price-item" style="background-color: #fef9f2;padding: 10px;color: #333;font-size: 12px;font-weight: 600;">
-                                                                        <div><span >Full Purchase Price (inc GST)</span><span style="float: right;">$' . $pricings->{'total_price_'.$i} . '</span></div>
-                                                                        <div><span >Less STCs (GST N/A)</span><span  style="float: right;color:red">$-' . $pricings->{'stc_value_'.$i} . '</span></div>
-                                                                        <div style="border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
-                                                                        <div><span >Discounted Purchase Price</span><span  style="float:right;">$' . $pricings->{'customer_price_'.$i} . '</span></div>
-                                                                        <div><span >Solar VIC Rebate</span><span  style="float: right;color:red">$-' .$str_vicreabte.'</span></div>
-                                                                        <div><small>* Where eligible for the Solar VIC Rebate</small></div>
-                                                                        <div style="border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
-                                                                        <div><span >Out of Pocket Price <small>(inc. GST)</small></span></div>
-                                                                        <div class="total-price" style="text-align: center;border: 1px solid #ea9e23;margin-top: 15px;">
-                                                                            <span class="symbol" style="font-size: 20px;color: #3b3b3b;font-weight: 600;">$</span>
-                                                                            <span class="amount" style="letter-spacing: -2px;font-size: 35px;color: #ea9e23;">'.$reabte_price.'</span>
-                                                                        </div>
-                                                            </div>
-                                                            <div class="op_footer" style="text-align: center;padding: 5px;background-color: #efb352;">
-                                                            </div>
-                                                    </div>';
+                            $solar_pricing_options .= '<tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Full Purchase Price (inc GST)</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;">$'. $pricings->{'total_price_'.$i} .'</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Less STCs (GST N/A)</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: #f77422;font-weight: bold;">$-'. $pricings->{'stc_value_'.$i} .'</p></td>
+                                    </tr>
+                                    <tr><td>&nbsp;</tr></tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Discounted Purchase Price</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;">$'. $pricings->{'customer_price_'.$i} .'</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Solar VIC Rebate</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: #f77422;font-weight: bold;">$-'. $str_vicreabte .'</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align: left;"><div style="margin: 0;padding:0;font-size: 0.7rem; font-style: italic;color: gray;">** Where eligible for the Solar VIC Rebate</div></td>
+                                    </tr>
+                                    <tr><td>&nbsp;</td></tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Out of Pocket Price (inc GST)</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;">$'. $reabte_price .'</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Interest Free Loan (inc GST)</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: #f77422;font-weight: bold;">$-'. $str_vicreabte .'</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align: left;"><div style="margin: 0;padding:0;font-size: 0.7rem; font-style: italic;color: gray;">** Payable to Solar VIC</div></td>
+                                    </tr>
+                                    <tr><td>&nbsp;</td></tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Up-front Price (inc GST)</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;"></p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                            <h1 class="amount" style="border-bottom-left-radius: 1.5rem;border-bottom-right-radius: 1.5rem;margin: 0.8rem 0 0 0;font-size:2rem;font-weight:bold;color:#f77221;padding:1rem 2rem;border-top:1px solid rgb(235, 235, 235);">
+                                <span style="margin: 0;padding:0;font-size: 1.5rem;">$</span>&nbsp;'. $loan_price .'</h1>';
                         }
-                    }else{
-                        // $solar_pricing_options .= '<p style="font-size: medium;" data-mce-style="font-size: medium;"></br><strong>Option #'.$i.':</strong> '.$pricings->{'total_kW_'.$i}.'kW = '.$pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i}.' + '.$pricings->{'inverter_type_'.$i}.(($pricings->{'extra_1_'.$i})? ' + '.$pricings->{'extra_1_'.$i} : '').(($pricings->{'extra_2_'.$i})? ' + '.$pricings->{'extra_2_'.$i} : '').' = $'.$pricings->{'customer_price_'.$i}.' ($'.$price_kw.'/W)</p>';
-                        $solar_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float:left;width:290px;border: 1px solid #f6ebd9;margin-top: 25px;margin-right: 10px;padding: 5px;">
-                                                        <div class="op_header" style="width: 100%;position: inherit;">
-                                                            <div class="number-options" style="float: left;border: 2px solid #efb352;width: 9%;height: 25px;text-align: center;line-height: 27px;"><p style="margin: unset;">' . $i . '</p></div>
-                                                            <div class="p" style="background-color: #efb352;float: right;width: 88.7%;border-radius: 0 20px 20px 0;height: 27px;    background-image: linear-gradient(90deg,#ea9e23,white,#efb352);position: relative;border: 1px solid #efb352;text-align: center;line-height: 27px;">
-                                                                <p style="color: red;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 2px;">' . $pricings->{'total_kW_'.$i} . ' kW</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="select-inverter" style="clear: both;padding: 10px;;z-index: 7;position: relative;">
-                                                            <div style="font-size: 15px;">' .$pricings->{'total_panels_'.$i}. ' x ' . $pricings->{'panel_type_'.$i} . '</div>
-                                                            <div style="font-size: 13px;">' . $inverter . '</div>
-                                                            <div style="font-size: 13px;">' . (($pricings->{'extra_1_'.$i})? $pricings->{'extra_1_'.$i} : '<br>') . '</div>
-                                                            <div style="font-size: 13px;">' . (($pricings->{'extra_2_'.$i})? $pricings->{'extra_2_'.$i} : '<br>') . '</div>
-                                                            <div style="font-size: 13px;">' . (($pricings->{'extra_3_'.$i})? $pricings->{'extra_3_'.$i} : '<br>') . '</div>
-                                                        </div>
-                                                        <div class="total-price-item" style="background-color: #fef9f2;padding: 10px;color: #333;font-size: 12px;font-weight: 600;">
-                                                                    <div><span >Full Purchase Price (inc GST)</span><span style="float: right;">$' . $pricings->{'total_price_'.$i} . '</span></div>
-                                                                    <div><span >Less STCs (GST N/A)</span><span  style="float: right;color:red">$-' . $pricings->{'stc_value_'.$i} . '</span></div>
-                                                                    <div style="border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
-                                                                    <div><span >Discounted Purchase Price</span></div>
-                                                                    <div class="total-price" style="text-align: center;border: 1px solid #ea9e23;margin-top: 15px;">
-                                                                        <span class="symbol" style="font-size: 20px;color: #3b3b3b;font-weight: 600;">$</span>
-                                                                        <span class="amount" style="letter-spacing: -2px;font-size: 35px;color: #ea9e23;">'.$pricings->{'customer_price_'.$i}.'</span>
-                                                                    </div>
-                                                        </div>
-                                                        <div class="op_footer" style="text-align: center;padding: 5px;background-color: #efb352;">
-                                                        </div>
-                                                    </div>';
+                        // .:nhantv:. Case Loan = NO
+                        else {
+                            $solar_pricing_options .= '<tr>
+                                                <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Full Purchase Price (inc GST)</p></td>
+                                                <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;">$'. $pricings->{'total_price_'.$i} .'</p></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Less STCs (GST N/A)</p></td>
+                                                <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: #f77422;font-weight: bold;">$-'. $pricings->{'stc_value_'.$i} .'</p></td>
+                                            </tr>
+                                            <tr><td>&nbsp;</tr></tr>
+                                            <tr>
+                                                <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Discounted Purchase Price</p></td>
+                                                <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;">$'. $pricings->{'customer_price_'.$i} .'</p></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Solar VIC Rebate</p></td>
+                                                <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: #f77422;font-weight: bold;">$-'. $str_vicreabte .'</p></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" style="text-align: left;"><div style="margin: 0;padding:0;font-size: 0.7rem; font-style: italic;color: gray;">** Where eligible for the Solar VIC Rebate</div></td>
+                                            </tr>
+                                            <tr><td>&nbsp;</td></tr>
+                                            <tr>
+                                                <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Out of Pocket Price (inc GST)</p></td>
+                                                <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;"></p></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <h1 class="amount" style="border-bottom-left-radius: 1.5rem;border-bottom-right-radius: 1.5rem;margin: 0.8rem 0 0 0;font-size:2rem;font-weight:bold;color:#f77221;padding:1rem 2rem;border-top:1px solid rgb(235, 235, 235);">
+                                <span style="margin: 0;padding:0;font-size: 1.5rem;">$</span>&nbsp;' .$reabte_price. '</h1>';
+                        }
                     }
+                    // .:nhantv:. Case Rebase = NO
+                    else {
+                        $solar_pricing_options .= '<tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Full Purchase Price (inc GST)</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;">$'. $pricings->{'total_price_'.$i} .'</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Less STCs (GST N/A)</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: #f77422;font-weight: bold;">$-'. $pricings->{'stc_value_'.$i} .'</p></td>
+                                    </tr>
+                                    <tr><td>&nbsp;</tr></tr>
+                                    <tr>
+                                        <td style="width: 70%;text-align: left;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;">Discounted Purchase Price</p></td>
+                                        <td style="width: 30%;text-align: right;"><p style="margin: 0;padding:0;font-size:0.8rem;color: gray;font-weight: bold;"></p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <h1 class="amount" style="border-bottom-left-radius: 1.5rem;border-bottom-right-radius: 1.5rem;margin: 0.8rem 0 0 0;font-size:2rem;font-weight:bold;color:#f77221;padding:1rem 2rem;border-top:1px solid rgb(235, 235, 235);">
+                        <span style="margin: 0;padding:0;font-size: 1.5rem;">$</span>&nbsp;' .$pricings->{'customer_price_'.$i}. '</h1>';
+                    }
+
+                    // .:nhantv:. Render end DIV each card
+                    $solar_pricing_options .= '</div></div>';
                 }
             }
-            $solar_pricing_options .= '<div style="clear:left"></div>';
+            // .:nhantv:. Render end DIV group card
+            $solar_pricing_options .= '<div style="clear: both;"></div></div>';
+
             $body_html = str_replace("\$solar_pricing_options",  $solar_pricing_options , $body_html);
             $body_html = str_replace("\$aos_quotes_id", $quote_id , $body_html);
 
