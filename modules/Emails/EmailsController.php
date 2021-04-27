@@ -5312,8 +5312,10 @@ class EmailsController extends SugarController
             if(isset($request['number_receive_sms']) && isset($request['sms_message'])){
                 $number_receive_sms = $request['number_receive_sms'];
                 $client_numbers = $phone_number_array[$number_receive_sms];
-
-                $sms_body = str_replace("$", "\\$", html_entity_decode($request['sms_message'], ENT_QUOTES));
+                
+                //thienpb fix
+                $sms_body = preg_replace("/&#?[a-z0-9]{2,8};/i"," ", strip_tags($request['sms_message']));
+                $sms_body = str_replace("$", "\\$", html_entity_decode($sms_body, ENT_QUOTES));
                 $sms_body = str_replace("+", "\\+", $sms_body);
                 //$sms_body = str_replace("'", "\'", $sms_body);
                 if( $_POST['number_send_sms'] == "+61421616733"){
