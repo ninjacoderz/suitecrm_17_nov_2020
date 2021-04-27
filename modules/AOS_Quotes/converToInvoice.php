@@ -350,6 +350,8 @@
     if( isset($_REQUEST['orderID']) ){
         $aupost_shipping_id = $_REQUEST['aupost_shipping_id'];
         $connote_id = $_REQUEST['connote_id'];
+        $invoice->aupost_shipping_id = $aupost_shipping_id;
+        $invoice->save();
         create_warehouse_log($invoice->id,$quote,$aupost_shipping_id,$connote_id);
     }
     $array_convert_file_name = array(
@@ -441,7 +443,11 @@
             }
         }
         if ($invoiceBean->account_id_c != '' ) {
+            // if (floatval($quote->electrician_total_amount) == 0) {
             createPO('electrical', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+            // } else {
+            //     createPO('electrician_quote', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+            // }
         }
     }
     if ($invoiceBean->quote_type_c == 'quote_type_daikin'  && $quote->proposed_install_date_c != '') {
