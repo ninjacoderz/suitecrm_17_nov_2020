@@ -93,7 +93,7 @@ function render_json_invoice($Invoice){
         'last_name' => $Contact->last_name,
         'phone_mobile' => $Contact->phone_mobile,
         'email1' => $Contact->email1,
-        'department' => $Contact->account_name, // custom company name
+        'department' => $Invoice->billing_account, // custom company name get account name
         'installation_date_c' => $installation_date_c,
         'check_contact_type_c' => $Contact->position_c, // chaneg position
         'abn_c' => $Invoice->abn_c,
