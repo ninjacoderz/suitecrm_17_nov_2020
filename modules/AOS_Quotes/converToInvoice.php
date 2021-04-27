@@ -443,11 +443,11 @@
             }
         }
         if ($invoiceBean->account_id_c != '' ) {
-            // if (floatval($quote->electrician_total_amount) == 0) {
+            if (floatval($quote->electrician_total_amount) == 0) {
             createPO('electrical', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
-            // } else {
-            //     createPO('electrician_quote', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
-            // }
+            } else {
+                createPO('electrician_quote', $invoiceBean , $invoiceBean->installation_pictures_c, gererate_UUID_for_invoice());
+            }
         }
     }
     if ($invoiceBean->quote_type_c == 'quote_type_daikin'  && $quote->proposed_install_date_c != '') {

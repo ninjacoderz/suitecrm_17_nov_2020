@@ -174,3 +174,132 @@ function plumber_display_shipping_amount($focus, $field, $value, $view)
     }
     return format_number($value);
 }
+
+//FUNCTION FOR PROPOSED ELECTRICIAN ELECTRICIAN
+function electrician_display_lines($focus, $field, $value, $view)
+{
+    global $sugar_config, $locale, $app_list_strings, $mod_strings;
+    $enable_groups = (int)$sugar_config['aos']['lineItems']['enableGroups'];
+    $total_tax = (int)$sugar_config['aos']['lineItems']['totalTax'];
+
+    $html = '';
+
+    if ($view == 'EditView') {
+
+        if($focus->module_dir == "AOS_Quotes"){
+            if ($focus->quote_type_c == 'quote_type_sanden') {
+                $quote_note = json_decode(html_entity_decode($focus->quote_note_inputs_c));
+                if ($quote_note->quote_electrical_installation_by_pure == 'Yes') {
+                    $html .= '<script src="custom/modules/AOS_Quotes/electrician_line_item.js"></script>'
+                    .'<link rel="stylesheet" type="text/css" href="custom/modules/AOS_Quotes/lineItem_PO_Electrician.css">' ;
+                } else {
+                    $db = DBManagerFactory::getInstance();
+                    //delete Old line_group
+                    $sql_delete_group = "   UPDATE aos_line_item_groups lig 
+                                            SET lig.deleted = 1 
+                                            WHERE lig.parent_include = '" . $focus->object_name . "' AND lig.po_type='sanden_electrician' AND lig.parent_id = '" . $focus->id . "' AND lig.deleted = 0";
+                    $res_gr = $db->query($sql_delete_group);                        
+                    //delete Old line_item
+                    $sql_delele_line = " UPDATE aos_products_quotes pg
+                                    SET pg.deleted = 1
+                                    WHERE pg.parent_include = '" . $focus->object_name . "' AND pg.po_type='sanden_electrician' AND pg.parent_id = '" . $focus->id . "' AND pg.deleted = 0";
+                    $res_line = $db->query($sql_delele_line);
+                    //update group total when delete line item and line grp
+                    $sql_delele_line = " UPDATE aos_quotes quote
+                                    SET quote.electrician_total_amt = 0,
+                                        quote.electrician_discount_amount = 0,
+                                        quote.electrician_subtotal_amount = 0,
+                                        quote.electrician_shipping_amount =0,
+                                        quote.electrician_shipping_tax_amt =0,
+                                        quote.electrician_tax_amount = 0,
+                                        quote.electrician_total_amount = 0
+                                    WHERE quote.id = '" . $focus->id . "' AND quote.deleted = 0";
+                    $res_line = $db->query($sql_delele_line);
+                    return $html;
+                }
+            } else {
+                return $html;
+            }
+        }
+        
+        $html .= '<script language="javascript">var sig_digits = '.$locale->getPrecision().';';
+        $html .= 'var module_sugar_grp1 = "'.$focus->module_dir.'";';
+        $html .= 'var enable_groups = '.$enable_groups.';';
+        $html .= 'var total_tax = '.$total_tax.';';
+        $html .= '</script>';
+
+        $html .= "<table border='0' cellspacing='4' id='electrician_lineItems'></table>";
+        //Add button Add group
+        if ($enable_groups) {
+            $html .= "<div style='padding-top: 10px; padding-bottom:10px;'>";
+            $html .= "<input type=\"button\" tabindex=\"116\" class=\"button\" value=\"Add Group\" id=\"electrician_addGroup\" onclick=\"electrician_insertGroup(0)\" />";
+            $html .= "</div>";
+        }
+        $html .= '<input type="hidden" name="electrician_vathidden" id="electrician_vathidden" value="'.get_select_options_with_id($app_list_strings['vat_list'], '').'">
+				  <input type="hidden" name="electrician_discounthidden" id="electrician_discounthidden" value="'.get_select_options_with_id($app_list_strings['discount_list'], '').'">';
+        if ($focus->id != '') {
+            require_once('modules/AOS_Products_Quotes/AOS_Products_Quotes.php');
+            require_once('modules/AOS_Line_Item_Groups/AOS_Line_Item_Groups.php');
+
+            $sql = "SELECT pg.id, pg.group_id FROM aos_products_quotes pg LEFT JOIN aos_line_item_groups lig ON pg.group_id = lig.id WHERE pg.parent_include = '" . $focus->object_name . "' AND pg.parent_id = '" . $focus->id . "' AND lig.po_type = 'sanden_electrician' AND pg.deleted = 0 AND lig.deleted = 0 ORDER BY lig.number ASC, pg.number ASC";
+
+            $result = $focus->db->query($sql);
+            $html .= "<script>
+                if(typeof sqs_objects == 'undefined'){var sqs_objects = new Array;}
+                </script>";
+
+            while ($row = $focus->db->fetchByAssoc($result)) {
+                $line_item = BeanFactory::newBean('AOS_Products_Quotes');
+                $line_item->retrieve($row['id'], false);
+                $line_item = json_encode($line_item->toArray());
+
+                $group_item = 'null';
+                if ($row['group_id'] != null) {
+                    $group_item = BeanFactory::newBean('AOS_Line_Item_Groups');
+                    $group_item->retrieve($row['group_id'], false);
+                    $group_item = json_encode($group_item->toArray());
+                }
+                $html .= "<script>
+                    electrician_insertLineItems(" . $line_item . "," . $group_item . ");
+                    </script>";
+            }
+        }
+        if (!$enable_groups) {
+            $html .= '<script>electrician_insertGroup();</script>';
+        }
+    } 
+    return $html;
+}
+
+function electrician_display_shipping_vat($focus, $field, $value, $view)
+{
+    if ($view == 'EditView') {
+        global $app_list_strings;
+
+        if ($value != '') {
+            $value = format_number($value);
+        }
+
+        $html = "<input id='electrician_shipping_tax_amt' type='text' tabindex='0' title='' value='".$value."' maxlength='26,6' size='22' name='electrician_shipping_tax_amt' onblur='electrician_calculateTotal(\"electrician_lineItems\");'>";
+        $html .= "<select name='electrician_shipping_tax' id='electrician_shipping_tax' onchange='electrician_calculateTotal(\"electrician_lineItems\");' >".get_select_options_with_id($app_list_strings['vat_list'], (isset($focus->electrician_shipping_tax) ? $focus->electrician_shipping_tax : ''))."</select>";
+
+        return $html;
+    }
+    return format_number($value);
+}
+
+function electrician_display_shipping_amount($focus, $field, $value, $view) 
+{
+    if ($view == 'EditView') {
+        global $app_list_strings;
+
+        if ($value != '') {
+            $value = format_number($value);
+        }
+
+        $html = "<input id='electrician_shipping_amount' type='text' tabindex='0' title='' value='".$value."' maxlength='26,6' size='30' name='electrician_shipping_amount' onblur='electrician_calculateTotal(\"electrician_lineItems\");'>";
+
+        return $html;
+    }
+    return format_number($value);
+}
