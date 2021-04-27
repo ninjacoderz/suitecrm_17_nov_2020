@@ -73,8 +73,8 @@ $vardefs_array = array(
     ),
     "quote_extra_switch_upgrade" => array(
         "name" => "quote_extra_switch_upgrade",
-        'partnumber' => "RCBO",
-        "display_label" => "RCBO",
+        'partnumber' => "SwitchUpgrade",
+        "display_label" => "SwitchUpgrade",
         "type" => "custom",
         "dataItem" => array(
             "quote_extra_switch_upgrade_add" => array(
