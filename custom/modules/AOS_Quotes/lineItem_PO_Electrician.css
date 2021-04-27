@@ -83,11 +83,11 @@ table#electrician_lineItems tr td table tfoot tr td span {
 #electrician_lineItems #electrician_shipping_tax {
 } */
 
-#electrician_lineItems .group_electrician {
+#electrician_lineItems .electrician_group {
     width: 100%
 }
 
-#electrician_lineItems .group_body_electrician {
+#electrician_lineItems .electrician_group_body {
     display: block;
     padding: 2px;
     border: 1px solid transparent;
@@ -95,7 +95,7 @@ table#electrician_lineItems tr td table tfoot tr td span {
     width: 100%
 }
 
-#electrician_lineItems .group_body_electrician > td {
+#electrician_lineItems .electrician_group_body > td {
     display: block;
     padding: 2px;
     border: 1px solid transparent;
@@ -103,7 +103,7 @@ table#electrician_lineItems tr td table tfoot tr td span {
     width: 100%
 }
 
-#electrician_lineItems .group_electrician > thead {
+#electrician_lineItems .electrician_group > thead {
     display: block;
     padding: 2px;
     border: 1px solid transparent;
@@ -111,7 +111,7 @@ table#electrician_lineItems tr td table tfoot tr td span {
     width: 100%
 }
 
-#electrician_lineItems .group_electrician > thead > tr {
+#electrician_lineItems .electrician_group > thead > tr {
     display: block;
     padding: 2px;
     border: 1px solid transparent;
@@ -119,36 +119,36 @@ table#electrician_lineItems tr td table tfoot tr td span {
     width: 100%
 }
 
-#electrician_lineItems .group_electrician > thead {
+#electrician_lineItems .electrician_group > thead {
     background-color: #f5f5f5;
     min-height: 52px
 }
 
-#electrician_lineItems .group_electrician > thead > tr {
+#electrician_lineItems .electrician_group > thead > tr {
     background-color: #f5f5f5;
     min-height: 52px
 }
 
-#electrician_lineItems .group_electrician > thead > tr > td {
+#electrician_lineItems .electrician_group > thead > tr > td {
     background-color: #f5f5f5;
     min-height: 52px
 }
 
-#electrician_lineItems .group_electrician > thead > tr > td:nth-of-type(1) {
+#electrician_lineItems .electrician_group > thead > tr > td:nth-of-type(1) {
     display: inline-block;
     width: 80%
 }
 
-#electrician_lineItems .group_electrician > thead > tr > td:nth-of-type(2) {
+#electrician_lineItems .electrician_group > thead > tr > td:nth-of-type(2) {
     display: inline-block;
     width: 20%
 }
 
-#electrician_lineItems .group_electrician > thead > tr > td[colspan="100"] {
+#electrician_lineItems .electrician_group > thead > tr > td[colspan="100"] {
     width: 100%
 }
 
-#electrician_lineItems .group_electrician button {
+#electrician_lineItems .electrician_group button {
     padding: 0;
     line-height: 0;
     width: 32px;
