@@ -56,6 +56,7 @@ if ($check != '' && $invoice_id != '') {
             $invoice->aupost_shipping_id = trim($WHL['aupost_shipping_id']);
             $invoice->save();
             echo trim($WHL['aupost_shipping_id']);
+            die;
         } 
     }
     echo 'not id';
