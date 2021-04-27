@@ -6703,6 +6703,19 @@ $(function () {
                     <a target="_blank" href="https://calendar.pure-electric.com.au/#/installation-booking/'+$("#installation_calendar_id_c").val().trim()+'/plumber/'+$("#account_id1_c").val().trim()+'">https://calendar.pure-electric.com.au/#/installation-booking/'+$("#installation_calendar_id_c").val().trim()+'/plumber/'+$("#account_id1_c").val().trim()+'</a>')
             }
             $("#create_installation_calendar").on("click",function(){
+                //save before
+                SUGAR.ajaxUI.showLoadingPanel();
+                $("#EditView input[name='action']").val('Save');
+                $.ajax({
+                    type: $("#EditView").attr('method'),
+                    url: $("#EditView").attr('action'),
+                    data: $("#EditView").serialize(),
+                    async: false,
+                    success: function () {
+                        console.log('Save Inv before create Calendar');
+                        SUGAR.ajaxUI.hideLoadingPanel();
+                    }
+                });
                 var  invoice_id         = $("input[name='record']").val().trim();
                 var  invoice_number     = $("div[field='number']").text().trim();
                 var  invoice_title      = $("#name").val().trim();

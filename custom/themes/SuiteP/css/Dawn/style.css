@@ -166,3 +166,10 @@ input#datetimepicker{
 }
 
 .suitepicon-module-pe-bills:before {content:"\f182"}
+ /* fix popup dialog attach file email */
+ #dialog_files p.name {
+   font-size: 12.5px !important;
+ }
+ #dialog_files tr.template-download.fade.in td{
+   padding: 4px !important; 
+ }
