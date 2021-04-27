@@ -365,70 +365,37 @@ $(function () {
                 '</ul>'+
             '</div>'
         )
-        var options_quatity ;
-        for( var c = 1; c <=30; c++){
-            options_quatity += '<option  value="'+c+'">'+c+'</option>';
-        }
+        // Purchare order inputs
         $('#create_sanden_quote_fqs_c').hide();
-        var po_sanden_supply_input = '<div id="po_sanden_supply_input">\
-        <span>315FQV</span> <select name="GAUS-315FQV" id="sanden_fqv_315" data-name="315FQV" data-id="40d20616-6007-44c4-1e9b-5ca447459af6" ><option value="0"></option>'+options_quatity+'</select>\
-        <span>315FQS</span> <select name="GAUS-315FQS" id="sanden_fqs_315" data-name="315FQS" data-id="def49e57-d3c8-b2f4-ad0e-5c7f51e1eb15" ><option value="0"></option>'+options_quatity+'</select>\
-        <span>300FQS</span> <select name="GAUS-300FQS" id="sanden_fqs_300" data-name="300FQS" data-id="335cc359-a2e9-a2a0-3b94-5cb015b32f1b" ><option value="0"></option>'+options_quatity+'</select>\
-        <span>250FQS</span> <select name="GAUS-250FQS" id="sanden_fqs_250" data-name="250FQS" data-id="67605168-6b72-5504-282c-5cc8e1492ec9" ><option value="0"></option>'+options_quatity+'</select>\
-        <span>160FQS</span> <select name="GAUS-160FQS" id="sanden_fqs_160" data-name="160FQS" data-id="7add0a17-c12e-7b70-ccb1-5d5a5db14d37" ><option value="0"></option>'+options_quatity+'</select>\
-        <span>QIK15</span>  <select name="QIK15-HPUMP" id="QIK15_HPUMP" data-name="QIK15" data-id="86f3b061-f33a-a9ec-05c4-56963e142784"><option value="0"></option>'+options_quatity+'</select>\
-        <span>QIK20</span>  <select name="QIK20-HPUMP" id="QIK20_HPUMP" data-name="QIK20" data-id="a5aa017e-724b-a7a9-70ab-5d5dfc0fe7e5"><option value="0"></option>'+options_quatity+'</select>\
-        <div style="padding-top:10px"><button type="button" class="button" id="supply_add_to_line_items" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
-        </div>';
-        var po_solar_pv_bos_input = '<div id="po_sanden_pv_bos_input">\
-            <span>Standard Solar PV Install</span> <input id="standard_solar_PV_install" type="checkbox" value="Standard Solar PV Install" name="Standard Solar PV Install">\
-            <span>30-60 Deg Tilts</span> <input type="number" id="deg_tilts" value="33" min="30" max="60"  name="30-60 Deg Tilts">\
-            <div style="padding-top:10px"><button type="button"  class="button"  onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
-        </div>';
-        //VUT - S - create line item Daikin Supply
-        var po_daikin_supply_input =    '<div id="po_daikin_supply_input">\
-                                    <span>US7 2.5kW</span><select name="FTXZ25N" id="US7_25" data-name="US7 2.5kW" data-id="3518d3a1-7c11-77c5-b9db-5694fed992e6" ><option value="0"></option>'+options_quatity+'</select>\
-                                    <span>US7 3.5kW</span><select name="FTXZ35N" id="US7_35" data-name="US7 3.5kW" data-id="571aa1b6-9abe-80ec-5cdd-56b4536a29d0" ><option value="0"></option>'+options_quatity+'</select>\
-                                    <span>US7 5kW</span><select name="FTXZ50N" id="US7_50" data-name="US7 5kW" data-id="ef81036f-9889-234d-02e5-57b2c0c71e79" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>Alira 2kW</span><select name="FTXM20U" id="Alira_20" data-name="Alira 2kW" data-id="a80988f7-9871-05d8-3150-5def2f744305" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>Alira 2.5kW</span><select name="FTXM25U" id="Alira_25" data-name="Alira 2.5kW" data-id="7a163038-6178-7479-65d2-5def2ea594ff" ><option value="0"></option>'+options_quatity+'</select>\
-                                    <span>Alira 3.5kW</span><select name="FTXM35U" id="Alira_35" data-name="Alira 3.5kW" data-id="c3f9a48a-03d1-8dbf-5f83-5def2f9ed532" ><option value="0"></option>'+options_quatity+'</select>\
-                                    <span>Alira 4.6kW</span><select name="FTXM46U" id="Alira_46" data-name="Alira 4.6kW" data-id="83e632ff-1a24-2710-3f18-5def30c7192b" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>Alira 5kW</span><select name="FTXM50U" id="Alira_50" data-name="Alira 5kW" data-id="ae050682-3f62-6925-d056-5def30adfe5e" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>Alira 6kW</span><select name="FTXM60U" id="Alira_60" data-name="Alira 6kW" data-id="947e6c72-cfa0-7a95-dc50-5def31501045" ><option value="0"></option>'+options_quatity+'</select>\
-                                        <span>Alira 7.1kW</span><select name="FTXM71U" id="Alira_71" data-name="Alira 7.1kW" data-id="4f552ea4-da55-cac2-1069-5def32ef431d" ><option value="0"></option>'+options_quatity+'</select>\
-                                    <div style="padding-top:10px"><button type="button" class="button" onclick="generatePOLineItem();">Generate PO Line Items</button></div>\
-                                        </div>';
+        var html_checklist_sanden_po_inputs = 
+        '<div id="group_custom_checklist_sanden_plumbing" class="row detail-view-row"></div>';
+        $("#create_sanden_quote_fqs_c").closest('.tab-content').prepend(html_checklist_sanden_po_inputs);
         //VUT - E - create line item Daikin Supply
         if( $('#po_type_c').val() =="sanden_supply"){
-            $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
-            LoadJSONPOInput();
+            renderPOInputsHTML($('#po_type_c').val());
         }else if($('#po_type_c').val() =="SolarBOS"){
-            $('#create_sanden_quote_fqs_c').after(po_solar_pv_bos_input);
-            LoadJSONPOInput();
+            $("#create_sanden_quote_fqs_c").closest('.tab-content').prepend(html_checklist_sanden_po_inputs);
+            renderPOInputsHTML($('#po_type_c').val());
         } else if ($('#po_type_c').val() =="daikin_supply") {
-            $('#create_sanden_quote_fqs_c').after(po_daikin_supply_input);
-            LoadJSONPOInput();
+            renderPOInputsHTML($('#po_type_c').val());
+        } else if ($('#po_type_c').val() =="sanden_plumber") {
+            renderPOInputsHTML($('#po_type_c').val());
         }
         $('#po_type_c').change(function(){
-            if( $('#po_type_c').val() =="sanden_supply"){
-                $(document).find('#po_sanden_supply_input,#po_sanden_pv_bos_input').remove();
-                $('#create_sanden_quote_fqs_c').after(po_sanden_supply_input);
-                LoadJSONPOInput();
-            }else if($('#po_type_c').val() =="SolarBOS"){
-                $(document).find('#po_sanden_supply_input,#po_sanden_pv_bos_input').remove();
-                $('#create_sanden_quote_fqs_c').after(po_solar_pv_bos_input);
-                LoadJSONPOInput();
-            }else{
-                $(document).find('#po_sanden_supply_input,#po_sanden_pv_bos_input').remove();
+            var type = $(this).val(); 
+            $(document).find('#group_custom_checklist_sanden_plumbing').remove();
+            var html_checklist_sanden_plumbing = 
+            '<div id="group_custom_checklist_sanden_plumbing" class="row detail-view-row"></div>';
+            $("#create_sanden_quote_fqs_c").closest('.tab-content').prepend(html_checklist_sanden_plumbing);
+            if( type == "sanden_supply"){
+                renderPOInputsHTML(type);
+            }else if(type == "SolarBOS"){
+                renderPOInputsHTML(type);
+            }else if (type == "daikin_supply") {
+                renderPOInputsHTML(type);
+            }else if(type == "sanden_plumber"){
+                renderPOInputsHTML(type);
             }
-        });
-
-        $(document).find('#po_sanden_supply_input').on("change", "select", function(e){
-            saveJSONPOInput();
-        });
-        $(document).find('#po_sanden_pv_bos_input input').on("change", function(e){
-            saveJSONPOInput();
         });
 
         $("#link_realestate_shipping").click(function(){
@@ -1296,14 +1263,36 @@ function getInfoProductDaikin() {
     }
     return obj;
 }
-
+/**
+ * Render HTML for Rebate Provided subpanel
+ * @param {String} type quote_type_c
+ * @param {String} state state
+ */
+ function renderPOInputsHTML(type){
+    $.ajax({
+        url: '/index.php?entryPoint=APIRenderPOInputs&type='+type,
+        success: function (result) {
+            try {
+                var json_data = JSON.parse(result);
+                $("#group_custom_checklist_sanden_plumbing").empty().append(json_data['template_html_rebate']);
+                var btn_generate_po = '<button type="button" class="button" onclick="generatePOLineItem();">Generate PO Line Items</button>';
+                $("#group_custom_checklist_sanden_plumbing").append(btn_generate_po);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }).done(function (data) {
+        LoadJSONPOInput();
+    });
+}
 async function generatePOLineItem(){
     for (var i = 0; i < prodln; i++){
         markLineDeleted(i,"product_");
     }
+    saveJSONPOInput();
+    SUGAR.ajaxUI.showLoadingPanel();
     if( $('#po_type_c').val() =="sanden_supply"){
-        saveJSONPOInput();
-        SUGAR.ajaxUI.showLoadingPanel();
+       
         switch ($('#shipping_address_state').val()) {
             case "VIC":
                 $('#shipping_account').val('PureElectric VIC');
@@ -1339,7 +1328,7 @@ async function generatePOLineItem(){
         var new_name = "Sanden ";
         var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
         // .:nhantv:. Update "LINE ITEM" with the correct order
-        var select_inputs = $("#po_sanden_supply_input").find("select");
+        var select_inputs = $("#group_custom_checklist_sanden_plumbing").find("select");
         try {
             for (i = 0; i < select_inputs.length; i++){
                 var el = select_inputs[i];
@@ -1377,12 +1366,6 @@ async function generatePOLineItem(){
         }
         new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#dispatch_date_c").val() != '') ? formatTimeforPOname($("#dispatch_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
         $('#name').val(new_name);
-        setTimeout(function (){
-            SUGAR.ajaxUI.hideLoadingPanel();
-            $('html, body').animate({
-                scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
-            }, 800);
-        },500);
     }else if($('#po_type_c').val() =="SolarBOS"){
         if( $('#standard_solar_PV_install').is(':checked') == true){
             if($("#lineItems").find(".group_body").length == 0){
@@ -1410,16 +1393,9 @@ async function generatePOLineItem(){
                 console.log(err);
             }
             $('#name').val(new_name);
-            setTimeout(function (){
-                SUGAR.ajaxUI.hideLoadingPanel();
-                $('html, body').animate({
-                    scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
-                }, 800);
-            },500);
         }
-    } else if ($('#po_type_c').val() == "daikin_supply") {
-        saveJSONPOInput();
-        SUGAR.ajaxUI.showLoadingPanel();
+    }else if ($('#po_type_c').val() == "daikin_supply") {
+
         switch ($('#shipping_address_state').val()) {
             case "VIC":
                 $('#shipping_account').val('PureElectric VIC');
@@ -1455,7 +1431,7 @@ async function generatePOLineItem(){
 
         var new_name = "Daikin ";
         // var total_item =  parseInt($("#sanden_fqv_315").val()) + parseInt($("#sanden_fqs_315").val()) + parseInt($("#sanden_fqs_300").val()) + parseInt($("#sanden_fqs_250").val()) + parseInt($("#sanden_fqs_160").val());
-        var select_inputs = $("#po_daikin_supply_input").find("select");
+        var select_inputs = $("#group_custom_checklist_sanden_plumbing").find("select");
         var total_wifi_US7 = 0;
         var total_wifi_alira_Under46 = 0 ;
         var total_wifi_alira_Over46 = 0;
@@ -1527,31 +1503,53 @@ async function generatePOLineItem(){
         }
         new_name += " to " + $("#shipping_address_city").val() + " " + $("#shipping_address_state").val() +" "+  (($("#delivery_date_c").val() != '') ? formatTimeforPOname($("#delivery_date_c").val()) : "") + " "+$("#supplier_order_number_c").val() ;
         $('#name').val(new_name);
-        setTimeout(function (){
-            SUGAR.ajaxUI.hideLoadingPanel();
-            $('html, body').animate({
-                scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
-            }, 800);
-        },500);
+    }else if($('#po_type_c').val() =="sanden_plumber"){
+        var select_inputs = $("#group_custom_checklist_sanden_plumbing").find("input");
+        try {
+            for (i = 0; i < select_inputs.length; i++){
+                var el = select_inputs[i];
+                if(el.checked == true){
+                    await autoCreateLineItem(el.attributes[1].value,1);
+                }
+                
+            }
+        } catch(err) {
+            console.log(err);
+        }
+        var new_name = $('#aos_invoices_po_purchase_order_1_name').val() + " Plumbing";
+        $('#name').val(new_name);
     }
+    setTimeout(function (){
+        SUGAR.ajaxUI.hideLoadingPanel();
+        $('html, body').animate({
+            scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
+        }, 800);
+    },500);
 }
 
 function saveJSONPOInput(){
     var values = {};
     if($('#po_type_c').val() =="sanden_supply"){
-        $(document).find('#po_sanden_supply_input select').each(function (){
+        $(document).find('#group_custom_checklist_sanden_plumbing select').each(function (){
             var id_name = $(this).attr("id");
             values[id_name] = $(this).val();
         });
     }else if($('#po_type_c').val() =="SolarBOS"){
-        $(document).find('#po_sanden_pv_bos_input input').each(function (){
+        $(document).find('#group_custom_checklist_sanden_plumbing input').each(function (){
             var id_name = $(this).attr("id");
             values[id_name] = $(this).val();
         });
     }else if (($('#po_type_c').val() =="daikin_supply")) {
-        $(document).find('#po_daikin_supply_input select').each(function (){
+        $(document).find('#group_custom_checklist_sanden_plumbing select').each(function (){
             var id_name = $(this).attr("id");
             values[id_name] = $(this).val();
+        });
+    }else if (($('#po_type_c').val() =="sanden_plumber")) {
+        $(document).find('#group_custom_checklist_sanden_plumbing input').each(function (){
+            if( $(this).is(':checked') == true){
+                var id_name = $(this).attr("id");
+                values[id_name] = 'checked';
+            }
         });
     }
     $("#create_sanden_quote_fqs_c").val(JSON.stringify(values));
@@ -1561,9 +1559,11 @@ function LoadJSONPOInput(){
     if($("#create_sanden_quote_fqs_c").val() != ''){
         var dataJSON = JSON.parse($("#create_sanden_quote_fqs_c").val());
         for (let key in dataJSON) {
-            if(dataJSON[key] == 'Standard Solar PV Install'){
+            if(dataJSON[key] == 'standard_solar_PV_install'){
                 $("#"+key).prop('checked', true);
-            }else{
+            }else if(dataJSON[key] == 'checked'){
+                $("#"+key).prop('checked', true);
+            }{
                 $("#"+key).val(dataJSON[key]);
             }
         }
