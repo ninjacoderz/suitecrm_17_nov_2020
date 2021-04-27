@@ -1290,9 +1290,7 @@ async function generatePOLineItem(){
         markLineDeleted(i,"product_");
     }
     saveJSONPOInput();
-    SUGAR.ajaxUI.showLoadingPanel();
     if( $('#po_type_c').val() =="sanden_supply"){
-       
         switch ($('#shipping_address_state').val()) {
             case "VIC":
                 $('#shipping_account').val('PureElectric VIC');
@@ -1520,7 +1518,6 @@ async function generatePOLineItem(){
         $('#name').val(new_name);
     }
     setTimeout(function (){
-        SUGAR.ajaxUI.hideLoadingPanel();
         $('html, body').animate({
             scrollTop: $('.panel-default').find('a:contains("Line Items")').offset().top - 200
         }, 800);
