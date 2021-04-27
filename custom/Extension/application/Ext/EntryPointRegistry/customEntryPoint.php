@@ -1116,6 +1116,12 @@ $entry_point_registry['APISolarQuoteForm'] = array(
     'auth' => true
 );
 
+// .:nhantv:. API Quick save Quote Solar Form
+$entry_point_registry['APIQuickSaveSolarQuoteForm'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIQuickSaveSolarQuoteForm.php',
+    'auth' => true
+);
+
 //VUT -- API get Contact for Internal note edit
 $entry_point_registry['APIgetContactFromInternalNote'] = array(
     'file' => 'custom/modules/pe_internal_note/APIgetContactFromInternalNote.php',
