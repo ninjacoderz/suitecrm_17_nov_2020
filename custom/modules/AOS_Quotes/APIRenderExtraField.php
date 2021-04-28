@@ -22,10 +22,17 @@ function renderExtraItemsHTML($vardefs_array){
                 foreach ($v['dataItem'] as $key => $value) {
                     switch ($value['type']) {
                         case 'checkbox':
-                            $field_item = '<span>'.$value['display_label'].'</span><input class="custom_fields" type="checkbox" value="" name="'.$key.'" id="'.$key.'" step="'.$value['step'].'" style="margin:0 5px;" />';
+                            if (strpos($key, '_add') !== false) {
+                                $field_item = '<span>'.$value['display_label'].'</span><input class="custom_fields added_field" type="checkbox" value="" name="'.$key.'" id="'.$key.'" step="'.$value['step'].'" style="margin:0 5px;" />';
+                            } else if (strpos($key, '_itemise') !== false) {
+                                $field_item = '<span>'.$value['display_label'].'</span><input class="custom_fields itemise_field" type="checkbox" value="" name="'.$key.'" id="'.$key.'" step="'.$value['step'].'" style="margin:0 5px;" />';
+                            } else {
+                                $field_item = '<span>'.$value['display_label'].'</span><input class="custom_fields" type="checkbox" value="" name="'.$key.'" id="'.$key.'" step="'.$value['step'].'" style="margin:0 5px;" />';
+                            }
+                            
                             break;
                         case 'number':
-                            $field_item = '<input class="custom_fields" type="number" value="" name="'.$key.'" id="'.$key.'" step="'.$value['step'].'" style="width :50px;" />';
+                            $field_item = '<input class="custom_fields value_field" type="number" value="" name="'.$key.'" id="'.$key.'" step="'.$value['step'].'" style="width :50px;" />';
                             break;
                     }
                     $field_content .= $field_item;
@@ -33,7 +40,7 @@ function renderExtraItemsHTML($vardefs_array){
                 break;
         }
         $tempHTML = '<div class="col-md-6 col-xs-12 col-sm-12 edit-view-row-item item-extras" id="'.$v['name'].'" data-partnumber="'.$v['partnumber'].'">
-                        <div class="col-md-6 col-xs-12 col-sm-12 label">$display_label</div>
+                        <div class="col-md-6 col-xs-12 col-sm-12 label" style="margin-top: 10px;">$display_label</div>
                         <div class="col-md-6 col-xs-12 col-sm-5 edit-view-field" data-item-id="'.$v['name'].'" type="varchar">
                             $field_content
                         </div>

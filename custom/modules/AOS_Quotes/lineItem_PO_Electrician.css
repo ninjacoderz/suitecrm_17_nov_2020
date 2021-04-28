@@ -1,0 +1,450 @@
+/* #electrician_lineItems  .edit-view-row-item {
+    width: 100%;
+} */
+
+#electrician_lineItems {
+    display: inline;
+    font-size: 11px;
+    font-weight: 700;
+    color: #534d64;
+    padding: 0 0 0 8px;
+    text-align: left;
+    vertical-align: baseline;
+    white-space: nowrap
+}
+
+
+#electrician_lineItems #service_head {
+    background: none
+}
+
+#electrician_lineItems #product_head {
+    background: none
+}
+
+#electrician_lineItems table > thead:nth-child(1) > tr > td:nth-child(1) [type="text"] {
+    width: 50%
+}
+
+#electrician_lineItems table {
+    font-size: 10px
+}
+
+[field=electrician_line_items] {
+    float: none;
+    width: 100%;
+    clear: both
+}
+
+[field=electrician_line_items] {
+    display: block
+}
+
+#electrician_line_items_span {
+    display: block
+}
+
+table#electrician_lineItems {
+    display: block
+}
+
+#electrician_line_items_span {
+    width: 100%;
+    white-space: normal
+}
+
+#electrician_lineItems .button {
+    padding: 0px;
+}
+
+table#electrician_lineItems tr td table tfoot tr td span {
+    width: 20%
+}
+
+#electrician_lineItems .totals {
+    float: right;
+    width: 256px;
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+#electrician_lineItems .totals label {
+    width: 50%;
+    line-height: 20px
+}
+
+#electrician_lineItems .totals input {
+    width: 50%
+}
+
+/* #electrician_lineItems #electrician_shipping_tax_amt {
+}
+
+#electrician_lineItems #electrician_shipping_tax {
+} */
+
+#electrician_lineItems .electrician_group {
+    width: 100%
+}
+
+#electrician_lineItems .electrician_group_body {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#electrician_lineItems .electrician_group_body > td {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#electrician_lineItems .electrician_group > thead {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#electrician_lineItems .electrician_group > thead > tr {
+    display: block;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%
+}
+
+#electrician_lineItems .electrician_group > thead {
+    background-color: #f5f5f5;
+    min-height: 52px
+}
+
+#electrician_lineItems .electrician_group > thead > tr {
+    background-color: #f5f5f5;
+    min-height: 52px
+}
+
+#electrician_lineItems .electrician_group > thead > tr > td {
+    background-color: #f5f5f5;
+    min-height: 52px
+}
+
+#electrician_lineItems .electrician_group > thead > tr > td:nth-of-type(1) {
+    display: inline-block;
+    width: 80%
+}
+
+#electrician_lineItems .electrician_group > thead > tr > td:nth-of-type(2) {
+    display: inline-block;
+    width: 20%
+}
+
+#electrician_lineItems .electrician_group > thead > tr > td[colspan="100"] {
+    width: 100%
+}
+
+#electrician_lineItems .electrician_group button {
+    padding: 0;
+    line-height: 0;
+    width: 32px;
+    height: 32px
+}
+
+#electrician_lineItems .alignedLabel {
+    display: none;
+    visibility: collapse
+}
+
+#electrician_lineItems #product_head td {
+    padding: 0;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#electrician_lineItems .electrician_product_group {
+    background: none
+}
+
+#electrician_lineItems .electrician_product_group thead {
+    background: none
+}
+
+#electrician_lineItems .electrician_product_group tr {
+    background: none
+}
+
+#electrician_lineItems .electrician_product_group td {
+    background: none
+}
+
+#electrician_lineItems #product_head > td:nth-of-type(1) {
+    width: 40px
+}
+
+#electrician_lineItems .electrician_product_group {
+    width: 100%
+}
+
+#electrician_lineItems .electrician_product_group > tbody > tr:nth-of-type(2) > td {
+    padding-bottom: 32px;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#electrician_lineItems .product_qty {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .product_name {
+    margin: 0 5px 0 0;
+    width: 98%
+}
+
+#electrician_lineItems .product_part_number {
+    margin: 0 5px 0 0;
+    width: 100%;
+}
+
+#electrician_lineItems .product_part_number_button {
+    margin: 0 15px 0 5px
+}
+
+#electrician_lineItems .product_list_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .product_discount_text {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .product_discount_amount_select {
+    margin: 0 5px 0 0
+}
+
+#electrician_lineItems .product_unit_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .product_vat_amt_text {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .product_vat_amt_select {
+    margin: 0 5px 0 0
+}
+
+#electrician_lineItems .product_total_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .electrician_product_delete_line {
+    margin: 0 15px 0 5px
+}
+
+#electrician_lineItems .product_item_description_label {
+    display: block
+}
+
+#electrician_lineItems .product_item_description {
+    width: 95%;
+    height: 50px
+}
+
+#electrician_lineItems .product_description_label {
+    display: block
+}
+
+#electrician_lineItems .product_description {
+    width: 95%;
+    height: 50px
+}
+
+#electrician_lineItems #service_head td {
+    padding: 0;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#electrician_lineItems .service_group > tbody > tr > td {
+    padding-bottom: 32px;
+    border-bottom: 1px solid #f5f5f5
+}
+
+#electrician_lineItems .service_group {
+    background: none
+}
+
+#electrician_lineItems .service_group thead {
+    background: none
+}
+
+#electrician_lineItems .service_group tr {
+    background: none
+}
+
+#electrician_lineItems .service_group td {
+    background: none
+}
+
+#electrician_lineItems .service_group {
+    width: 100%
+}
+
+#electrician_lineItems .service_name {
+    margin: 0 5px 0 0;
+    width: 95%;
+    height: 50px
+}
+
+#electrician_lineItems .service_list_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .service_discount_text {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .service_discount_select {
+    margin: 0 5px 0 0
+}
+
+#electrician_lineItems .service_unit_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .service_vat_text {
+    width: 40px
+}
+
+#electrician_lineItems .service_vat_select {
+    margin: 0 5px 0 5px
+}
+
+#electrician_lineItems .service_total_price {
+    margin: 0 5px 0 0;
+    width: 40px
+}
+
+#electrician_lineItems .service_delete_line {
+    margin: 0 5px 0 0
+}
+
+#electrician_lineItems select {
+    line-height: 18px
+}
+
+#EditView #electrician_total_amt {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #electrician_discount_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #electrician_subtotal_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #electrician_shipping_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #electrician_shipping_tax_amt {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #electrician_tax_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #electrician_total_amount {
+    width: 40%;
+    max-width: 40%
+}
+
+#EditView #electrician_shipping_tax {
+    margin-left: 8px
+}
+
+@media (min-width: 1350px) {
+    #electrician_lineItems {
+        font-size:13px
+    }
+
+    #electrician_lineItems table {
+        font-size: 13px
+    }
+
+    #electrician_lineItems #product_head > td:nth-of-type(1) {
+        width: 80px
+    }
+
+    #electrician_lineItems .product_qty {
+        width: 80px
+    }
+
+    #electrician_lineItems .product_list_price {
+        width: 80px
+    }
+
+    #electrician_lineItems .product_discount_text {
+        width: 80px
+    }
+
+    #electrician_lineItems .product_unit_price {
+        width: 80px
+    }
+
+    #electrician_lineItems .product_vat_amt_text {
+        width: 80px
+    }
+
+    #electrician_lineItems .product_total_price {
+        width: 80px
+    }
+
+    #electrician_lineItems .service_list_price {
+        width: 80px
+    }
+
+    #electrician_lineItems .service_discount_text {
+        width: 80px
+    }
+
+    #electrician_lineItems .service_unit_price {
+        width: 80px
+    }
+
+    #electrician_lineItems .service_vat_text {
+        width: 80px
+    }
+
+    #electrician_lineItems .service_total_price {
+        width: 80px
+    }
+}
+
+
+@media (max-width: 1700px) {
+    table#electrician_lineItems table tr td table tbody tr td span.hidden.alignedLabel {
+        display:inline
+    }
+}
+

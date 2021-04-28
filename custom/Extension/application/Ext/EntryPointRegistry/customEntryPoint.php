@@ -550,6 +550,11 @@ $entry_point_registry['APIrederectToPVwatts'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIrederectToPVwatts.php',
     'auth' => true
 );
+//tuan RenderPOInputs
+$entry_point_registry['APIRenderPOInputs'] = array(
+    'file' => 'custom/modules/PO_purchase_order/APIRenderPOInputs.php',
+    'auth' => true
+);
 //dung code - button "Resize All" in file upload
 $entry_point_registry['ResizeAllFile'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/ResizeAllFile.php',
@@ -1113,6 +1118,12 @@ $entry_point_registry['APIPricingPVSolarForm'] = array(
 //Tri Truong code -- API Create Quote Solar Form FOrm
 $entry_point_registry['APISolarQuoteForm'] = array(
     'file' => 'custom/modules/AOS_Quotes/APISolarQuoteForm.php',
+    'auth' => true
+);
+
+// .:nhantv:. API Quick save Quote Solar Form
+$entry_point_registry['APIQuickSaveSolarQuoteForm'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIQuickSaveSolarQuoteForm.php',
     'auth' => true
 );
 

@@ -547,7 +547,7 @@
             $pricings = json_decode(html_entity_decode($pricing_options));
 
             // $solar_pricing_options = '';
-            $solar_pricing_options = '<div style="margin: 0;padding:0;box-sizing:border-box;max-width: 100%;width:1125px;line-height:1.8;font-family: sans-serif;font-size:16px;">';
+            $solar_pricing_options = '<div style="margin: 0;padding:0;box-sizing:border-box;max-width: 100%;line-height:1.8;font-family: sans-serif;font-size:16px;">';
             for ($i=1; $i < 7 ; $i++) { 
                 if($pricings->{'base_price_'.$i} != "" || $pricings->{'base_price_'.$i} != 0){
                     switch ( $pricings->{'inverter_type_'.$i} ){
@@ -640,19 +640,27 @@
                     $str_vicreabte = $reabte_price = $loan_price = 0;
 
                     // .:nhantv:. Render Option Num and Solar Panel Type Group
-                    $solar_pricing_options .= '<div class="card-premium" style="float:left; padding: 0;width: 30%;background:#fff;color:#444;text-align:center;overflow:hidden;margin:0;">
+                    $solar_pricing_options .= '<div class="card-premium" style="float:left; padding: 0;width:30%;min-width:365px;background:#fff;color:#444;text-align:center;overflow:hidden;margin:0;">
                     <div style="margin: 0.5rem;border-radius: 1.5rem;border: 3px solid rgb(235, 235, 235);">
-                      <div class="card-header" style="position: relative;border-top-left-radius: 1.5rem;border-top-right-radius: 1.5rem;clear: both;margin: 0;font-weight:bold;padding:1rem 0;color:#fff;background:linear-gradient(135deg, #ffc64b, #fb7020);">
-                        <span style="margin: 0;padding:0;box-sizing:border-box;position:absolute;top:-1.2rem;left:1rem;opacity: .25;color:white;font-size:5rem;">'. $i .'</span>
-                        <h1 style="margin: 0;padding:0;box-sizing:border-box;">'. $pricings->{'total_kW_'.$i} .' kW</h1>
+                    <div class="card-header" style="border-top-left-radius: 1.5rem;border-top-right-radius: 1.5rem;clear: both;margin: 0;font-weight:bold;padding:1rem 0;color:#fff;background:linear-gradient(135deg, #ffc64b, #fb7020);">
+                        <h1 style="margin: 0;padding:0 0 0 1rem;font-size: 1.6rem;">'. $pricings->{'total_kW_'.$i} .' kW</h1>
                     </div>
-                      <div class="card-body" style="margin: 0;padding: 0.5rem;">
-                        <div class="card-element-container" style="padding:0;color: #444;list-style:none;text-align:left;margin:0;height:7rem;display:flex;flex-direction:column;justify-content:center;">
-                            <h1 style="margin: 0 0 0.25rem 0;padding:0;font-size:1rem;font-weight: bold;">'. $pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i} .'</h1>
-                            <div style="margin: 0;padding:0;font-size:0.8rem;">&bull;&nbsp;'. $inverter .'</div>
-                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_1_'.$i}) ? '&bull;&nbsp;'.$pricings->{'extra_1_'.$i} : '') .'</div>
-                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_2_'.$i})? '&bull;&nbsp;'.$pricings->{'extra_2_'.$i} : '') .'</div>
-                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_3_'.$i})? '&bull;&nbsp;'.$pricings->{'extra_3_'.$i} : '') .'</div>
+                    <div class="card-body" style="margin: 0;padding: 0.5rem;">
+                        <div class="card-element-container" style="padding:0;color: #444;list-style:none;text-align:left;margin:0;height:7rem;">
+                            <table style="width: 100%;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 20%;text-align: center;"><h1 style="margin: 0;padding:0;color: #ffc64b;font-size: 3rem;">'.$i.'</h1></td>
+                                        <td style="width: 80%;text-align: left;">
+                                            <h1 style="margin: 0 0 0.25rem 0;padding:0;font-size:1rem;font-weight: bold;">'. $pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i} .'</h1>
+                                            <div style="margin: 0;padding:0;font-size:0.8rem;">&bull;&nbsp;'. $inverter .'</div>
+                                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_1_'.$i}) ? '&bull;&nbsp;'.$pricings->{'extra_1_'.$i} : '') .'</div>
+                                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_2_'.$i})? '&bull;&nbsp;'.$pricings->{'extra_2_'.$i} : '') .'</div>
+                                            <div style="margin: 0;padding:0;font-size:0.8rem;">'. (($pricings->{'extra_3_'.$i})? '&bull;&nbsp;'.$pricings->{'extra_3_'.$i} : '') .'</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <div class="card-element-extra" style="color: #444;text-align:left;margin:0.5rem 0 0 0;padding: 0.5rem 0 0 0;border-top:1px solid rgb(235, 235, 235);">
                           <table style="width: 100%;font-weight: bold;">
@@ -776,6 +784,8 @@
 
             $body_html = str_replace("\$solar_pricing_options",  $solar_pricing_options , $body_html);
             $body_html = str_replace("\$aos_quotes_id", $quote_id , $body_html);
+
+            // file_put_contents('./newfile.txt', $body_html);
 
         }
         if (empty($defaultEmailSignature)) {

@@ -235,5 +235,17 @@ $mod_strings = array(
     'LBL_PLUMBER_SHIPPING_TAX_AMT' => 'Plumber Shipping Tax',
     'LBL_PLUMBER_SHIPPING_TAX' => 'Plumber Shipping Tax',
     'LBL_PLUMBER_TAX_AMOUNT' => 'Plumber Tax',
-    'LBL_PLUMBER_GRAND_TOTAL' => 'Grand Total',
+    'LBL_PLUMBER_GRAND_TOTAL' => 'Plumber Grand Total',
+    //VUT - e - Label Line Item Proposed plumbers
+    //VUT - S - Label Line Item Proposed plumbers
+    'LBL_ELECTRICIAN_LINE_ITEMS' => 'Electrician Line Items',
+    'LBL_ELECTRICIAN_TOTAL_AMT' => 'Electrician Total',
+    'LBL_ELECTRICIAN_DISCOUNT_AMOUNT' => 'Electrician Discount',
+    'LBL_ELECTRICIAN_SUBTOTAL_AMOUNT' => 'Electrician Subtotal',
+    'LBL_ELECTRICIAN_SHIPPING_AMOUNT' => 'Electrician Shipping',
+    'LBL_ELECTRICIAN_SHIPPING_TAX_AMT' => 'Electrician Shipping Tax',
+    'LBL_ELECTRICIAN_SHIPPING_TAX' => 'Electrician Shipping Tax',
+    'LBL_ELECTRICIAN_TAX_AMOUNT' => 'Electrician Tax',
+    'LBL_ELECTRICIAN_GRAND_TOTAL' => 'Electrician Grand Total',
+    //VUT - e - Label Line Item Proposed plumbers
 );

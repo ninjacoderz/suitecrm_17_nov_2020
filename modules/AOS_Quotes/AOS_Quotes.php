@@ -75,7 +75,14 @@ class AOS_Quotes extends AOS_Quotes_sugar
                 unset($_POST['plumber_product_id']);
             }
             //VUT - E - Proposed plumber - Sanden
-
+            //VUT - S - Proposed electrician - Sanden
+            if (isset($_POST['electrician_group_id'])) {
+                unset($_POST['electrician_group_id']);
+            }
+            if (isset($_POST['electrician_product_id'])) {
+                unset($_POST['electrician_product_id']);
+            }
+            //VUT - E - Proposed electrician - Sanden
             if ($sugar_config['dbconfig']['db_type'] == 'mssql') {
                 $this->number = $this->db->getOne("SELECT MAX(CAST(number as INT))+1 FROM aos_quotes");
             } else {
@@ -97,14 +104,19 @@ class AOS_Quotes extends AOS_Quotes_sugar
         $productQuoteGroup = BeanFactory::newBean('AOS_Line_Item_Groups');
         $productQuoteGroup->save_groups($_POST, $this, 'group_');
 
-        //VUT - S - Proposed plumber - Sanden
+        //VUT - S - Proposed plumber/electrician - Sanden
         $quote_inputs = json_decode(html_entity_decode($this->quote_note_inputs_c), true);
         if ($quote_inputs["quote_plumbing_installation_by_pure"] == "Yes") {
             require_once('modules/AOS_Line_Item_Groups/AOS_Line_Item_Groups.php');
             $productQuoteGroup = BeanFactory::newBean('AOS_Line_Item_Groups');
             $productQuoteGroup->save_groups($_POST, $this, 'plumber_group_');
-        }        
-        //VUT - E - Proposed plumber - Sanden
+        } 
+        if ($quote_inputs["quote_electrical_installation_by_pure"] == "Yes") {
+            require_once('modules/AOS_Line_Item_Groups/AOS_Line_Item_Groups.php');
+            $productQuoteGroup = BeanFactory::newBean('AOS_Line_Item_Groups');
+            $productQuoteGroup->save_groups($_POST, $this, 'electrician_group_');
+        } 
+        //VUT - E - Proposed plumber/electrician - Sanden
         return $return_id;
     }
 

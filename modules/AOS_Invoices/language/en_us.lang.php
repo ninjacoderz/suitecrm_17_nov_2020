@@ -236,4 +236,5 @@ $mod_strings = array(
     'LBL_MEETING_PLUMBER' => 'Meeting Plumber',
     'LBL_MEETING_ELECTRICIAN' => 'Meeting Electrician',
     'LBL_STC_ACCOUNT' => 'STC Aggregator',
+    'LBL_AUPOST_SHIPPING_ID' => 'AuPost Shipping id',
 );

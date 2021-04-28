@@ -1321,6 +1321,16 @@ $dictionary['AOS_Invoices'] = array(
                 'duplicate_merge' => 'disabled',
             ),
         //VUT - E - create field save id meeting for Plumber/Electrician
+        'aupost_shipping_id' =>
+            array(
+                'name' => 'aupost_shipping_id',
+                'vname' => 'LBL_AUPOST_SHIPPING_ID',
+                'type' => 'varchar',
+                'len' => '100',
+                'comment' => 'Aupost Shipping ID',
+                'studio' => 'visible',
+                // 'merge_filter' => 'enabled',
+            ),
         //VUT - S - create relate account relate STC Aggregator
         'stc_account_id' =>
         array(

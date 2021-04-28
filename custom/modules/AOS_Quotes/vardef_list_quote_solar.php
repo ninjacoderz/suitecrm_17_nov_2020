@@ -25,8 +25,9 @@ $vardefs_array = array(
             "Big Solar",
             "Cover house in solar roof",
             "Cut home energy bills",
+            "Environmental Considerations",
             "Off-Grid",
-        ) ,
+        ),
         "parent" => "",
     ) ,
     "electricity_distributor" => array(

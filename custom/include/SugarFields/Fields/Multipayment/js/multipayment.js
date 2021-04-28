@@ -279,6 +279,9 @@ $(document).ready(function() {
             }
             //E - check has geo Assignment
  
+        } else if ($('#quote_type_c').val() == 'quote_type_methven') {
+            var sanden_equipment_cost = calculate_sanden_equipment_cost_gp();
+            $('#sanden_supply_bill_c').val(sanden_equipment_cost);
         }
         $('#sanden_revenue_c').val($('#total_amt').val()).trigger('change');
         calculation_gross_profit_sanden();
@@ -340,33 +343,40 @@ $(document).ready(function() {
      * VUT - Calculate Sanden Equipment Cost for GP Calculation
      */
     function calculate_sanden_equipment_cost_gp() {
-        // let sanden_product = [
-        //     "GAUS-160FQS",
-        //     "GAUS-250FQS",
-        //     "GAUS-300FQS",
-        //     "GAUS-315FQS",
-        // ];
-        // let sanden_hpump = [
-        //     "QIK15−HPUMP", 
-        //     "QIK20−HPUMP",
-        // ];
         let lineItems_products = $('#line_items_span').find('.product_group').children('tbody');
         let i; 
         let sanden_groups={};
         //get product in LineItem at Invoice
         for (i=0; i < lineItems_products.length ; i++) {
-            let product_partNumber = $(`#product_part_number${i}`).val();
-            let product_id = $(`#product_product_id${i}`).val();
-            let product_qty = $(`#product_product_qty${i}`).val();
-            // if (sanden_product.includes(product_partNumber) || sanden_hpump.includes(product_partNumber)) {
-            if (product_partNumber.indexOf("GAUS-") != -1 || product_partNumber.indexOf("−HPUMP") != -1) {
-                if (sanden_groups.hasOwnProperty(product_id)) {
-                    sanden_groups[product_id].qty += parseInt(product_qty);
-                } else {
-                    sanden_groups[product_id] = {
-                        'partNumber': product_partNumber,
-                        'qty': parseInt(product_qty),
-                    };
+            if (lineItems_products[i].getAttribute('style') != "display: none;") {
+                let product_partNumber = $(`#product_part_number${i}`).val();
+                let product_id = $(`#product_product_id${i}`).val();
+                let product_qty = $(`#product_product_qty${i}`).val();
+                switch ($('#quote_type_c').val()) {
+                    case 'quote_type_sanden':
+                        if (product_partNumber.indexOf("GAUS-") != -1 || product_partNumber.indexOf("−HPUMP") != -1) {
+                            if (sanden_groups.hasOwnProperty(product_id)) {
+                                sanden_groups[product_id].qty += parseInt(product_qty);
+                            } else {
+                                sanden_groups[product_id] = {
+                                    'partNumber': product_partNumber,
+                                    'qty': parseInt(product_qty),
+                                };
+                            }
+                        }
+                        break;
+                    case 'quote_type_methven':
+                        if (sanden_groups.hasOwnProperty(product_id)) {
+                            sanden_groups[product_id].qty += parseInt(product_qty);
+                        } else {
+                            sanden_groups[product_id] = {
+                                'partNumber': product_partNumber,
+                                'qty': parseInt(product_qty),
+                            };
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }

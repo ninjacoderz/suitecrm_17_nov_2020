@@ -79,9 +79,7 @@ const PEAdminPercent = 0.3;
             set_value(list0.attr('id'), old_price - (((old_total_amount - new_total_amount) / 1.1)/qty));
             list0.trigger("blur");
         });
-        $('#group_custom_quote_inputs_checklist_extra .edit-view-field').each((index, item) =>{
-            
-        });
+        
     });
     // .:nhantv:. Init select Option checkbox and line item
     function initOptionAndGenLineItem(){
@@ -361,7 +359,6 @@ const PEAdminPercent = 0.3;
     function generate_quote_by_input(dataType){
         SUGAR.ajaxUI.showLoadingPanel();
         if(dataType == "quote_type_sanden") {
-            debugger;
             var data = new Object();
             var checkList =  $("#group_custom_quote_inputs_checklist .custom_fields");
             data['quote_generate_type'] = 'bySuite';
@@ -436,6 +433,49 @@ const PEAdminPercent = 0.3;
                 }
             }
         }
+
+        // Parse Data Product Get From Suite 
+        // var arrPartNumber = ['Sanden_Complex_Install', 'SANDEN_ELEC_EXTRA', 'RCBO', 'SwitchUpgrade', 'HWS_R', 'Sanden_Tank_Slab', 'Sanden_HP_Pavers', 'Site_Delivery', 'Spec_Trade_Disc', 'san_wall_bracket', 'Travel'];
+        $.ajax({
+            url: '/index.php?entryPoint=APIGetDataProduct',
+            data: {type_get: 'quote_input'},
+            method: 'POST',
+            success: function (result) {
+                try {
+                    var json_data = JSON.parse(result);
+                    for (let key in json_data) {
+                        console.log(json_data[key], $('div[data-partnumber='+json_data[key]["part_number"]+']'));
+                        if($('div[data-partnumber='+json_data[key].part_number+']').find('input[type=number]').val() == '') {
+                            $('div[data-partnumber='+json_data[key].part_number+']').find('input[type=number]').val(json_data[key].cost)
+                        }
+                        if($('div[data-partnumber='+json_data[key].part_number+']').find('input.added_field').is(":checked") == false) {
+                            $('div[data-partnumber='+json_data[key].part_number+']').find('input:nth-child(4)').attr('disabled', 'disabled');
+                            $('div[data-partnumber='+json_data[key].part_number+']').find('input[type=number]').attr('disabled', 'disabled');
+                        } else {
+                            $('div[data-partnumber='+json_data[key].part_number+']').find('input:nth-child(4)').removeAttr('disabled');
+                            $('div[data-partnumber='+json_data[key].part_number+']').find('input[type=number]').attr('disabled');
+                        }
+                    }
+                    $('body').on('change', '.added_field', function() {
+                        var current_input = $(this).parent().find('.value_field').val();
+                        if ($(this).is(':checked')) {
+                            $(this).parent().find('.itemise_field').removeAttr('disabled');
+                            $(this).parent().find('.value_field').removeAttr('disabled');
+                        } else {
+                            $(this).parent().find('.itemise_field').attr('disabled', 'disabled');
+                            $(this).parent().find('.itemise_field').prop("checked", false);
+                            $(this).parent().find('.value_field').attr('disabled', 'disabled');
+                            $(this).parent().find('.value_field').val(current_input);
+                        }
+                    })
+                    // $("#group_custom_checklist_rebate_provided").empty().append(json_data['template_html_rebate']);
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }).done(function (data) {
+            // SUGAR.ajaxUI.hideLoadingPanel();
+        });
     }
 
     function generateJSONForInput(){
