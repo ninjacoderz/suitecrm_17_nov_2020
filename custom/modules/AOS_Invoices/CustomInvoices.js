@@ -810,6 +810,10 @@ $(function () {
                     alert("please click the link to edit PO");
                     return false;
                 }
+                if ($('#installation_date_c_date').val() == '' && $('#plumber_install_date_c').val() == '') {
+                    alert("please fill 'Installation Date' or 'Plumber Install Date'!");
+                    return false;
+                }
                 $('#createPlumberPO span.glyphicon-refresh').removeClass('hidden');
                 var record_id = $("input[name='record']").val();
                 var invoice_installation = $('input[name="installation_pictures_c"]').val();
@@ -859,6 +863,10 @@ $(function () {
             $("#createElectricalPO").click(function(){
                 if($("#electrical_po_c").val() != ""){
                     alert("Please click the link to edit PO");
+                    return false;
+                }
+                if ($('#installation_date_c_date').val() == '' && $('#electrician_install_date_c').val() == '') {
+                    alert("please fill 'Installation Date' or 'Electrician Install Date'!");
                     return false;
                 }
                 $('#createElectricalPO span.glyphicon-refresh').removeClass('hidden');
