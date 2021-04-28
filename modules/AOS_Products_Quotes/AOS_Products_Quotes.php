@@ -124,6 +124,11 @@ class AOS_Products_Quotes extends AOS_Products_Quotes_sugar
                             $product_quote->parent_include = $parent->object_name;
                             $product_quote->po_type =  'sanden_plumber';
                             break;
+                        case 'electrician_product_': case 'electrician_service_': /**proposed po in quote */
+                            $product_quote->parent_type = "";
+                            $product_quote->parent_include = $parent->object_name;
+                            $product_quote->po_type =  'sanden_electrician';
+                            break;
                         default:
                             $product_quote->parent_type = $parent->object_name;
                             break;

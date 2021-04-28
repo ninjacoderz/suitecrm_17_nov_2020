@@ -346,7 +346,7 @@ session_start();
 
 date_default_timezone_set('Australia/Melbourne');
 $filename = 'severinfo.txt';
-$time_file = strtotime(date("F d Y H:i:s.", filemtime($filename)))+86400;
+$time_file = strtotime(date("F d Y H:i:s.", filemtime($filename)))+28800;
 $date =  strtotime(date('F d Y H:i:s.', time()));
 if( $time_file <= $date){
     $folder_info = shell_exec('df -h');

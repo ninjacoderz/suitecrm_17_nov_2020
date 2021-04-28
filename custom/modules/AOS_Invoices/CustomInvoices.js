@@ -6853,6 +6853,32 @@ $(function () {
                 }
             });     
             //VUT - E - add button TODAY / TODAY +1 TODAY+7  >> https://trello.com/c/42nirRdb/3048-invoice-add-date-shortcut-buttons
+            //VUT - S - Get AuPost Shipping id
+            var aupost_shipping_id = $(document).find('#aupost_shipping_id').val();
+            var invoice_type = $('#quote_type_c').val();
+            if (invoice_type != 'quote_type_methven') {
+                $(document).find('div[field="aupost_shipping_id"]').parent().hide();
+            } else {
+                $(document).find('#aupost_shipping_id').hide();
+                if (aupost_shipping_id == '') {
+                    var  invoice_id= $("input[name='record']").val().trim();
+                    $.ajax({
+                        url: "?entryPoint=API_Invoice_WarehouseLog&check=aupost&invoice_id=" +encodeURIComponent(invoice_id),
+                        success: function(data) {
+                            console.log('API_Invoice_WarehouseLog >>'+data);
+                            if (data.trim() == 'not id') {
+                                $(document).find('div[field="aupost_shipping_id"]').parent().hide(); 
+                                return; 
+                            }
+                            aupost_shipping_id = data.trim();
+                            showLink('aupost_shipping_id', 'aupost', aupost_shipping_id);
+                        }
+                    });
+                } else {
+                    showLink('aupost_shipping_id', 'aupost', aupost_shipping_id);
+                }
+            }
+            //VUT - E - Get AuPost Shipping id
         }
         $('#create_service_case').click(function() {
             // debugger;
@@ -8706,4 +8732,24 @@ function showLinkMeeting(id, meeting_id) {
     let link_meeting = "<div id='open_"+id+"'><a target='_blank' href='/index.php?module=Meetings&action=EditView&record=" + meeting_id + "'>" + "Open Meeting" + "</a></div>";
     $(`#open_${id}`).remove();
     $(`#${id}`).parent().append(link_meeting);
+}
+
+/**
+ * show link 
+ * @param {*} id_ele 
+ * @param {*} module_name 
+ * @param {*} record 
+ */
+function showLink(id_ele, module_name, record) {
+    let link = '';
+    switch (module_name) {
+        case 'aupost':
+            link += `<div id="open_${id_ele}"><a target="_blank" href="https://auspost.com.au/mypost-business/shipping-and-tracking/orders/view/retail/${record}">Open ${module_name.toUpperCase()}</a></div>`;
+            break;
+
+        default:
+            break;
+    }
+    $(document).find(`#open_${id_ele}`).remove();
+    $(document).find(`#${id_ele}`).parent().append(link);
 }

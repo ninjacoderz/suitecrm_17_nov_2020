@@ -550,6 +550,11 @@ $entry_point_registry['APIrederectToPVwatts'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIrederectToPVwatts.php',
     'auth' => true
 );
+//tuan RenderPOInputs
+$entry_point_registry['APIRenderPOInputs'] = array(
+    'file' => 'custom/modules/PO_purchase_order/APIRenderPOInputs.php',
+    'auth' => true
+);
 //dung code - button "Resize All" in file upload
 $entry_point_registry['ResizeAllFile'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/ResizeAllFile.php',

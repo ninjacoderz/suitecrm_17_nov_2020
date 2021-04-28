@@ -5534,8 +5534,10 @@ $(window).load(function () {
         if ($("#quote_note_inputs_c").val() == '' || typeof $("#quote_note_inputs_c").val() == 'undefined'){
             console.log('CustomQuotes.js >> Empty field #quote_note_inputs_c');
             showSubpanel('plumber','No');
+            showSubpanel('electrician','No');
         } else {
             sanden_quote_input = JSON.parse($('#quote_note_inputs_c').val());
+            //Plumber
             if (sanden_quote_input['quote_plumbing_installation_by_pure'] == 'Yes') {
                 var plumber_group_id = ($('#plumber_lineItems input[name="plumber_group_id[]"]').length > 0) ? $('#plumber_lineItems input[name="plumber_group_id[]"]').val() : '';
                 if (plumber_group_id == '') {
@@ -5544,8 +5546,18 @@ $(window).load(function () {
             } else {
                 showSubpanel('plumber','No');
             }
+            //Electrician
+            if (sanden_quote_input['quote_electrical_installation_by_pure'] == 'Yes') {
+                var electrician_group_id = ($('#electrician_lineItems input[name="electrician_group_id[]"]').length > 0) ? $('#electrician_lineItems input[name="electrician_group_id[]"]').val() : '';
+                if (electrician_group_id == '') {
+                    console.log('CustomQuotes.js >> #electrician_group_id is null');
+                }
+            } else {
+                showSubpanel('electrician','No');
+            }
+
         }
-        
+        //Plumber
         $(document).find('#group_custom_quote_inputs_checklist').on('change','#quote_plumbing_installation_by_pure',function (){
             // var plumber_panel = $('#plumber_total_amount').closest('.panel.panel-default');
             // var plumber_panel_title = plumber_panel.find('.panel-heading a div').text() != '' ? plumber_panel.find('.panel-heading a div').text().toLowerCase().trim() : ''; encodeURIComponent($("input[name='record']").val())
@@ -5591,8 +5603,54 @@ $(window).load(function () {
                 });
             }
         });
+        //Electrician
+        $(document).find('#group_custom_quote_inputs_checklist').on('change','#quote_electrical_installation_by_pure',function (){
+            if ($(this).val() == 'No') {
+                $(document).find('#electrician_lineItems .delete_group').trigger('click');
+                showSubpanel('electrician', 'No');
+            } else {
+                SUGAR.ajaxUI.showLoadingPanel();
+                showSubpanel('electrician','Yes');
+                let electrician_group_id = ($('#electrician_lineItems input[name="electrician_group_id[]"]').length) ? $('#electrician_lineItems input[name="electrician_group_id[]"]').val() : '';
+                if (electrician_group_id == '') {
+                    $.ajax({
+                        url: '/index.php?entryPoint=APICreateLineItemProposedPO',
+                        type: 'POST',
+                        async: true,
+                        data:
+                        {
+                            quote_id: encodeURIComponent($("input[name='record']").val()),
+                            po_type: 'sanden_electrician',
+                        },
+                        success: function (data) {
+                            // console.log(data);
+                            if (data == '') {
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                                return;
+                            }
+                            $(document).find('#electrician_line_items_span').append(data);
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                        }
+                    });
+                } else {
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                }
+                $(document).find('[field="electrician_line_items"] .electrician_group_body').each(function(e){
+                    if ($(this).find('tbody').length > 0) {
+                        $(this).attr('style', '');
+                        $(this).find('tbody').each(function(e){
+                            $(this).attr('style', '');
+                            $(this).find(`#electrician_product_deleted${e}`).val('0');
+                        });
+                        electrician_calculateAllLines();
+                    }
+                });
+            }
+        });
+        
     } else {
         showSubpanel('plumber','No');
+        showSubpanel('electrician','No');
     }
     //VUT - E - Proposed Plumber/Electrician PO in Quotes's Editview
 });
@@ -6336,7 +6394,7 @@ function compareToday() {
  * @param {'string'} status : Yes / No
  */
 function showSubpanel(key,status) {
-    console.log(`function showSubpanel(${key}, ${status})`);
+    // console.log(`function showSubpanel(${key}, ${status})`);
     switch (status) {
         case 'No':
             $(document).find(`#${key}_total_amount`).closest('.panel.panel-default').hide();

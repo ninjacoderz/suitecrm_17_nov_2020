@@ -98,17 +98,22 @@ class AOS_Line_Item_Groups extends AOS_Line_Item_Groups_sugar
                 $product_quote_group->currency_id = $parentCurrencyId;
                 $product_quote_group->parent_id = $parent->id;
                 $product_quote_group->parent_type = $parent->object_name;
-                //VUT - S - Proposed Plumber
+                //VUT - S - Proposed Plumber/electrician
                 switch ($key) {
                     case 'plumber_group_': 
                         $product_quote_group->parent_type = "";
                         $product_quote_group->parent_include =  $parent->object_name;
                         $product_quote_group->po_type =  'sanden_plumber';
                         break;
+                    case 'electrician_group_':
+                        $product_quote_group->parent_type = "";
+                        $product_quote_group->parent_include =  $parent->object_name;
+                        $product_quote_group->po_type =  'sanden_electrician';
+                        break;
                     default:
                         break;
                 }
-                //VUT - E - Proposed Plumber
+                //VUT - E - Proposed Plumber/electrician
                 $product_quote_group->save();
                 $post_data[$key . 'id'][$i] = $product_quote_group->id;
 
@@ -123,6 +128,10 @@ class AOS_Line_Item_Groups extends AOS_Line_Item_Groups_sugar
             case 'plumber_group_':
                 $productQuote->save_lines($post_data, $parent, $groups, 'plumber_product_');
                 $productQuote->save_lines($post_data, $parent, $groups, 'plumber_service_');
+                break;
+            case 'electrician_group_':
+                $productQuote->save_lines($post_data, $parent, $groups, 'electrician_product_');
+                $productQuote->save_lines($post_data, $parent, $groups, 'electrician_service_');
                 break;
             default:
                 $productQuote->save_lines($post_data, $parent, $groups, 'product_');
