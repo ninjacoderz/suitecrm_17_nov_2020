@@ -4236,53 +4236,16 @@ $(document).ready(function () {
         }
     });
     $("#btn_pe_solar_tool").on('click', function (e) {
-        // if ($("#solar_design_tool_id_c").val() == '') {
-        //     SUGAR.ajaxUI.showLoadingPanel();
-        //     var address = [$("#install_address_c").val(), $("#install_address_city_c").val() + ' ' + $("#install_address_state_c").val(), $("#install_address_postalcode_c").val(), 'Australia'];
-        //     address = address.join(', ');
-        //     var first_name = $("#account_firstname_c").val();
-        //     var family_name = $("#account_lastname_c").val();
-        //     var email = $(".phone-number").children("a").attr('data-email-address');
-        //     var phone = $(".phone-number").children(".account_phone_number").text().replace(/ /g, '');
-        //     $.ajax({
-        //         url: 'https://maps.googleapis.com/maps/api/geocode/json?address='
-        //             + address
-        //             + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
-        //         type: 'GET',
-        //         success: function (result) {
-        //             if (result.status == "OK") {
-        //                 var location = result.results[0].geometry.location;
-        //                 var quote_id = $("#EditView input[name='record']").val();
-        //                 $.ajax({
-        //                     type: "GET",
-        //                     url: 'index.php?entryPoint=customCreateProjectAPISolarDesignTool',
-        //                     data: { "quote_id": quote_id, "mapAPI": result, "first_name": first_name, "family_name": family_name, "email": email, "phone": phone },
-        //                     success: function (data) {
-        //                         if (data != '') {
-        //                             SUGAR.ajaxUI.hideLoadingPanel();
-        //                             $("#solar_design_tool_id_c").val(data);
-        //                             window.open(
-        //                                 'https://solardesign.pure-electric.com.au/#/studio/' + data,
-        //                                 '_blank' // <- This is what makes it open in a new window.
-        //                             );
-        //                         } else {
-        //                             alert("Can't create solar design project");
-        //                             SUGAR.ajaxUI.hideLoadingPanel();
-        //                         }
-        //                     }
-        //                 });
-        //             } else {
-        //                 SUGAR.ajaxUI.hideLoadingPanel();
-        //             }
-        //         }
-        //     });
-        // } else {
-            // .:nhantv:. Update link to Jarod's design tool
+        // .:nhantv:. Update link to Jarod's design tool
+        let quoteId = $('input[name="record"]').val();
+        if (quoteId != '') {
             window.open(
-                'https://main.d3djjyr2awjnsi.amplifyapp.com/',
+                'http://solardesigndev.pure-electric.com.au/' + quoteId,
                 '_blank' // <- This is what makes it open in a new window.
             );
-        // }
+        } else {
+            alert('No quote exist, please check again !');
+        }
     });
 });
 
