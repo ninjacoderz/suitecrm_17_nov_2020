@@ -8,16 +8,18 @@ function display_account_site_details($focus, $field, $value, $view)
 
     if ($view == 'DetailView') {
         $result_data = '';
-        
         switch ($focus->module_dir ) {
             case 'AOS_Quotes':
-                $result_data = $focus->billing_account;
+                // $result_data = $focus->billing_account;
+                $result_data = '<a target="_blank" href="/index.php?module=Accounts&action=EditView&record='.$focus->billing_account_id.'"><span id="billing_account_id" class="sugar_field" data-id-value="'.$focus->billing_account_id.'">'.$focus->billing_account.'</span></a>';
                 break;
             case 'Leads':
-                $result_data = $focus->account_name;
+                // $result_data = $focus->account_name;
+                $result_data = '<a target="_blank" href="/index.php?module=Accounts&action=EditView&record='.$focus->account_id.'"><span id="account_id" class="sugar_field" data-id-value="'.$focus->account_id.'">'.$focus->account_name.'</span></a>';
                 break;
             case 'AOS_Invoices':
-                $result_data = $focus->billing_account;
+                // $result_data = $focus->billing_account;
+                $result_data = '<a target="_blank" href="/index.php?module=Accounts&action=EditView&record='.$focus->billing_account_id.'"><span id="billing_account_id" class="sugar_field" data-id-value="'.$focus->billing_account_id.'">'.$focus->billing_account.'</span></a>';
                 break;
             default:
                 # code...
@@ -40,7 +42,8 @@ function display_contact_site_details($focus, $field, $value, $view)
         
         switch ($focus->module_dir ) {
             case 'AOS_Quotes':
-                $result_data = $focus->billing_contact;
+                // $result_data = $focus->billing_contact;
+                $result_data = '<a target="_blank" href="/index.php?module=Contacts&action=EditView&record='.$focus->billing_contact_id.'"><span id="billing_contact_id" class="sugar_field" data-id-value="'.$focus->billing_contact_id.'">'.$focus->billing_contact.'</span></a>';
                 break;
           
             default:
