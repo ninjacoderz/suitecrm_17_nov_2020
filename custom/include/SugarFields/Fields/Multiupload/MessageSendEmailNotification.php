@@ -19,6 +19,7 @@
 
             //VUT-
             $SMSContents = getMessage($phone); 
+            $sale_email = getEmailUserSaleAssigned(trim($row['id']));
             // VUT-
             $emailObj = new Email();
             $defaults = $emailObj->getSystemDefaultEmail();
@@ -41,6 +42,10 @@
             $bodytext .= "<p>Contact Name :<a href='https://suitecrm.pure-electric.com.au/index.php?module=Contacts&action=EditView&record=".$row['id']. "' target='_blank'><b>".$row["first_name"]." ".$row["last_name"]."</b></a></p>";
             $mail->Body = $bodytext.'<br>'.$SMSContents['contents'];
             $mail->AddBCC('thienpb89@gmail.com');
+            $mail->AddBCC('tranvu222@gmail.com');
+            if ($sale_email != '') {
+                $mail->AddCC(trim($sale_email));
+            }
             $mail->AddAddress('info@pure-electric.com.au');
             $mail->prepForOutbound();    
             $mail->setMailerForSystem();
@@ -151,4 +156,67 @@ function getMessage($phone_number) {
     }
     return $data_return;
 }
+/**
+ * Get Email User Assign
+ * @param string $contact_id 
+ * @return email $user->email1
+ */
+function getEmailUserSaleAssigned($contact_id) {
+    $db = DBManagerFactory::getInstance();
+    //AOS_Invoices
+    $sql = "SELECT DISTINCT id, number, assigned_user_id
+            FROM aos_invoices 
+            WHERE billing_contact_id ='".$contact_id."' AND deleted = 0 
+            ORDER BY number DESC
+            LIMIT 1";
+    $ret = $db->query($sql);
+    if ($ret->num_rows > 0) {
+        $row = $db->fetchByAssoc($ret);
+        if ($row['id'] &&  $row['assigned_user_id']) {
+            $user = new User();
+            $user->retrieve($row['assigned_user_id']);
+            if ($user->id) {
+                return $user->email1;
+            }
+        }
+    } 
+
+    //AOS_Quotes
+    $sql = "SELECT DISTINCT id, number, assigned_user_id
+            FROM aos_quotes 
+            WHERE billing_contact_id ='".$contact_id."' AND deleted = 0 
+            ORDER BY number DESC
+            LIMIT 1";
+    $ret = $db->query($sql);
+    if ($ret->num_rows > 0) {
+        $row = $db->fetchByAssoc($ret);
+        if ($row['id'] &&  $row['assigned_user_id']) {
+            $user = new User();
+            $user->retrieve($row['assigned_user_id']);
+            if ($user->id) {
+                return $user->email1;
+            }
+        }
+    } 
+
+    //leads
+    $sql = "SELECT DISTINCT id, number, assigned_user_id
+    FROM leads 
+    WHERE contact_id ='".$contact_id."' AND deleted = 0 
+    ORDER BY number DESC
+    LIMIT 1";
+    $ret = $db->query($sql);
+    if ($ret->num_rows > 0) {
+        $row = $db->fetchByAssoc($ret);
+        if ($row['id'] &&  $row['assigned_user_id']) {
+            $user = new User();
+            $user->retrieve($row['assigned_user_id']);
+            if ($user->id) {
+                return $user->email1;
+            }
+        }
+    }
+    return '';
+} 
+
 ?>
