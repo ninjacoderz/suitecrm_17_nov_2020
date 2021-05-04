@@ -547,7 +547,7 @@
             $pricings = json_decode(html_entity_decode($pricing_options));
 
             // $solar_pricing_options = '';
-            $solar_pricing_options = '<div style="margin: 0;padding:0;box-sizing:border-box;max-width: 100%;line-height:1.8;font-family: sans-serif;font-size:16px;">';
+            $solar_pricing_options = '<div style="margin: 0;padding:0;box-sizing:border-box;width: 100%;max-width: 1125px;line-height:1.8;font-family: sans-serif;font-size:16px;">';
             for ($i=1; $i < 7 ; $i++) { 
                 if($pricings->{'base_price_'.$i} != "" || $pricings->{'base_price_'.$i} != 0){
                     switch ( $pricings->{'inverter_type_'.$i} ){
