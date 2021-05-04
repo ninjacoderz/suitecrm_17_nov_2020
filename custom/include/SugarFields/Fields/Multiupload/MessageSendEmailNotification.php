@@ -42,7 +42,7 @@
             $bodytext .= "<p>Contact Name :<a href='https://suitecrm.pure-electric.com.au/index.php?module=Contacts&action=EditView&record=".$row['id']. "' target='_blank'><b>".$row["first_name"]." ".$row["last_name"]."</b></a></p>";
             $mail->Body = $bodytext.'<br>'.$SMSContents['contents'];
             $mail->AddBCC('thienpb89@gmail.com');
-            $mail->AddBCC('tranvu222@gmail.com');
+            // $mail->AddBCC('tranvu222@gmail.com');
             if ($sale_email != '') {
                 $mail->AddCC(trim($sale_email));
             }
