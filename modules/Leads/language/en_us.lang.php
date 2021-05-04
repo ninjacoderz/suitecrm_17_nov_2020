@@ -238,4 +238,9 @@ $mod_strings = array(
     'LBL_EMAIL_SITE_DETAILS' => 'Email',
     'LBL_ADDRESS_SITE_DETAILS' => 'Site Address',
     'LBL_IMAGE_SITE_DETAILS' => 'Image Site Address',
+    //VUT - Create Proposed Installer Subpanel
+    'LBL_PROPOSED_PLUMBER_ACCOUNT' => 'Sanden Plumber',
+    'LBL_PROPOSED_ELECTRICIAN_ACCOUNT' => 'Sanden Electrician',
+    'LBL_PROPOSED_DAIKIN_INSTALLER_ACCOUNT' => 'Daikin Installer',
+    'LBL_PROPOSED_SOLAR_INSTALLER_ACCOUNT' => 'Solar Installer',
 );

@@ -75,9 +75,10 @@ if($request == 'custom_display_link_contact_plum_elec_invoice'){
 
 //VUT-S-Request only in the quotes
 if ($request == "custom_display_link_contact_plum_elec_quote") {
-    $sanden_electrician_id = $_GET['sanden_electrician_id'];
-    $sanden_installer_id = $_GET['sanden_installer_id'];
-    $daikin_installer_id = $_GET['daikin_installer_id'];
+    $sanden_electrician_id = isset($_GET['sanden_electrician_id']) ? trim($_GET['sanden_electrician_id']) : '';
+    $sanden_installer_id = isset($_GET['sanden_installer_id']) ? trim($_GET['sanden_installer_id']): '';
+    $daikin_installer_id = isset($_GET['daikin_installer_id']) ? trim($_GET['daikin_installer_id']) : '';
+    $solar_installer_id = isset($_GET['solar_installer_id']) ? trim($_GET['solar_installer_id']) : '';
     $return = array();
 
     /**Sanden Electrician */
@@ -134,9 +135,28 @@ if ($request == "custom_display_link_contact_plum_elec_quote") {
         }
     }
 
+    /**Solar Installer */
+    $solar_installer_contact = '';
+    $solar_installer_account = new Account();
+    $solar_installer_account->retrieve($solar_installer_id);
+    if ($daikin_installer_account->id != '') {
+        $solar_installer_contact = $solar_installer_account->get_linked_beans('contacts','Contact');
+        if(count($solar_installer_contact)> 0){
+            for($i=0;$i < count($solar_installer_contact);$i++){
+                if($solar_installer_contact[$i]->id == $solar_installer_account->primary_contact_c){
+                    $solar_installer_contact = $solar_installer_contact[$i];
+                    break;
+                }elseif($i == count($solar_installer_contact) -1){
+                    $solar_installer_contact = $solar_installer_contact[count($solar_installer_contact) -1];
+                }
+            }
+        }
+    }
+
     $return['sanden_electrician_contact'] = html_entity_decode($sanden_electrician_contact->id, ENT_QUOTES);
     $return['sanden_installer_contact'] = html_entity_decode($sanden_installer_contact->id, ENT_QUOTES);
     $return['daikin_installer_contact'] = html_entity_decode($daikin_installer_contact->id, ENT_QUOTES);
+    $return['solar_installer_contact'] = html_entity_decode($solar_installer_contact->id, ENT_QUOTES);
 
     echo json_encode($return);
     die();

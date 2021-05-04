@@ -270,7 +270,11 @@ $(function () {
         });
     }
 
-
+    //VUT - Add link SA REPS link with SANDEN and SA
+    if ($('#quote_type_c').val() == 'quote_type_sanden' && $('#install_address_state_c').val() == 'SA') {
+        $(document).find('#install_address_state_c').parent().append('<p><a target="_blank" href="https://reps.escosa.sa.gov.au/Account/Login.aspx"><span>open SA REPS</span></a></p>');
+    }
+    
 
 
     //render_info_contact();

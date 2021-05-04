@@ -4178,4 +4178,70 @@ $(document).ready(function(){
         remove_break_line_textarea();
     });
 
+    //show link Account sub panel PROPOSED INSTALLER
+    showLinkAccount();
+    YAHOO.util.Event.addListener(["proposed_plumber_acccount_id","proposed_electrician_acccount_id","proposed_daikin_installer_acccount_id", "proposed_solar_installer_acccount_id"], "change", showLinkAccount);
 });
+
+function showLinkAccount() {
+    let plumber_account_id = $('#proposed_plumber_acccount_id');
+    let electrician_account_id = $('#proposed_electrician_acccount_id');
+    let daikin_installer_account_id = $('#proposed_daikin_installer_acccount_id');
+    let solar_installer_account_id = $('#proposed_solar_installer_acccount_id');
+
+    $("#link_proposed_plumber_acccount").remove();
+    if (plumber_account_id.val() != '') {
+        plumber_account_id.parent().append("<p id='link_proposed_plumber_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + plumber_account_id.val() + "' target='_blank'>Open Account</a></p>");
+    }
+
+    $("#link_proposed_electrician_acccount").remove();
+    if (electrician_account_id.val() != '') {
+        electrician_account_id.parent().append("<p id='link_proposed_electrician_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + electrician_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+    }
+
+    $("#link_proposed_daikin_installer_acccount").remove();
+    if (daikin_installer_account_id.val() != '') {
+        daikin_installer_account_id.parent().append("<p id='link_proposed_daikin_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + daikin_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+    }
+
+    $("#link_proposed_solar_installer_acccount").remove();
+    if (solar_installer_account_id.val() != '') {
+        solar_installer_account_id.parent().append("<p id='link_proposed_solar_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + solar_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+    }
+
+    $('.display_link_contact_proposed_account').remove();
+    $.ajax({
+        url: "?entryPoint=getContactFromAccount&request=custom_display_link_contact_plum_elec_quote&sanden_electrician_id=" + electrician_account_id.val()+"&sanden_installer_id="+plumber_account_id.val()+"&daikin_installer_id="+daikin_installer_account_id.val()+"&solar_installer_id="+solar_installer_account_id.val(),
+   }).done(function (data) {
+       debugger
+        if(data == '' || typeof data == 'undefined')return;
+       var json = $.parseJSON(data);
+       
+       $("#link_proposed_plumber_acccount").remove();
+       if (plumber_account_id.val() != '') {
+            plumber_account_id.parent().append("<p id='link_proposed_plumber_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + plumber_account_id.val() + "' target='_blank'>Open Account</a></p>");
+           if(json.sanden_installer_contact != '')  plumber_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.sanden_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='sanden_installer_contact_id' value='"+json.sanden_installer_contact+"'></p>");
+       }
+
+       $("#link_proposed_electrician_acccount").remove();
+       if (electrician_account_id.val() != '') {
+            electrician_account_id.parent().append("<p id='link_proposed_electrician_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + electrician_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+           if(json.sanden_electrician_contact != '') electrician_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.sanden_electrician_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='sanden_electrician_contact_id' value='"+json.sanden_electrician_contact+"'></p>");
+       }
+
+       $("#link_proposed_daikin_installer_acccount").remove();
+       if (daikin_installer_account_id.val() != '') {
+            daikin_installer_account_id.parent().append("<p id='link_proposed_daikin_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + daikin_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+            if(json.daikin_installer_contact != '') daikin_installer_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.daikin_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='daikin_installer_contact_id' value='"+json.daikin_installer_contact+"'></p>");
+       }
+
+       $("#link_proposed_solar_installer_acccount").remove();
+       if (solar_installer_account_id.val() != '') {
+        solar_installer_account_id.parent().append("<p id='link_proposed_solar_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + solar_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+            if(json.solar_installer_contact != '') solar_installer_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.solar_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='daikin_installer_contact_id' value='"+json.daikin_installer_contact+"'></p>");
+       }
+
+    });
+
+
+}
