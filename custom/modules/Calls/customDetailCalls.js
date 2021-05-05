@@ -134,6 +134,10 @@ $(document).ready(function(){
             });
             return $(self);
     }
-        //VUT-E-Add button Quote Follow Up
+    //VUT-E-Add button Quote Follow Up
+
+    //VUT - S - Clone button Delete
+    $('#tab-actions').parent().append($('#tab-actions li:nth-child(3)').clone().css('margin','0px 1px')); 
+    //VUT - E - Clone button Delete
     
 });
