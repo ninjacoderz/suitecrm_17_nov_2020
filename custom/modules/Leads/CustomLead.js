@@ -3441,20 +3441,21 @@ $(document).ready(function(){
         var distance_value = $("#distance_to_sg_c").val().replace('km','').replace(',','').trim();
         distance_value = distance_value.substring(0, distance_value.indexOf('.'));
         distance_value = parseInt(distance_value);
-        if($("#distance_to_sg_c").val() == ''){
-               //tu-code
-               var dialog_message = confirm('Get null distance field, Do you want to continue');
-               if(dialog_message == true){
-                   var _form = document.getElementById('EditView');
-                   _form.action.value='Save';
-                //    $("#updateToQuotesSolarGain").trigger('click');
-                   SUGAR.ajaxUI.submitForm(_form);
-                   return check_form('EditView');
-               }else{
-                   $("#distance_to_sg_c").focus();
-                   return false;
-               }
-        }else if(distance_value > 100){
+        // if($("#distance_to_sg_c").val() == ''){
+        //        //tu-code
+        //        var dialog_message = confirm('Get null distance field, Do you want to continue');
+        //        if(dialog_message == true){
+        //            var _form = document.getElementById('EditView');
+        //            _form.action.value='Save';
+        //         //    $("#updateToQuotesSolarGain").trigger('click');
+        //            SUGAR.ajaxUI.submitForm(_form);
+        //            return check_form('EditView');
+        //        }else{
+        //            $("#distance_to_sg_c").focus();
+        //            return false;
+        //        }
+        // }else 
+        if(distance_value > 100){
             var dialog_message = '<span>Distance greater than 100 kms please speak to the sales consultant</span>';
             var dialog = $(dialog_message).dialog({
                 buttons: {
