@@ -93,7 +93,7 @@ function getInternalNoteForLead ($record_id, $status) {
               LEFT JOIN leads_pe_internal_note_1_c ON leads_pe_internal_note_1_c.leads_pe_internal_note_1pe_internal_note_idb = pe_internal_note.id
               LEFT JOIN leads ON leads.id = leads_pe_internal_note_1_c.leads_pe_internal_note_1leads_ida
               WHERE pe_internal_note.deleted = 0 AND leads.id = '$record_id' 
-              ORDER BY pe_internal_note.date_entered ASC
+              ORDER BY pe_internal_note.date_entered DESC
               ";
     $ret = $db->query($query);
     if ($status == '') {
