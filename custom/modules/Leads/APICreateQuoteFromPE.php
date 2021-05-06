@@ -1999,7 +1999,9 @@ function send_email_schedule_info_pack($lead, $emailTemplateID,$schedule_time ='
             break;
             
         case '3c143527-67a2-6190-1565-5d5b3809767e':
-            $link_upload_files = 'https://pure-electric.com.au/pesolarform/confirm-to-lead?lead-id=' . $lead->id;
+            // $link_upload_files = 'https://pure-electric.com.au/pesolarform/confirm-to-lead?lead-id=' . $lead->id;
+            // .:nhantv:. Update link to solar quote form
+            $link_upload_files = 'https://pure-electric.com.au/pesolarform?lead-id=' . $lead->id;
             $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">Link Upload Here</a>';
             break; 
                    

@@ -931,13 +931,24 @@ else if($mail_format == "electrical"){
 //Add exist/old hws 
 $old_hws ='';
 $invoice_type = $app_list_strings['quote_type_list'];
+$sys_model = '';
 switch ( $_REQUEST['product_type']) {
     case "quote_type_sanden":
         $old_hws = urldecode($_REQUEST['old_hws'] ? 'Existing/Old HWS: '.$_REQUEST['old_hws'] : '' );
-        $subject = str_replace('$product_type',"Sanden",$subject);
+        preg_match('/(\d{3,3}\D{3,3})/', $invoice->name, $sys_model);
+        $subject = str_replace('$product_type',"Sanden {$sys_model[0]}",$subject);
         break;
     case "quote_type_daikin": case "quote_type_nexura":
-        $subject = str_replace('$product_type',"Daikin",$subject);
+        if (strpos(strtolower($invoice->name), "us7") !== false) {
+            $sys_model .= ' US7';
+        }
+        if (strpos(strtolower($invoice->name), "alira") !== false) {
+            $sys_model .= ' ALIRA';
+        }
+        if (strpos(strtolower($invoice->name), "nexura") !== false) {
+            $sys_model .= ' NEXURA';
+        }
+        $subject = str_replace('$product_type',"Daikin{$sys_model}",$subject);
         break;
     case "quote_type_upcomming_service":
         $subject = str_replace('$product_type',"Upcoming Service Call",$subject);

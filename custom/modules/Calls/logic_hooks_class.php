@@ -308,7 +308,7 @@
         }
     }
     /**
-     * Create Internal note (create new/change status)
+     * Create Internal note (create new/change status,assign_user)
      */
     class CreateInternalNotesCall {
         function after_save_createdInternalNotesCall($bean, $event, $arguments) {
@@ -350,6 +350,22 @@
                     $bean_intenal_notes = new  pe_internal_note();
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = $call_direction[$bean->direction].' '.$call_status[$bean->status].' '.$date_note;
+                    $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->save();
+                    $bean_intenal_notes->load_relationship('calls_pe_internal_note_1');
+                    $bean_intenal_notes->calls_pe_internal_note_1->add($bean->id);
+                }
+                if ($old_fields['assigned_user_id'] != $bean->assigned_user_id) {
+                    $bean_intenal_notes = new  pe_internal_note();
+                    if ($old_fields['assigned_user_id']) {
+                        $old_user = new User();
+                        $old_user->retrieve($old_fields['assigned_user_id']);
+                        if ($old_user->id) {
+                            $old_fields['assigned_user_name'] = $old_user->name;
+                        }
+                    }
+                    $bean_intenal_notes->type_inter_note_c = 'status_updated';
+                    $decription_internal_notes = "Change Assigned User from {$old_fields['assigned_user_name']} to {$bean->assigned_user_name}";
                     $bean_intenal_notes->description =  $decription_internal_notes;
                     $bean_intenal_notes->save();
                     $bean_intenal_notes->load_relationship('calls_pe_internal_note_1');

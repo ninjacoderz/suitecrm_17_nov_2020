@@ -810,6 +810,10 @@ $(function () {
                     alert("please click the link to edit PO");
                     return false;
                 }
+                if ($('#installation_date_c_date').val() == '' && $('#plumber_install_date_c').val() == '') {
+                    alert("please fill 'Installation Date' or 'Plumber Install Date'!");
+                    return false;
+                }
                 $('#createPlumberPO span.glyphicon-refresh').removeClass('hidden');
                 var record_id = $("input[name='record']").val();
                 var invoice_installation = $('input[name="installation_pictures_c"]').val();
@@ -859,6 +863,10 @@ $(function () {
             $("#createElectricalPO").click(function(){
                 if($("#electrical_po_c").val() != ""){
                     alert("Please click the link to edit PO");
+                    return false;
+                }
+                if ($('#installation_date_c_date').val() == '' && $('#electrician_install_date_c').val() == '') {
+                    alert("please fill 'Installation Date' or 'Electrician Install Date'!");
                     return false;
                 }
                 $('#createElectricalPO span.glyphicon-refresh').removeClass('hidden');
@@ -8084,6 +8092,7 @@ $(document).ready(function(){
                     success: function (data) {
                         if(data.replace(/\s/g, '') != ''){
                             alert("Successfully created Auspost Label.");
+                            $("#order_number_c").parent().append("<p id='link_order'><a  href='https://auspost.com.au/mypost-business/shipping-and-tracking/orders/edit/retail/"+data+"' target='_blank'>Open detail the newly created auspost</a></p>");
                         }else{
                             alert("We can not create label manually.");
                         }   
@@ -8096,6 +8105,7 @@ $(document).ready(function(){
                     success: function (data) {
                         if(data.replace(/\s/g, '') != ''){
                             alert("Successfully created Auspost Label.");
+                            $("#order_number_c").parent().append("<p id='link_order'><a  href='https://auspost.com.au/mypost-business/shipping-and-tracking/orders/edit/retail/"+data+"' target='_blank'>Open detail the newly created auspost</a></p>");
                         }else{
                             alert("We can not create label manually.");
                         }   

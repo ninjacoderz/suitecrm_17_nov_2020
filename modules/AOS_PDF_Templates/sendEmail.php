@@ -81,7 +81,15 @@ class sendEmail
         }
 
         // set sms content that relate with email
-        $email->sms_message = str_replace("\n\n","\n",str_replace("<br />","\n",$sms_content));
+        if( $email->sms_signture == '') {
+            $sales_person = new User();
+            $sales_person->retrieve($module->assigned_user_id);
+            $email->sms_signture = $sales_person->sms_signature_c;
+            if($email->sms_signture == ''){
+                $email->sms_signture = $current_user->sms_signature_c;
+            }
+        };
+        $email->sms_message = str_replace("\n\n","\n",str_replace("<br />","\n",$sms_content ."\n".$email->sms_signture));
         $email->number_client = $sms_received;
 
 

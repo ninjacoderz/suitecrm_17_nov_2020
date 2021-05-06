@@ -735,6 +735,57 @@ $(function () {
     //hidden salutation
     $("#salutation").hide();
     // Generate uinique id
+    //VUT - S - Get distance for Installer
+    $('#distance_plumber').closest('.edit-view-row-item').prepend('<div><button class="button primary" type="button" id="getDistance_all"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get All Distance </button><button class="button primary" id="getDistance_selected"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected </button></div>');
+    $(document).on('focus', '#proposed_plumber_acccount, #proposed_electrician_acccount, #proposed_daikin_installer_acccount, #proposed_solar_installer_acccount', function () {
+        window.accountFocus = $(this).siblings('input[type=hidden]');
+    });
+    //VUT - get distance
+    $(document).on('click', '#getDistance_selected', function (e) {
+        if (typeof window.accountFocus === "undefined") return false;
+        $('#getDistance_selected span.glyphicon-refresh').removeClass('hidden');
+        let accFocus = window.accountFocus;
+        let accFocus_idElement = accFocus.attr('id');
+        let account_id = $(`#${accFocus_idElement}`).val();
+        let field_distance_idElement;
+        let distance_selected = get_distance_by_account_id(account_id);
+        switch (accFocus_idElement) {
+            case 'proposed_plumber_acccount_id': 
+                field_distance_idElement = 'distance_plumber';
+                break;
+            case 'proposed_electrician_acccount_id': 
+                field_distance_idElement = 'distance_electrician';
+                break;
+            case 'proposed_daikin_installer_acccount_id':
+                field_distance_idElement = 'distance_daikin_installer';
+                break;
+            case 'proposed_solar_installer_acccount_id':
+                field_distance_idElement = 'distance_to_sg_c';
+                break;
+            default:
+                break;
+        }
+        if (typeof (distance_selected) == 'string') {
+            $("#" + field_distance_idElement).val(`${distance_selected}`);
+        } else {
+            $("#" + field_distance_idElement).val(`${distance_selected} km`);
+        }
+        $('#getDistance_selected span.glyphicon-refresh').addClass('hidden');
+        return false;
+    });
+
+    //VUT - get all distance
+    $(document).on("click", "#getDistance_all", function () {
+        var from_address = $("#site_detail_addr__c").val() + ", " +
+            $("#site_detail_addr__city_c").val() + ", " +
+            $("#site_detail_addr__state_c").val() + ", " +
+            $("#site_detail_addr__postalcode_c").val();
+        SUGAR.ajaxUI.showLoadingPanel();
+        getDistances(from_address);
+    });
+
+    
+    //VUT - E - Get distance for Installer
 
     //tuan code css 
     // $('div[field="product_type_c"]').css('height','85px');
@@ -3390,20 +3441,21 @@ $(document).ready(function(){
         var distance_value = $("#distance_to_sg_c").val().replace('km','').replace(',','').trim();
         distance_value = distance_value.substring(0, distance_value.indexOf('.'));
         distance_value = parseInt(distance_value);
-        if($("#distance_to_sg_c").val() == ''){
-               //tu-code
-               var dialog_message = confirm('Get null distance field, Do you want to continue');
-               if(dialog_message == true){
-                   var _form = document.getElementById('EditView');
-                   _form.action.value='Save';
-                //    $("#updateToQuotesSolarGain").trigger('click');
-                   SUGAR.ajaxUI.submitForm(_form);
-                   return check_form('EditView');
-               }else{
-                   $("#distance_to_sg_c").focus();
-                   return false;
-               }
-        }else if(distance_value > 100){
+        // if($("#distance_to_sg_c").val() == ''){
+        //        //tu-code
+        //        var dialog_message = confirm('Get null distance field, Do you want to continue');
+        //        if(dialog_message == true){
+        //            var _form = document.getElementById('EditView');
+        //            _form.action.value='Save';
+        //         //    $("#updateToQuotesSolarGain").trigger('click');
+        //            SUGAR.ajaxUI.submitForm(_form);
+        //            return check_form('EditView');
+        //        }else{
+        //            $("#distance_to_sg_c").focus();
+        //            return false;
+        //        }
+        // }else 
+        if(distance_value > 100){
             var dialog_message = '<span>Distance greater than 100 kms please speak to the sales consultant</span>';
             var dialog = $(dialog_message).dialog({
                 buttons: {
@@ -3656,7 +3708,7 @@ $(document).ready(function(){
                         });
                         $(document).find('#check_addr_site_detail_c').parent().detach().appendTo("#group_address_site_detail");
                         $('body').find('#solargain_tesla_quote_number_c').closest('.edit-view-row-item').after('<div id="div_for_distance_to_sg_c"><div class="clear"></div></div>');
-                        $("#distance_to_sg_c").closest(".edit-view-row-item").detach().appendTo("#div_for_distance_to_sg_c");
+                        // $("#distance_to_sg_c").closest(".edit-view-row-item").detach().appendTo("#div_for_distance_to_sg_c");
                         var parent_solargain_tesla_quote_number_c =  $('#solargain_tesla_quote_number_c').parent().parent();
                         $("#solargain_quote_number_c").parent().parent().detach().insertAfter(parent_solargain_tesla_quote_number_c);
                         $("#site_detail_addr__c").parent().parent().before('<div class="col-xs-12 edit-view-field"> <label>Copy address from billing address:</label><input id="check_addr_site_detail_c" name="check_addr_site_detail_c"  type="checkbox"></div>');
@@ -4178,4 +4230,157 @@ $(document).ready(function(){
         remove_break_line_textarea();
     });
 
+    //show link Account sub panel PROPOSED INSTALLER
+    showLinkAccount();
+    YAHOO.util.Event.addListener(["proposed_plumber_acccount_id","proposed_electrician_acccount_id","proposed_daikin_installer_acccount_id", "proposed_solar_installer_acccount_id"], "change", showLinkAccount);
 });
+
+function showLinkAccount() {
+    let plumber_account_id = $('#proposed_plumber_acccount_id');
+    let electrician_account_id = $('#proposed_electrician_acccount_id');
+    let daikin_installer_account_id = $('#proposed_daikin_installer_acccount_id');
+    let solar_installer_account_id = $('#proposed_solar_installer_acccount_id');
+
+    $("#link_proposed_plumber_acccount").remove();
+    if (plumber_account_id.val() != '') {
+        plumber_account_id.parent().append("<p id='link_proposed_plumber_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + plumber_account_id.val() + "' target='_blank'>Open Account</a></p>");
+    }
+
+    $("#link_proposed_electrician_acccount").remove();
+    if (electrician_account_id.val() != '') {
+        electrician_account_id.parent().append("<p id='link_proposed_electrician_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + electrician_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+    }
+
+    $("#link_proposed_daikin_installer_acccount").remove();
+    if (daikin_installer_account_id.val() != '') {
+        daikin_installer_account_id.parent().append("<p id='link_proposed_daikin_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + daikin_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+    }
+
+    $("#link_proposed_solar_installer_acccount").remove();
+    if (solar_installer_account_id.val() != '') {
+        solar_installer_account_id.parent().append("<p id='link_proposed_solar_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + solar_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+    }
+
+    $('.display_link_contact_proposed_account').remove();
+    $.ajax({
+        url: "?entryPoint=getContactFromAccount&request=custom_display_link_contact_plum_elec_quote&sanden_electrician_id=" + electrician_account_id.val()+"&sanden_installer_id="+plumber_account_id.val()+"&daikin_installer_id="+daikin_installer_account_id.val()+"&solar_installer_id="+solar_installer_account_id.val(),
+   }).done(function (data) {
+        if(data == '' || typeof data == 'undefined')return;
+       var json = $.parseJSON(data);
+       
+       $("#link_proposed_plumber_acccount").remove();
+       if (plumber_account_id.val() != '') {
+            plumber_account_id.parent().append("<p id='link_proposed_plumber_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + plumber_account_id.val() + "' target='_blank'>Open Account</a></p>");
+           if(json.sanden_installer_contact != '')  plumber_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.sanden_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='sanden_installer_contact_id' value='"+json.sanden_installer_contact+"'></p>");
+       }
+
+       $("#link_proposed_electrician_acccount").remove();
+       if (electrician_account_id.val() != '') {
+            electrician_account_id.parent().append("<p id='link_proposed_electrician_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + electrician_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+           if(json.sanden_electrician_contact != '') electrician_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.sanden_electrician_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='sanden_electrician_contact_id' value='"+json.sanden_electrician_contact+"'></p>");
+       }
+
+       $("#link_proposed_daikin_installer_acccount").remove();
+       if (daikin_installer_account_id.val() != '') {
+            daikin_installer_account_id.parent().append("<p id='link_proposed_daikin_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + daikin_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+            if(json.daikin_installer_contact != '') daikin_installer_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.daikin_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='daikin_installer_contact_id' value='"+json.daikin_installer_contact+"'></p>");
+       }
+
+       $("#link_proposed_solar_installer_acccount").remove();
+       if (solar_installer_account_id.val() != '') {
+        solar_installer_account_id.parent().append("<p id='link_proposed_solar_installer_acccount'><a  href='/index.php?module=Accounts&action=EditView&record=" + solar_installer_account_id.val()+ "' target='_blank'>Open Account</a></p>");
+            if(json.solar_installer_contact != '') solar_installer_account_id.parent().append("<p class='display_link_contact_proposed_account' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.solar_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='daikin_installer_contact_id' value='"+json.daikin_installer_contact+"'></p>");
+       }
+
+    });
+
+
+}
+
+function get_distance_by_account_id(id_account){
+    if(id_account == '') return '';
+    if( $('#site_detail_addr__c').val() == "" ){  
+        var from_address =  $("#primary_address_street").val() +", " +
+                            $("#primary_address_city").val() + ", " +
+                            $("#primary_address_state").val() + ", " +
+                            $("#primary_address_postalcode").val();
+     
+    }else {
+        var from_address =  $("#site_detail_addr__c").val() +", " +
+                            $("#site_detail_addr__city_c").val() + ", " +
+                            $("#site_detail_addr__state_c").val() + ", " +
+                            $("#site_detail_addr__postalcode_c").val();
+    }
+    var result_distance = '';
+    $.ajax({
+        url: "/index.php?entryPoint=getdistance_Flum_or_Elec_to_Suite&ac_id="+id_account,
+        type: 'GET',
+        async:false,
+        success: function(data)
+            {
+                if(data == ', , , '){
+                    alert('Sorry! - Not see address');
+                }else {       
+                    $.ajax({
+                            url: "/index.php?entryPoint=customDistance&address_from=" + from_address + "&address_to=" + data,
+                            type: 'GET',
+                            async:false,
+                            success: function(result)
+                            {
+                                try {
+                                    var jsonObject = $.parseJSON(result);
+                                    var l_distance = parseFloat(jsonObject.routes[0].legs[0].distance.text.replace(/[^\d.-]/g, ''));
+                                    result_distance = l_distance;
+                                } catch (error) {
+                                    result_distance = 'not found';
+                                }
+                                
+                            } 
+                        
+                    });
+                }
+            },
+    })
+    return result_distance;
+}
+
+function getDistances(from_address) {
+    setTimeout(() => {
+        $.ajax({
+            url: "?entryPoint=customFilterPlumber&address_from=" + from_address,
+            success: function (data) {
+                try {
+                    var infor = $.parseJSON(data);
+                    renderShortest(infor['daikin_instaler'], 'distance_daikin_installer', 'proposed_daikin_installer_acccount', 'proposed_daikin_installer_acccount_id');
+                    renderShortest(infor['electrician'], 'distance_electrician', 'proposed_electrician_acccount', 'proposed_electrician_acccount_id')
+                    renderShortest(infor['plumber'], 'distance_plumber', 'proposed_plumber_acccount', 'proposed_plumber_acccount_id');
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                } catch (error) {
+                    console.log(error);
+                    SUGAR.ajaxUI.hideLoadingPanel();
+
+                }
+            }
+        });
+    }, 1000);
+}
+
+function renderShortest(info, field_distance_id, field_account_name, field_account_id) {
+    $("#" + field_distance_id).after("<b class='suggest'> Suggest: </b><br/>");
+    $("#" + field_distance_id).after("</br><b class='shortest'> Shortest: </b><br/><b class='shortest-suggest'></b>");
+    info.sort(function (a, b) {
+        return a.distance - b.distance;
+    });
+    for (var i = 0; i < 5; i++) {
+        var addr = info[0][0];
+        var name_lum = info[0][1];
+        var id_nearest = info[0][2];
+        var str_dis = info[0][3];
+
+        $("#" + field_distance_id).nextAll('.shortest-suggest').html('<a class="selected-suggest" dist="' + str_dis + '" rel="' + addr + '" href="#">' + name_lum + ': ' + addr + ':<span style="color:green">' + str_dis + '</span></a> <br>');
+        $("#" + field_distance_id).val(str_dis);
+        $('#' + field_account_name).val(name_lum);
+        $('#' + field_account_id).val(id_nearest);
+        $("#" + field_distance_id).nextAll('.suggest').append('<a class="selected-suggest" dist="' + info[i][3] + '" rel="' + info[i][0] + '" href="#">' + info[i][1] + ': ' + info[i][0] + ':<span style="color:green">' + info[i][3] + '</span></a> <br>');
+    }
+}
