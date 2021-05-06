@@ -841,7 +841,22 @@
         // $mail->AddCC('ngoanhtuan2510@gmail.com');
         $mail->prepForOutbound();
         $mail->setMailerForSystem();  
-        $sent = $mail->Send();
+        if ($mail->Send()) {
+            $emailObj->to_addrs= $email;
+            $emailObj->type= 'archived';
+            $emailObj->deleted = '0';
+            $emailObj->name = $mail->Subject;
+            $emailObj->description_html = $mail->Body;
+            $emailObj->from_addr = $mail->From;
+            $emailObj->parent_type = 'Leads';
+            $emailObj->parent_id = $focus->leads_aos_quotes_1leads_ida;
+            $emailObj->parent_name = $focus->leads_aos_quotes_1_name;
+            $emailObj->date_sent = TimeDate::getInstance()->nowDb();
+            $emailObj->modified_user_id = '1';
+            $emailObj->created_by = '1';
+            $emailObj->status = 'sent';
+            $emailObj->save();
+        }
 
         // .:nhantv:. Add logic to check that "Quote via SMS?" is selected
         if($sms_send === "Yes"){
