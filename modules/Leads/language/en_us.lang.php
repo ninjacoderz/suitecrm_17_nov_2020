@@ -243,4 +243,7 @@ $mod_strings = array(
     'LBL_PROPOSED_ELECTRICIAN_ACCOUNT' => 'Sanden Electrician',
     'LBL_PROPOSED_DAIKIN_INSTALLER_ACCOUNT' => 'Daikin Installer',
     'LBL_PROPOSED_SOLAR_INSTALLER_ACCOUNT' => 'Solar Installer',
+    'LBL_DISTANCE_PLUMBER' => 'Distance Sanden Plumber',
+    'LBL_DISTANCE_ELECTRICIAN' => 'Distance Sanden Electrician',
+    'LBL_DISTANCE_DAIKIN_INSTALLER' => 'Distance Daikin Installer',
 );

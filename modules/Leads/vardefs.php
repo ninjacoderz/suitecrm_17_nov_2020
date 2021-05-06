@@ -912,6 +912,36 @@ $dictionary['Lead'] = array('table' => 'leads', 'audited' => true, 'unified_sear
                 'quicksearch' => 'enabled',
                 'studio' => 'visible',
             ),
+        'distance_plumber' =>
+        array(
+            'name' => 'distance_plumber',
+            'vname' => 'LBL_DISTANCE_PLUMBER',
+            'type' => 'varchar',
+            'len' => 10,
+            // 'inline_edit' => true,
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+        ),
+        'distance_electrician' =>
+        array(
+            'name' => 'distance_electrician',
+            'vname' => 'LBL_DISTANCE_ELECTRICIAN',
+            'type' => 'varchar',
+            'len' => 10,
+            // 'inline_edit' => true,
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+        ),
+        'distance_daikin_installer' =>
+        array(
+            'name' => 'distance_daikin_installer',
+            'vname' => 'LBL_DISTANCE_DAIKIN_INSTALLER',
+            'type' => 'varchar',
+            'len' => 10,
+            // 'inline_edit' => true,
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+        ),
         //VUT - E - Create Proposed Installers
                 
 
