@@ -516,7 +516,7 @@
      */
     self.onSendEmail = function () {
       $(self).trigger("sendEmail", [self]);
-
+      
       // Tell the user we are sending an email
       var mb = messageBox();
       mb.hideHeader();
@@ -577,6 +577,20 @@
         var client_number =  $('#number_client').val().trim();
         if(client_number != ""){
           formData.append('number_client', client_number);
+        }else{
+          if($("#send_sms").prop("checked")){
+            mb.showHeader();
+            mb.setBody("No client mobile number. Please add number to send SMS.");
+            mb.showFooter();
+            $(self).trigger("sentEmailError", [self, response]);
+          }
+        }
+      }else{
+        if($("#send_sms").prop("checked")){
+          mb.showHeader();
+          mb.setBody("No client mobile number. Please add number to send SMS.");
+          mb.showFooter();
+          $(self).trigger("sentEmailError", [self, response]);
         }
       }
 

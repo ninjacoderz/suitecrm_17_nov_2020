@@ -131,6 +131,8 @@
             
             $attachmentBeans = $emailTemplate->getAttachments();
     
+            $emailObj = new Email();
+            $defaults = $emailObj->getSystemDefaultEmail();
             $mail = new SugarPHPMailer();  
             $mail->setMailerForSystem();  
             $mail->From = 'info@pure-electric.com.au';  
@@ -162,6 +164,21 @@
             $mail->AddCC('info@pure-electric.com.au');
             $mail->prepForOutbound();
             $mail->setMailerForSystem();  
-            $sent = $mail->Send();
+            if ($mail->Send()) {
+                $emailObj->to_addrs= $email;
+                $emailObj->type= 'archived';
+                $emailObj->deleted = '0';
+                $emailObj->name = $mail->Subject;
+                $emailObj->description_html = $mail->Body;
+                $emailObj->from_addr = $mail->From;
+                $emailObj->parent_type = 'Leads';
+                $emailObj->parent_id = $quote->leads_aos_quotes_1leads_ida;
+                $emailObj->parent_name = $quote->leads_aos_quotes_1_name;
+                $emailObj->date_sent = TimeDate::getInstance()->nowDb();
+                $emailObj->modified_user_id = '1';
+                $emailObj->created_by = '1';
+                $emailObj->status = 'sent';
+                $emailObj->save();
+            }
         }
     }

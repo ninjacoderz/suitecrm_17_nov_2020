@@ -793,7 +793,23 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                 //VUT-E
                 $mail->prepForOutbound();
                 $mail->setMailerForSystem();  
-                $sent = $mail->Send();
+                // $sent = $mail->Send();
+                if ($mail->Send()) {
+                    $emailObj->to_addrs= $_REQUEST['list_infomation']['your_email'];
+                    $emailObj->type= 'archived';
+                    $emailObj->deleted = '0';
+                    $emailObj->name = $mail->Subject;
+                    $emailObj->description_html = $mail->Body;
+                    $emailObj->from_addr = $mail->From;
+                    $emailObj->parent_type = 'Leads';
+                    $emailObj->parent_id = $quote->leads_aos_quotes_1leads_ida;
+                    $emailObj->parent_name = $quote->leads_aos_quotes_1_name;
+                    $emailObj->date_sent = TimeDate::getInstance()->nowDb();
+                    $emailObj->modified_user_id = '1';
+                    $emailObj->created_by = '1';
+                    $emailObj->status = 'sent';
+                    $emailObj->save();
+                }
 
                 echo 'https://suitecrm.pure-electric.com.au/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $dirName. '/'.$name_file;
                 // echo 'http://new.suitecrm-pure.com/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $dirName. '/'.$name_file;

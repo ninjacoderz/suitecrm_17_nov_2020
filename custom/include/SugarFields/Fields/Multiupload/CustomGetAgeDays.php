@@ -35,7 +35,7 @@ if($bean->id == '') {
         $check = strtolower($bean->age_days_c);
         if ($check == '' || !(strpos($check,'days') !== false && strpos($check,'hours') !== false && strpos($check, 'minutes') !== false)) {
             if (strpos($bean->status,'Lost') !== false) {
-                $note_id = getInternalNoteForLead($record_id, 'Lost');
+                $note_id = getInternalNoteForLead($record_id, 'lost');
             } else {
                 $note_id = getInternalNoteForLead($record_id, $bean->status);
             }
@@ -56,17 +56,26 @@ if($bean->id == '') {
                     $date_last = $note->date_entered;
                     $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone($user_timezone));
                     $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
-                    // $bean->age_days_c = $date_diff;
-                    // $bean->save();
                     echo $date_diff;
                 } else { //Converted but save note is new
-                    echo 'Internal note haven\'t status NEW'; 
+                    $note_id_first = getInternalNoteForLead($record_id, '');
+                    $note = new pe_internal_note();
+                    $note->retrieve($note_id_first);
+                    $date_last = $note->date_entered;
+                    $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone($user_timezone));
+                    $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
+                    echo $date_diff;
                 }
             } 
         } else {
-            echo '';
+            $note_id_first = getInternalNoteForLead($record_id, '');
+            $note = new pe_internal_note();
+            $note->retrieve($note_id_first);
+            $date_last = $note->date_entered;
+            $date_converted = DateTime::createFromFormat('d/m/Y H:i', $date_last, new DateTimeZone($user_timezone));
+            $date_diff = date_diff($date, $date_converted, false)->format('%a Days %h Hours %i Minutes');
+            echo $date_diff;
         }
-
     }
     //VUT-S-Calculate date_create to change status converted date
 }
@@ -87,14 +96,20 @@ function getInternalNoteForLead ($record_id, $status) {
               ORDER BY pe_internal_note.date_entered DESC
               ";
     $ret = $db->query($query);
-    
-    while($row = $ret->fetch_assoc()){
-      $check = strtolower($row['note_description']);
-      if (strpos($check, 'lead status') !== false && strpos($check, strtolower($status)) !== false ) {
-        return $row['note_id'];
-        die();
-      }
+    if ($status == '') {
+        while($row = $ret->fetch_assoc()){
+            return $row['note_id'];
+            die;
+        }
+    } else {
+        while($row = $ret->fetch_assoc()){
+            $check = strtolower($row['note_description']);
+            if (strpos($check, 'lead status') !== false && strpos(strtolower($check), strtolower($status)) !== false ) {
+              return $row['note_id'];
+              die();
+            }
+          }
+          return '';
     }
-    return '';
 }
 

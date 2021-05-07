@@ -8092,6 +8092,7 @@ $(document).ready(function(){
                     success: function (data) {
                         if(data.replace(/\s/g, '') != ''){
                             alert("Successfully created Auspost Label.");
+                            $("#order_number_c").parent().append("<p id='link_order'><a  href='https://auspost.com.au/mypost-business/shipping-and-tracking/orders/edit/retail/"+data+"' target='_blank'>Open detail the newly created auspost</a></p>");
                         }else{
                             alert("We can not create label manually.");
                         }   
@@ -8104,6 +8105,7 @@ $(document).ready(function(){
                     success: function (data) {
                         if(data.replace(/\s/g, '') != ''){
                             alert("Successfully created Auspost Label.");
+                            $("#order_number_c").parent().append("<p id='link_order'><a  href='https://auspost.com.au/mypost-business/shipping-and-tracking/orders/edit/retail/"+data+"' target='_blank'>Open detail the newly created auspost</a></p>");
                         }else{
                             alert("We can not create label manually.");
                         }   
