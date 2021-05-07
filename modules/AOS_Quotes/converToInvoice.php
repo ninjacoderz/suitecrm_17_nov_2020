@@ -195,7 +195,7 @@
     }
     $invoice->quote_type_c = $quote->quote_type_c;
     //VUT - Add next action date when creating Methven's Invoice
-    if ($invoice->quote_type_c == 'quote_type_methven' ) {
+    if ($invoice->quote_type_c == 'quote_type_methven' || $invoice->next_action_date_c == "" ) {
         date_default_timezone_set('UTC');
         $dateAUS = date('Y-m-d H:i:s', time());
         $invoice->next_action_date_c = $dateAUS;
