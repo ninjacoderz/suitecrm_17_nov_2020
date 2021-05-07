@@ -4228,7 +4228,7 @@ $(document).ready(function () {
         let quoteId = $('input[name="record"]').val();
         if (quoteId != '') {
             window.open(
-                'https://pure-electric.com.au/pesolarform?quote-id=' + quoteId,
+                'https://pure-electric.com.au/pesolarform/master?quote-id=' + quoteId,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {
