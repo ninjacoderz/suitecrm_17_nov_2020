@@ -868,6 +868,7 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Body .= "<p>Phone number: <a href='#'>".$account->phone_mobile."</a></p>";
         $mail->Body .= "<p><a href='http://sandentool.pure-electric.com.au/index.php?quote_id=".$quote->id."'>Sanden Design Tool</a></p>";
         $mail->Body .= "<p><a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=converToInvoice&record=".$quote->id."' target='_blank'>Convert Invoice</a></p>";
+        $mail->Body .= "<p>PE Sales Consultant: <strong>".$user->name."</strong></p>";
         $mail->Body .= $list_photos;
         email_notification_for_client($quote->account_firstname_c,$quote->account_lastname_c,$account->email1,$list_photos);
 

@@ -90,8 +90,8 @@ $mod_strings = array (
   'LBL_APPROVED_GRID_EXPORT_CAPACITY' => 'Approved Grid Export Capacity (kW)',
   'LBL_BILLING_ACCOUNT' => 'Account',
   'LBL_BILLING_CONTACT' => 'Contact',
-  // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
-  // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
+  'LBL_MAP_DATA' => 'Map Data',
+  'LBL_STREET_VIEW' => 'Google Street View',
   // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
   // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
 );

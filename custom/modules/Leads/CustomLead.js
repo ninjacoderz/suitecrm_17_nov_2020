@@ -4109,7 +4109,7 @@ $(document).ready(function(){
     });
     $("#btn_pe_sanden_form_new").click(function(e) {
         window.open(
-            'https://pure-electric.com.au/pe-sanden-quote-form?lead-id='+lead_id,
+            'https://pure-electric.com.au/pe-sanden-quote-form/master?lead-id='+lead_id,
             '_blank' // <- This is what makes it open in a new window.
         );
     });

@@ -357,6 +357,34 @@ $dictionary['pe_address'] = array(
             'quicksearch' => 'enabled',
             'studio' => 'visible',
         ),
+    'map_data' => array(
+        'name' => 'map_data',
+        'vname' => 'LBL_MAP_DATA',
+        'type' => 'text',
+        'rows' => 6,
+        'cols' => 80,
+    ),
+    'street_view' =>
+        array(
+            'required' => false,
+            'name' => 'street_view',
+            'vname' => 'LBL_STREET_VIEW',
+            'type' => 'function',
+            'source' => 'non-db',
+            'massupdate' => 0,
+            'importable' => 'false',
+            'duplicate_merge' => 'disabled',
+            'duplicate_merge_dom_value' => 0,
+            'audited' => false,
+            'reportable' => false,
+            'studio' => true,
+            'function' =>
+            array(
+                'name' => 'street_view',
+                'returns' => 'html',
+                'include' => 'modules/pe_address/customFunctionForFields.php'
+            ),
+        ),
 
 ),//end field
     'relationships' => array (
