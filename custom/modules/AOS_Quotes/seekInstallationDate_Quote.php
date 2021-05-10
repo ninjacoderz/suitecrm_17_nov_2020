@@ -137,9 +137,12 @@ if ($button == 'sanden_installer') {
 } else if ($button == 'sanden_electrician') {
     $temp_request["aos_invoices_contact_id4_c"] = $quote->plumber_electrician_c;
     $temp_request['distance_to_suite_c'] = str_replace(" km","",$quote->distance_to_electrician_c);
-} else {
+} else if ($button == 'daikin_installer') {
     $temp_request["aos_invoices_contact_id4_c"] = $quote->daikin_installer_c;
     $temp_request['distance_to_suite_c'] = str_replace(" km","",$quote->distance_to_daikin_installer_c);
+} else {
+    $temp_request["aos_invoices_contact_id4_c"] = $quote->proposed_solar_installer_acccount;
+    $temp_request['distance_to_suite_c'] = str_replace(" km","",$quote->distance_to_sg_c);
 }
 $emailBean = new Email();
 $emailBean = $emailBean->populateBeanFromRequest($emailBean, $temp_request);

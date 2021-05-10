@@ -248,4 +248,5 @@ $mod_strings = array(
     'LBL_ELECTRICIAN_TAX_AMOUNT' => 'Electrician Tax',
     'LBL_ELECTRICIAN_GRAND_TOTAL' => 'Electrician Grand Total',
     //VUT - e - Label Line Item Proposed plumbers
+    'LBL_PROPOSED_SOLAR_INSTALLER_ACCOUNT' => 'Proposed Solar Installer',
 );
