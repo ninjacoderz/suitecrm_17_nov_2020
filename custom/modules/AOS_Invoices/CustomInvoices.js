@@ -4785,10 +4785,10 @@ $(document).ready(function(){
 $(document).ready(function(){
     //dung code -button get data ABN
     $('#abn_c').parent().siblings('.label').append('<br> <button type="button" class="button primary" id="getData_ABN"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Get ABN</button>');
-    $('#business_name_c').hide();
-    $('#business_name_c').parent().append('<div id="text_business_name"></div>');
-    if($('#business_name_c').val() !== '' && typeof($('#business_name_c').val()) !== 'undefined'){
-        var render_data_business = JSON.parse($('#business_name_c').val());
+    $('#business_name_data_c').hide();
+    $('#business_name_data_c').parent().append('<div id="text_business_name"></div>');
+    if($('#business_name_data_c').val() !== '' && typeof($('#business_name_data_c').val()) !== 'undefined'){
+        var render_data_business = JSON.parse($('#business_name_data_c').val());
         var html_business_name = '';
         if(typeof(render_data_business) !== 'undefined' ){
             $.each(render_data_business,function(key,value){
@@ -4819,13 +4819,13 @@ $(document).ready(function(){
                     $('#good_services_tax_c').val(data_result['Goods_Services_Tax']);
                     $('#main_business_location_c').val(data_result['Main_business_location']);
                     if (typeof(data_result['Business_name']) !== 'undefined'){
-                        $('#business_name_c').val(JSON.stringify(data_result['Business_name']));
+                        $('#business_name_data_c').val(JSON.stringify(data_result['Business_name']));
                     }
                     else {
-                        $('#business_name_c').val(JSON.stringify(data_result['trading_name']));
+                        $('#business_name_data_c').val(JSON.stringify(data_result['trading_name']));
                     }
 
-                    $('#trading_name_c').val(JSON.stringify(data_result['trading_name']));
+                    $('#trading_name_data_c').val(JSON.stringify(data_result['trading_name']));
                     $('#asic_registation_acn_or_arbn_c').val(data_result['ASIC_registration_ACN_or_ARBN']);
                     var html_business_name = '';
                     if(typeof(data_result['Business_name']) !== 'undefined' ){
@@ -4876,8 +4876,8 @@ $(document).ready(function(){
             }
         }
         
-        if($('#business_name_c').val() !== ''){
-            var render_data_business = JSON.parse($('#business_name_c').val());
+        if($('#business_name_data_c').val() !== ''){
+            var render_data_business = JSON.parse($('#business_name_data_c').val());
             if(typeof(render_data_business) !== 'undefined' ){             
                 $.each(render_data_business,function(key,value){
                     if(key !== '' || value[0] !== '' ){
@@ -4901,16 +4901,16 @@ $(document).ready(function(){
                 });      
             }
 
-            $('#business_name_c').val(JSON.stringify(render_data_business));
+            $('#business_name_data_c').val(JSON.stringify(render_data_business));
         }
     });
 
     // For trading name 
     
-    $('#trading_name_c').hide();
-    $('#trading_name_c').parent().append('<div id="text_trading_name"></div>');
-    if($('#trading_name_c').val() !== '' && typeof($('#trading_name_c').val()) !== 'undefined'){
-        var render_data_trading = JSON.parse($('#trading_name_c').val());
+    $('#trading_name_data_c').hide();
+    $('#trading_name_data_c').parent().append('<div id="text_trading_name"></div>');
+    if($('#trading_name_data_c').val() !== '' && typeof($('#trading_name_data_c').val()) !== 'undefined'){
+        var render_data_trading = JSON.parse($('#trading_name_data_c').val());
         var html_trading_name = '';
         if(typeof(render_data_trading) !== 'undefined' ){
             $.each(render_data_trading,function(key,value){
@@ -4939,8 +4939,8 @@ $(document).ready(function(){
                 $("#entity_name_c").val($("#entity_name_c").val() + " T/A " + key_change);
             }
         }
-        if($('#trading_name_c').val() !== ''){
-            var render_data_trading = JSON.parse($('#trading_name_c').val());
+        if($('#trading_name_data_c').val() !== ''){
+            var render_data_trading = JSON.parse($('#trading_name_data_c').val());
             if(typeof(render_data_trading) !== 'undefined' ){             
                 $.each(render_data_trading,function(key,value){
                     if(key !== '' || value[0] !== '' ){
@@ -4952,7 +4952,7 @@ $(document).ready(function(){
                     }
                 });      
             }
-            $('#trading_name_c').val(JSON.stringify(render_data_trading));
+            $('#trading_name_data_c').val(JSON.stringify(render_data_trading));
         }
     });
 });
