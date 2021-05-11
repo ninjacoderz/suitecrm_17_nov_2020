@@ -408,7 +408,7 @@
                 Attach: function(){
                     var json_add_files = [];
                     $("input[name^=dialog_add_notes]").each(function(k,v){
-                        if($(this).is(':checked')) {
+                        if($(this).is(':checked') && $(this).attr('data-note-id') == "") {
                             var file_name = $(this).attr('data-file-name');
                             var id_folder = $(this).attr('data-id-folder');
                             var url_image = $(this).attr('data-url');
@@ -431,8 +431,12 @@
 
                         },
                         success: function(result) { 
-                            if(result == 'Not Have Files') {console.log('Fail');};
-                            var data_result = $.parseJSON(result);   
+                            if(result.trim() == 'Not Have Files') {
+                                console.log('Fail');
+                                $("#icon_loader").hide();
+                                $("#dialog_files").dialog('close');
+                            };
+                            var data_result = JSON.parse(result);   
                             var html = ''; 
                             $.each(data_result,function(k,v){    
                                 html += '<div class="attachment-group-container"><select style="display:none" id="'+v['note_id']+'"\
@@ -479,12 +483,11 @@
         });
 
         function render_group_files(result){
-            var data_result = $.parseJSON(result);
-            // debugger;
+            var data_result = JSON.parse(result);
             $("#dialog_files tbody").empty();
             var html = '';
             $.each(data_result,function(k,v){    
-                 var removeAttachment = $("input[name='removeAttachment']").val();
+                 var removeAttachment = typeof ($("input[name='removeAttachment']").val()) === "undefined" ? '' : $("input[name='removeAttachment']").val();
         
                  var value_check = ''; 
                 if(v['attach'] == 1 && v['note_id'] != '' && !(removeAttachment.indexOf(v['note_id']) != -1 )){
