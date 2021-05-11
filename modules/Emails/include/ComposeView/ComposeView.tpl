@@ -380,11 +380,11 @@
         });
 
         $("#dialog_files").on("click", "#select_all", function(){
-            debugger
+            //debugger
             if ($(this).val() == "1") {
                 $(this).parent().find("input[name^=dialog_add_notes]").each(function(k,v){
                     if(!$(this).is(':checked')) {
-                        $(this).attr('checked',true);
+                        $(this).prop('checked',true);
                     }
                 });
                 $(this).val("0");
@@ -392,7 +392,7 @@
             } else {
                 $(this).parent().find("input[name^=dialog_add_notes]").each(function(k,v){
                     if($(this).is(':checked')) {
-                        $(this).attr('checked', false);
+                        $(this).prop('checked', false);
                     }
                 });
                 $(this).val("1");
