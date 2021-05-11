@@ -9,9 +9,9 @@ $(function () {
     if(state != ''){
         loadJSON(state);
         if(state == 'VIC' && state == 'NSW' && state == 'ACT'){
-            installYear = 2021;
+            installYear = localStorage.InstallYear;
         }else{
-            installYear = 2021;
+            installYear = localStorage.InstallYear;
         }
         if($("#distance_to_sg_c").val() != "" && $("#distance_to_sg_c").val() !== undefined){
             $("input[id*='travel_km_']").val($("#distance_to_sg_c").val().replace(" km",""));
@@ -20,11 +20,11 @@ $(function () {
     $('body').on("change","#install_address_state_c",function(e){
         e.preventDefault();
         if($(this).val() == "VIC" && $(this).val() != ''){
-            installYear = 2021;
+            installYear = localStorage.InstallYear;
         }else{
-            installYear = 2021;
+            installYear = localStorage.InstallYear;
         }
-        $("#installYear").html(installYear);
+        $("#installYear").val(installYear);
         $("#table_pricing_state").val(convert_state($(this).val()));
     });
 
@@ -207,11 +207,11 @@ $(function () {
             await loadJSON(state);
             $("#table_pricing_state").val(state);
             if(state == 'VIC'){
-                installYear = 2021;
-                $("#installYear").html("2021");
+                installYear = localStorage.InstallYear;
+                $("#installYear").val(installYear);
             }else{
-                installYear = 2021;
-                $("#installYear").html("2021");
+                installYear = localStorage.InstallYear;
+                $("#installYear").val(installYear);
             }
         }
         for(var i = 1 ; i < 7 ; i++){
@@ -251,18 +251,6 @@ $(function () {
         // alert($(this).data('option'));
         clear_option($(this).data('option')+1);
     });
-    
-    $('table[id="Solar-PV-Pricing"]').after('<br><button type="button" class="button primary" id="calculatePrice"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Calculate Price </button><div class="clearfix"></div>');
-    
-    $('#calculatePrice').after(
-        '<br><button type="button" id="copy_suggested_price"  class="button copy_suggested_price" title="Copy Suggested Price" onClick="copySuggestedPrice()" >CUSTOMER PRICE<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
-    );
-
-    //VUT
-    $('#copy_suggested_price').after(
-        '<br><button type="button" id="send_solar_pricing_option"  class="button send_solar_pricing" title="Send Solar pricing option" >SEND SOLAR PRICING OPTION<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
-    );
-    //VUT 
 
     $('body').on("click","#calculatePrice",function(){
         $('#calculatePrice span.glyphicon-refresh').removeClass('hidden');
@@ -301,7 +289,7 @@ $(function () {
         //     }
         // }
     });
-
+    $('table[id="Solar-PV-Pricing"]').after('<div id="button_bottom" style="margin-top:15px;"></div>');
     display_button_price();
 
     $('body').on('change','#solargain_quote_number_c, #solargain_tesla_quote_number_c',function(){
@@ -437,7 +425,6 @@ $(function () {
     }
 
     function init(state,installYear){
-
         var panel_type = ['','Jinko Tiger P-type Mono 370',/*'Jinko 330W Mono PERC HC',*/'Q CELLS Q.MAXX-G3 385W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W','Sunpower P3 325 BLACK'*/'Sunpower P3 370 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
         var inverter_type = ['','Primo 3','Primo 4','Primo 5','Primo 6','Primo 8.2','Symo 5','Symo 6','Symo 8.2','Symo 10','Symo 15','SYMO 20','S Edge 3G','S Edge 5G','S Edge 6G','S Edge 8G','S Edge 8 3P','S Edge 10G','IQ7 plus',/*'IQ7',*/'IQ7X',/*'Growatt 3','Growatt 5','Growatt 6','Growatt8','Growatt 8.2',*/'Sungrow 3','Sungrow 5','Sungrow 8','Sungrow 10 3P','Sungrow 15 3P'];
         var extra_1 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
@@ -500,65 +487,37 @@ $(function () {
         //set default PM = 100
         $("input[id*='pm_").val(100);
 
-        var html_checkbox_Terracotta = 
-        '<div class="col-xs-12 col-sm-12 edit-view-row-item">'
-        + '<div class="col-xs-12 col-sm-2 label" data-label="">'
-        + 'Terracotta:</div>'
-        + '<div type="bool" colspan="3">'
-        + '<input type="checkbox" class="solar_pv_pricing_input" id="Terracotta_checkbox" name="Terracotta_checkbox" value="1" title="" tabindex="0">'                  
-        +'</div>'
-        +'</div>';
-        $('#solar_pv_pricing_table').parent().before(html_checkbox_Terracotta); 
+        var top_html_pricing = '<div style="padding: 10px 24px 0 24px;" class="col-xs-12 col-sm-12 edit-view-row-item">'+
+                                    '<div class="col-xs-2 col-sm-2 label" style="text-align: right;">State:'+
+                                        '<input style="width: 75px;text-align:center;margin-left:10px" disabled type="text" class=" solar_pv_pricing_input table_pricing_state" id="table_pricing_state" name="table_pricing_state" value="'+state+'" title="" tabindex="0">'+         
+                                    '</div>'  ;
         if( $('#install_address_state_c').val() == "VIC"){
-            // Vic Rebate
-            var html_checkbox_Vic_Rebate = 
-            '<div class="col-xs-12 col-sm-12 edit-view-row-item">'
-            + '<div class="col-xs-12 col-sm-2 label" data-label="">'
-            + 'VIC Rebate:</div>'
-            + '<div class="" type="bool" field="send_sms" colspan="3">'
-            + '<input type="checkbox" class="solar_pv_pricing_input" id="Vic_Rebate" name="Vic_Rebate" title="" tabindex="0">'                  
-            +'</div>'
-            +'</div>';
-
-            // Vic Loan
-            var html_checkbox_Loan_Rebate = 
-            '<div class="col-xs-12 col-sm-12 edit-view-row-item">'
-            + '<div class="col-xs-12 col-sm-2 label" data-label="">'
-            + 'Loan Rebate:</div>'
-            + '<div class="" type="bool" field="send_sms" colspan="3">'
-            + '<input type="checkbox" class="solar_pv_pricing_input" id="Loan_Rebate" name="Loan_Rebate" title="" tabindex="0">'                  
-            +'</div>'
-            +'</div>';
-
-            $('#solar_pv_pricing_table').parent().before(html_checkbox_Vic_Rebate); 
-            $('#solar_pv_pricing_table').parent().before(html_checkbox_Loan_Rebate); 
+            top_html_pricing    +=  '<div class="col-xs-2 col-sm-2 label" style="text-align: right;">Loan Rebate:'+
+                                        '<input style="margin-left:10px" type="checkbox" class="solar_pv_pricing_input" id="Loan_Rebate" name="Loan_Rebate" title="" tabindex="0">'+
+                                    '</div>'+
+                                    '<div class="col-xs-2 col-sm-2 label" style="text-align: right;">VIC Rebate:'+
+                                        '<input style="margin-left:10px" type="checkbox" class="solar_pv_pricing_input" id="Vic_Rebate" name="Vic_Rebate" title="" tabindex="0">'+             
+                                    '</div>';
         }
-        //Double Storey Checkbox
-        var html_checkbox_Convert_Solar_Opportunity = 
-        '<div class="col-xs-12  col-sm-12 label" >Install Year = <span id="installYear">'+installYear+'</span></div>'
-        + '<div class="col-xs-6 col-sm-6 edit-view-row-item">'
-        + '<div class="col-xs-12 col-sm-2 label" data-label="">'
-        + 'Double Storey:</div>'
-        + '<div class="" type="bool" field="send_sms" colspan="3">'
-        + '<input type="checkbox" class="solar_pv_pricing_input" id="Double_Storey" name="Double_Storey" value="1" title="" tabindex="0">'
-        +'</div>'
-        + '<div class="col-xs-12 col-sm-2 label" data-label="">Rough in Stage:</div>'
-        + '<div class="" type="bool" field="send_sms" colspan="3">'
-        + '<input type="checkbox" class="solar_pv_pricing_input" id="Rough_in_Stage" name="Rough_in_Stage"  title="" tabindex="0">'               
-        +'</div>'
-        +'</div>';
+        top_html_pricing    +=      '<div style="clear: both;"></div>'+
+                                '</div>';
+        top_html_pricing    +=  '<div style="padding: 0px 24px 0 24px;" class="col-xs-12 col-sm-12 edit-view-row-item">'+
+                                    '<div class="col-xs-2 col-sm-2 label" style="text-align: right;">Install Year:'+
+                                        '<input style="width: 75px;text-align:center;margin-left:10px" disabled type="text" class=" solar_pv_pricing_input table_pricing_state" id="installYear" name="installYear" value="'+installYear+'" title="" tabindex="0">'+     
+                                    '</div>'+
+                                    '<div class="col-xs-2 col-sm-2 label" style="text-align: right;">Double Storey:'+
+                                        '<input style="margin-left:10px" type="checkbox" class="solar_pv_pricing_input" id="Double_Storey" name="Double_Storey" value="1" title="" tabindex="0">'+
+                                    '</div>'+
+                                    '<div class="col-xs-2 col-sm-2 label" style="text-align: right;">Rough in Stage:'+
+                                        '<input style="margin-left:10px" type="checkbox" class="solar_pv_pricing_input" id="Rough_in_Stage" name="Rough_in_Stage"  title="" tabindex="0">'+        
+                                    '</div>'+
+                                    '<div class="col-xs-2 col-sm-2 label" style="text-align: right;">Terracotta:'+
+                                        '<input style="margin-left:10px" type="checkbox" class="solar_pv_pricing_input" id="Terracotta_checkbox" name="Terracotta_checkbox" value="1" title="" tabindex="0">'+          
+                                    '</div>'+
+                                    '<div style="clear: both;"></div>'+
+                                '</div>';
 
-        //add Text state  
-        html_checkbox_Convert_Solar_Opportunity += 
-        '<div class="col-xs-6 col-sm-6 edit-view-row-item">'
-        + '<div class="col-xs-12 col-sm-2 label" data-label="">'
-        + 'State:</div>'
-        + '<div class="" type="bool" field="send_sms" colspan="3">'
-        + '<input disabled type="text" class=" solar_pv_pricing_input table_pricing_state" id="table_pricing_state" name="table_pricing_state" value="'+state+'" title="" tabindex="0">'                  
-        +'</div>'
-        +'</div>';
-
-        $('#solar_pv_pricing_table').parent().before(html_checkbox_Convert_Solar_Opportunity);
+        $('#solar_pv_pricing_table').parent().before(top_html_pricing);
         // .:nhantv:. Add class to prevent zoom event
         $('#solar_pv_pricing_table').parent().addClass('col-xs-12 col-sm-12');
 
@@ -602,13 +561,18 @@ $(function () {
     // .:nhantv:. convert to async function
     function loadJSON(state){
         return $.ajax({
-            url: 'index.php?entryPoint=popularSolarBasePrice&state='+state,
+            url: 'index.php?entryPoint=popularSolarBasePrice&state='+state+'&getLatestFile=true',
             type : 'GET'}).then(function (data) {
                 if(data === undefined){
                     localStorage.setItem('basePrice','');
+                    localStorage.setItem('version','');
+                    localStorage.setItem('InstallYear','2021');
                     return;
                 }else{
-                    localStorage.setItem('basePrice',JSON.stringify($.parseJSON(data)));
+                    var dataJSON = JSON.parse(data);
+                    localStorage.setItem('basePrice',JSON.stringify(dataJSON[0]));
+                    localStorage.setItem('version',dataJSON[1]+dataJSON[2]);
+                    localStorage.setItem('InstallYear',dataJSON[2]);
                 }
             });
     }
@@ -1099,31 +1063,29 @@ $(function () {
     }
 
     function display_button_price(){
+        $(document).find("#button_bottom").html("");
+        var button_bottom = '';
+        var display_1 = false;
         if($("#solargain_quote_number_c").val() == "" && $("#solargain_tesla_quote_number_c").val() == ""  ){
-            
-            $('table[id="Solar-PV-Pricing"]').after(
-            '&nbsp;<br> <button type="button" id="convertToQuotesSolarGain_position_price" class="button convertToQuotesSolarGain" title="Convert To Solargain Quote" onClick="SUGAR.addAllEventPushSGButton(this);" > Push To SG <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
-            );
-
+            display_1 = true;
         }else{
-
-            $('#calculatePrice').after('<br><button type="button"  class="button primary" id="getSGPrice_table_price"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get SG Price </button><div class="clearfix"></div>');
-
-            $('#getSGPrice_table_price').after(
-            '<br><button type="button" id="updateToQuotesSolarGain_position_price"  class="button updateToQuotesSolarGain" title="Update Price To Solargain Quote" onClick="SUGAR.updateQuotePriceToSolargain(this);" > Update Price To Solargain Quote <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
-            );
-
-            $('#updateToQuotesSolarGain_position_price').after(
-                '<br><button type="button" id="get_STCs_SG"  class="button get_STC_QuotesSolarGain" title="Get STC From Solargain Quote" onClick="getSTCsFromSolargain();" > GET PV STC <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
-            );
-
-            if($("#solargain_quote_number_c").val() !== ''){
-                $('#solar_pv_pricing_table').append('</br><a id="link_solargain_quote" target="_blank" href="https://crm.solargain.com.au/quote/edit/'+$("#solargain_quote_number_c").val() +'">Solargain Quote Link</a>');
-            }else {
-                $('#solar_pv_pricing_table').append('</br><a id="link_solargain_quote" target="_blank" href="https://crm.solargain.com.au/quote/edit/'+$("#solargain_tesla_quote_number_c").val() +'">Solargain Quote Link</a>');
-            }
-          
+            display_1 = false;
         }
+        button_bottom +='<button type="button" class="button primary" id="calculatePrice"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Calculate Price </button>';
+        button_bottom +='&nbsp;<button ' +(display_1 ? 'style="display:none"' : '')+ 'type="button" class="button primary" id="getSGPrice_table_price"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get SG Price </button>';
+        button_bottom +='&nbsp;<button ' +(display_1 ? 'style="display:none"' : '')+ 'type="button" class="button get_STC_QuotesSolarGain" id="get_STCs_SG"  title="Get STC From Solargain Quote" onClick="getSTCsFromSolargain();" > GET PV STC <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>';
+        button_bottom +='&nbsp;<button type="button" class="button copy_suggested_price" id="copy_suggested_price" title="Copy Suggested Price" onClick="copySuggestedPrice()" >CUSTOMER PRICE<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>';
+        button_bottom +='<br/><button ' +(!display_1 ? 'style="display:none"' : '')+ 'type="button" class="button convertToQuotesSolarGain" id="convertToQuotesSolarGain_position_price"  title="Convert To Solargain Quote" onClick="SUGAR.addAllEventPushSGButton(this);" > Push To SG <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>';    
+        button_bottom +='<br/><button ' +(display_1 ? 'style="display:none"' : '')+ 'type="button" id="updateToQuotesSolarGain_position_price"  class="button updateToQuotesSolarGain" title="Update Price To Solargain Quote" onClick="SUGAR.updateQuotePriceToSolargain(this);" > Update Price To Solargain Quote <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>';
+        button_bottom +='&nbsp;<button type="button" class="button send_solar_pricing" id="send_solar_pricing_option"   title="Send Solar pricing option" >SEND SOLAR PRICING OPTION<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>';
+
+        if($("#solargain_quote_number_c").val() !== ''){
+            button_bottom +='<div class="clearfix"><br/><a id="link_solargain_quote" target="_blank" href="https://crm.solargain.com.au/quote/edit/'+$("#solargain_quote_number_c").val() +'">Solargain Quote Link</a>';
+        }else {
+            button_bottom +='<div class="clearfix"><br/><a id="link_solargain_quote" target="_blank" href="https://crm.solargain.com.au/quote/edit/'+$("#solargain_tesla_quote_number_c").val() +'">Solargain Quote Link</a>';
+        }
+        button_bottom +='&nbsp;&nbsp;<span style="color:red;position: absolute;right:125px;">Latest Version : '+localStorage.version+'</span>';
+        $(document).find("#button_bottom").html(button_bottom);
     }
 
     function calculation_for_option(option){
