@@ -474,6 +474,53 @@
             }
         }
     }
+    class UpdateRelatePOInstaller {
+        function after_save_method($bean, $event, $arguments){
+            $old_fields = $bean->fetched_row;
+            if ($bean->plumber_po_c) {
+                $po_plumber = new PO_purchase_order();
+                $po_plumber->retrieve($bean->plumber_po_c);
+                if ($po_plumber->id) {
+                    if ($old_fields['account_id1_c'] != $bean->account_id1_c) {
+                        $po_plumber->billing_account_id = $bean->account_id1_c;
+                        $supplier_plumber =  BeanFactory::getBean("Accounts", $bean->account_id1_c);
+                        if($supplier_plumber->id){
+                            $po_plumber->billing_address_street  = $supplier_plumber->billing_address_street;
+                            $po_plumber->billing_address_city  = $supplier_plumber->billing_address_city;
+                            $po_plumber->billing_address_state = $supplier_plumber->billing_address_state;
+                            $po_plumber->billing_address_postalcode = $supplier_plumber->billing_address_postalcode;
+                        }
+                    }
+                    if ($old_fields['plumber_install_date_c'] != $bean->plumber_install_date_c) {
+                        $po_plumber->install_date = $bean->plumber_install_date_c;
+                    }
+                    $po_plumber->save();
+                }
+            }
+            if ($bean->electrical_po_c) {
+                $po_electrician = new PO_purchase_order();
+                $po_electrician->retrieve($bean->electrical_po_c);
+                if ($po_electrician->id) {
+                    if ($old_fields['account_id_c'] != $bean->account_id_c) {
+                        $po_electrician->billing_account_id = $bean->account_id_c;
+                        $supplier_electrician =  BeanFactory::getBean("Accounts", $bean->account_id_c);
+                        if($supplier_electrician->id){
+                            $po_electrician->billing_address_street  = $supplier_electrician->billing_address_street;
+                            $po_electrician->billing_address_city  = $supplier_electrician->billing_address_city;
+                            $po_electrician->billing_address_state = $supplier_electrician->billing_address_state;
+                            $po_electrician->billing_address_postalcode = $supplier_electrician->billing_address_postalcode;
+                        }
+                    }
+                    if ($old_fields['electrician_install_date_c'] != $bean->electrician_install_date_c) {
+                        $po_electrician->install_date = $bean->electrician_install_date_c;
+                    }
+                    $po_electrician->save();
+                }
+            }
+        }
+    }
+
+
     //Thienpb code  -- update next action date = '' when status = Paid >> comment https://trello.com/c/xe2bwURy/2354-invoice-cant-fill-the-next-action-date
     // class UpdateNextActionDate {
     //     function after_save_method($bean, $event, $arguments){

@@ -139,7 +139,7 @@ if ($request == "custom_display_link_contact_plum_elec_quote") {
     $solar_installer_contact = '';
     $solar_installer_account = new Account();
     $solar_installer_account->retrieve($solar_installer_id);
-    if ($daikin_installer_account->id != '') {
+    if ($solar_installer_account->id != '') {
         $solar_installer_contact = $solar_installer_account->get_linked_beans('contacts','Contact');
         if(count($solar_installer_contact)> 0){
             for($i=0;$i < count($solar_installer_contact);$i++){

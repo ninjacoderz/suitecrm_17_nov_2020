@@ -22,11 +22,29 @@ $sql = "SELECT * FROM aos_invoices WHERE number = ".$_REQUEST['invoice_number'].
 $result = $db->query($sql);
 $row = $db->fetchByAssoc($result);
 
-$mail->Subject = strtoupper($_REQUEST['role']).' has already set up installation date for invoice #'.$_REQUEST['invoice_number'].' '.$row['name'].', Please check!';
 $url= "";
 if($_REQUEST['role'] != 'client'){
+    $sql_intl = "SELECT * FROM aos_invoices_cstm WHERE id_c = '" . $row['id'] . "' ";
+    $result_intl = $db->query($sql_intl);
+    $row_intl = $db->fetchByAssoc($result_intl);
+    if(strtoupper($_REQUEST['role']) == "PLUMBER"){
+        $company = new Account();
+        $company->retrieve($row_intl['account_id1_c']);
+
+        $installer = new Contact();
+        $installer->retrieve($row_intl['contact_id4_c']);
+    }else {
+        $company = new Account();
+        $company->retrieve($row_intl['account_id_c']);
+    
+        $installer = new Contact();
+        $installer->retrieve($row_intl['contact_id_c']);
+    } 
+
+    $mail->Subject = strtoupper($_REQUEST['role'].": ".$installer->name.' / '.$company->name) .' has already set up installation date for invoice #'.$_REQUEST['invoice_number'].' '.$row['name'].', Please check!';
     $url = 'https://calendar.pure-electric.com.au/#/installation-booking/'.$_REQUEST['installation_id'].'/'. $_REQUEST['role'].'/'.$_REQUEST['installer_id'];
 }else{
+    $mail->Subject = strtoupper($_REQUEST['role']).' has already set up installation date for invoice #'.$_REQUEST['invoice_number'].' '.$row['name'].', Please check!';
     $url = 'https://calendar.pure-electric.com.au/#/installation-booking/'.$_REQUEST['installation_id'].'/'.$_REQUEST['role'];
     //VUT - S - Send email to customer
     $customer = new Contact();

@@ -67,11 +67,11 @@
     <span class="folder_info"></span>
     <ul style="margin-bottom:10px">
         <li style="float:left">
-            <a class="button moveSandenForm" href="https://pure-electric.com.au/pe-sanden-quote-form" target="_blank" style="background:#945596;color:white;padding:8.3px;">SANDEN QUOTE FORM</a>
+            <a class="button moveSandenForm" href="https://pure-electric.com.au/pe-sanden-quote-form/master" target="_blank" style="background:#945596;color:white;padding:8.3px;">SANDEN QUOTE FORM</a>
         </li>
 
         <li style="float:left">
-            <a class="button moveSandenForm" href="https://pure-electric.com.au/pesolarform" target="_blank" style="background:#f48c21;color:white;padding:8.3px;margin-left: 4px;">SOLAR QUOTE FORM</a>
+            <a class="button moveSandenForm" href="https://pure-electric.com.au/pesolarform/master" target="_blank" style="background:#f48c21;color:white;padding:8.3px;margin-left: 4px;">SOLAR QUOTE FORM</a>
         </li>
         <li style="float:left">
             <a class="button moveSandenForm" href="https://pure-electric.com.au/pedaikinform-new" target="_blank" style="background:#009acf;color:white;padding:8.3px;margin-left: 4px;">DAIKIN QUOTE FORM </a>
