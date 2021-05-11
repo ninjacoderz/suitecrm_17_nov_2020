@@ -42,6 +42,7 @@ $result = array();
 $link_folder_file = '/custom/include/SugarFields/Fields/Multiupload/server/php/files/' . $folder_install .'/';
 switch ($action) {
     case 'read':
+        $nameFileNote = [];
         $EmailBean = new Email();
         $EmailBean->retrieve($id_email);
         if($EmailBean->id == '')  die('Not Have Files');
@@ -58,18 +59,21 @@ switch ($action) {
                     'note_id' => $note->id,
                     'attach' => 1
                 );
+                array_push($nameFileNote, $note->filename);
         }
         
         $data = scan_dir_folder($forder);
         foreach ($data as  $value) {
-            $result[] = array(
-                'link_image' => $link_folder_file .'/'.$value,
-                'link_thub' => $link_folder_file .'thumbnail/'.$value,
-                'file_name' => $value,
-                'id_folder' => $folder_install,
-                'note_id' => '',
-                'attach' => 0
-            );
+            if (!in_array($value,$nameFileNote)) {
+                $result[] = array(
+                    'link_image' => $link_folder_file .'/'.$value,
+                    'link_thub' => $link_folder_file .'thumbnail/'.$value,
+                    'file_name' => $value,
+                    'id_folder' => $folder_install,
+                    'note_id' => '',
+                    'attach' => 0
+                );
+            }
         }
 
         break;
