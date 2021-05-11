@@ -364,6 +364,7 @@ $dictionary['pe_address'] = array(
         'rows' => 6,
         'cols' => 80,
     ),
+    //S - data non-db
     'street_view' =>
         array(
             'required' => false,
@@ -385,7 +386,29 @@ $dictionary['pe_address'] = array(
                 'include' => 'modules/pe_address/customFunctionForFields.php'
             ),
         ),
+    'satellite_view' =>
+        array(
+            'required' => false,
+            'name' => 'satellite_view',
+            'vname' => 'LBL_SATELLITE_VIEW',
+            'type' => 'function',
+            'source' => 'non-db',
+            'massupdate' => 0,
+            'importable' => 'false',
+            'duplicate_merge' => 'disabled',
+            'duplicate_merge_dom_value' => 0,
+            'audited' => false,
+            'reportable' => false,
+            'studio' => true,
+            'function' =>
+            array(
+                'name' => 'satellite_view',
+                'returns' => 'html',
+                'include' => 'modules/pe_address/customFunctionForFields.php'
+            ),
+        ),
 
+    //E - data non-db
 ),//end field
     'relationships' => array (
 ),

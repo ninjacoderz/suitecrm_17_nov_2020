@@ -1519,3 +1519,8 @@ $entry_point_registry['APIRenderExtraField'] = array(
     'auth' => false
 );
 
+//Tri code --   
+$entry_point_registry['googleForAddress'] = array( 
+    'file' => 'custom/modules/pe_address/googleForAddress.php',
+    'auth' => false
+);
