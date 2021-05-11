@@ -4,10 +4,11 @@ $(function () {
     // DECLARE GLOBAL VARIABLE
     var state = convert_state();
     var installYear = 0;
-    
+    localStorage.setItem('InstallYear','');
+    localStorage.setItem('version','');
     //INIT BASE PRICE JSON BY STATE
     if(state != ''){
-        loadJSON(state);
+        initJSON(state);
         if(state == 'VIC' && state == 'NSW' && state == 'ACT'){
             installYear = localStorage.InstallYear;
         }else{
@@ -289,8 +290,6 @@ $(function () {
         //     }
         // }
     });
-    $('table[id="Solar-PV-Pricing"]').after('<div id="button_bottom" style="margin-top:15px;"></div>');
-    display_button_price();
 
     $('body').on('change','#solargain_quote_number_c, #solargain_tesla_quote_number_c',function(){
         display_button_price();
@@ -520,7 +519,8 @@ $(function () {
         $('#solar_pv_pricing_table').parent().before(top_html_pricing);
         // .:nhantv:. Add class to prevent zoom event
         $('#solar_pv_pricing_table').parent().addClass('col-xs-12 col-sm-12');
-
+        $('table[id="Solar-PV-Pricing"]').after('<div id="button_bottom" style="margin-top:15px;"></div>');
+        display_button_price();
     }
     ///////////// END MAKE A TABLE //////////////////
 
@@ -559,6 +559,7 @@ $(function () {
     }
     
     // .:nhantv:. convert to async function
+    
     function loadJSON(state){
         return $.ajax({
             url: 'index.php?entryPoint=popularSolarBasePrice&state='+state+'&getLatestFile=true',
@@ -1503,5 +1504,25 @@ $(function () {
                 $("#calculatePrice").trigger("click");
             }
         }); 
+    }
+    function initJSON(state){
+        $.ajax({
+            url: 'index.php?entryPoint=popularSolarBasePrice&state='+state+'&getLatestFile=true',
+            type : 'GET',
+            async : false,
+            success: function (data) {
+                if(data === undefined){
+                    localStorage.setItem('basePrice','');
+                    localStorage.setItem('version','');
+                    localStorage.setItem('InstallYear','2021');
+                    return;
+                }else{
+                    var dataJSON = JSON.parse(data);
+                    localStorage.setItem('basePrice',JSON.stringify(dataJSON[0]));
+                    localStorage.setItem('version',dataJSON[1]+dataJSON[2]);
+                    localStorage.setItem('InstallYear',dataJSON[2]);
+                }
+            },
+        });
     }
 ///// END FUNCTION /////
