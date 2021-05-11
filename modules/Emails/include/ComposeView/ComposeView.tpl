@@ -310,6 +310,7 @@
 
 
    <div id = "dialog_files" hidden>
+        <button value="1" id="select_all" style="float: right;">Select all</button>
 		<h4 class="text-center">Select Files</h4>
         <div id="icon_loader" hidden></div>
         <table id="dialog_files"  class="table table-striped">
@@ -377,6 +378,27 @@
                 }); 
                 return false;
         });
+
+        $("#dialog_files").on("click", "#select_all", function(){
+            debugger
+            if ($(this).val() == "1") {
+                $(this).parent().find("input[name^=dialog_add_notes]").each(function(k,v){
+                    if(!$(this).is(':checked')) {
+                        $(this).attr('checked',true);
+                    }
+                });
+                $(this).val("0");
+                $(this).text("Unselect all");
+            } else {
+                $(this).parent().find("input[name^=dialog_add_notes]").each(function(k,v){
+                    if($(this).is(':checked')) {
+                        $(this).attr('checked', false);
+                    }
+                });
+                $(this).val("1");
+                $(this).text("Select all");
+            }
+        })
 
         $("#dialog_files").dialog({
             autoOpen: false,
