@@ -4078,6 +4078,9 @@ function check_email_before_convert(){
 }
 
 $(document).ready(function(){
+    // .:nhantv:. Add customer form link
+    generateCustomerLink();
+
     var lead_id = $("input[name=lead_id]").val();;
     //thienpb code -- API Generate to quote design
     $("#btn_view_change_log").before('<button style="margin: 10px 0;background:#945596;" type="button" id="btn_lead_design_tool" class="button btn_lead_design_tool" title="Lead Design Tool">Lead Design Tool</button>');
@@ -4234,6 +4237,27 @@ $(document).ready(function(){
     showLinkAccount();
     YAHOO.util.Event.addListener(["proposed_plumber_acccount_id","proposed_electrician_acccount_id","proposed_daikin_installer_acccount_id", "proposed_solar_installer_acccount_id"], "change", showLinkAccount);
 });
+
+// .:nhantv:. Generate customer's link
+function generateCustomerLink(){
+    const lead_id = $("input[name=lead_id]").val();
+    var strAppend = '';
+    // case 'quote_type_sanden':
+    strAppend = '<div><span><strong>Customer Sanden Form Link: </strong></span><span id="customer_path">' +
+        'https://pure-electric.com.au/pe-sanden-quote-form?lead-id=' + lead_id +
+        '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+    $('#absolute_path').next().after(strAppend);
+    // case 'quote_type_solar':
+    strAppend = '<div><span><strong>Customer Solar Form Link: </strong></span><span id="customer_path">' +
+        'https://pure-electric.com.au/pesolarform?lead-id=' + lead_id +
+        '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+    $('#absolute_path').next().after(strAppend);
+    // case 'quote_type_daikin':
+    strAppend = '<div><span><strong>Customer Daikin Form Link: </strong></span><span id="customer_path">' +
+        'https://pure-electric.com.au/pedaikinform-new?lead-id=' + lead_id +
+        '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+    $('#absolute_path').next().after(strAppend);
+}
 
 function showLinkAccount() {
     let plumber_account_id = $('#proposed_plumber_acccount_id');
