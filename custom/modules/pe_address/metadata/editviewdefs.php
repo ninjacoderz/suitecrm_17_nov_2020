@@ -26,11 +26,24 @@ array (
         array (
           'file' => 'custom/modules/pe_address/customAddress.js',
         ),
+        1 => 
+        array (
+          'file' => 'custom/include/SugarFields/Fields/Multiupload/js/html2canvas.js',
+        ),
+        2 => 
+        array (
+          'file' => 'custom/include/SugarFields/Fields/Multiupload/js/canvas2image.js',
+        ),
       ),
       'useTabs' => false,
       'tabDefs' => 
       array (
         'DEFAULT' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_EDITVIEW_PANEL1' => 
         array (
           'newTab' => false,
           'panelDefault' => 'expanded',
@@ -166,6 +179,42 @@ array (
             'name' => 'grid_export_limit',
             'label' => 'LBL_APPROVED_GRID_EXPORT_CAPACITY',
           ),
+        ),
+        11 => 
+        array (
+          0 => '',
+          1 => '',
+        ),
+        12 => 
+        array (
+          0 => 
+          array (
+            'name' => 'satellite_view',
+            'studio' => true,
+            'label' => 'LBL_SATELLITE_VIEW',
+          ),
+          1 => 
+          array (
+            'name' => 'street_view',
+            'studio' => true,
+            'label' => 'LBL_STREET_VIEW',
+          ),
+        ),
+      ),
+      'lbl_editview_panel1' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'installation_pictures_c',
+            'label' => 'LBL_INSTALLATION_PICTURES',
+          ),
+        ),
+        1 => 
+        array (
+          0 => '',
+          1 => '',
         ),
       ),
     ),

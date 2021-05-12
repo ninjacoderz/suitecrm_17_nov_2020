@@ -1139,7 +1139,11 @@ function createPO($po_type="", $invoice,$invoice_installation,$purchase_installa
 
 function UpdatePO($invoice,$purchaseOrder){
     if($purchaseOrder->id == '') return;
-    $purchaseOrder->install_date = $invoice->plumber_install_date_c;
+    if ($purchaseOrder->po_type_c == 'sanden_electrician') {
+        $purchaseOrder->install_date = $invoice->electrician_install_date_c;
+    } else {
+        $purchaseOrder->install_date = $invoice->plumber_install_date_c;
+    }
     $purchaseOrder->save();
     return;
 }

@@ -4785,10 +4785,10 @@ $(document).ready(function(){
 $(document).ready(function(){
     //dung code -button get data ABN
     $('#abn_c').parent().siblings('.label').append('<br> <button type="button" class="button primary" id="getData_ABN"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Get ABN</button>');
-    $('#business_name_c').hide();
-    $('#business_name_c').parent().append('<div id="text_business_name"></div>');
-    if($('#business_name_c').val() !== '' && typeof($('#business_name_c').val()) !== 'undefined'){
-        var render_data_business = JSON.parse($('#business_name_c').val());
+    $('#business_name_data_c').hide();
+    $('#business_name_data_c').parent().append('<div id="text_business_name"></div>');
+    if($('#business_name_data_c').val() !== '' && typeof($('#business_name_data_c').val()) !== 'undefined'){
+        var render_data_business = JSON.parse($('#business_name_data_c').val());
         var html_business_name = '';
         if(typeof(render_data_business) !== 'undefined' ){
             $.each(render_data_business,function(key,value){
@@ -4819,13 +4819,13 @@ $(document).ready(function(){
                     $('#good_services_tax_c').val(data_result['Goods_Services_Tax']);
                     $('#main_business_location_c').val(data_result['Main_business_location']);
                     if (typeof(data_result['Business_name']) !== 'undefined'){
-                        $('#business_name_c').val(JSON.stringify(data_result['Business_name']));
+                        $('#business_name_data_c').val(JSON.stringify(data_result['Business_name']));
                     }
                     else {
-                        $('#business_name_c').val(JSON.stringify(data_result['trading_name']));
+                        $('#business_name_data_c').val(JSON.stringify(data_result['trading_name']));
                     }
 
-                    $('#trading_name_c').val(JSON.stringify(data_result['trading_name']));
+                    $('#trading_name_data_c').val(JSON.stringify(data_result['trading_name']));
                     $('#asic_registation_acn_or_arbn_c').val(data_result['ASIC_registration_ACN_or_ARBN']);
                     var html_business_name = '';
                     if(typeof(data_result['Business_name']) !== 'undefined' ){
@@ -4876,8 +4876,8 @@ $(document).ready(function(){
             }
         }
         
-        if($('#business_name_c').val() !== ''){
-            var render_data_business = JSON.parse($('#business_name_c').val());
+        if($('#business_name_data_c').val() !== ''){
+            var render_data_business = JSON.parse($('#business_name_data_c').val());
             if(typeof(render_data_business) !== 'undefined' ){             
                 $.each(render_data_business,function(key,value){
                     if(key !== '' || value[0] !== '' ){
@@ -4901,16 +4901,16 @@ $(document).ready(function(){
                 });      
             }
 
-            $('#business_name_c').val(JSON.stringify(render_data_business));
+            $('#business_name_data_c').val(JSON.stringify(render_data_business));
         }
     });
 
     // For trading name 
     
-    $('#trading_name_c').hide();
-    $('#trading_name_c').parent().append('<div id="text_trading_name"></div>');
-    if($('#trading_name_c').val() !== '' && typeof($('#trading_name_c').val()) !== 'undefined'){
-        var render_data_trading = JSON.parse($('#trading_name_c').val());
+    $('#trading_name_data_c').hide();
+    $('#trading_name_data_c').parent().append('<div id="text_trading_name"></div>');
+    if($('#trading_name_data_c').val() !== '' && typeof($('#trading_name_data_c').val()) !== 'undefined'){
+        var render_data_trading = JSON.parse($('#trading_name_data_c').val());
         var html_trading_name = '';
         if(typeof(render_data_trading) !== 'undefined' ){
             $.each(render_data_trading,function(key,value){
@@ -4939,8 +4939,8 @@ $(document).ready(function(){
                 $("#entity_name_c").val($("#entity_name_c").val() + " T/A " + key_change);
             }
         }
-        if($('#trading_name_c').val() !== ''){
-            var render_data_trading = JSON.parse($('#trading_name_c').val());
+        if($('#trading_name_data_c').val() !== ''){
+            var render_data_trading = JSON.parse($('#trading_name_data_c').val());
             if(typeof(render_data_trading) !== 'undefined' ){             
                 $.each(render_data_trading,function(key,value){
                     if(key !== '' || value[0] !== '' ){
@@ -4952,7 +4952,7 @@ $(document).ready(function(){
                     }
                 });      
             }
-            $('#trading_name_c').val(JSON.stringify(render_data_trading));
+            $('#trading_name_data_c').val(JSON.stringify(render_data_trading));
         }
     });
 });
@@ -7860,6 +7860,7 @@ $(document).ready(function(){
             var sanden_installer_id = $('#account_id3_c').val();
             var sanden_electrician_id = $('#account_id2_c').val();
             var daikin_installer_id = $('#account_id4_c').val();
+            var solar_installer_account_id = $('#proposed_solar_installer_acccount_id').val();
 
             $("#link_account_sanden_installer").remove();
             if( sanden_installer_id != ''){
@@ -7875,7 +7876,7 @@ $(document).ready(function(){
             }
             $('.display_link_contact_plum_elec_quote').remove();
             $.ajax({
-                url: "?entryPoint=getContactFromAccount&request=custom_display_link_contact_plum_elec_quote&sanden_electrician_id=" + sanden_electrician_id+"&sanden_installer_id="+sanden_installer_id+"&daikin_installer_id="+daikin_installer_id,
+                url: "?entryPoint=getContactFromAccount&request=custom_display_link_contact_plum_elec_quote&sanden_electrician_id=" + sanden_electrician_id+"&sanden_installer_id="+sanden_installer_id+"&daikin_installer_id="+daikin_installer_id+"&solar_installer_id="+solar_installer_account_id,
            }).done(function (data) {
                 if(data == '' || typeof data == 'undefined')return;
                var json = $.parseJSON(data);
@@ -7897,15 +7898,21 @@ $(document).ready(function(){
                    $("#account_id4_c").parent().append("<p class='display_link_contact_plum_elec_quote' id='link_account_daikin_installer'><a  href='/index.php?module=Accounts&action=EditView&record=" + $('#account_id4_c').val()+ "' target='_blank'>Open Account</a></p>");
                    if(json.daikin_installer_contact != '') $("#account_id4_c").parent().append("<p class='display_link_contact_plum_elec_quote' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.daikin_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='daikin_installer_contact_id' value='"+json.daikin_installer_contact+"'></p>");
                }
-
+               $("#link_account_solar_installer").remove();
+               if( $('#proposed_solar_installer_acccount_id').val() != ''){
+                $("#proposed_solar_installer_acccount_id").parent().append("<p class='display_link_contact_plum_elec_quote' id='link_account_solar_installer'><a  href='/index.php?module=Accounts&action=EditView&record=" + $('#proposed_solar_installer_acccount_id').val()+ "' target='_blank'>Open Account</a></p>");
+                if(json.solar_installer_contact != '') $("#proposed_solar_installer_acccount_id").parent().append("<p class='display_link_contact_plum_elec_quote' ><a  href='/index.php?module=Contacts&action=EditView&record=" + json.solar_installer_contact+ "' target='_blank'>Open Primary Contact</a><input type='hidden' id='solar_installer_contact_id' value='"+json.solar_installer_contact+"'></p>");
+            }
+     
             });
         }
         display_link_contact_plum_elec_quote();
-        YAHOO.util.Event.addListener(["account_id2_c","account_id3_c","account_id4_c"], "change", display_link_contact_plum_elec_quote);
+        YAHOO.util.Event.addListener(["account_id2_c","account_id3_c","account_id4_c", "proposed_solar_installer_acccount_id"], "change", display_link_contact_plum_elec_quote);
     
         $('#plumber_new_c').parent().siblings('.label').append('<br> <button class="button primary" id="seekInstallationDate_SandenInstaller"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Seek Install Date</button>');
         $('#plumber_electrician_c').parent().siblings('.label').append('<br> <button class="button primary" id="seekInstallationDate_SandenElec"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Seek Install Date</button>');
         $('#daikin_installer_c').parent().siblings('.label').append('<br> <button class="button primary" id="seekInstallationDate_DaikinInstaller"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Seek Install Date</button>');
+        $('#proposed_solar_installer_acccount').parent().siblings('.label').append('<br> <button class="button primary" id="seekInstallationDate_SolarInstaller"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Seek Install Date</button>');
         /**Sanden Installer - Seek Install Date Button */
         $("#seekInstallationDate_SandenInstaller").click(function(){
             $('#seekInstallationDate_SandenInstaller span.glyphicon-refresh').removeClass('hidden');
@@ -7977,6 +7984,33 @@ $(document).ready(function(){
                         return;
                     }
                     $('#seekInstallationDate_DaikinInstaller span.glyphicon-refresh').addClass('hidden');
+                    window.open(data,'_blank');
+                    return false;
+                });
+            },100);
+            return false;
+        });
+        /**Solar installer - Seek Install Date Button */
+        $("#seekInstallationDate_SolarInstaller").click(function(){
+            $('#seekInstallationDate_SolarInstaller span.glyphicon-refresh').removeClass('hidden');
+            if($("#proposed_solar_installer_acccount").val() == ""){
+                alert("Please enter Solar Installer name.");
+                $('#seekInstallationDate_SolarInstaller span.glyphicon-refresh').addClass('hidden');
+                $("#proposed_solar_installer_acccount").focus();
+                return false;
+            }
+            var record_id = $("input[name='record']").val();
+            setTimeout(function(){
+                $.ajax({
+                    url: "?entryPoint=seekInstallationDate_Quote&button=solar_installer&record_id=" + record_id + "&account_id="+ $("#proposed_solar_installer_acccount_id").val()+ "&contact_id="+$('#solar_installer_contact_id').val(),
+                    context: document.body,
+                    async: true
+                }).done(function (data) {
+                    if(data == '' || typeof data == 'undefined') {
+                        $('#seekInstallationDate_SolarInstaller span.glyphicon-refresh').addClass('hidden');
+                        return;
+                    }
+                    $('#seekInstallationDate_SolarInstaller span.glyphicon-refresh').addClass('hidden');
                     window.open(data,'_blank');
                     return false;
                 });

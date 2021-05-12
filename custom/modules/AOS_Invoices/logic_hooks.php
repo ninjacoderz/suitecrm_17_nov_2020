@@ -57,6 +57,15 @@
         'CreateInternalNotes_invoice',
         'before_save_method'
     );
+    //VUT - hook update relate PO Installers
+    $hook_array['after_save'][] = Array(
+        6,
+        'update_relate_po',
+        'custom/modules/AOS_Invoices/logic_hooks_class.php',
+        'UpdateRelatePOInstaller',
+        'after_save_method'
+    );
+    
     // // thienpb code -- update next action date = '' when status = Paid
     // $hook_array['after_save'][] = Array(
     //     6,

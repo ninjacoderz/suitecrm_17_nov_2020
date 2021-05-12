@@ -310,6 +310,7 @@
 
 
    <div id = "dialog_files" hidden>
+        <button value="1" id="select_all" style="float: right;">Select all</button>
 		<h4 class="text-center">Select Files</h4>
         <div id="icon_loader" hidden></div>
         <table id="dialog_files"  class="table table-striped">
@@ -378,6 +379,27 @@
                 return false;
         });
 
+        $("#dialog_files").on("click", "#select_all", function(){
+            //debugger
+            if ($(this).val() == "1") {
+                $(this).parent().find("input[name^=dialog_add_notes]").each(function(k,v){
+                    if(!$(this).is(':checked')) {
+                        $(this).prop('checked',true);
+                    }
+                });
+                $(this).val("0");
+                $(this).text("Unselect all");
+            } else {
+                $(this).parent().find("input[name^=dialog_add_notes]").each(function(k,v){
+                    if($(this).is(':checked')) {
+                        $(this).prop('checked', false);
+                    }
+                });
+                $(this).val("1");
+                $(this).text("Select all");
+            }
+        })
+
         $("#dialog_files").dialog({
             autoOpen: false,
             width: 902,
@@ -386,7 +408,7 @@
                 Attach: function(){
                     var json_add_files = [];
                     $("input[name^=dialog_add_notes]").each(function(k,v){
-                        if($(this).is(':checked')) {
+                        if($(this).is(':checked') && $(this).attr('data-note-id') == "") {
                             var file_name = $(this).attr('data-file-name');
                             var id_folder = $(this).attr('data-id-folder');
                             var url_image = $(this).attr('data-url');
@@ -409,8 +431,12 @@
 
                         },
                         success: function(result) { 
-                            if(result == 'Not Have Files') {console.log('Fail');};
-                            var data_result = $.parseJSON(result);   
+                            if(result.trim() == 'Not Have Files') {
+                                console.log('Fail');
+                                $("#icon_loader").hide();
+                                $("#dialog_files").dialog('close');
+                            };
+                            var data_result = JSON.parse(result);   
                             var html = ''; 
                             $.each(data_result,function(k,v){    
                                 html += '<div class="attachment-group-container"><select style="display:none" id="'+v['note_id']+'"\
@@ -457,12 +483,11 @@
         });
 
         function render_group_files(result){
-            var data_result = $.parseJSON(result);
-            // debugger;
+            var data_result = JSON.parse(result);
             $("#dialog_files tbody").empty();
             var html = '';
             $.each(data_result,function(k,v){    
-                 var removeAttachment = $("input[name='removeAttachment']").val();
+                 var removeAttachment = typeof ($("input[name='removeAttachment']").val()) === "undefined" ? '' : $("input[name='removeAttachment']").val();
         
                  var value_check = ''; 
                 if(v['attach'] == 1 && v['note_id'] != '' && !(removeAttachment.indexOf(v['note_id']) != -1 )){

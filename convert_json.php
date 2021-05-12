@@ -94,5 +94,16 @@
             }
         }
     }
-    echo json_encode($json_file);
+
+    if($_REQUEST['getLatestFile'] == 'true'){
+        $folder =   "price_csv/"; 
+        $files = glob($folder.'Price Calculator*'); // return array files
+        if(count($files) > 0){
+            $re = '/price_csv\/Price Calculator - (.*?)(\d{4})_cracked/';
+            preg_match($re, $files[0], $matches);
+        }
+        echo json_encode(array($json_file,$matches[1],$matches[2]));
+    }else{
+        echo json_encode($json_file);
+    }
 ?>

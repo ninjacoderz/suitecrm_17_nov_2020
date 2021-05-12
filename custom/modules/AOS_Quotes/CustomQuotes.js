@@ -4920,9 +4920,9 @@ $(function () {
                 });
                 $(document).find('#check_addr_site_detail_c').parent().detach().appendTo("#group_address_site_detail").show();
                 //  $('body').find('#distance_to_electrician_c').closest('.edit-view-row-item').after('<div class="clear"></div><div class="col-xs-12 col-sm-6 edit-view-row-item"></div><div id="div_for_distance_to_sg_c"></div>');
-                $('body').find('#distance_to_daikin_installer_c').closest('.edit-view-row-item').after('<div class="clear"></div><div class="col-xs-12 col-sm-6 edit-view-row-item"></div><div id="div_for_distance_to_sg_c"></div>');
+                // $('body').find('#distance_to_daikin_installer_c').closest('.edit-view-row-item').after('<div class="clear"></div><div class="col-xs-12 col-sm-6 edit-view-row-item"></div><div id="div_for_distance_to_sg_c"></div>');
 
-                $("#distance_to_sg_c").closest(".edit-view-row-item").detach().appendTo("#div_for_distance_to_sg_c");
+                // $("#distance_to_sg_c").closest(".edit-view-row-item").detach().appendTo("#div_for_distance_to_sg_c");
             }, 3000)
         }
         //THIEN FIX
@@ -5495,7 +5495,7 @@ $(window).load(function () {
 $(window).load(function () {
     $('#distance_to_travel_c').closest('.edit-view-row-item').prepend('<div><button class="button primary" type="button" id="getDistance"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get All Distance </button><button style="margin: 0px 2px;" class="button primary" type="button" id="getDistance_selected"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button></div>');
     //VUT - S - button GET DISTANCE SELECTED
-    $(document).on('focus', '#plumber_electrician_c, #plumber_new_c, #daikin_installer_c', function () {
+    $(document).on('focus', '#plumber_electrician_c, #plumber_new_c, #daikin_installer_c, #proposed_solar_installer_acccount', function () {
         window.accountFocus = $(this).siblings('input[type=hidden]');
     });
     $(document).on('click', '#getDistance_selected', function () {
@@ -5514,6 +5514,9 @@ $(window).load(function () {
                 break;
             case 'account_id3_c': //plumber_new_c
                 field_distance_idElement = 'distance_to_travel_c';
+                break;
+            case 'proposed_solar_installer_acccount_id':
+                field_distance_idElement = 'distance_to_sg_c';
                 break;
             default:
                 break;
