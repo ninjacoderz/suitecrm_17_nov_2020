@@ -1204,7 +1204,11 @@ if($mail_format != 'custommer') {
                         $noteId = $note->save();
 
                         if($noteID !== false && !empty($noteId)) {
-                            copy($current_file_path . '/' . $file, $sugar_config['upload_dir'] . $note->id);
+                            // copy($current_file_path . '/' . $file, $sugar_config['upload_dir'] . $note->id);
+                            if (!symlink($current_file_path . '/' . $file, $sugar_config['upload_dir'] . $note->id)) {
+                                $GLOBALS['log']->error("CustomSendEmailPopup.php could not symlink file");
+                            }
+                            // copy($current_file_path . '/' . $file, $sugar_config['upload_dir'] . $note->id);
                             $email->attachNote($note);
                             // $email->addAttachment($current_file_path . '/' . $file);
                         } else {
@@ -1235,7 +1239,10 @@ if($mail_format != 'custommer') {
 
                         if($noteID !== false && !empty($noteId)) {
                             //copy ($current_file_path . '/' . $file, $sugar_config['upload_dir'] . 'attachfile.pdf');
-                            copy($current_file_path . '/' . $file, $sugar_config['upload_dir'] . $note->id);
+                            if (!symlink($current_file_path . '/' . $file, $sugar_config['upload_dir'] . $note->id)) {
+                                $GLOBALS['log']->error("CustomSendEmailPopup.php could not symlink file");
+                            }
+                            // copy($current_file_path . '/' . $file, $sugar_config['upload_dir'] . $note->id);
                             $email->attachNote($note);
                             // $email->addAttachment($current_file_path . '/' . $file);
                         } else {
