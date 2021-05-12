@@ -506,6 +506,8 @@ $(function () {
             })
         }, 3000)
 
+        // .:nhantv:. Add customer form link
+        generateCustomerLink();
 
         //tritruong -- add button Convert Off Grid
         $("#convert_lead_button").parent().after('<li><input class="button_convert" title="Convert Off Grid" accesskey="V" class="button" name="convert" id="convert_off_grid_button" type="button" value="Convert Off Grid"></li>');
@@ -531,7 +533,7 @@ $(function () {
         });
         $("#btn_pe_daikin_new_form").click(function(e) {
             window.open(
-                'https://pure-electric.com.au/pedaikinform-new?lead-id='+lead_id,
+                'https://pure-electric.com.au/pedaikinform-new/master?lead-id='+lead_id,
                 '_blank' // <- This is what makes it open in a new window.
             );
         });
@@ -667,4 +669,25 @@ $(function () {
             }
         }
     })
+    // .:nhantv:. Generate customer's link
+    function generateCustomerLink(){
+        const lead_id = $("input[name=lead_id]").val();
+        var strAppend = '';
+        // case 'quote_type_sanden':
+        strAppend = '<div><span><strong>Customer Sanden Form Link: </strong></span><span id="customer_path">' +
+            'https://pure-electric.com.au/pe-sanden-quote-form?lead-id=' + lead_id +
+            '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+        $('#absolute_path').next().after(strAppend);
+        // case 'quote_type_solar':
+        strAppend = '<div><span><strong>Customer Solar Form Link: </strong></span><span id="customer_path">' +
+            'https://pure-electric.com.au/pesolarform?lead-id=' + lead_id +
+            '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+        $('#absolute_path').next().after(strAppend);
+        // case 'quote_type_daikin':
+        strAppend = '<div><span><strong>Customer Daikin Form Link: </strong></span><span id="customer_path">' +
+            'https://pure-electric.com.au/pedaikinform-new?lead-id=' + lead_id +
+            '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+        $('#absolute_path').next().after(strAppend);
+    }
+
 })

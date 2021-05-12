@@ -800,7 +800,7 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Subject = "Client ".$client->name." -  Uploaded (delivery has arrived) photo to Invoice#".$invoice->number."";
         $mail->Body = $shortcuts;
         $mail->Body .= "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
-        $mail->Body .= "<p>Email Client: <a href='https://mail.google.com/#search/".$client->email1."'>".$client->email1." GSearch</a></p>";
+        $mail->Body .= "<p>Email Client: ".$client->email1." <a href='https://mail.google.com/#search/".$client->email1."'>GSearch</a></p>";
     }else {
         if ( $worker_type == "Customer"){
             $mail->Subject = $worker_type." ".$client->name." Upload Install Photos - Sanden international (Australia) Pty Customer Warranty registration - Invoice#".$invoice->number." ".$invoice->name;
@@ -810,7 +810,7 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Body = $shortcuts;
         $mail->Body .= "<p>Link Invoice: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Invoices&action=EditView&record=".$invoice->id."' target='_blank'>".$invoice->name."</a></p>";
         if ( $worker_type != "Customer" ){
-            $mail->Body .= "<p>Email ".$worker_type.": <a href='https://mail.google.com/#search/".$installer->email1."'>".$installer->email1." GSearch</a></p>";
+            $mail->Body .= "<p>Email ".$worker_type.": ".$installer->email1." <a href='https://mail.google.com/#search/".$installer->email1."'>GSearch</a></p>";
             /// Tri Todo
             if ( $worker_type == "Plumber" || $worker_type == "Electrician" ){
                 $mail->Body .= "<p>Phone ".$worker_type.": <a href='tel:".$installer->phone_mobile."'>".$installer->phone_mobile." </a></p>";
@@ -819,7 +819,7 @@ if($_POST['to_module'] == "aos_invoice"){
             }
             
         }
-        $mail->Body .= "<p>Email Client: <a href='https://mail.google.com/#search/".$client->email1."'>".$client->email1." GSearch</a></p>";
+        $mail->Body .= "<p>Email Client: ".$client->email1." <a href='https://mail.google.com/#search/".$client->email1."'>GSearch</a></p>";
         $mail->Body .= $send_install_link;    
     }
     $mail->Body .= $list_photos;
@@ -840,7 +840,7 @@ if($_POST['to_module'] == "aos_invoice"){
     $mail->Subject = $purchase->billing_account." - Uploaded (delivery has arrived) photo to Purhchase Order";
     $mail->Body = $shortcuts;
     $mail->Body .= "<p>Link Purchase Order: <a href=https://suitecrm.pure-electric.com.au/index.php?module=PO_purchase_order&action=EditView&record=".$purchase->id."' target='_blank'>".$purchase->name."</a></p>";
-    $mail->Body .= "<p>Email Supplier: <a href='https://mail.google.com/#search/".$installer->email1."'>".$installer->email1." GSearch</a></p>";
+    $mail->Body .= "<p>Email Supplier: ".$installer->email1." <a href='https://mail.google.com/#search/".$installer->email1."'>GSearch</a></p>";
     $mail->Body .= $list_photos;
     
 }else{
@@ -864,7 +864,7 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Subject = $quote->account_firstname_c." ".$quote->account_lastname_c." uploaded file to Quote#".$quote->number." ".$quote->name;
         $mail->Body = $shortcuts;
         $mail->Body .= "<p>Link Quote: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote->id."' target='_blank'>".$quote->name."</a></p>";
-        $mail->Body .= "<p>Email: <a href='https://mail.google.com/#search/".$account->email1."'>".$account->email1." GSearch</a></p>";
+        $mail->Body .= "<p>Email: ".$account->email1." <a href='https://mail.google.com/#search/".$account->email1."'>GSearch</a></p>";
         $mail->Body .= "<p>Phone number: <a href='#'>".$account->phone_mobile."</a></p>";
         $mail->Body .= "<p><a href='http://sandentool.pure-electric.com.au/index.php?quote_id=".$quote->id."'>Sanden Design Tool</a></p>";
         $mail->Body .= "<p><a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=converToInvoice&record=".$quote->id."' target='_blank'>Convert Invoice</a></p>";
@@ -969,7 +969,7 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Subject = $_POST['type_product'] .' - '.$lead->first_name." ".$lead->last_name." uploaded file to lead#".$lead->number." ".$lead->account_name;
         $mail->Body = $shortcuts;
         $mail->Body .= "<p>Link Lead: <a href='https://suitecrm.pure-electric.com.au/index.php?module=Leads&action=EditView&record=".$lead->id."' target='_blank'>".$lead->account_name."</a></p>";
-        $mail->Body .= "<p>Email: <a href='https://mail.google.com/#search/".$lead->email1."'>".$lead->email1." GSearch</a></p>";
+        $mail->Body .= "<p>Email: ".$lead->email1." <a href='https://mail.google.com/#search/".$lead->email1."'>GSearch</a></p>";
         $mail->Body .= "<p>Phone number: <a href='#'>".$lead->phone_mobile."</a></p></p>";
         //info to design
         $address_array = [$lead->primary_address_street, $lead->primary_address_city.' '.$lead->primary_address_state, $lead->primary_address_postalcode, 'Australia'];

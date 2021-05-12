@@ -4151,6 +4151,9 @@ $(document).ready(function () {
         return false;
     })
 
+    // .:nhantv:. Add customer form link
+    generateCustomerLink();
+
     //thienpb code - add button QUOTE FOLLOW UP
     $("#btn_view_change_log").after('<button data-email-type="follow_up" data-quote-name="' + $("#name").val() + '" data-email-address="" data-lead-id="' + $('#leads_aos_quotes_1leads_ida').val() + '" style="margin-left: 4px;"   data-record-id="' + $('input[name="record"]').val() + '" type="button" id="quote_follow_up" class="button quote_follow_up" title="Quote Follow Up" data-module="Lead" onClick="SUGAR.quoteFollowUp(this);" >Quote Follow Up<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
     $("#btn_view_change_log").after('<button type="button" class="button primary" data-email-address="" id="send_site_inspection_request" onclick="$(document).openComposeViewModal_Inspection_request(this);" data-email-type="send_site_inspection_request" data-module="AOS_Quotes" data-module-name="' + $("#name").val() + '" data-contact-name="' + $('#billing_contact').val() + '" data-record-id="' + $("input[name='record']").val() + '">Send Inspection Request</button>')
@@ -4170,7 +4173,7 @@ $(document).ready(function () {
     $("#btn_pe_daikin_new_form").click(function (e) {
         if (lead_id_solar != '') {
             window.open(
-                'https://pure-electric.com.au/pedaikinform-new?lead-id=' + lead_id_solar,
+                'https://pure-electric.com.au/pedaikinform-new/master?lead-id=' + lead_id_solar,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {
@@ -4326,6 +4329,43 @@ $.fn.openComposeViewModal_quoteFollowUp = function (source) {
         composeBox.controls.modal.content.html(SUGAR.language.translate('', 'LBL_EMAIL_ERROR_GENERAL_TITLE'));
     });
     return $(self);
+}
+
+// .:nhantv:. Generate customer's link
+function generateCustomerLink(){
+    const product_type = $('#quote_type_c').val();
+    const lead_id = $('#leads_aos_quotes_1leads_ida').val();
+    const quote_id = $('input[name="record"]').val();
+
+    var strAppend = '';
+    // Check product_type is sanden, solar or daikin
+    switch (product_type) {
+        case 'quote_type_sanden':
+            if(lead_id !== ''){
+                strAppend = '<div><span><strong>Customer Sanden Form Link: </strong></span><span id="customer_path">' +
+                'https://pure-electric.com.au/pe-sanden-quote-form?lead-id=' + lead_id +
+                '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+            }
+            break;
+        case 'quote_type_solar':
+            if(quote_id !== ''){
+                strAppend = '<div><span><strong>Customer Solar Form Link: </strong></span><span id="customer_path">' +
+                'https://pure-electric.com.au/pesolarform?quote-id=' + quote_id +
+                '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+            }
+            break;
+        case 'quote_type_daikin':
+            if(lead_id !== ''){
+                strAppend = '<div><span><strong>Customer Daikin Form Link: </strong></span><span id="customer_path">' +
+                'https://pure-electric.com.au/pedaikinform-new?lead-id=' + lead_id +
+                '</span><button type="button" onclick="clip_aboard(\'customer_path\')">Copy Path</button></div>';
+            }
+            break;
+        default: return;
+    }
+    if(strAppend !== ''){
+        $('#absolute_path').next().after(strAppend);
+    }
 }
 
 function sendEmailDesignsComplete() {

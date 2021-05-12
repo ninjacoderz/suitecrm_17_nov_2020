@@ -50,18 +50,31 @@
     $data_input['assigned_user'] = '1';
   }
 
-  // init variable
+  // initial variable
   $lead = new Lead();
   $quote = new AOS_Quotes();
 
   // Case lead_id != null
-  if (isset($lead_id)) {
+  if(isset($lead_id) && $lead_id !== "") {
     $lead ->retrieve($lead_id);
-    update_quote_value_step_1($quote, $data_input, $lead);
+    update_quote_value_step_1($quote, $data_input, $lead, true);
     $quote->save();
     $file_to_attach = upload_file_form_solar($quote->id);
   }
-  // Case lead_id == null
+
+  // Case quote_id == null
+  if(isset($quote_id) && $quote_id !== "") {
+    $quote ->retrieve($quote_id);
+    if($quote->leads_aos_quotes_1leads_ida !== "") {
+        $lead_id = $quote->leads_aos_quotes_1leads_ida;
+        $lead ->retrieve($lead_id);
+    }
+    update_quote_value_step_1($quote, $data_input, $lead, false);
+    $quote->save();
+    $file_to_attach = upload_file_form_solar($quote->id);
+  }
+
+  echo $quote->id;
 
   // Create call by work-flow
   $workflow = new AOW_WorkFlow();
@@ -69,7 +82,7 @@
   $workflow->run_actions($quote, true);
 
   /** FUNCTION DECLARE */
-  function update_quote_value_step_1($quote, $data_input, $lead){
+  function update_quote_value_step_1($quote, $data_input, $lead, $is_create){
     $data_solar_input = array(
       'solar_aspiration' => $data_input['solar_aspiration'],
       'electricity_distributor' => $data_input['distributor'],
@@ -84,34 +97,39 @@
       'external_or_internal_switchboard' => $data_input['external_or_internal'],
     );
 
-    $quote->leads_aos_quotes_1leads_ida = $lead->id;
+    // Set lead and ref of lead
+    if($is_create){
+        $quote->leads_aos_quotes_1leads_ida = $lead->id;
+        $quote->billing_contact_id = $lead->contact_id;
+        $quote->billing_account_id = $lead->account_id;
+        
+        // Get the name of quote
+        $first_name = $data_input['first_name'] == "" ? $lead->first_name : $data_input['first_name'];
+        $last_name = $data_input['last_name'] == "" ? $lead->last_name : $data_input['last_name'];
+        $quote->name = $first_name.' '.$last_name.' '.$data_input['primary_address_city'].' '.$data_input['primary_address_state']." Solar";
 
-    $quote->name = $data_input['first_name'].' '.$data_input['last_name'].' '.$data_input['primary_address_city'].' '.$data_input['primary_address_state']." Solar";
-    $quote->account_firstname_c = $data_input['first_name'];
-    $quote->account_lastname_c = $data_input['last_name'];
-    $quote->quote_type_c = 'quote_type_solar';
-    $quote->lead_source_co_c = 'PureElectric';
-    $quote->assigned_user_id = $data_input['assigned_user'];
-    $quote->the_quote_prepared_c = "solar_quote_form";
+        $quote->account_firstname_c = $first_name;
+        $quote->account_lastname_c = $last_name;
+        $quote->quote_type_c = 'quote_type_solar';
+        $quote->lead_source_co_c = 'PureElectric';
+        $quote->assigned_user_id = $data_input['assigned_user'];
+        $quote->the_quote_prepared_c = "solar_quote_form";
+        $quote->install_address_postalcode_c =  $data_input['primary_address_postalcode'];
+        $quote->install_address_state_c = $data_input['primary_address_state'];
+        $quote->install_address_city_c = $data_input['primary_address_city'];
+        $quote->install_address_c = $data_input['your_street'];
+        $quote->billing_address_street = $data_input['your_street'];
+        $quote->billing_address_postalcode = $data_input['primary_address_postalcode'];
+        $quote->billing_address_state = $data_input['primary_address_state'];
+        $quote->billing_address_city = $data_input['primary_address_city'];
+    }
+    
     $quote->quote_note_inputs_c = json_encode($data_solar_input);
-    $quote->distributor_c = $data_input['option_distributor'];
+    $quote->distributor_c = $data_input['distributor'];
     $quote->main_switch_c = $data_input['main_switch'];
     $quote->meter_type_c = str_replace(" ", "" , $data_input['meter_type']);
     $quote->inverter_to_mainswitch_c = $data_input['distancetoswitch']."m";
     $quote->external_or_internal_c = $data_input['external_or_internal'];
-
-    $quote->install_address_postalcode_c =  $data_input['primary_address_postalcode'];
-    $quote->install_address_state_c = $data_input['primary_address_state'];
-    $quote->install_address_city_c = $data_input['primary_address_city'];
-    $quote->install_address_c = $data_input['your_street'];
-
-    $quote->billing_address_street = $data_input['your_street'];
-    $quote->billing_address_postalcode = $data_input['primary_address_postalcode'];
-    $quote->billing_address_state = $data_input['primary_address_state'];
-    $quote->billing_address_city = $data_input['primary_address_city'];
-    $quote->billing_contact_id = $lead->contact_id;
-    $quote->billing_account_id = $lead->account_id;
-
     if ( $data_input['phases'] == "Three Phases") {
         $quote->meter_phase_c = '3';
     } else if ( $data_input['phases'] == "Two Phases") {
