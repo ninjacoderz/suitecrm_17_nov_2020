@@ -903,7 +903,7 @@ $(function () {
         $("#btn_pe_daikin_new_form").click(function(e) {
             if(lead_id != '') {
                 window.open(
-                    'https://pure-electric.com.au/pedaikinform-new?lead-id='+lead_id,
+                    'https://pure-electric.com.au/pedaikinform-new/master?lead-id='+lead_id,
                     '_blank' // <- This is what makes it open in a new window.
                 );
             } else {

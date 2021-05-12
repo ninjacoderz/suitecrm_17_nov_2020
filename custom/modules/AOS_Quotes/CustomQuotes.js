@@ -4173,7 +4173,7 @@ $(document).ready(function () {
     $("#btn_pe_daikin_new_form").click(function (e) {
         if (lead_id_solar != '') {
             window.open(
-                'https://pure-electric.com.au/pedaikinform-new?lead-id=' + lead_id_solar,
+                'https://pure-electric.com.au/pedaikinform-new/master?lead-id=' + lead_id_solar,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {
