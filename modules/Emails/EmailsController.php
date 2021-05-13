@@ -4960,7 +4960,7 @@ class EmailsController extends SugarController
                                     </div>
                                     <div style="float:left;padding:0;width:30%;min-width:215px;color:#444;text-align:center;overflow:hidden;margin:0">
                                         <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
-                                            <div style="height: auto;border-radius: 20px;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background: silver;">pure-electric.com.a
+                                            <div style="height: auto;border-radius: 20px;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background: silver;">
                                                 <table style="width:100%">
                                                     <tbody>
                                                     <tr>
