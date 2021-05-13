@@ -1,5 +1,6 @@
 <?php
-
+ $call =  new Call();
+ $call->retrieve(trim($_REQUEST['call_id']));
 if( $call->id != ''){
     $call->feedback_from_client_c = $_REQUEST['feedback'];
     $call->save();
@@ -23,7 +24,7 @@ function email_notification($call){
     $email->Body .= $list_photos;
     $email->IsHTML(true);
     // $mail->AddAddress('info@pure-electric.com.au');
-    $mail->AddAddress('ngoanhtuan2510@gmail.com');
+    $mail->AddAddress('ngoanhtuan2510@gmail');
     // $mail->AddCC('matthew.wright@pure-electric.com.au');  
     // $mail->AddCC('paul.szuster@pure-electric.com.au');  
     $email->setMailerForSystem();  
