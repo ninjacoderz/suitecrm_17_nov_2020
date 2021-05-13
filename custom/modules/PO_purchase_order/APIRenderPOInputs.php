@@ -43,16 +43,16 @@ function renderPlumbingInputsHTML($vardefs_array) {
         $display_label  = $v['display_label'];
         switch ($v['type']) {
             case 'select':
-                $field_content = '<select class="custom_rebate_fields" data-id="'.$v['data_id'].'" name="'.$v['name'].'" id="'.$k.'" style="width:200px;" title="">/**'.renderOption($v['list_array']).'*/</select>';
+                $field_content = '<select class="custom_rebate_fields" data-name="'.$v['display_label'].'" data-id="'.$v['data_id'].'" name="'.$v['name'].'" id="'.$k.'" style="width:200px;" title="">/**'.renderOption($v['list_array']).'*/</select>';
                 break;
             case 'input':
-                $field_content = '<input class="custom_rebate_fields" data-id="'.$v['data_id'].'" type="text" value="" name="'.$v['name'].'" id="'.$k.'" style="width:200px;" />';
+                $field_content = '<input class="custom_rebate_fields" data-name="'.$v['display_label'].'" data-id="'.$v['data_id'].'" type="text" value="" name="'.$v['name'].'" id="'.$k.'" style="width:200px;" />';
                 break;
             case 'number':
-                $field_content = '<input class="custom_rebate_fields" data-id="'.$v['data_id'].'" type="number" value="'.$v['default_val'].'" name="'.$v['name'].'" id="'.$k.'" min="'.$v['min'].'" max="'.$v['max'].'" style="width:70px;" />';
+                $field_content = '<input class="custom_rebate_fields" data-name="'.$v['display_label'].'" data-id="'.$v['data_id'].'" type="number" value="'.$v['default_val'].'" name="'.$v['name'].'" id="'.$k.'" min="'.$v['min'].'" max="'.$v['max'].'" style="width:70px;" />';
                 break;
             case 'checkbox':
-                $field_content = '<input class="custom_rebate_fields" data-id="'.$v['data_id'].'" type="checkbox" value="'.$k.'" name="'.$v['name'].'" id="'.$k.'"/>';
+                $field_content = '<input class="custom_rebate_fields" data-name="'.$v['display_label'].'" data-id="'.$v['data_id'].'" type="checkbox" value="'.$k.'" name="'.$v['name'].'" id="'.$k.'"/>';
                 break;
         }
         $tempHTML = '<div class="col-md-6 col-xs-12 col-sm-12 edit-view-row-item">
