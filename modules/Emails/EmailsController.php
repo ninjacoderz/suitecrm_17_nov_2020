@@ -4984,6 +4984,8 @@ class EmailsController extends SugarController
                                             </div>
                                         </div>
                                     </div>';
+            $select_call_status .= '<div style="clear: both;"></div></div>';
+
             $description = str_replace("\$button_select_status",$select_call_status , $description);
             $description_html = str_replace("\$button_select_status",$select_call_status , $description_html);
 
