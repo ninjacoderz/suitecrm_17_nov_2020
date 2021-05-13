@@ -364,6 +364,21 @@ $dictionary['pe_address'] = array(
         'rows' => 6,
         'cols' => 80,
     ),
+    /**Unique number for Service case */
+    'number' =>
+        array(
+            'name' => 'number',
+            'vname' => 'LBL_ADDRESS_NUMBER',
+            'type' => 'int',
+            'len' => 11,
+            'isnull' => 'false',
+            'unified_search' => true,
+            'comments' => '',
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+            'reportable' => true,
+            'disable_num_format' => true,
+        ),
     //S - data non-db
     'street_view' =>
         array(
