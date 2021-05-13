@@ -540,6 +540,11 @@ $entry_point_registry['GetInfoInvoice'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/GetInfoInvoice.php',
     'auth' => true
 );
+//tuan update status quote follow up
+$entry_point_registry['UpdateQuoteFollowUpCall'] = array(
+    'file' => 'custom/modules/Calls/UpdateQuoteFollowUpCall.php',
+    'auth' => false
+);
 //tuan
 $entry_point_registry['update_invoice'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/update_invoice.php',

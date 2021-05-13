@@ -4940,6 +4940,56 @@ class EmailsController extends SugarController
             $name = $emailTemplate->subject;
             $description_html = $emailTemplate->body_html;
             $description = $emailTemplate->body;
+            if( $_REQUEST['module_type'] == 'call'){
+
+            $select_call_status = '<div style="float:left;padding:0;width:30%;min-width:210px;color:#444;text-align:center;overflow:hidden;margin:0">
+                                        <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
+                                            <div style="height: 40px;border-radius: 2rem;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background:linear-gradient(135deg,#ffc64b,#fb7020)">
+                                                <table style="width:100%">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:1rem;color: black;" href="http://pure-electric.com.au/quote_follow_up?call_id='.$_REQUEST['call_id'].'&feedback=ASK_ME_AGAIN_in_a_week">ASK ME AGAIN in a week</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float:left;padding:0;width:30%;min-width:210px;color:#444;text-align:center;overflow:hidden;margin:0">
+                                        <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
+                                            <div style="height: 40px;border-radius: 2rem;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background:linear-gradient(135deg,#ffc64b,#fb7020)">
+                                                <table style="width:100%">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:14px;color: black;" href="http://pure-electric.com.au/quote_follow_up?call_id='.$_REQUEST['call_id'].'&feedback=Call_me_I_have_more_Questions">Call me I have more Questions</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float:left;padding:0;width:30%;min-width:210px;color:#444;text-align:center;overflow:hidden;margin:0">
+                                        <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
+                                            <div style="height: 40px;border-radius: 2rem;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background:linear-gradient(135deg,#ffc64b,#fb7020)">
+                                                <table style="width:100%">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:14px;color: black;" href="http://pure-electric.com.au/quote_follow_up?call_id='.$_REQUEST['call_id'].'&feedback=I_am_no_longer_interested">I am no longer interested, thank you for the quote</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>';
+            $description = str_replace("\$button_select_status",$select_call_status , $description);
+
+            $description_html = str_replace("\$button_select_status",$select_call_status , $description_html);
+            }else {
+                $description = str_replace("\$button_select_status","" , $description);
+
+                $description_html = str_replace("\$button_select_status","" , $description_html);
+            }
+
             $templateData = $emailTemplate->parse_email_template(
                 array(
                     'subject' => $name,
