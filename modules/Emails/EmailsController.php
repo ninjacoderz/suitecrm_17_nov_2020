@@ -930,6 +930,11 @@ class EmailsController extends SugarController
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
+                //Add email sale person
+                $user_assign = new User();
+                $user_assign->retrieve($invoice->assigned_user_id);
+                $email_assigned = $user_assign->email1;
+                $this->bean->cc_addrs_names = $email_assigned;
             }
 
             /**VUT-E-Quote-Button 'Send Inspection Request' (send for installer Sanden/Daikin) */
