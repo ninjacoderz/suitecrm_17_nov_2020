@@ -9,7 +9,7 @@ $(document).ready(function() {
     //Hide field data JSON
     // $(document).find('#map_data').closest('.edit-view-row-item').hide();
     //init Geo Data
-    debugger
+    // debugger
     if( $('#image_satellite').length == 0) {
         getGEOGoogle();
     } else {
@@ -19,6 +19,11 @@ $(document).ready(function() {
     $(document).on('change', '#billing_address_street',  function(){
         getGEOGoogle();
     });
+
+    $(document).on('change', '#billing_address_street, #billing_address_city, #billing_address_state, #billing_address_postalcode',  function(){
+        $(document).find('#name').val(generateName());
+    });
+
 
     $("#billing_address_street").autocomplete({
         source: function (request, response) {
@@ -68,6 +73,13 @@ $(document).ready(function() {
 
 
 //////////////////////////////////***DECLARE FUNCTIONS***//////////////////////////////////////
+
+
+function generateName() {
+    let fulladdress = `${$('#billing_address_street').val()}, ${$('#billing_address_city').val()}, ${$('#billing_address_state').val()}, ${$('#billing_address_postalcode').val()}`;
+    return fulladdress;
+}
+
 /**
  * Get Geo from Google
  */

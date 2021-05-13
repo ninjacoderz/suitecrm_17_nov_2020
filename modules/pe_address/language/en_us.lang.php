@@ -93,7 +93,7 @@ $mod_strings = array (
   'LBL_MAP_DATA' => 'Map Data',
   'LBL_STREET_VIEW' => 'Google Street View',
   'LBL_SATELLITE_VIEW' => 'Gooogle Satellite',
-  // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
+  'LBL_ADDRESS_NUMBER' => 'Number',
   // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
   // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
 );
