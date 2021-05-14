@@ -61,8 +61,8 @@ function I_Need_More_Time($quote_fb){
     $email = new SugarPHPMailer();  
     $email->setMailerForSystem();  
     $email->From = 'michael.golden@pure-electric.com.au';   
-    $email->FromName = 'Pure Electric';
-    $email->Subject = $account->name ."has feedbacked to Pure Electric";
+    $email->FromName = 'Michael Golden - Pure Electricc';
+    $email->Subject = "Thanks" .$account->name ."! You have feedbacked to Pure Electric";
     $email->Body = "<p>Hi ".$quote_fb->account_firstname_c.", </p>";
     $email->Body .= "<p>Thank you for advising you would like a reminder email in a weeks' time for your ".$productType." Quote #".$quote_fb->number.". We'll be in touch again in a week. Thank you for the opportunity to quote for your ".$productType." from Australia's #1 Five Star Rated ".$productType." specialist.</p>";
     $email->Body .= "<p>Any questions in the meantime please don't hesitate to email, SMS or call when convenient.</p>";
@@ -71,7 +71,7 @@ function I_Need_More_Time($quote_fb){
     $email->AddAddress($account->email1);
     // $email->AddAddress('ngoanhtuan2510@gmail.com');
     $email->AddCC('info@pure-electric.com.au');  
-    $email->AddCC('michael.golden@pure-electric.com.au');  
+    // $email->AddCC('michael.golden@pure-electric.com.au');  
     $email->setMailerForSystem();  
     $email->Send();
     return ;
@@ -85,7 +85,7 @@ function I_Have_More_Questions($quote_fb){
     $email = new SugarPHPMailer();  
     $email->setMailerForSystem();  
     $email->From = 'michael.golden@pure-electric.com.au';   
-    $email->FromName = 'Pure Electric';
+    $email->FromName = 'Michael Golden - Pure Electric';
     $email->Subject = $account->name ."has feedbacked to Pure Electric";
     $email->Body = "<p>Hi ".$quote_fb->account_firstname_c.", </p>";
     $email->Body .= "<p>Thank you for advising you would like a phone call. I'll organise a phone call asap to answer any questions you have regarding your ".$productType." Quote #".$quote_fb->number.".</p>";
@@ -95,7 +95,7 @@ function I_Have_More_Questions($quote_fb){
     $email->AddAddress($account->email1);
     // $email->AddAddress('ngoanhtuan2510@gmail.com');
     $email->AddCC('info@pure-electric.com.au');  
-    $email->AddCC('michael.golden@pure-electric.com.au');  
+    // $email->AddCC('michael.golden@pure-electric.com.au');  
     $email->setMailerForSystem();  
     $email->Send();
     return ;
@@ -109,7 +109,7 @@ function Not_Proceeding_With_Quote($quote_fb){
     $email = new SugarPHPMailer();  
     $email->setMailerForSystem();  
     $email->From = 'michael.golden@pure-electric.com.au';   
-    $email->FromName = 'Pure Electric';
+    $email->FromName = 'Michael Golden - Pure Electric';
     $email->Subject = $account->name ."has feedbacked to Pure Electric";
     $email->Body = "<p>Hi ".$quote_fb->account_firstname_c.", </p>";
     $email->Body .= "<p>Thank you for the opportunity to provide you a comprehensive ".$productType." Quote #".$quote_fb->number.".</p>";
@@ -120,7 +120,7 @@ function Not_Proceeding_With_Quote($quote_fb){
     $email->AddAddress($account->email1);
     // $email->AddAddress('ngoanhtuan2510@gmail.com');
     $email->AddCC('info@pure-electric.com.au');  
-    $email->AddCC('michael.golden@pure-electric.com.au');  
+    // $email->AddCC('michael.golden@pure-electric.com.au');  
     $email->setMailerForSystem();  
     $email->Send();
     return ;
