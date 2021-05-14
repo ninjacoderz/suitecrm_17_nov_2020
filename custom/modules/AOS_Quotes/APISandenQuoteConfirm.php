@@ -1,6 +1,6 @@
 <?php
     $rq_data = $_POST;
-
+    global $current_user;
     $decription_internal_notes = 'Update Sanden Form Confirmation From Email ';
     if($rq_data['pipe_run_distance'] != '') {
         $decription_internal_notes .= '| Pipe run distance existing hot water tank to new Sanden tank location (1 metre standard): '.$rq_data['pipe_run_distance'];
@@ -58,6 +58,7 @@
     $leads_intenal_notes->type_inter_note_c = 'status_updated';
     
     $leads_intenal_notes->description =  $decription_internal_notes;
+    $leads_intenal_notes->created_by = $current_user->id;
     $leads_intenal_notes->save();
     
     $leads_intenal_notes->load_relationship('leads_pe_internal_note_1');

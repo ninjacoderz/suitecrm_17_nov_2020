@@ -420,6 +420,7 @@
     class CreateInternalNotes_invoice {
         function before_save_method($bean, $event, $arguments){
             $old_fields = $bean->fetched_row;
+            global $current_user;
             if($old_fields == false){
                 //check internal notes new 
                 $db = DBManagerFactory::getInstance();
@@ -436,6 +437,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = 'Invoice Status : New Invoice';
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
@@ -450,6 +452,7 @@
                     $decription_internal_notes .= str_replace('_',' ',$bean->status);
 
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                  
                     $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
@@ -467,6 +470,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = "Change Assigned User from {$old_fields['assigned_user_name']} to {$bean->assigned_user_name}";
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     $bean_intenal_notes->load_relationship('aos_invoices_pe_internal_note_1');
                     $bean_intenal_notes->aos_invoices_pe_internal_note_1->add($bean->id);

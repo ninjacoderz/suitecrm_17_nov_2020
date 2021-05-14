@@ -7,59 +7,59 @@
     if (!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
     class AutoXeroPO {
-        function after_save_method($bean, $event, $arguments){
-            $old_fields = $bean->fetched_row;
-            $method = '';
-            if($old_fields == false || empty($bean->xero_po_id_c)){
-                $method = 'create';
-            }else{
-                $method = 'update';
-            }
-            exec("cd /var/www/suitecrm/custom/modules/PO_purchase_order/; php curlForXero.php ". $method. " " . $bean->id ." > /dev/null &");
-            return ;
-            $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
-            $curl = curl_init();
+        // function after_save_method($bean, $event, $arguments){
+        //     $old_fields = $bean->fetched_row;
+        //     $method = '';
+        //     if($old_fields == false || empty($bean->xero_po_id_c)){
+        //         $method = 'create';
+        //     }else{
+        //         $method = 'update';
+        //     }
+        //     exec("cd /var/www/suitecrm/custom/modules/PO_purchase_order/; php curlForXero.php ". $method. " " . $bean->id ." > /dev/null &");
+        //     return ;
+        //     $tmpfsuitename = dirname(__FILE__).'/cookiesuitecrm.txt';
+        //     $curl = curl_init();
             
-            if (file_exists($tmpfsuitename)) {
-            } else {
-                $fields = array();
-                $fields['user_name'] = 'admin';
-                $fields['username_password'] = 'pureandtrue2020*';
-                $fields['module'] = 'Users';
-                $fields['action'] = 'Authenticate';
-                $url = 'https://suitecrm.pure-electric.com.au/index.php';
-                //$url = 'http://loc.suitecrm.com/index.php';
+        //     if (file_exists($tmpfsuitename)) {
+        //     } else {
+        //         $fields = array();
+        //         $fields['user_name'] = 'admin';
+        //         $fields['username_password'] = 'pureandtrue2020*';
+        //         $fields['module'] = 'Users';
+        //         $fields['action'] = 'Authenticate';
+        //         $url = 'https://suitecrm.pure-electric.com.au/index.php';
+        //         //$url = 'http://loc.suitecrm.com/index.php';
                 
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
-                curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
+        //         curl_setopt($curl, CURLOPT_URL, $url);
+        //         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($fields));
+        //         curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
 
-                curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-                curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
-                //curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1);
-                curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
-                $result = curl_exec($curl);
-            }
-            curl_setopt($curl, CURLOPT_URL, 'https://suitecrm.pure-electric.com.au/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method='.$method.'&record='.$bean->id);
-            //curl_setopt($curl, CURLOPT_URL, 'http://loc.suitecrm.com/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method='.$method.'&record='.$bean->id);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
-            curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
-            //curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1);
-            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
-            $result = curl_exec($curl);
-            curl_close($curl);
-        }
+        //         curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+        //         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        //         curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+        //         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        //         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        //         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        //         curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        //         //curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1);
+        //         curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+        //         $result = curl_exec($curl);
+        //     }
+        //     curl_setopt($curl, CURLOPT_URL, 'https://suitecrm.pure-electric.com.au/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method='.$method.'&record='.$bean->id);
+        //     //curl_setopt($curl, CURLOPT_URL, 'http://loc.suitecrm.com/index.php?entryPoint=xeroAPI&type=PurchaseOrder&method='.$method.'&record='.$bean->id);
+        //     curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        //     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        //     curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
+        //     curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfsuitename);
+        //     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        //     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        //     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        //     curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
+        //     //curl_setopt($curl, CURLOPT_TIMEOUT_MS, 1);
+        //     curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
+        //     $result = curl_exec($curl);
+        //     curl_close($curl);
+        // }
     }
     class CreateInternalNotesPO {
         /**
@@ -68,6 +68,8 @@
         function after_save_createdInternalNotesChangeStatus ($bean, $event, $arguments) {
             //get  PO's status dropdown
             global $app_list_strings;
+            global $current_user;
+
             $PO_status = $app_list_strings['po_status_dom'];
             // $PO_status = translate('po_status_dom','', $bean->status_c); //other case-don't use
             $old_fields = $bean->fetched_row;
@@ -97,6 +99,7 @@
                     }
                     $decription_internal_notes = $PO_status[$bean->status_c].' '.$date_note;
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('po_purchase_order_pe_internal_note_1');
@@ -108,6 +111,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = $PO_status[$bean->status_c].' '.$date_note;
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('po_purchase_order_pe_internal_note_1');
