@@ -63,7 +63,7 @@ $(document).ready(function(){
     }
     
     function render_nav_panel_right(module_sugar_grp1){
-        var array_module_use_fucntion = ['AOS_Quotes','AOS_Invoices','Leads','PO_purchase_order','pe_warehouse_log','pe_service_case'];
+        var array_module_use_fucntion = ['AOS_Quotes','AOS_Invoices','Leads','PO_purchase_order','pe_warehouse_log','pe_service_case', 'pe_address'];
         var check_module_use = array_module_use_fucntion.includes(module_sugar_grp1);
         if(!check_module_use) return;
         var json_menu_nav = [];
@@ -97,7 +97,7 @@ $(document).ready(function(){
         $('#button_back_to_top').fadeOut(200);
     }
     function render_nav_panel_left(module_sugar_grp1){
-        var array_module_use_fucntion = ['AOS_Quotes','AOS_Invoices','Leads','PO_purchase_order','pe_warehouse_log','pe_service_case'];
+        var array_module_use_fucntion = ['AOS_Quotes','AOS_Invoices','Leads','PO_purchase_order','pe_warehouse_log','pe_service_case', 'pe_address'];
         var check_module_use = array_module_use_fucntion.includes(module_sugar_grp1);
         if(!check_module_use) return;
         var json_menu_nav = [];

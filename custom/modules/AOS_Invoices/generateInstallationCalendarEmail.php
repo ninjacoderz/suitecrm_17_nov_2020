@@ -8,6 +8,9 @@
         $invoice->retrieve($_REQUEST["invoiceID"]);
 
         if(empty($invoice->id))return;
+        $user_assign = new User();
+        $user_assign->retrieve($invoice->assigned_user_id);
+        $email_assigned = ", {$user_assign->email1}";
 
         $temp_request = array(
             "module" => "Emails",
@@ -23,7 +26,7 @@
             "parent_id" => $invoice->id,
             "from_addr" => 'operations@pure-electric.com.au',
             "to_addrs_names" => "",
-            "cc_addrs_names" => "info@pure-electric.com.au",
+            "cc_addrs_names" => "Pure Info <info@pure-electric.com.au>".$email_assigned,
             "bcc_addrs_names" => "",
             "is_only_plain_text" => false,
         );

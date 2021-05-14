@@ -56,23 +56,18 @@ array (
       array (
         0 => 
         array (
-          0 => 'name',
-          1 => 
+          0 => 
           array (
-            'name' => 'date_entered',
-            'comment' => 'Date record created',
-            'label' => 'LBL_DATE_ENTERED',
+            'name' => 'number',
+            'label' => 'LBL_ADDRESS_NUMBER',
+            'customCode' => '{$fields.number.value}',
           ),
+          1 => '',
         ),
         1 => 
         array (
-          0 => 'assigned_user_name',
-          1 => 
-          array (
-            'name' => 'date_modified',
-            'comment' => 'Date record last modified',
-            'label' => 'LBL_DATE_MODIFIED',
-          ),
+          0 => 'name',
+          1 => 'assigned_user_name',
         ),
         2 => 
         array (

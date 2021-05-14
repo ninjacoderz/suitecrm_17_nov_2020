@@ -110,13 +110,12 @@ $(function () {
             var product_type = $(source).attr('data-product-type');
             var lead_source_company = $(source).attr('data-lead-source');
             var name_quote = $(source).attr('data-quote-name');
-            var call_id= $('input[name="record"]').val();
 
             // debugger;
             $.ajax({
                 type: "GET",
                 cache: false,
-                url: 'index.php?module=Emails&action=ComposeView&in_popup=1&quote_id='+record_id+((email_type!="")? ("&email_type="+email_type):"")+((lead_id!="")? ("&lead_id="+lead_id):"")+((email!='') ? "&email_address="+email : "")+((product_type!='') ? "&product_type="+product_type : "")+((lead_source_company!='') ? "&lead_source_company="+lead_source_company : "")+"&call_id="+call_id+"&module_type=call",
+                url: 'index.php?module=Emails&action=ComposeView&in_popup=1&quote_id='+record_id+((email_type!="")? ("&email_type="+email_type):"")+((lead_id!="")? ("&lead_id="+lead_id):"")+((email!='') ? "&email_address="+email : "")+((product_type!='') ? "&product_type="+product_type : "")+((lead_source_company!='') ? "&lead_source_company="+lead_source_company : ""),
             }).done(function (data) {
                 if (data.length === 0) {
                 console.error("Unable to display ComposeView");

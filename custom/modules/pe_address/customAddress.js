@@ -5,11 +5,11 @@ $(document).ready(function() {
         convertasbinaryimage(true);
     });
 //for test
-
+    
     //Hide field data JSON
     // $(document).find('#map_data').closest('.edit-view-row-item').hide();
     //init Geo Data
-    debugger
+    // debugger
     if( $('#image_satellite').length == 0) {
         getGEOGoogle();
     } else {
@@ -19,6 +19,11 @@ $(document).ready(function() {
     $(document).on('change', '#billing_address_street',  function(){
         getGEOGoogle();
     });
+
+    $(document).on('change', '#billing_address_street, #billing_address_city, #billing_address_state, #billing_address_postalcode',  function(){
+        $(document).find('#name').val(generateName());
+    });
+
 
     $("#billing_address_street").autocomplete({
         source: function (request, response) {
@@ -64,10 +69,51 @@ $(document).ready(function() {
         }
     });
 
+    //SAVE AND EDIT
+    SUGAR.saveAndEdit = function (elem) {
+        SUGAR.ajaxUI.showLoadingPanel();
+        $("#EditView input[name='action']").val('Save');
+        $.ajax({
+            type: $("#EditView").attr('method'),
+            url: $("#EditView").attr('action'),
+            data: $("#EditView").serialize(),
+            success: function (data) {
+                if($("input[name='record']").val() == ''){
+                    var record_id_patt = /"record" value="(.*)"/g;
+                    var records = record_id_patt.exec(data);
+                    if(records !== null && typeof records === 'object'){
+                        if(records[1] !='')  {
+                            window.onbeforeunload = null;
+                            window.onunload = null;
+                            window.addEventListener('beforeunload', function(e) {
+                                window.onbeforeunload = null;
+                                window.onunload = null;
+                            });
+                            // var url = 'https://suitecrm.pure-electric.com.au';
+                            var url = 'http://locsuitecrm.com/';
+                            window.location.href = url+"index.php?module="+module_sugar_grp1+"&action=EditView&record="+records[1];
+                        }
+                    }
+                    return false;
+                }
+                $(".reload_after_rename").trigger("click");
+                SUGAR.ajaxUI.hideLoadingPanel();
+            }
+        });
+        return false;
+    }
+
 }); //end $(document).ready
 
 
 //////////////////////////////////***DECLARE FUNCTIONS***//////////////////////////////////////
+
+
+function generateName() {
+    let fulladdress = `${$('#billing_address_street').val()}, ${$('#billing_address_city').val()}, ${$('#billing_address_state').val()}, ${$('#billing_address_postalcode').val()}`;
+    return fulladdress;
+}
+
 /**
  * Get Geo from Google
  */

@@ -439,12 +439,19 @@
         $quote->account_firstname_c = $contact->first_name;
         $quote->account_lastname_c = $contact->last_name;
         $quote->billing_address_street = $your_street;
-        $quote->install_address_c = $your_street;
         $quote->billing_contact_id = $lead->contact_id;
         $quote->billing_account_id = $lead->account_id;
+        $quote->billing_address_country = 'Australia';
+        /// Install Address
+        $quote->install_address_c = $your_street;
+        $quote->install_address_city_c = $primary_address_city;
+        $quote->install_address_state_c = $primary_address_state;
+        $quote->install_address_postalcode_c = $primary_address_postalcode;
+        $quote->install_address_country_c = 'Australia';
         $quote->assigned_user_id = $assigned_user;
         $quote->the_quote_prepared_c = "sanden_quote_form";
         $quote->stage = 'New';
+
 
         $quote->save();
 

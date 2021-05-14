@@ -9,7 +9,7 @@ $(document).ready(function() {
         //Hide field data JSON
         // $(document).find('#map_data').closest('.edit-view-row-item').hide();
         //init Geo Data
-        debugger
+        // debugger
         if( $('#satellite_view_span').length == 0) {
             getGEOGoogle();
         } else {

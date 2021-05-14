@@ -866,7 +866,14 @@ if($_POST['to_module'] == "aos_invoice"){
         $mail->Body .= "<p>Link Quote: <a href='https://suitecrm.pure-electric.com.au/index.php?module=AOS_Quotes&offset=14&stamp=1587091474041920500&return_module=AOS_Quotes&action=EditView&record=".$quote->id."' target='_blank'>".$quote->name."</a></p>";
         $mail->Body .= "<p>Email: ".$account->email1." <a href='https://mail.google.com/#search/".$account->email1."'>GSearch</a></p>";
         $mail->Body .= "<p>Phone number: <a href='#'>".$account->phone_mobile."</a></p>";
-        $mail->Body .= "<p><a href='http://sandentool.pure-electric.com.au/index.php?quote_id=".$quote->id."'>Sanden Design Tool</a></p>";
+        if($quote->quote_type_c == 'quote_type_daikin') {
+            $mail->Body .= "<p><a href='http://daikintool.pure-electric.com.au/index.php?quote_id=".$quote->id."'>Daikin Design Tool</a></p>";
+        } else if($quote->quote_type_c == 'quote_type_sanden') {
+            $mail->Body .= "<p><a href='http://sandentool.pure-electric.com.au/index.php?quote_id=".$quote->id."'>Sanden Design Tool</a></p>";
+        } else if($quote->quote_type_c == 'quote_type_solar') {
+            $mail->Body .= "<p><a href='https://solardesigndev.pure-electric.com.au/".$quote->id."'>Solar Design Tool</a></p>";
+        }
+        
         $mail->Body .= "<p><a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=converToInvoice&record=".$quote->id."' target='_blank'>Convert Invoice</a></p>";
         $mail->Body .= "<p>PE Sales Consultant: <strong>".$user->name."</strong></p>";
         $mail->Body .= $list_photos;
