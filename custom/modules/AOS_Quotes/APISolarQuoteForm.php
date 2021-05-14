@@ -647,7 +647,7 @@
                             <tbody>
                             <tr>
                                 <td style="width:60px;text-align:center;">
-                                    <h1 style="margin: 0;padding:0.6rem;color:orange;font-size:2rem;background:white;border-radius:2rem;border:2px solid rgba(254, 165, 58, 0.7)">'.$i.'</h1>
+                                    <h1 style="margin: 0;padding:0 0.6rem;color:orange;font-size:2rem;background:white;border-radius:2rem;border:2px solid rgba(254, 165, 58, 0.7)">'.$i.'</h1>
                                 </td>
                                 <td style="text-align:center;"><h1 style="margin:0;padding:0;font-size:2rem;color: white;">'. $pricings->{'total_kW_'.$i} .' kW</h1></td>
                             </tr>
