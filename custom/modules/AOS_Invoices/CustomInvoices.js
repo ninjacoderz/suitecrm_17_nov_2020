@@ -3413,7 +3413,16 @@ $(function () {
             else
             // unchecked
                 testing = 0;
-
+            if($("#ces_cert_wording_c").val() == "") {
+                var answer = confirm("No PCOC Cert Wording, Are you sure you want to show the Draft Email?")
+                if (answer) {
+                    //some code
+                }
+                else {
+                    $("#ces_cert_wording_c").focus();
+                    return false;
+                }
+            }
             var is_proposed_location_ins_photo = check_proposed_ins_localtion();
             if (is_proposed_location_ins_photo) {
                 //have >> continue
@@ -4019,7 +4028,16 @@ $(function () {
                     return false;
                 }
             }
-
+            if($("#pcoc_cert_wording_c").val() == "") {
+                var answer = confirm("No PCOC Cert Wording, Are you sure you want to show the Draft Email?")
+                if (answer) {
+                    //some code
+                }
+                else {
+                    $("#pcoc_cert_wording_c").focus();
+                    return false;
+                }
+            }
             var is_proposed_location_ins_photo = check_proposed_ins_localtion();
             if (is_proposed_location_ins_photo) {
                 //have >> continue
