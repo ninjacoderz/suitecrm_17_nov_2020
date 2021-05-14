@@ -300,7 +300,7 @@ class Lead extends Person implements EmailInterface
     {
         parent::fill_in_additional_list_fields();
         $this->_create_proper_name_field();
-        $this->get_account();
+        //$this->get_account();
     }
 
     public function fill_in_additional_detail_fields()
@@ -312,7 +312,7 @@ class Lead extends Person implements EmailInterface
         $this->_create_proper_name_field();
         $this->get_contact();
         $this->get_opportunity();
-        $this->get_account();
+        //$this->get_account();
 
         if (!empty($this->campaign_id)) {
             $camp = BeanFactory::newBean('Campaigns');

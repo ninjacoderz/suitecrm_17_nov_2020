@@ -63,6 +63,7 @@ class pe_address extends Basic
     public $assigned_user_name;
     public $assigned_user_link;
     public $SecurityGroups;
+    public $number;
 	
     public function bean_implements($interface)
     {
@@ -74,5 +75,17 @@ class pe_address extends Basic
 
         return false;
     }
-	
+
+    function save($check_notify = FALSE){
+		global  $sugar_config;
+		if (empty($this->id) || $this->new_with_id){
+			if($sugar_config['dbconfig']['db_type'] == 'mssql'){
+				$this->number = $this->db->getOne("SELECT MAX(CAST(COALESCE(number,0) as INT))+1 FROM pe_address");
+			} else {
+				$this->number = $this->db->getOne("SELECT MAX(CAST(COALESCE(number,0) as UNSIGNED))+1 FROM pe_address");
+			}
+        }
+        $value = parent::save($check_notify);
+        return $value;
+    }
 }

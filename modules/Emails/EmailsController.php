@@ -930,6 +930,11 @@ class EmailsController extends SugarController
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
+                //Add email sale person
+                $user_assign = new User();
+                $user_assign->retrieve($invoice->assigned_user_id);
+                $email_assigned = $user_assign->email1;
+                $this->bean->cc_addrs_names = $email_assigned;
             }
 
             /**VUT-E-Quote-Button 'Send Inspection Request' (send for installer Sanden/Daikin) */
@@ -4940,6 +4945,50 @@ class EmailsController extends SugarController
             $name = $emailTemplate->subject;
             $description_html = $emailTemplate->body_html;
             $description = $emailTemplate->body;
+            $select_call_status = '<div style="float:left;padding:0;width:30%;min-width:215px;color:#444;text-align:center;overflow:hidden;margin:0">
+                                        <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
+                                            <div style="height: auto;border-radius: 20px;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background:silver;">
+                                                <table style="width:100%">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="https://pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=I_Need_More_Time">I Need More Time - Email Me In a Week</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float:left;padding:0;width:30%;min-width:215px;color:#444;text-align:center;overflow:hidden;margin:0">
+                                        <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
+                                            <div style="height: auto;border-radius: 20px;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background: silver;">
+                                                <table style="width:100%">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="https://pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=I_Have_More_Questions">I Have More Questions - Call Me When Possible</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float:left;padding:0;width:30%;min-width:215px;color:#444;text-align:center;overflow:hidden;margin:0">
+                                        <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
+                                            <div style="height: auto;border-radius: 20px;clear:both;margin:0;font-weight:bold;padding:0.25rem 0;color:#fff;background: silver;">
+                                                <table style="width:100%">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="https://pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=Not_Proceeding_With_Quote">Not Proceeding With Quote - Thank You For The Quote</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>';
+            $select_call_status .= '<div style="clear: both;"></div></div>';
+
+            $description = str_replace("\$button_select_status",$select_call_status , $description);
+            $description_html = str_replace("\$button_select_status",$select_call_status , $description_html);
+
             $templateData = $emailTemplate->parse_email_template(
                 array(
                     'subject' => $name,

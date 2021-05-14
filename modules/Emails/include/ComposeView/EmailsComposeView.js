@@ -494,9 +494,13 @@
         // copy html to plain
         $(self).find('.html_preview').html(editor.getContent());
         $(self).find('input#description_html').val(editor.getContent());
+        var email_user_assigned  = $(self).find('#cc_addrs_names').val() != '' ? $(self).find('#cc_addrs_names').val() : '';
         if ($(self).find('#cc_addrs_names').val().indexOf('sa@cope.com.au') == -1) { //if has cc_addr has <sa@cope.com.au> then break
           $(self).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
         } 
+        if (email_user_assigned.indexOf('info@pure-electric.com.au') != -1) {
+          $(self).find('#cc_addrs_names').val(email_user_assigned);
+        }
 
         // if($('input[name="inbound_email_id"]').val() !== "58cceed9-3dd3-d0b5-43b2-59f1c80e3869" && $('input[name="inbound_email_id"]').val()!=='8dab4c79-32d8-0a26-f471-59f1c4e037cf') {
         //   $(self).find('#bcc_addrs_names').val("Lee Andrewartha <lee.andrewartha@pure-electric.com.au>");

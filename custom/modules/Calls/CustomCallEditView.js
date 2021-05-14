@@ -110,6 +110,7 @@ $(function () {
             var product_type = $(source).attr('data-product-type');
             var lead_source_company = $(source).attr('data-lead-source');
             var name_quote = $(source).attr('data-quote-name');
+
             // debugger;
             $.ajax({
                 type: "GET",

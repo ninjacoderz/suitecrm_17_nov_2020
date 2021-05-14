@@ -6288,7 +6288,9 @@ function cal_total_constractor(default_value_input = null) {
             $(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
             $(self.emailComposeView).find('#parent_type').val(populateModule);
             $(self.emailComposeView).find('#parent_name').val(populateModuleName);
-            $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
+            var email_user_assigned  = $(self.emailComposeView).find('#cc_addrs_names').val() != '' ? $(self.emailComposeView).find('#cc_addrs_names').val() : '';
+
+            $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>"+`, ${email_user_assigned}`);
             $(self.emailComposeView).find('#parent_id').val(populateModuleRecord);
             $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
             $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);         

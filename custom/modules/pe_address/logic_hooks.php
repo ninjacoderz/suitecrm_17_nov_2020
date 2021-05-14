@@ -20,6 +20,8 @@
     //     //The method to call.
     //     'after_save_method'
     // );
+
+    //Hook Before
     $hook_array['before_save'][] = Array(
         1,
         'create_folder_upload',
@@ -27,4 +29,14 @@
         'CreateFolderUpload',
         'before_save_method'
     );
+
+    //Hook after
+    $hook_array['after_save'][] = Array(
+        1,
+        'create_internalnote_for_address',
+        'custom/modules/AOS_Invoices/logic_hooks_class.php',
+        'CreateInternalNoteForAddress',
+        'after_save_method'
+    );
+
 ?>
