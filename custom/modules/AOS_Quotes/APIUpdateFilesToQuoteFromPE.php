@@ -820,6 +820,8 @@ if($_POST['to_module'] == "aos_invoice"){
             
         }
         $mail->Body .= "<p>Email Client: ".$client->email1." <a href='https://mail.google.com/#search/".$client->email1."'>GSearch</a></p>";
+        $mail->Body .= "<p>Phone Client: <a href='tel:".$client->mobile_phone_c."'>".$client->mobile_phone_c." </a></p>";
+
         $mail->Body .= $send_install_link;    
     }
     $mail->Body .= $list_photos;
