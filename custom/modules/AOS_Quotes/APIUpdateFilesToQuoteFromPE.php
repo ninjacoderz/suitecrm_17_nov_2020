@@ -968,6 +968,7 @@ if($_POST['to_module'] == "aos_invoice"){
             }
         }     
         $lead->status = "Info_Uploaded";
+        $lead->uploaded_photos_c = "yes";
         $lead->save();   
         $mail = new SugarPHPMailer();  
         $mail->setMailerForSystem();  

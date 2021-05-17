@@ -116,6 +116,7 @@ switch ($action) {
             }
         }
         $EmailBean->save();
+        // $result['error'] = resizeImageNote($EmailBean->id);
         break;
     default:
 
@@ -206,5 +207,76 @@ if(!function_exists('mime_content_type')) {
         else {
             return 'application/octet-stream';
         }
+    }
+}
+
+function resizeImageNote($email_id) {
+    $db = DBManagerFactory::getInstance();
+    $q = "SELECT id FROM notes WHERE deleted = 0 AND parent_id = '" . $email_id . "'";
+    $r = $db->query($q);
+    $totalSize = 0;
+    $limitSize = 25165824; //24MB
+    while ($a = $db->fetchByAssoc($r)) {
+        $note = new Note();
+        $note->retrieve($a['id']);
+        if ($note->id) {
+            $array_extension = explode('.', $note->filename);
+            $extension = end($array_extension);
+            $image = $_SERVER["DOCUMENT_ROOT"].'/upload/'. $note->id;
+            if (in_array(strtolower($extension), [ 'jpg', 'jpeg', 'gif', 'png'])) {
+                try {
+                    $sizeFile = 0;
+                    $oneMB = 1048576;
+                    $im = new Imagick($image);
+                    if ($im->getImageLength() > $oneMB) {
+                        $new_image = "{$image}.{$extension}";
+                        $im->writeImage($new_image);
+                        $im->readImage($new_image);
+                        // $origin_properties = $im->getImageProperties();
+                        $sizeFile = $im->getImageLength();
+                        $maxWidth = 2048; //2k 2048*1080
+                        $maxHeight = 1080;
+                        $i = 0;
+                        while ($sizeFile > $oneMB && $i < 5) {
+                            $size = $im->getImageGeometry();
+                            $im->setImageCompression(\Imagick::COMPRESSION_JPEG);
+                            $im->setImageCompressionQuality(90);
+                            if($size['width'] >= $size['height']){
+                                if($size['width'] > $maxWidth){
+                                    $im->resizeImage($maxWidth, 0, \Imagick::FILTER_LANCZOS, 1);
+                                    $maxWidth *= 0.9; 
+                                    $maxHeight *= 0.9;
+                                } 
+                            } else{
+                                if($size['height'] > $maxHeight){
+                                    $im->resizeImage(0, $maxHeight, \Imagick::FILTER_LANCZOS, 1);
+                                    $maxWidth *= 0.9; 
+                                    $maxHeight *= 0.9;
+                                }
+                            }
+                            $im->writeImage($new_image);
+                            $im->readImage($new_image);
+                            $sizeFile = $im->getImageLength();
+                            $i++;
+                        }
+                        if (is_link($image)) {
+                            unlink($image);
+                        }
+                        $im->writeImage($image);
+                        unlink($new_image);
+                    }
+                    $totalSize += filesize($image);
+                } catch (Exception $e) {
+                    throw new Exception('Exception:' . $e->getMessage());
+                }
+            } else { //other files
+                $totalSize += filesize($image);
+            }
+        } 
+    }
+
+    if ($totalSize > $limitSize) {
+        // return "Error: totalSize > 24MB";
+        throw new Exception('Error: totalSize > 24MB');
     }
 }

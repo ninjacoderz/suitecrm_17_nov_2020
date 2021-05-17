@@ -5,7 +5,8 @@ function custom_autoCreateInvoiceByOrderSam(){
 
         $quoteJSON_MT = GetJson_CRMSolargainOrders('matthew.wright','MW@pure733');
         $quoteJSON_PS = GetJson_CRMSolargainOrders('paul.szuster@solargain.com.au','S0larga1n$');
-        $data_json = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results),SORT_REGULAR);
+        $quoteJSON_michael = GetJson_CRMSolargainOrders('michael.golden@solargain.com.au','michaelg@sg79');
+        $data_json = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results,$quoteJSON_michael->Results),SORT_REGULAR);
         $aray_order_number = [];
         foreach ($data_json as $key => $value) {
             $aray_order_number[] = $value->ID;
@@ -177,27 +178,7 @@ function Create_Invoice_By_Order_Number($sg_order_number){
   $password = "MW@pure733";
   $assigned_user_id = '8d159972-b7ea-8cf9-c9d2-56958d05485e';
   $assigned_user_name = 'Matthew Wright';
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, "https://crm.solargain.com.au/apiv2/orders/$sg_order_number");
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-  curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-  $headers = array();
-  $headers[] = "Pragma: no-cache";
-  $headers[] = "Accept-Encoding: gzip, deflate, br";
-  $headers[] = "Accept-Language: en-US,en;q=0.9";
-  $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
-  $headers[] = "Accept: application/json, text/plain, */*";
-  $headers[] = "Referer: https://crm.solargain.com.au/order/edit/30962";
-  $headers[] = "Authorization: Basic ".base64_encode($username . ":" . $password);
-  $headers[] = "Cookie: SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1";
-  $headers[] = "Connection: keep-alive";
-  $headers[] = "Cache-Control: no-cache";
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-  $result = curl_exec($ch);
-  curl_close ($ch);
-  $json_result = json_decode($result);
+  $json_result = Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number);
   //change account paul
   if(!isset($json_result->ID)) {
       $username = 'paul.szuster@solargain.com.au';
@@ -206,28 +187,20 @@ function Create_Invoice_By_Order_Number($sg_order_number){
       $assigned_user_id = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
       $assigned_user_name = 'Paul Szuster';
 
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, "https://crm.solargain.com.au/apiv2/orders/$sg_order_number");
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-      curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-      $headers = array();
-      $headers[] = "Pragma: no-cache";
-      $headers[] = "Accept-Encoding: gzip, deflate, br";
-      $headers[] = "Accept-Language: en-US,en;q=0.9";
-      $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
-      $headers[] = "Accept: application/json, text/plain, */*";
-      $headers[] = "Referer: https://crm.solargain.com.au/order/edit/30962";
-      $headers[] = "Authorization: Basic ".base64_encode($username . ":" . $password);
-      $headers[] = "Cookie: SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1";
-      $headers[] = "Connection: keep-alive";
-      $headers[] = "Cache-Control: no-cache";
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-  
-      $result = curl_exec($ch);
-      curl_close ($ch);
-      $json_result = json_decode($result);
+      $json_result = Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number);
   }
+
+    //change account michael
+    if(!isset($json_result->ID)) {
+        $username = 'michael.golden@solargain.com.au';
+        $password = 'michaelg@sg79';
+
+        $assigned_user_id = '71adfe6a-5e9e-1fc2-3b6c-6054c8e33dcb';
+        $assigned_user_name = 'Michael Golden';
+
+        $json_result = Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number);
+    }
+
   //logic for install date, due date
   $installdate = '';
   if(isset($json_result->InstallDate)){
@@ -449,27 +422,7 @@ function Update_Invoice_By_InvoiceID($record_id){
     $password = "MW@pure733";
     $assigned_user_id = '8d159972-b7ea-8cf9-c9d2-56958d05485e';
     $assigned_user_name = 'Matthew Wright';
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://crm.solargain.com.au/apiv2/orders/$sg_order_number");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-    $headers = array();
-    $headers[] = "Pragma: no-cache";
-    $headers[] = "Accept-Encoding: gzip, deflate, br";
-    $headers[] = "Accept-Language: en-US,en;q=0.9";
-    $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
-    $headers[] = "Accept: application/json, text/plain, */*";
-    $headers[] = "Referer: https://crm.solargain.com.au/order/edit/30962";
-    $headers[] = "Authorization: Basic ".base64_encode($username . ":" . $password);
-    $headers[] = "Cookie: SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1";
-    $headers[] = "Connection: keep-alive";
-    $headers[] = "Cache-Control: no-cache";
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-  
-    $result = curl_exec($ch);
-    curl_close ($ch);
-    $json_result = json_decode($result);
+    $json_result = Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number);
     //change account paul
     if(!isset($json_result->ID)) {
         $username = 'paul.szuster@solargain.com.au';
@@ -478,28 +431,20 @@ function Update_Invoice_By_InvoiceID($record_id){
         $assigned_user_id = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
         $assigned_user_name = 'Paul Szuster';
   
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://crm.solargain.com.au/apiv2/orders/$sg_order_number");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-        curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
-        $headers = array();
-        $headers[] = "Pragma: no-cache";
-        $headers[] = "Accept-Encoding: gzip, deflate, br";
-        $headers[] = "Accept-Language: en-US,en;q=0.9";
-        $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
-        $headers[] = "Accept: application/json, text/plain, */*";
-        $headers[] = "Referer: https://crm.solargain.com.au/order/edit/30962";
-        $headers[] = "Authorization: Basic ".base64_encode($username . ":" . $password);
-        $headers[] = "Cookie: SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1";
-        $headers[] = "Connection: keep-alive";
-        $headers[] = "Cache-Control: no-cache";
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    
-        $result = curl_exec($ch);
-        curl_close ($ch);
-        $json_result = json_decode($result);
+        $json_result = Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number);
     }
+
+    //change account michael
+    if(!isset($json_result->ID)) {
+        $username = 'michael.golden@solargain.com.au';
+        $password = 'michaelg@sg79';
+
+        $assigned_user_id = '71adfe6a-5e9e-1fc2-3b6c-6054c8e33dcb';
+        $assigned_user_name = 'Michael Golden';
+
+        $json_result = Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number);
+    }
+    
     //logic for install date, due date
     $installdate = '';
     if(isset($json_result->InstallDate)){
@@ -647,4 +592,29 @@ function Create_Update_Invoice_Xero($invoice_id,$method){
     curl_setopt($curl, CURLOPT_COOKIESESSION, TRUE);
     curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.125 Safari/533.4");
     $result = curl_exec($curl); 
+}
+
+function Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://crm.solargain.com.au/apiv2/orders/$sg_order_number");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+    $headers = array();
+    $headers[] = "Pragma: no-cache";
+    $headers[] = "Accept-Encoding: gzip, deflate, br";
+    $headers[] = "Accept-Language: en-US,en;q=0.9";
+    $headers[] = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+    $headers[] = "Accept: application/json, text/plain, */*";
+    $headers[] = "Referer: https://crm.solargain.com.au/order/edit/30962";
+    $headers[] = "Authorization: Basic ".base64_encode($username . ":" . $password);
+    $headers[] = "Cookie: SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1";
+    $headers[] = "Connection: keep-alive";
+    $headers[] = "Cache-Control: no-cache";
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+    $result = curl_exec($ch);
+    curl_close ($ch);
+    $json_result = json_decode($result);
+    return $json_result;
 }

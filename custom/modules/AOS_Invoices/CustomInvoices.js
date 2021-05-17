@@ -234,6 +234,7 @@ $(function () {
                if(invoice_id !='')  {
                    SUGAR.ajaxUI.showLoadingPanel(); 
                    var data_post = {
+                       'selected': 'selected',  
                        'method': 'customize',
                        'invoiceID':invoice_id,
                        'invoiceNum':invoice_number,
@@ -3412,7 +3413,16 @@ $(function () {
             else
             // unchecked
                 testing = 0;
-
+            if($("#ces_cert_wording_c").val() == "") {
+                var answer = confirm("No PCOC Cert Wording, Are you sure you want to show the Draft Email?")
+                if (answer) {
+                    //some code
+                }
+                else {
+                    $("#ces_cert_wording_c").focus();
+                    return false;
+                }
+            }
             var is_proposed_location_ins_photo = check_proposed_ins_localtion();
             if (is_proposed_location_ins_photo) {
                 //have >> continue
@@ -4018,7 +4028,16 @@ $(function () {
                     return false;
                 }
             }
-
+            if($("#pcoc_cert_wording_c").val() == "") {
+                var answer = confirm("No PCOC Cert Wording, Are you sure you want to show the Draft Email?")
+                if (answer) {
+                    //some code
+                }
+                else {
+                    $("#pcoc_cert_wording_c").focus();
+                    return false;
+                }
+            }
             var is_proposed_location_ins_photo = check_proposed_ins_localtion();
             if (is_proposed_location_ins_photo) {
                 //have >> continue
@@ -8409,33 +8428,78 @@ function check_proposed_ins_localtion() {
 /**
  * VUT- Send email promo code Methven
  */
-function promo_code_methven(e) {
+ function promo_code_methven(e) {
     // debugger
     let i;
     let promo_codes = [];
+    var html_radio_promo_code = '';
     for (i = 0 ; i < 3 ; i++ ) {
     //    if ($(`#promo_methven_${i+1}_c`).prop('checked'))
-        if ($(`#handheld_${i+1}_c`).val() != '') {
+        if ($(`#promo_methven_${i+1}_c`).is(':checked')) {
             promo_codes.push($(`#handheld_${i+1}_c`).val());
+           // html_radio_promo_code +='<input type="radio" checked name="radio_promo_code" class="radio_promo_code" value="'+$(`#handheld_${i+1}_c`).val()+'">' + $(`#handheld_${i+1}_c`).parents().eq(1).find('div.label').text() + ': ' + $(`#handheld_${i+1}_c`).val() +'<br>'; 
+            html_radio_promo_code += '<div class="radio">\
+                <label><input type="radio" name="radio_promo_code" class="radio_promo_code" value="'+$(`#handheld_${i+1}_c`).val()+'">' + $(`#handheld_${i+1}_c`).parents().eq(1).find('div.label').text()  + $(`#handheld_${i+1}_c`).val()  +'</label>\
+            </div>';
         }
+        // if ($(`#handheld_${i+1}_c`).val() != '') {
+        //     promo_codes.push($(`#handheld_${i+1}_c`).val());
+        // }
     }
-    if (promo_codes.length != 0) {
-        //have >> continue
+    
+    $(".checkbox_promo_code_customize").each(function() {
+        if ($(this).is(':checked')) {
+            promo_codes.push($(this).attr('id'));
+            var label_discount = $(this).parents().eq(1).find('.label-discount').text();
+            html_radio_promo_code += '<div class="radio">\
+                                            <label><input type="radio" name="radio_promo_code" class="radio_promo_code" value="'+$(this).attr('id')+'">' + label_discount + ': ' + $(this).attr('id') +'</label>\
+                                        </div>';
+            //html_radio_promo_code +='<input type="radio" checked name="radio_promo_code" class="radio_promo_code" value="'+$(this).attr('id')+'">' + label_discount + ': ' + $(this).attr('id') +'<br>'; 
+        }
+    });
+
+    if(promo_codes.length == 1) {
         $(e).attr('data-promo-code', promo_codes.join("_"));
         $(document).openComposeViewModal_US7_and_Sanden_Tips(e);
-    } else {
-        var question = confirm("No Promo Code has been generated - sure you want to continue?");
-        if (question) {
-            $(e).attr('data-promo-code', '');
-            $(document).openComposeViewModal_US7_and_Sanden_Tips(e);
-        }
-        else {
-            // $('html, body').animate({
-            //     scrollTop: (($('#generate_promo_code').closest(".panel-default").offset().top) - 100)
-            // });
-            return false;
-        }
+    }else{
+
+        var popupList = $('<div id="popupSelectPromoCode" title="Please Select Promo Code">'
+               + html_radio_promo_code +
+                        + '</div>');
+        popupList.dialog({
+            modal:true,
+            width: 500,
+            buttons: {
+                Cancel : function(){
+                    $(this).dialog("close");
+                },
+                OK : function() {
+                    $(e).attr('data-promo-code', $('input[name="radio_promo_code"]:checked').val());
+                    $(document).openComposeViewModal_US7_and_Sanden_Tips(e);
+                    $(this).dialog("close");
+    
+                }
+            }
+        });
     }
+
+    // if (promo_codes.length != 0) {
+    //     //have >> continue
+    //     $(e).attr('data-promo-code', promo_codes.join("_"));
+    //     $(document).openComposeViewModal_US7_and_Sanden_Tips(e);
+    // } else {
+    //     var question = confirm("No Promo Code has been generated - sure you want to continue?");
+    //     if (question) {
+    //         $(e).attr('data-promo-code', '');
+    //         $(document).openComposeViewModal_US7_and_Sanden_Tips(e);
+    //     }
+    //     else {
+    //         // $('html, body').animate({
+    //         //     scrollTop: (($('#generate_promo_code').closest(".panel-default").offset().top) - 100)
+    //         // });
+    //         return false;
+    //     }
+    // }
 }
 
 /**
@@ -8673,20 +8737,33 @@ function Ajax_Generate_File_PDF_REPS(action=''){
 
 function GenerateJsonPromoCodeCustom (data_in){
     var json_promo_code_custom_c = $("#json_promo_code_custom_c").val();
+    var check_exist_promocode = false;
+    var index_exist_promocode = 0 ;
     if(json_promo_code_custom_c == ''){
          json_promo_code_custom_c = [];
     }else{
          json_promo_code_custom_c = $.parseJSON(json_promo_code_custom_c);
     }
-    
-    var data_insert = {    
+
+    var data_insert = { 
+        'selected': data_in.selected,  
         'offer_type_promotion':data_in.offer_type_promotion,
         'name_promotion': data_in.name_promotion,
         'amount_off_promotion': data_in.amount_off_promotion,
         'percentage_off_promotion': data_in.percentage_off_promotion,
         'promo_code': data_in.promo_code
-    } ;
-    json_promo_code_custom_c.push(data_insert);
+    };
+    $.each(json_promo_code_custom_c,function(key,value){
+        if(value.promo_code == data_insert.promo_code){
+            check_exist_promocode = true;
+            index_exist_promocode = key;
+        }
+    });
+    if(check_exist_promocode) {
+        json_promo_code_custom_c[index_exist_promocode].selected = data_insert.selected;
+    }else{
+        json_promo_code_custom_c.push(data_insert);
+    }
     $("#json_promo_code_custom_c").val(JSON.stringify(json_promo_code_custom_c));
 };
 
@@ -8702,13 +8779,18 @@ function RenderHTMLPromoCodeCustom(){
         $.each(json_promo_code_custom_c,function(key,value){
             if(value.promo_code !== '' ){
                 html += '<li>';
-                    html +=  '<span>'+ value.name_promotion + '</span>'; 
-                if(value.offer_type_promotion == 'order_fixed_grand_total_off'){
-                    html +=  '<span>- Discount ($ '+value.amount_off_promotion + ') - </span>'; 
-                }else {
-                    html +=  '<span>- Discount ( '+value.percentage_off_promotion + ' %) - </span>';  
+                if(value.selected == 'selected'){
+                    html +=  '<span><input onClick="SUGAR.EventChange_checkbox_promo_code_customize(this);"  class="checkbox_promo_code_customize" checked type="checkbox" id="'+value.promo_code+'" name="'+value.promo_code+'" value="" title="" tabindex="0"> - </span>'; 
+                }else { 
+                    html +=  '<span><input onClick="SUGAR.EventChange_checkbox_promo_code_customize(this);" class="checkbox_promo_code_customize" type="checkbox" id="'+value.promo_code+'" name="'+value.promo_code+'"  value="" title="" tabindex="0"> - </span>';  
                 }
-                    html +=  '<strong>'+value.promo_code + '</strong>'; 
+                    html +=  '<span>'+ value.name_promotion + ' -</span>'; 
+                if(value.offer_type_promotion == 'order_fixed_grand_total_off'){
+                    html +=  '<span class="label-discount"> Discount ($ '+value.amount_off_promotion + ')  </span>'; 
+                }else {
+                    html +=  '<span class="label-discount"> Discount ( '+value.percentage_off_promotion + ' %)  </span>';  
+                }
+                    html +=  '<strong>- '+value.promo_code + '</strong>'; 
                 html += '</li>';
             }
         });
@@ -8718,6 +8800,24 @@ function RenderHTMLPromoCodeCustom(){
     $('#custom_generate_promo_code').after(html);
 }
 
+SUGAR.EventChange_checkbox_promo_code_customize = function(element){
+    let promo_code =  $(element).attr('id');
+    let selected = '';
+    if( $(element).is(":checked")){
+        selected = 'selected';
+    }
+
+    var data_insert = { 
+        'selected': selected,  
+        'offer_type_promotion':'',
+        'name_promotion': '',
+        'amount_off_promotion': '',
+        'percentage_off_promotion': '',
+        'promo_code': promo_code
+    };
+    GenerateJsonPromoCodeCustom (data_insert);
+
+}
 /**
  * 3 button TODAY +7 , TODAY +1, TODAY
  * @param {STRING} type  'data-type' of element

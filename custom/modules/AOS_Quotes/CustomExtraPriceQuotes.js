@@ -375,9 +375,13 @@ $(function () {
         warningLineItem(0);
 
         let pmVal = $(this).val();
-        $('#solar_pv_pricing_table *[id*=pm_]:visible').each(function() {
-            $(this).val(pmVal);
-        });
+        let attrId = $(this).attr('id');
+        let index = attrId.substr(attrId.length - 1);
+        if(index == "1"){
+            $('#solar_pv_pricing_table *[id*=pm_]:visible').each(function() {
+                $(this).val(pmVal);
+            });
+        }
     });
 });
 
