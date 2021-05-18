@@ -33,9 +33,9 @@ function renderQuoteFieldHTML($vardefs_array){
                 $field_content = '<select class="custom_fields" name="'.$k.'" id="'.$k.'" style="width:260px;" title="" size="6" multiple>'.renderOption($v['list_array']).'</select>';
                 break;
         }
-        $tempHTML = '<div class="col-md-6 col-xs-12 col-sm-12 edit-view-row-item">
+        $tempHTML = '<div class="col-md-6 col-xs-12 col-sm-12 edit-view-row-item" style="'.($k == "quote_main_tank_water" ? "display: block": "display:none").'">
                         <div class="col-md-6 col-xs-12 col-sm-12 label">$display_label</div>
-                        <div class="col-md-6 col-xs-12 col-sm-5 edit-view-field " type="varchar">
+                        <div class="col-md-6 col-xs-12 col-sm-5 edit-view-field " data-next-step="'.$v['next_step'].'" data-next-step-backup="'.$v['next_step_backup'].'" type="varchar">
                             $field_content
                         </div>
                     </div>';
@@ -48,8 +48,8 @@ function renderQuoteFieldHTML($vardefs_array){
 
 function renderOption($option_array) {
     $option_group = '';
-    foreach($option_array as $option) {
-        $option_group .= '<option label="'.$option.'" value="'.$option.'">'.$option.'</option>';
+    foreach($option_array as $key => $option) {
+        $option_group .= '<option label="'.$option.'" value="'.$option.'" data-value-item="'.$key.'">'.$option.'</option>';
     };
     return $option_group;
 }
