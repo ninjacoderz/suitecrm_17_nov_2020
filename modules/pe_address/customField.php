@@ -1,5 +1,5 @@
 <?php
-    function generateNumberField($focus, $field, $value, $view)
+    function address_generateNumberField($focus, $field, $value, $view)
     {
         $html = '';
         if ($view == 'EditView') {
