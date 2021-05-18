@@ -232,6 +232,7 @@
     // $mail->AddAddress('admin@pure-electric.com.au');
     // $mail->AddAddress("ngoanhtuan2510@gmail.com");
     $mail->AddAddress('info@pure-electric.com.au');
+    $mail->AddCC('michael.golden@pure-electric.com.au');  
     $mail->prepForOutbound();    
     $mail->setMailerForSystem();
     $sent = $mail->send();
