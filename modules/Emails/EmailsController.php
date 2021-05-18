@@ -5001,7 +5001,7 @@ class EmailsController extends SugarController
                                                 <table style="width:100%">
                                                     <tbody>
                                                     <tr>
-                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="https://pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=I_Need_More_Time">I Need More Time - Email Me In a Week</a></td>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="http://devel.pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=I_Need_More_Time">I Need More Time - Email Me In a Week</a></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -5014,7 +5014,7 @@ class EmailsController extends SugarController
                                                 <table style="width:100%">
                                                     <tbody>
                                                     <tr>
-                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="https://pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=I_Have_More_Questions">I Have More Questions - Call Me When Possible</a></td>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="http://devel.pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=I_Have_More_Questions">I Have More Questions - Call Me When Possible</a></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
@@ -5027,7 +5027,7 @@ class EmailsController extends SugarController
                                                 <table style="width:100%">
                                                     <tbody>
                                                     <tr>
-                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="https://pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=Not_Proceeding_With_Quote">Not Proceeding With Quote - Thank You For The Quote</a></td>
+                                                        <td style="text-align:center;"><a target="_blank" style="text-decoration: none;margin:0;padding:0;font-size:13px;color: black;" href="http://devel.pure-electric.com.au/quote_follow_up?quote_id='.$_REQUEST['quote_id'].'&feedback=Not_Proceeding_With_Quote">Not Proceeding With Quote - Thank You For The Quote</a></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
