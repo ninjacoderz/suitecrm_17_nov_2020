@@ -9,6 +9,10 @@
 
     $quote = new AOS_Quotes();
     $quote->retrieve($_REQUEST['quote_id']);
+    $saleperson = new User();
+    $saleperson->retrieve($quote->assigned_user_id);
+    $emailsale = $saleperson->email1;
+
     if($quote->id == '') {
         echo json_encode(array('msg'=>'error'));
         die();
@@ -218,7 +222,7 @@
     $defaults = $emailObj->getSystemDefaultEmail();
     $mail = new SugarPHPMailer();
     $mail->setMailerForSystem();
-   $mail->From = 'info@pure-electric.com.au';  
+    $mail->From = 'info@pure-electric.com.au';  
     //  $mail->From = 'pureDev2019@gmail.com';  
     $mail->FromName = 'Pure Electric';  
     $mail->IsHTML(true);
@@ -232,7 +236,7 @@
     // $mail->AddAddress('admin@pure-electric.com.au');
     // $mail->AddAddress("ngoanhtuan2510@gmail.com");
     $mail->AddAddress('info@pure-electric.com.au');
-    $mail->AddCC('michael.golden@pure-electric.com.au');  
+    $mail->AddCC($emailsale);  
     $mail->prepForOutbound();    
     $mail->setMailerForSystem();
     $sent = $mail->send();
