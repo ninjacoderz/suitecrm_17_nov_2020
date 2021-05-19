@@ -427,12 +427,23 @@ const PEAdminPercent = 0.3;
                     data: data,
                     success: function (result) {
                         try {
-                            SUGAR.ajaxUI.hideLoadingPanel();
-                            location.reload();
+                            var data_quote = JSON.parse(result);
+                            $("#name").val(data_quote['quote_name'])
+                            $("#EditView input[name='action']").val('Save');
+                            $.ajax({
+                                type: $("#EditView").attr('method'),
+                                url: $("#EditView").attr('action'),
+                                data: $("#EditView").serialize(),
+                                success: function (data) {
+                                    SUGAR.ajaxUI.hideLoadingPanel();
+                                }
+                            });
                         } catch (error) {
                             console.log(error)
                         }
                     }
+                }).done(function (){
+                    location.reload();
                 });
             }
         }else{

@@ -485,7 +485,8 @@ if($_REQUEST['quote_generate_type'] == "bySuite") {
             'GST' => $gst,
             'Tax' => $product_quote_group->tax_amount,
             'Group_Total' => $groupTotal,
-        )
+        ),
+        "quote_name" => $quote->name,
     );
 
 
