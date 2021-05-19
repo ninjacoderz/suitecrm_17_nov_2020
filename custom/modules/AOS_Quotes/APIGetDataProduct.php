@@ -1,6 +1,6 @@
 <?php
 
-if (!isset($_POST['type_get']) || $_POST['type_get'] == 'quote_input' ) {
+if (isset($_POST['type_get']) || $_POST['type_get'] == 'quote_input' ) {
     $listPartNumber = ['Sanden_Complex_Install', 'SANDEN_ELEC_EXTRA', 'RCBO', 'SwitchUpgrade', 'HWS_R', 'Sanden_Tank_Slab', 'Sanden_HP_Pavers', 'Site_Delivery', 'Spec_Trade_Disc', 'san_wall_bracket', 'Travel'];
 } else {
     $listPartNumber = $_POST;
