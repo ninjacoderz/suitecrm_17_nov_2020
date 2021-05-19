@@ -345,7 +345,7 @@ $layout_defs['Accounts'] = array(
             'sort_by' => 'number',
             'title_key' => 'Address',
             'function_parameters' => array(
-                'import_function_file' => 'custom/Extension/application/Ext/Ultils/customFunctionSubpanel.php',
+                'import_function_file' => 'custom/modules/Accounts/customSubpanelFunction.php',
                 // 'link' => 'pe_address'
             ),
             'get_subpanel_data' => 'function:get_account_address_subpanel',
