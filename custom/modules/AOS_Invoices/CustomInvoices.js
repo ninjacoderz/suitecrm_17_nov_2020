@@ -10,6 +10,7 @@ $(function () {
     //thienpb code -- add logic for show link edit product
     if(module_sugar_grp1 == 'AOS_Invoices' && typeof(module_sugar_grp1) == 'string' ){
         createLinkProduct();
+        showLinkWarehouseLogRelated();
         $('#line_items_span').on('change', '.product_name', function (e) {
             setTimeout(function() {
                 createLinkProduct();
@@ -8909,4 +8910,20 @@ function showLink(id_ele, module_name, record) {
     }
     $(document).find(`#open_${id_ele}`).remove();
     $(document).find(`#${id_ele}`).parent().append(link);
+}
+
+/**
+ * show link related warehouse log
+ */
+ function showLinkWarehouseLogRelated() {
+    $("#link_ware_house_log_c").hide();
+    var InvoiceID = $("input[name='record']").val();
+    if(InvoiceID !== '') {
+        $.ajax({
+            url: "/index.php?entryPoint=showLinkWarehouseLogRelated&InvoiceID="+ InvoiceID,
+            success: function (data) {
+                $("#link_ware_house_log_c").parent().append(data);
+            }
+        });
+    }
 }

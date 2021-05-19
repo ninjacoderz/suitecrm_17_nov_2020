@@ -1529,3 +1529,9 @@ $entry_point_registry['googleForAddress'] = array(
     'file' => 'custom/modules/pe_address/googleForAddress.php',
     'auth' => false
 );
+
+// Get Link Warehouse Log Related Invoice
+$entry_point_registry['showLinkWarehouseLogRelated'] = array( 
+    'file' => 'custom/modules/AOS_Invoices/showLinkWarehouseLogRelated.php',
+    'auth' => false
+);
