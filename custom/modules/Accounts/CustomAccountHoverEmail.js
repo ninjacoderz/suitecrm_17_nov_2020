@@ -30,3 +30,38 @@ $(function () {
         // $('#tab-actions').after($('#tab-actions li:first').clone());
     });
 });
+
+//FOR ADDRESS'S DETAILVIEW IN ACCOUNT'S DETAIL
+$(document).ready(function(){
+    var record = $('#formDetailView').find('input[name="record"]').val();
+    var module = $('#formDetailView').find('input[name="module"]').val();
+    $(document).find('#account_address_detail').closest('.detail-view-row-item').hide();
+    $.ajax({
+        url: "index.php?entryPoint=showDetailViewOtherModule",
+        type: 'GET',
+        async: false,
+        data: {
+            record: record,
+            module: module,
+        },
+        success: function(data) {
+            // debugger
+            if (data == '' || typeof data === 'undefined') return;
+            let result = JSON.parse(data);
+            if (Object.keys(result.contents).length > 0) {
+                window.addressContent = result.contents;
+                $(document).find('#account_address_detail').closest('.detail-view-row-item').after(result.selector);
+                $(document).find('#content_address_selected').append(result.contents[$('#detail_pe_address').val()]);
+                // $(document).find('#account_address_detail').closest('.detail-view-row-item').hide();
+            } else {
+                console.log('No address!');
+                return;
+            }
+        }
+    });
+
+    $(document).find('#detail_pe_address').on('change', function() {
+        $(document).find('#content_address_selected').empty();
+        $(document).find('#content_address_selected').append(window.addressContent[$('#detail_pe_address').val()]);
+    });
+});

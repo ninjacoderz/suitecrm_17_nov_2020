@@ -1541,3 +1541,10 @@ $entry_point_registry['showLinkWarehouseLogRelated'] = array(
     'file' => 'custom/modules/AOS_Invoices/showLinkWarehouseLogRelated.php',
     'auth' => false
 );
+
+//VUT - Show detailview in other module
+$entry_point_registry['showDetailViewOtherModule'] = array( 
+    'file' => 'custom/modules/pe_address/showDetailOtherModule.php',
+    'auth' => false
+);
+
