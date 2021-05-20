@@ -520,6 +520,7 @@ class UpdateAcountContactCustomer {
 class CreateInternalNotes {
     function before_save_method_CreateInternalNotes ($bean, $event, $arguments){
         $old_fields = $bean->fetched_row;
+        global $current_user;
         // case 1: create new 
         if($old_fields == false || $bean->pre_install_photos_c == "") {
             
@@ -562,6 +563,7 @@ class CreateInternalNotes {
                 $bean_intenal_notes->type_inter_note_c = 'status_updated';
                 $decription_internal_notes = 'Quote Status : New';
                 $bean_intenal_notes->description =  $decription_internal_notes;
+                $bean_intenal_notes->created_by = $current_user->id;
                 $bean_intenal_notes->save();
                 
                 $bean_intenal_notes->load_relationship('aos_quotes_pe_internal_note_1');
@@ -612,6 +614,7 @@ class CreateInternalNotes {
                         break;
                 }
                 $bean_intenal_notes->description =  $decription_internal_notes;
+                $bean_intenal_notes->created_by = $current_user->id;
                 $bean_intenal_notes->save();
              
                 $bean_intenal_notes->load_relationship('aos_quotes_pe_internal_note_1');
@@ -630,6 +633,7 @@ class CreateInternalNotes {
                 $bean_intenal_notes->type_inter_note_c = 'status_updated';
                 $decription_internal_notes = "Change Assigned User from {$old_fields['assigned_user_name']} to {$bean->assigned_user_name}";
                 $bean_intenal_notes->description =  $decription_internal_notes;
+                $bean_intenal_notes->created_by = $current_user->id;
                 $bean_intenal_notes->save();
                 $bean_intenal_notes->load_relationship('aos_quotes_pe_internal_note_1');
                 $bean_intenal_notes->aos_quotes_pe_internal_note_1->add($bean->id);

@@ -1,6 +1,6 @@
 <?php
     $rq_data = $_POST;
-
+    global $current_user;
     if(isset($rq_data['list_infomation']['first_name']) && isset($rq_data['list_infomation']['last_name'])){
        
         if($rq_data['type_form'] == 'daikin_form') {
@@ -201,11 +201,11 @@
             $save_lead->retrieve($new_lead->id);
             $save_lead->status = 'Converted';
             $save_lead->save();
-
             $leads_intenal_notes = new  pe_internal_note();
             $leads_intenal_notes->type_inter_note_c = 'status_updated';
             
             $leads_intenal_notes->description =  $decription_internal_notes;
+            $leads_intenal_notes->created_by = $current_user->id;
             $leads_intenal_notes->save();
             
             $leads_intenal_notes->load_relationship('leads_pe_internal_note_1');
@@ -360,6 +360,7 @@
             $leads_intenal_notes->type_inter_note_c = 'status_updated';
             
             $leads_intenal_notes->description =  $decription_internal_notes;
+            $leads_intenal_notes->created_by = $current_user->id;
             $leads_intenal_notes->save();
             
             $leads_intenal_notes->load_relationship('leads_pe_internal_note_1');

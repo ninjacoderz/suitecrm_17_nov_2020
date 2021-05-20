@@ -337,6 +337,20 @@ $layout_defs['Accounts'] = array(
             'get_subpanel_data' => 'function:getProductsServicesPurchasedQuery',
             'title_key' => 'LBL_PRODUCTS_SERVICES_PURCHASED_SUBPANEL_TITLE',
         ),
+        'account_pe_address' => array(
+            'order' => 105,
+            'module' => 'pe_address',
+            'subpanel_name' => 'default',
+            'sort_order' => 'desc',
+            'sort_by' => 'number',
+            'title_key' => 'Address',
+            'function_parameters' => array(
+                'import_function_file' => 'custom/modules/Accounts/customSubpanelFunction.php',
+                // 'link' => 'pe_address'
+            ),
+            'get_subpanel_data' => 'function:get_account_address_subpanel',
+        ),
+
         'securitygroups' => array(
             'top_buttons' => array(array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'SecurityGroups', 'mode' => 'MultiSelect'),),
             'order' => 900,

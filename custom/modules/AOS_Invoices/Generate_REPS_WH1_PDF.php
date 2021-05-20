@@ -520,10 +520,24 @@ function Generate_Solar_Hot_Water_Proof_Install_Rebate($Invoice){
     $pdf->Write($pdf->SetXY(25,271.5), html_entity_decode($Invoice->install_address_state_c,ENT_QUOTES)); // state
     $pdf->Write($pdf->SetXY(81,271.5), html_entity_decode($Invoice->install_address_postalcode_c,ENT_QUOTES)); // postcode
 
+    $check_VEEC_STCs = false;
+    $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = '" . $Invoice->object_name . "' AND parent_id = '".$Invoice->id."' AND deleted = 0";
+    $result = $Invoice->db->query($sql);
+    while ($row = $Invoice->db->fetchByAssoc($result)) {
+        if (strpos($row['part_number'],'VEEC') !== false  ) { 
+            $check_VEEC_STCs = true;
+        }
+    }
+
     //Documentation of installation
     $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,106,5,5);
     $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,115,5,5); //120
-    $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,127,5,5); //131
+    if($check_VEEC_STCs){
+        $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,127,5,5); //131
+    }else{
+        $pdf->Image(__DIR__.'/text/icon_checkbox.jpg' ,175,127,5,5); //131
+    }
+
     $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,139,5,5); //141
     $pdf->Image(__DIR__.'/text/icon_checkbox_true.jpg' ,175,150,5,5); //161
 

@@ -313,6 +313,7 @@
     class CreateInternalNotesCall {
         function after_save_createdInternalNotesCall($bean, $event, $arguments) {
             global $app_list_strings;
+            global $current_user;
             $call_status = $app_list_strings['call_status_dom'];
             $call_direction = $app_list_strings['call_direction_dom'];
             $old_fields = $bean->fetched_row;
@@ -340,6 +341,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = 'NEW '.$call_direction[$bean->direction].' '.$call_status[$bean->status].' '.$date_note;
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('calls_pe_internal_note_1');
@@ -351,6 +353,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = $call_direction[$bean->direction].' '.$call_status[$bean->status].' '.$date_note;
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     $bean_intenal_notes->load_relationship('calls_pe_internal_note_1');
                     $bean_intenal_notes->calls_pe_internal_note_1->add($bean->id);
@@ -367,6 +370,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = "Change Assigned User from {$old_fields['assigned_user_name']} to {$bean->assigned_user_name}";
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     $bean_intenal_notes->load_relationship('calls_pe_internal_note_1');
                     $bean_intenal_notes->calls_pe_internal_note_1->add($bean->id);

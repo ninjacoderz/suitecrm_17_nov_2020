@@ -39,14 +39,14 @@
                 foreach($dataURL[$i] as $key =>$val){
                     if($key == "tabname") continue;
                     $designType = '_'.str_replace(" ","_",$dataURL[$i]['tabname']).'_'.(($key!='floorplan')?$key:'');
-                    createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status);
+                    createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status,$dataURL[$i]['tabname']);
                 }
             }
     
         }else if($quote->quote_type_c == 'quote_type_sanden'){
             $dataURL = base64_decode($_REQUEST['dataURL']);
             $quoteType = 'Sanden';
-            createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status );
+            createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status,'');
         }
     }
 
@@ -57,7 +57,7 @@
 
     echo json_encode($dataReturn);
 
-    function createImage($quote,$dataURL,$key,$designType,$quoteType,$status){
+    function createImage($quote,$dataURL,$key,$designType,$quoteType,$status,$tabname){
         if($dataURL != ''){
             $img = preg_replace('/data:image\/(.*?);base64,/', '', $dataURL);
             $img = str_replace(' ', '+', $img);
@@ -88,7 +88,7 @@
             }
             
             $success = file_put_contents($source, $data);
-            
+            $data_option['tabname'] = $tabname;
             $data_option['quote_number'] = $quote->number;
             $data_option['customer_name'] = $quote->account_firstname_c.' '.$quote->account_lastname_c;
             $data_option['address_line1'] = $quote->install_address_c;
@@ -159,7 +159,9 @@
             list($w_info, $h_info) = getimagesize($img_template);
             $img_info = imagecreatefrompng($img_template);
             $black = imagecolorallocate($img_info, 0, 0, 0);
-
+            if($key != "floorplan"){
+                imagettftext($img_info,27,0,240,110,$black,$font, $data_option["tabname"]);
+            }
             imagettftext($img_info,24,0,480,46,$black,$font,"Quote #".$data_option['quote_number']);
             imagettftext($img_info,20,0,480,92,$black,$font, $data_option["product0"]);
             imagettftext($img_info,20,0,480,128,$black,$font,$data_option["product1"]);
@@ -184,7 +186,9 @@
             list($w_info, $h_info) = getimagesize($img_template);
             $img_info = imagecreatefrompng($img_template);
             $black  = imagecolorallocate($img_info, 0, 0, 0);
-
+            if($key != "floorplan"){
+                imagettftext($img_info,13,0,85,50,$black,$font, $data_option["tabname"]);
+            }
             imagettftext($img_info,14,0,185,25,$black,$font,"Quote #".$data_option['quote_number']);
             imagettftext($img_info,12,0,185,50,$black,$font,$data_option["product0"]);
             imagettftext($img_info,12,0,185,70,$black,$font,$data_option["product1"]);

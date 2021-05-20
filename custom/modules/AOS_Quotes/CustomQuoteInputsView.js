@@ -93,6 +93,36 @@ const PEAdminPercent = 0.3;
             set_value(list0.attr('id'), old_price - (((old_total_amount - new_total_amount) / 1.1)/qty));
             list0.trigger("blur");
         });
+        $('body').on('change', '#group_custom_quote_inputs_checklist select.custom_fields', function() {
+            var choosed = $('option:selected', this).attr('data-value-item').replace('-','').replace('(', '').replace(')', '').replace(/\s+/g, '_').toLowerCase();
+            var next_step = $(this).parent().attr('data-next-step');
+            if(next_step != '') {
+                $('#'+next_step).closest('.edit-view-row-item').show();
+            }
+            switch(choosed) {
+                case "mains_water": case "tank_water": case "mains_tank": 
+                    if(next_step != '') {
+                        $('#'+next_step).closest('.edit-view-row-item').show();
+                    }
+                    break;
+                case "1": case "2": 
+                    break;
+                case "sanden_315fqs": case "sanden_300fqs": case "sanden_250fqs": case "sanden_160fqs": case "sanden_315fqv": 
+                    
+                    break;
+                case "yes_plumbing":
+                    break;
+                case "no_quick_connection_kit": 
+                    break;
+                case "15mm_quick_connection_kit_qik15":  case "20mm_quick_connection_kit_qik25": 
+                    break;
+                case "15mm_quick_connection_kit_qik15":  case "20mm_quick_connection_kit_qik25": 
+                    break;
+                case "yes_electrical":
+                    break;
+            };
+                
+        })
         
     });
     // .:nhantv:. Init select Option checkbox and line item
@@ -380,6 +410,7 @@ const PEAdminPercent = 0.3;
     }
 
     function renderQuoteInputHTML(type){
+        
         $.ajax({
             url: '/index.php?entryPoint=APIRenderListQuoteInputs&type='+type,
             success: function (result) {
@@ -452,12 +483,23 @@ const PEAdminPercent = 0.3;
                     data: data,
                     success: function (result) {
                         try {
-                            SUGAR.ajaxUI.hideLoadingPanel();
-                            location.reload();
+                            var data_quote = JSON.parse(result);
+                            $("#name").val(data_quote['quote_name'])
+                            $("#EditView input[name='action']").val('Save');
+                            $.ajax({
+                                type: $("#EditView").attr('method'),
+                                url: $("#EditView").attr('action'),
+                                data: $("#EditView").serialize(),
+                                success: function (data) {
+                                    SUGAR.ajaxUI.hideLoadingPanel();
+                                }
+                            });
                         } catch (error) {
                             console.log(error)
                         }
                     }
+                }).done(function (){
+                    location.reload();
                 });
             }
         }else{
@@ -471,13 +513,16 @@ const PEAdminPercent = 0.3;
         for (let key in dataJSON) {
             if(typeof(dataJSON[key]) === Boolean){
                 $("#"+key).prop('checked', dataJSON[key]);
+                $("#"+key).closest('.edit-view-row-item').show();
             } else {
-                $("#"+key).val(dataJSON[key]);
+                $("#"+key).val(dataJSON[key]);  
+                if(dataJSON[key] !== '' || key == 'quote_main_tank_water'){
+                    $("#"+key).closest('.edit-view-row-item').show();
+                }
             }
         }
     }
     function parseJSONValueToFieldsExtra(){
-        debugger;
         if ($("#quote_note_inputs_c").val() == '')  return;
         var dataJSON = JSON.parse($("#quote_note_inputs_c").val());
         for (let key in dataJSON['quote_sanden_extra']) {
@@ -714,6 +759,10 @@ function autoCreateLineItem_Rebate(id,total_item){
         },
         error: function(response){console.log("Fail");},
     });
+}
+
+function DynamicField(id) {
+    var sellector = $('#'+id).find('select');
 }
 /** END - DECLARE FUNCTION FOR REBATE PROVIDED */
 

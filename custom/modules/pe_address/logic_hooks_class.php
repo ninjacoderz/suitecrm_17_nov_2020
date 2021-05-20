@@ -22,6 +22,7 @@
     {
         function after_save_method($bean, $event, $arguments){
             $old_fields = $bean->fetched_row;
+            global $current_user;
             // $format = 'Y-m-d H:i:s';
             // $date = DateTime::createFromFormat($format, $bean->date_modified);
             // // $test = DateTime::createFromFormat($format, "2020-09-28 17:51:57");
@@ -43,6 +44,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = 'Create New Address';
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('pe_address_pe_internal_note_1');
@@ -61,6 +63,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = "Change Assigned User from {$old_fields['assigned_user_name']} to {$bean->assigned_user_name}";
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     $bean_intenal_notes->load_relationship('pe_address_pe_internal_note_1');
                     $bean_intenal_notes->pe_address_pe_internal_note_1->add($bean->id);

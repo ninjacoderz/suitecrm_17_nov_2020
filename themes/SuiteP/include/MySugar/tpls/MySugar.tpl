@@ -74,7 +74,7 @@
             <a class="button moveSandenForm" href="https://pure-electric.com.au/pesolarform/master" target="_blank" style="background:#f48c21;color:white;padding:8.3px;margin-left: 4px;">SOLAR QUOTE FORM</a>
         </li>
         <li style="float:left">
-            <a class="button moveSandenForm" href="https://pure-electric.com.au/pedaikinform-new" target="_blank" style="background:#009acf;color:white;padding:8.3px;margin-left: 4px;">DAIKIN QUOTE FORM </a>
+            <a class="button moveSandenForm" href="https://pure-electric.com.au/pedaikinform-new/master" target="_blank" style="background:#009acf;color:white;padding:8.3px;margin-left: 4px;">DAIKIN QUOTE FORM </a>
         </li>
         <li style="float:left">
             <button type="button" class="button primary" style="margin:0 4px;" onClick="updateGGShett();">Update GG Sheet Order SAM</button>

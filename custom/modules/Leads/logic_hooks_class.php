@@ -550,6 +550,7 @@
     class CreateInternalNotesLead {
         function before_save_method_CreateInternalNotes ($bean, $event, $arguments){
             $old_fields = $bean->fetched_row;
+            global $current_user;
             // case 1: create new 
             if($old_fields == false) {       
                 //thienpb update set folderUploadID
@@ -578,6 +579,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = 'Lead Status : '.$bean->status;
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('leads_pe_internal_note_1');
@@ -628,6 +630,7 @@
                             break;
                     }
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                  
                     $bean_intenal_notes->load_relationship('leads_pe_internal_note_1');
@@ -758,6 +761,7 @@
     class ChangeStatusToSpam {
         function before_save_method_ChangeStatusToSpam ($bean, $event, $arguments) {
             $old_fields = $bean->fetched_row;
+            global $current_user;
             /**new Leads*/
             if ($old_fields == false) {
                 if ($bean->phone_mobile[0] == "8" && $bean->status != "Spam") {
@@ -765,6 +769,7 @@
                     $bean_intenal_notes = new  pe_internal_note();
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $bean_intenal_notes->description =  "Lead Status : {$bean->status}";
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                  
                     $bean_intenal_notes->load_relationship('leads_pe_internal_note_1');

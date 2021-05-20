@@ -68,6 +68,8 @@
         function after_save_createdInternalNotesChangeStatus ($bean, $event, $arguments) {
             //get  PO's status dropdown
             global $app_list_strings;
+            global $current_user;
+
             $PO_status = $app_list_strings['po_status_dom'];
             // $PO_status = translate('po_status_dom','', $bean->status_c); //other case-don't use
             $old_fields = $bean->fetched_row;
@@ -97,6 +99,7 @@
                     }
                     $decription_internal_notes = $PO_status[$bean->status_c].' '.$date_note;
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('po_purchase_order_pe_internal_note_1');
@@ -108,6 +111,7 @@
                     $bean_intenal_notes->type_inter_note_c = 'status_updated';
                     $decription_internal_notes = $PO_status[$bean->status_c].' '.$date_note;
                     $bean_intenal_notes->description =  $decription_internal_notes;
+                    $bean_intenal_notes->created_by = $current_user->id;
                     $bean_intenal_notes->save();
                     
                     $bean_intenal_notes->load_relationship('po_purchase_order_pe_internal_note_1');

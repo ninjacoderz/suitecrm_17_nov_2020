@@ -1,6 +1,6 @@
 <?php
     require_once('include/SugarPHPMailer.php');
-
+    global $current_user;
     /// Data Request
     $file_to_attach = array();
     $solarOptions = json_encode(($_POST['products']), true);
@@ -221,6 +221,7 @@
         $leads_intenal_notes->type_inter_note_c = 'status_updated';
         
         $leads_intenal_notes->description =  $decription_internal_notes;
+        $leads_intenal_notes->created_by = $current_user->id;
         $leads_intenal_notes->save();
         
         $leads_intenal_notes->load_relationship('leads_pe_internal_note_1');
@@ -367,6 +368,7 @@
         $leads_intenal_notes->type_inter_note_c = 'status_updated';
         
         $leads_intenal_notes->description =  $decription_internal_notes;
+        $leads_intenal_notes->created_by = $current_user->id;
         $leads_intenal_notes->save();
         
         $leads_intenal_notes->load_relationship('leads_pe_internal_note_1');

@@ -10,6 +10,7 @@ $(function () {
     //thienpb code -- add logic for show link edit product
     if(module_sugar_grp1 == 'AOS_Invoices' && typeof(module_sugar_grp1) == 'string' ){
         createLinkProduct();
+        showLinkWarehouseLogRelated();
         $('#line_items_span').on('change', '.product_name', function (e) {
             setTimeout(function() {
                 createLinkProduct();
@@ -547,9 +548,20 @@ $(function () {
             display_link_contact_plum_elec_invoice();
             YAHOO.util.Event.addListener(["account_id1_c","account_id_c"], "change", display_link_contact_plum_elec_invoice);
             $('#plumber_c').parent().siblings('.label').append('<br> <button class="button primary" id="distanceFlumbertoSuite"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DISTANCE</button>');
-            $('#plumber_c').parent().siblings('.label').append('<button style="margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedPlumber"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
+            $('#plumber_c').parent().siblings('.label').append('<button style="font-size: smaller;margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedPlumber"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
         }
 
+        //VUT - trigger click get distance installer
+        if (module_sugar_grp1 == 'AOS_Invoices') {
+            setTimeout(function() {
+                if($('#account_id1_c').val() != '') {
+                    $('#getDistance_selectedPlumber').trigger('click');
+                }
+                if ($('#account_id_c').val() != '') {
+                    $('#getDistance_selectedElectrician').trigger('click');
+                }
+            },100);
+        }
         //Get Distance Selected Plumber
         $('#getDistance_selectedPlumber').click(function(){
             $('#getDistance_selectedPlumber span.glyphicon-refresh').removeClass('hidden');
@@ -1116,7 +1128,7 @@ $(function () {
              //tuan code --------------------
         if(module_sugar_grp1 == 'AOS_Invoices'){
             $('#electrician_c').parent().siblings('.label').append('<br> <button class="button primary" id="distanceElectrictoSuite"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DISTANCE</button>');
-            $('#electrician_c').parent().siblings('.label').append('<button style="margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedElectrician"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
+            $('#electrician_c').parent().siblings('.label').append('<button style="font-size: smaller;margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedElectrician"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
             // $('#installation_date_c').parent().siblings('.label').append('<input type="button" id="client_warranty_registration" value="Email Client Warranty" class="button primary" data-email-address-id="'+$('#billing_contact_id').val()+'" data-email-type="client_warranty_registration" onclick="$(document).openComposeViewModal_reupload(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").val() +'" data-contact-name="'+$('#billing_contact').val()+'"  data-record-id="'+ $("input[name='record']").val() +'" /></li>');
 
             //Get Distance Selected Electrician
@@ -3413,7 +3425,16 @@ $(function () {
             else
             // unchecked
                 testing = 0;
-
+            if($("#ces_cert_wording_c").val() == "") {
+                var answer = confirm("No PCOC Cert Wording, Are you sure you want to show the Draft Email?")
+                if (answer) {
+                    //some code
+                }
+                else {
+                    $("#ces_cert_wording_c").focus();
+                    return false;
+                }
+            }
             var is_proposed_location_ins_photo = check_proposed_ins_localtion();
             if (is_proposed_location_ins_photo) {
                 //have >> continue
@@ -4019,7 +4040,16 @@ $(function () {
                     return false;
                 }
             }
-
+            if($("#pcoc_cert_wording_c").val() == "") {
+                var answer = confirm("No PCOC Cert Wording, Are you sure you want to show the Draft Email?")
+                if (answer) {
+                    //some code
+                }
+                else {
+                    $("#pcoc_cert_wording_c").focus();
+                    return false;
+                }
+            }
             var is_proposed_location_ins_photo = check_proposed_ins_localtion();
             if (is_proposed_location_ins_photo) {
                 //have >> continue
@@ -8880,4 +8910,20 @@ function showLink(id_ele, module_name, record) {
     }
     $(document).find(`#open_${id_ele}`).remove();
     $(document).find(`#${id_ele}`).parent().append(link);
+}
+
+/**
+ * show link related warehouse log
+ */
+ function showLinkWarehouseLogRelated() {
+    $("#link_ware_house_log_c").hide();
+    var InvoiceID = $("input[name='record']").val();
+    if(InvoiceID !== '') {
+        $.ajax({
+            url: "/index.php?entryPoint=showLinkWarehouseLogRelated&InvoiceID="+ InvoiceID,
+            success: function (data) {
+                $("#link_ware_house_log_c").parent().append(data);
+            }
+        });
+    }
 }
