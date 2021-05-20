@@ -136,7 +136,7 @@ function getGEOGoogle(hasImg = 0) {
     } else {
         showStreetView(dataGEO, hasImg);
     }
-
+    $(document).find('#map_data').val(JSON.stringify(dataGEO));
 }
 /**
  * show Street View Google

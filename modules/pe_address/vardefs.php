@@ -313,7 +313,7 @@ $dictionary['pe_address'] = array(
             'type'  => 'int',
             'required' => false,
             'function' =>  array(
-                'name' => 'generateNumberField',
+                'name' => 'address_generateNumberField',
                 'returns' => 'html',
                 'include' => 'modules/pe_address/customField.php'
             ),

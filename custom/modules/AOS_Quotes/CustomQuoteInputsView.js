@@ -23,11 +23,18 @@ const PEAdminPercent = 0.3;
         var btn_generate_quote = '<button type="button" id="generate_quote" class="button primary">Save and Generate Quote</button>';
         $("#quote_note_inputs_c").closest('.tab-content').append(btn_generate_quote);
         
-        if($("#quote_type_c").val() == "quote_type_solar"){
-            renderQuoteInputHTML('quote_type_solar');
-        }else if($("#quote_type_c").val() == "quote_type_sanden"){
-            renderQuoteInputHTML('quote_type_sanden');
-            renderQuoteInputExtra('quote_type_sanden');
+        switch($("#quote_type_c").val()){
+            case "quote_type_solar":
+                renderQuoteInputHTML('quote_type_solar');
+                break;
+            case "quote_type_off_grid_system":
+                renderQuoteInputHTML('quote_type_solar');
+                break;
+            case "quote_type_sanden":
+                renderQuoteInputHTML('quote_type_sanden');
+                renderQuoteInputExtra('quote_type_sanden');
+                break;
+            default: break;
         }
 
         $("#quote_type_c").on("change", function(){
@@ -49,13 +56,20 @@ const PEAdminPercent = 0.3;
         });
 
         $("#generate_quote").on('click',function(){
-            if($("#quote_type_c").val() == "quote_type_solar"){
-                // generate_quote_by_input('quote_type_solar');
-                generateLineItem();
-                generateJSONForInput();
-            }else{
-                generateJSONForInput();
-                generate_quote_by_input('quote_type_sanden');
+            let productType = $("#quote_type_c").val();
+            switch (productType) {
+                case "quote_type_solar":
+                    generateLineItem();
+                    generateJSONForInput();
+                    break;
+                case "quote_type_sanden":
+                    generateJSONForInput();
+                    generate_quote_by_input('quote_type_sanden');
+                    break;
+                case "quote_type_off_grid_system":
+                    generateOffgridItem();
+                    break;
+                default: break;
             }
         });
 
@@ -71,7 +85,7 @@ const PEAdminPercent = 0.3;
         $(document).on('focusin', "#total_amount", function(){
             old_total_amount = get_value('total_amount');
         }).on('change', "#total_amount", function(){
-            let new_total_amount = get_value('total_amount');
+            let new_total_amount = roundTo90(get_value('total_amount'));
             let product0 = $('.product_group').find('tbody[id*=product_body]:visible')[0];
             let list0 = $(product0).find('input[id*=product_product_list_price]');
             let qty = get_value($(product0).find('input[id*=product_product_qty]').attr('id'));
@@ -79,6 +93,36 @@ const PEAdminPercent = 0.3;
             set_value(list0.attr('id'), old_price - (((old_total_amount - new_total_amount) / 1.1)/qty));
             list0.trigger("blur");
         });
+        $('body').on('change', '#group_custom_quote_inputs_checklist select.custom_fields', function() {
+            var choosed = $('option:selected', this).attr('data-value-item').replace('-','').replace('(', '').replace(')', '').replace(/\s+/g, '_').toLowerCase();
+            var next_step = $(this).parent().attr('data-next-step');
+            if(next_step != '') {
+                $('#'+next_step).closest('.edit-view-row-item').show();
+            }
+            switch(choosed) {
+                case "mains_water": case "tank_water": case "mains_tank": 
+                    if(next_step != '') {
+                        $('#'+next_step).closest('.edit-view-row-item').show();
+                    }
+                    break;
+                case "1": case "2": 
+                    break;
+                case "sanden_315fqs": case "sanden_300fqs": case "sanden_250fqs": case "sanden_160fqs": case "sanden_315fqv": 
+                    
+                    break;
+                case "yes_plumbing":
+                    break;
+                case "no_quick_connection_kit": 
+                    break;
+                case "15mm_quick_connection_kit_qik15":  case "20mm_quick_connection_kit_qik25": 
+                    break;
+                case "15mm_quick_connection_kit_qik15":  case "20mm_quick_connection_kit_qik25": 
+                    break;
+                case "yes_electrical":
+                    break;
+            };
+                
+        })
         
     });
     // .:nhantv:. Init select Option checkbox and line item
@@ -139,7 +183,7 @@ const PEAdminPercent = 0.3;
             // Alway add this product: STCs
             await autoCreateLineItem("STCs", stcTotal);
             // Calculate
-            await calculatePrice(panelTotal, totalKw);
+            await calculatePrice(panelTotal, totalKw, "solar");
             // Hide loading
             setTimeout(function (){
                 SUGAR.ajaxUI.hideLoadingPanel();
@@ -149,20 +193,8 @@ const PEAdminPercent = 0.3;
         }
     }
     // .:nhantv:. Calculate total price
-    async function calculatePrice(panelTotal, totalKw){
+    async function calculatePrice(panelTotal, totalKw, type){
         // await wait(200);
-        // Get solar product need to calculate
-        var solarProductCalData = {};
-        await $.ajax({
-            url: "/index.php?entryPoint=APIGetDataProduct",
-            data: solarProductCal,
-            type: 'POST'})
-            .then(function(data) {
-                if(data !== undefined || data !== ''){
-                    solarProductCalData = JSON.parse(data);
-                    // console.log(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"], data);
-                }
-            });
         let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
         var totalList = 0, totalDiscount = 0, totalAmount = 0;
         var list, dis, amount, tax;
@@ -188,47 +220,61 @@ const PEAdminPercent = 0.3;
             // blur
             list.trigger("blur");
         });
-        // console.log(totalAmount, totalKw, panelTotal);
-        // Solar product calculate: 
-        // Solar_PV_Site_Visit_Module_Load_Up
-        if(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"] !== undefined 
+
+        if(type == "solar"){
+            // Get solar product need to calculate
+            var solarProductCalData = {};
+            await $.ajax({
+                url: "/index.php?entryPoint=APIGetDataProduct",
+                data: solarProductCal,
+                type: 'POST'})
+                .then(function(data) {
+                    if(data !== undefined || data !== ''){
+                        solarProductCalData = JSON.parse(data);
+                        // console.log(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"], data);
+                    }
+                });
+            // Solar product calculate: 
+                // Solar_PV_Site_Visit_Module_Load_Up
+            if(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"] !== undefined 
             && solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"] != 0){
-            totalAmount += parseInt(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"]);
-        } else {
-            totalAmount += 180;
+                totalAmount += parseInt(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"]);
+            } else {
+                totalAmount += 180;
+            }
+            // Single_Phase_1Ph_Inverter_Installation
+            if(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"] !== undefined
+                && solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"] != 0){
+                totalAmount += parseInt(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"]);
+            } else {
+                totalAmount += 120;
+            }
+            // Standard_PV_Module_Installation
+            if(solarProductCalData["Standard_PV_Module_Installation"] !== undefined
+                && solarProductCalData["Standard_PV_Module_Installation"]["cost"] != 0){
+                totalAmount += parseInt(solarProductCalData["Standard_PV_Module_Installation"]["cost"]) * parseInt(panelTotal);
+            } else {
+                totalAmount += 50 * parseInt(panelTotal);
+            }
+            // Solar_PV_Balance_of_System
+            if(solarProductCalData["Solar_PV_Balance_of_System"] !== undefined
+                && solarProductCalData["Solar_PV_Balance_of_System"]["cost"] != 0){
+                totalAmount += parseFloat(solarProductCalData["Solar_PV_Balance_of_System"]["cost"]) * parseFloat(totalKw);
+            } else {
+                totalAmount += 120 * parseFloat(totalKw);
+            }
+            // Smart_Meter_Solar_Monitoring_Installation
+            if(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"] !== undefined
+                && solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"] != 0){
+                totalAmount += parseInt(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"]);
+            } else {
+                totalAmount += 50;
+            }
+            // PE Admin
+            // totalAmount += 1020.00;
+            totalAmount += totalAmount * PEAdminPercent;
+            // console.log(totalAmount);
         }
-        // Single_Phase_1Ph_Inverter_Installation
-        if(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"] !== undefined
-            && solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"] != 0){
-            totalAmount += parseInt(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"]);
-        } else {
-            totalAmount += 120;
-        }
-        // Standard_PV_Module_Installation
-        if(solarProductCalData["Standard_PV_Module_Installation"] !== undefined
-            && solarProductCalData["Standard_PV_Module_Installation"]["cost"] != 0){
-            totalAmount += parseInt(solarProductCalData["Standard_PV_Module_Installation"]["cost"]) * parseInt(panelTotal);
-        } else {
-            totalAmount += 50 * parseInt(panelTotal);
-        }
-        // Solar_PV_Balance_of_System
-        if(solarProductCalData["Solar_PV_Balance_of_System"] !== undefined
-            && solarProductCalData["Solar_PV_Balance_of_System"]["cost"] != 0){
-            totalAmount += parseFloat(solarProductCalData["Solar_PV_Balance_of_System"]["cost"]) * parseFloat(totalKw);
-        } else {
-            totalAmount += 120 * parseFloat(totalKw);
-        }
-        // Smart_Meter_Solar_Monitoring_Installation
-        if(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"] !== undefined
-            && solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"] != 0){
-            totalAmount += parseInt(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"]);
-        } else {
-            totalAmount += 50;
-        }
-        // PE Admin
-        // totalAmount += 1020.00;
-        totalAmount += totalAmount * PEAdminPercent;
-        // console.log(totalAmount);
 
         // Set value to first line
         list = $(productVisible[0]).find('input[id*=product_product_list_price]');
@@ -242,8 +288,47 @@ const PEAdminPercent = 0.3;
         await wait(200);
         $("#total_amount").trigger("change");
 
+        // Equipment cost
+        var sanden_equipment_cost = calculate_equipment_cost_gp();
+        $('#sanden_supply_bill').val(parseFloat(sanden_equipment_cost).formatMoney(2, ',', '.'));
+
         // Scroll top offset
         jQuery('html,body').animate({scrollTop: jQuery('.panel-heading a div:contains(Line Items)').offset().top - 200}, 500);
+    }
+    // .:nhantv:. 
+    function calculate_equipment_cost_gp() {
+        let lineItems_products = $('#line_items_span').find('.product_group').children('tbody');
+        let i;
+        let sanden_groups = {};
+        //get product in LineItem at Invoice
+        for (i = 0; i < lineItems_products.length; i++) {
+            let product_partNumber = $(`#product_part_number${i}`).val();
+            let product_id = $(`#product_product_id${i}`).val();
+            let product_qty = $(`#product_product_qty${i}`).val();
+            sanden_groups[product_id] = {
+                'partNumber': product_partNumber,
+                'qty': parseInt(product_qty),
+            };
+        }
+        //get product's price, cost in AOS_Product
+        var total_equipment_cost = 0;
+
+        $.each(sanden_groups, function (key, value) {
+            let price, cost;
+            $.ajax({
+                url: "?entryPoint=getProductInfos&type=gp_profit&product_id=" + key,
+                async: false
+            }).done(function (data) {
+                if (data == '' || typeof data === 'undefined') return;
+                let jsonObj = JSON.parse(data);
+                price = jsonObj.price;
+                cost = jsonObj.cost;
+            });
+            sanden_groups[key].price = parseFloat(price);
+            sanden_groups[key].cost = parseFloat(cost);
+            total_equipment_cost += value.cost * value.qty;
+        });
+        return total_equipment_cost;
     }
     // .:nhantv:. Round to 90
     function roundTo90(val){
@@ -309,7 +394,8 @@ const PEAdminPercent = 0.3;
 
     // .:nhantv:. If Product Type is not Solar -> hide all solar panels: "SOLARGAIN INFORMATION" / "PRICING PV SECTION" / "SOLAR VICTORIA PROVIDER STATEMENT"
     function hideSolarPanel(){
-        if ($("#quote_type_c").val() !== "quote_type_solar"){
+        let product_type = $("#quote_type_c").val();
+        if ($.inArray(product_type, ["quote_type_solar"]) == -1 ){
             // Hide panels
             $('.panel-default a div:visible').each((index, item) =>{
                 var divText = item.innerText.toUpperCase();
@@ -324,6 +410,7 @@ const PEAdminPercent = 0.3;
     }
 
     function renderQuoteInputHTML(type){
+        
         $.ajax({
             url: '/index.php?entryPoint=APIRenderListQuoteInputs&type='+type,
             success: function (result) {
@@ -396,12 +483,23 @@ const PEAdminPercent = 0.3;
                     data: data,
                     success: function (result) {
                         try {
-                            SUGAR.ajaxUI.hideLoadingPanel();
-                            location.reload();
+                            var data_quote = JSON.parse(result);
+                            $("#name").val(data_quote['quote_name'])
+                            $("#EditView input[name='action']").val('Save');
+                            $.ajax({
+                                type: $("#EditView").attr('method'),
+                                url: $("#EditView").attr('action'),
+                                data: $("#EditView").serialize(),
+                                success: function (data) {
+                                    SUGAR.ajaxUI.hideLoadingPanel();
+                                }
+                            });
                         } catch (error) {
                             console.log(error)
                         }
                     }
+                }).done(function (){
+                    location.reload();
                 });
             }
         }else{
@@ -415,13 +513,16 @@ const PEAdminPercent = 0.3;
         for (let key in dataJSON) {
             if(typeof(dataJSON[key]) === Boolean){
                 $("#"+key).prop('checked', dataJSON[key]);
+                $("#"+key).closest('.edit-view-row-item').show();
             } else {
-                $("#"+key).val(dataJSON[key]);
+                $("#"+key).val(dataJSON[key]);  
+                if(dataJSON[key] !== '' || key == 'quote_main_tank_water'){
+                    $("#"+key).closest('.edit-view-row-item').show();
+                }
             }
         }
     }
     function parseJSONValueToFieldsExtra(){
-        debugger;
         if ($("#quote_note_inputs_c").val() == '')  return;
         var dataJSON = JSON.parse($("#quote_note_inputs_c").val());
         for (let key in dataJSON['quote_sanden_extra']) {
@@ -658,6 +759,10 @@ function autoCreateLineItem_Rebate(id,total_item){
         },
         error: function(response){console.log("Fail");},
     });
+}
+
+function DynamicField(id) {
+    var sellector = $('#'+id).find('select');
 }
 /** END - DECLARE FUNCTION FOR REBATE PROVIDED */
 

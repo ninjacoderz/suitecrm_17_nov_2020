@@ -1490,6 +1490,12 @@ $entry_point_registry['APISaveSolarDesign'] = array(
     'auth' => false
 );
 
+// .:nhantv:. Get data Product for Off-grid
+$entry_point_registry['APIGetOffGridProduct'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIGetOffGridProduct.php',
+    'auth' => false
+);
+
 //Nhat -Test
 $entry_point_registry['PO_purchase_order_meeting'] = array(
     'file' => 'custom/modules/PO_purchase_order_meeting/PO_purchase_order_meeting.php',
@@ -1527,5 +1533,11 @@ $entry_point_registry['APIRenderExtraField'] = array(
 //Tri code --   
 $entry_point_registry['googleForAddress'] = array( 
     'file' => 'custom/modules/pe_address/googleForAddress.php',
+    'auth' => false
+);
+
+// Get Link Warehouse Log Related Invoice
+$entry_point_registry['showLinkWarehouseLogRelated'] = array( 
+    'file' => 'custom/modules/AOS_Invoices/showLinkWarehouseLogRelated.php',
     'auth' => false
 );
