@@ -3237,7 +3237,7 @@ $(document).ready(function () {
         //Travel option and Price option
         var count_option = 0;
         var option_models = {
-            'Jinko Tiger P-type Mono 370': '195',
+            'Jinko Tiger N-type Mono 370': '196',
             // 'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
             //'Longi Hi-MO X 350W':'162',
             // 'Q CELLS Q.MAXX 330W':'156',
