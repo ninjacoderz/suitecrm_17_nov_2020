@@ -4,20 +4,20 @@ $data_return = array();
 $db = DBManagerFactory::getInstance();
 
 // Get Solar panels
-$data_return['panel_data'] = getDataByCategoryName($db, "solar_panels");
+$data_return['panel_data'] = getDataByCategoryName($db, "Solar", "solar_panels");
 // Get Inverter
-$data_return['inverter_data'] = getDataByCategoryName($db, "inverters");
+$data_return['inverter_data'] = getDataByCategoryName($db, "Microgrid", "inverters");
 // Get Off-Grid Inverter
-$data_return['og_inverter_data'] = getDataByCategoryName($db, "og_inverters");
+$data_return['og_inverter_data'] = getDataByCategoryName($db, "Microgrid", "og_inverters");
 // Get Batteries
-$data_return['battery_data'] = getDataByCategoryName($db, "battery_storage");
+$data_return['battery_data'] = getDataByCategoryName($db, "Microgrid", "battery_storage");
 // Get Accessories
-$data_return['accessory_data'] = getDataByCategoryName($db, "accessories");
+$data_return['accessory_data'] = getDataByCategoryName($db, "Microgrid", "accessories");
 
 // Return
 echo json_encode($data_return);
 
-function getDataByCategoryName($db, $category_name){
+function getDataByCategoryName($db, $category_name, $solar_category){
   $data = array();
   $sql = "SELECT p.id, p.name AS product_name
       , pc.short_name_c AS short_name
@@ -32,8 +32,8 @@ function getDataByCategoryName($db, $category_name){
     ON p.aos_product_category_id = c.id
     LEFT JOIN aos_products_cstm pc
     ON p.id = pc.id_c
-    WHERE c.name = 'Solar'
-    AND pc.solar_category_c = '". $category_name ."'
+    WHERE c.name = '". $category_name ."'
+    AND pc.solar_category_c = '". $solar_category ."'
     AND pc.product_status_c = 'available'
     ORDER BY pc.short_name_c ASC";
     
