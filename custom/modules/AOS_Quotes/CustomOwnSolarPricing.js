@@ -2,6 +2,7 @@ $(function () {
     'use strict';
     //INIT
     $(document).find('#own_solar_pv_pricing_c').attr('readonly', 'readonly');
+    $("#offgrid_option_c").closest('.edit-view-row-item').hide();
 
     // //test
     // $('#detailpanel_11').append('<button id="testVUT">CLICK</button>');
