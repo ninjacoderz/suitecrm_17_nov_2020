@@ -524,7 +524,7 @@ function Generate_Solar_Hot_Water_Proof_Install_Rebate($Invoice){
     $sql = "SELECT * FROM aos_products_quotes WHERE parent_type = '" . $Invoice->object_name . "' AND parent_id = '".$Invoice->id."' AND deleted = 0";
     $result = $Invoice->db->query($sql);
     while ($row = $Invoice->db->fetchByAssoc($result)) {
-        if (strpos($row['part_number'],'VEEC') !== false  ) { 
+        if (strpos($row['part_number'],'VEEC') !== false  && $row['product_qty'] > 0) { 
             $check_VEEC_STCs = true;
         }
     }
