@@ -13,7 +13,7 @@
                     //'Q CELLS Q.MAXX-G2 350W',
                     // 'Q CELLS Q.PEAK DUO G6+ 350W',
                     // 'Sunpower X22 360W',
-                    'Jinko 370W Tiger P-type JKM370M-6HLM',
+                    'Jinko 370W Tiger N-type JKM370N-6TL3',
                     'Q CELLS Q.MAXX-G3 385W',
                     'Sunpower P3 370 BLACK',
                     'Sunpower Maxeon 3 400');
