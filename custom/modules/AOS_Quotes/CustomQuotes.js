@@ -736,17 +736,17 @@ $(document).ready(function () {
             title="Copy '+install_addr+'" onclick="$(document).copy_email_address(this);"\
             style="cursor: pointer; position: relative;display: inline-block;border-bottom: 1px dotted black;" data-toggle="tooltip">&nbsp;<span class="glyphicon glyphicon-copy"></span>\
             <span class="tooltiptext" style="display:none;width:200px;background:#94a6b5;color:#fff;text-align: center;border-radius: 6px;padding: 5px 0; position: absolute;z-index: 1;">Copied '+install_addr+'</span></a>')
-            $('#pvwatts_nrel_gov_c').parent().append("<a id='redirecttoPVwatts' style='cursor:pointer'>Open NREL's PVWatts® Calculator</a>");//href='https://pvwatts.nrel.gov"+data+"'
-            $('#redirecttoPVwatts').click( function (){
-                $.ajax({
-                    url: "index.php?entryPoint=APIrederectToPVwatts&mylocation="+install_addr,
-                    success: function (data) {
-                        if( data == "/pvwatts.php"){
-                            window.open('https://pvwatts.nrel.gov'+data, '_blank');
-                        }
-                    },
-                });
-            })   
+            $('#pvwatts_nrel_gov_c').parent().append("<a  id='redirecttoPVwatts' target='_blank' href='https://pvwatts.nrel.gov/pvwatts.php?myloc="+install_addr+"' style='cursor:pointer'>Open NREL's PVWatts® Calculator</a>");// href='https://pvwatts.nrel.gov/pvwatts.php?myloc="+install_addr+"'
+            // $('#redirecttoPVwatts').click( function (){
+            //     $.ajax({
+            //         url: "index.php?entryPoint=APIrederectToPVwatts&mylocation="+install_addr,
+            //         success: function (data) {
+            //             if( data == "/pvwatts.php"){
+            //                 window.open("https://pvwatts.nrel.gov/pvwatts.php?myloc="+install_addr, '_blank');
+            //             }
+            //         },
+            //     });
+            // })   
         }
     }
     $('input[id="SAVE"]').prop('onclick', null).off('click');
