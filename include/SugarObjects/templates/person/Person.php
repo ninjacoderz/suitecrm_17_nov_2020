@@ -145,6 +145,9 @@ class Person extends Basic
         // last name has at least read access
         $lastName = $this->last_name;
 
+        //thienpb update logic
+        $accountName = $this->account_name;
+
         // salutation has at least read access
         if (isset($this->field_defs['salutation']['options']) &&
             isset($app_list_strings[$this->field_defs['salutation']['options']]) &&
@@ -160,13 +163,23 @@ class Person extends Basic
         // Both first name and last name cannot be empty, at least one must be shown
         // In that case, we can ignore field level ACL and just display last name...
         // In the ACL field level access settings, last_name cannot be set to "none"
-        if (empty($firstName) && empty($lastName)) {
-            $full_name = $locale->getLocaleFormattedName('', $lastName, $salutation, $title);
-        } else {
-            if ($this->createLocaleFormattedName) {
+
+        //thienpb update logic
+        if($this->module_name == 'Leads'){
+            if(!empty($accountName)){
+                $full_name = $locale->getLocaleFormattedName('', $accountName, $salutation, $title);
+            }else{
                 $full_name = $locale->getLocaleFormattedName($firstName, $lastName, $salutation, $title);
+            }
+        }else{
+            if (empty($firstName) && empty($lastName)) {
+                $full_name = $locale->getLocaleFormattedName('', $lastName, $salutation, $title);
             } else {
-                $full_name = $locale->getLocaleFormattedName($firstName, $lastName);
+                if ($this->createLocaleFormattedName) {
+                    $full_name = $locale->getLocaleFormattedName($firstName, $lastName, $salutation, $title);
+                } else {
+                    $full_name = $locale->getLocaleFormattedName($firstName, $lastName);
+                }
             }
         }
 

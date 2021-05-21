@@ -59,10 +59,10 @@ $(function () {
         if($("#inverter_type_"+index).val().indexOf("3P") >= 0){
             var choose = confirm("Change site to 3P");
             if(choose){
-                $("#meter_phase_c").val(3);
+                $("#phase").val("Three Phases");
                 SUGAR.ajaxUI.showLoadingPanel();
                 setTimeout(function() {
-                    var build_url_quote = "?entryPoint=updateQuoteToSGQuote&meter_phase_c="+encodeURIComponent($("#meter_phase_c").val())+"&type=updateMeterPhase&record="+ encodeURIComponent($('input[name="record"]').val())+"&quoteSG_ID="+encodeURIComponent($("#solargain_quote_number_c").val());
+                    var build_url_quote = "?entryPoint=updateQuoteToSGQuote&meter_phase_c="+encodeURIComponent($("#phases option:selected").attr("data-value-item"))+"&type=updateMeterPhase&record="+ encodeURIComponent($('input[name="record"]').val())+"&quoteSG_ID="+encodeURIComponent($("#solargain_quote_number_c").val());
                     $.ajax({
                         url: build_url_quote,
                         type : 'POST',
@@ -1203,10 +1203,12 @@ $(function () {
 
     function action_changed_extra(index){
         if($("#inverter_type_"+index).val().toLowerCase().indexOf('primo ') >= 0 ){
-            if($("#meter_phase_c").val() == '1'){
+            if($("#phases").val() == 'Single Phase'){
                 $("#extra_1_"+index).val('Fro. Smart Meter (1P)'); 
-            }else if($("#meter_phase_c").val() == '3'){
+            }else if($("#phases").val() == 'Three Phases'){
                 $("#extra_1_"+index).val('Fro. Smart Meter (3P)');
+            }else{
+                
             }
             // $("#extra_2_"+index).val('Fronius Service Partner Plus 10YR Warranty');
             $("#extra_2_"+index).val('');

@@ -48,6 +48,7 @@ const PEAdminPercent = 0.3;
             }else if($(this).val() == "quote_type_sanden"){
                 renderQuoteInputHTML('quote_type_sanden');
                 $('body').find("#own_solar_pv_pricing_table").remove();
+                // dynamic();
             } else {
                 $('#group_custom_quote_inputs_checklist .edit-view-row').empty();
                 $('body').find("#own_solar_pv_pricing_table").remove();
@@ -65,6 +66,7 @@ const PEAdminPercent = 0.3;
                 case "quote_type_sanden":
                     generateJSONForInput();
                     generate_quote_by_input('quote_type_sanden');
+                    // dynamic();
                     break;
                 case "quote_type_off_grid_system":
                     generateOffgridItem();
@@ -93,6 +95,9 @@ const PEAdminPercent = 0.3;
             set_value(list0.attr('id'), old_price - (((old_total_amount - new_total_amount) / 1.1)/qty));
             list0.trigger("blur");
         });
+    });
+    // Tri 
+    function dynamic(){
         $('body').on('change', '#group_custom_quote_inputs_checklist select.custom_fields', function() {
             var choosed = $('option:selected', this).attr('data-value-item').replace('-','').replace('(', '').replace(')', '').replace(/\s+/g, '_').toLowerCase();
             var next_step = $(this).parent().attr('data-next-step');
@@ -123,8 +128,7 @@ const PEAdminPercent = 0.3;
             };
                 
         })
-        
-    });
+    }
     // .:nhantv:. Init select Option checkbox and line item
     function initOptionAndGenLineItem(){
         // init Options
