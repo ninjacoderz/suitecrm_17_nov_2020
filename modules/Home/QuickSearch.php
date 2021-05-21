@@ -202,15 +202,29 @@ class quicksearchQuery
                         $nameFormat = $locale->getLocaleFormatMacro($current_user);
 
                         if (strpos($nameFormat, 'l') > strpos($nameFormat, 'f')) {
-                            array_push(
-                                $conditionArray,
-                                $db->concat($table, array('first_name','last_name')) . " like '$like'"
-                            );
+                            if($focus->module_name == 'Leads'){
+                                array_push(
+                                    $conditionArray,
+                                    $db->concat($table, array('account_name')) . " like '$like'"
+                                );
+                            }else{
+                                array_push(
+                                    $conditionArray,
+                                    $db->concat($table, array('first_name','last_name')) . " like '$like'"
+                                );
+                            }
                         } else {
-                            array_push(
-                                $conditionArray,
-                                $db->concat($table, array('last_name','first_name')) . " like '$like'"
-                            );
+                            if($focus->module_name == 'Leads'){
+                                array_push(
+                                    $conditionArray,
+                                    $db->concat($table, array('account_name')) . " like '$like'"
+                                );
+                            }else{
+                                array_push(
+                                    $conditionArray,
+                                    $db->concat($table, array('last_name','first_name')) . " like '$like'"
+                                );
+                            }
                         }
                     } else {
                         array_push(
@@ -373,8 +387,11 @@ class quicksearchQuery
 
         foreach ($args['modules'] as $module) {
             $focus = SugarModule::get($module)->loadBean();
-
-            $orderBy = $focus->db->getValidDBName(($args['order_by_name'] && $focus instanceof Person && $args['order'] == 'name') ? 'last_name' : $orderBy);
+            if($module == 'Leads'){
+                $orderBy = $focus->db->getValidDBName(($args['order_by_name'] && $focus instanceof Person && $args['order'] == 'name') ? 'account_name' : $orderBy);
+            }else{
+                $orderBy = $focus->db->getValidDBName(($args['order_by_name'] && $focus instanceof Person && $args['order'] == 'name') ? 'last_name' : $orderBy);
+            }
 
             if ($focus->ACLAccess('ListView', true)) {
                 $where = $this->constructWhere($focus, $args);
