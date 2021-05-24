@@ -1075,6 +1075,144 @@ class EmailsController extends SugarController
             }
             /**VUT-E-Quote-Button 'Send Inspection Request' */
 
+           //Nhat code https://trello.com/c/XTSzMI2F/
+           if($_REQUEST['email_type'] == 'sanden_freight_estimate'){
+                $record_id = trim($_REQUEST['record_id']);
+                $macro_nv = array();
+                $focusName = "AOS_Quotes";
+                $focus = BeanFactory::getBean($focusName, $record_id);
+
+                if(!$focus->id) return;
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+
+                $emailTemplateID = '4f9d33bc-347c-d77d-04c5-609ca866758e'; //suitecrm server
+                // $emailTemplateID = '5b618685-ec7e-14d2-56d4-609dd973ed74'; //test devel
+
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',
+                    $emailTemplateID
+                );
+                //get email from contact
+                $contact_bean = new Contact;
+                $contact_bean->retrieve($focus->billing_contact_id);
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+                //parse value
+                $name = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city, $name);
+                $description_html = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . ", " . $focus->billing_address_state .", " . $focus->billing_address_postalcode , $description_html);
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+
+                /**Custom Attachments */
+                // $noteArray = array();
+                $file_attachments = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c ."/");
+                $name_file_include = 'Proposed_Install_Location';
+                if (count($file_attachments)>0 ) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach ($file_attachments as $att) {
+                        $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c ."/" . $att ;
+                        if(!is_file($source)) continue;
+                        if (strpos(strtolower($att),strtolower($name_file_include))) {
+                            $noteTemplate = new Note();
+                            $noteTemplate->id = create_guid();
+                            $noteTemplate->new_with_id = true; // duplicating the note with files
+                            $noteTemplate->parent_id = $this->bean->id;
+                            $noteTemplate->parent_type = 'Emails';
+                            $noteTemplate->date_entered = '';
+                            $noteTemplate->filename = $att;
+                            $noteTemplate->name = $att;
+                            if(strpos(strtolower($att), "png") !== false) {
+                                $noteTemplate->file_mime_type = 'image/png';
+                            } elseif (strpos(strtolower($att), "pdf") !== false) {
+                                $noteTemplate->file_mime_type = 'application/pdf';
+                            } else {
+                                $noteTemplate->file_mime_type = 'image/jpg';
+                            }
+                                
+                            $noteTemplate->save();
+        
+                            $destination = realpath(dirname(__FILE__) . '/../../').'/upload/'.$noteTemplate->id;
+                            if (!symlink($source, $destination)) {
+                                $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                            }
+                            $this->bean->attachNote($noteTemplate);
+                        }
+                    }
+                }
+                //get infomation from quote
+                /**Check product type => select installer */
+
+                // $installer = new Account();
+                // $contact_installer = new Contact();
+                // if ($focus->quote_type_c ==  "quote_type_sanden" ) {
+                //     $installer->retrieve($focus->account_id3_c);
+                //     $contact_installer->retrieve($installer->primary_contact_c);
+                // } else if ($focus->quote_type_c == "quote_type_daikin" || $focus->quote_type_c == "quote_type_nexura") {
+                //     $installer->retrieve($focus->account_id4_c);
+                //     $contact_installer->retrieve($installer->primary_contact_c);
+                // }
+                
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+                $this->bean->to_addrs_names = $installer->name." <".$installer->email1.">";
+
+
+                // //start - code render sms_template  
+                global $current_user;
+                $smsTemplateID = '328a27e7-51e8-1640-4183-5d75f7757982'; //suitecrm server
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    $smsTemplateID 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$first_name", $contact_installer->first_name, $body);
+                $smsTemplate->body_c = $body;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->number_receive_sms = "matthew_paul_client";
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact_installer->phone_mobile));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client =  $phone_number; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus)/**.' '.$current_user->sms_signature_c */,ENT_QUOTES)));   
+                // //end - code render sms_template
+            }
+
             //Button 'Delivery Schedule'
             if($_REQUEST['email_type'] == 'delivery_schedule'){ 
                 // tuan code for plumber 
@@ -7884,7 +8022,7 @@ class EmailsController extends SugarController
                         }
                         $totalSize += filesize($image);
                     } catch (Exception $e) {
-                        // throw new Exception('Exception:' . $e->getMessage());
+                        throw new Exception('Exception:' . $e->getMessage());
                     }
                 } else { //other files
                     $totalSize += filesize($image);
@@ -7893,7 +8031,7 @@ class EmailsController extends SugarController
         }
     
         if ($totalSize > $limitSize) {
-            // throw new Exception('Error: totalSize > 24MB');
+            throw new Exception('Error: totalSize > 24MB');
         }
     }
 

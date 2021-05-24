@@ -1265,3 +1265,129 @@ function isSandenSupply() {
     });
     return sanden_groups;
 }  
+
+//Nhat code https://trello.com/c/XTSzMI2F/
+$(function () {
+  "use strict";
+
+  $(document).ready(function () {
+    //Nhat code
+    $("#tab-actions").after(
+      '<button data-email-type="sanden_freight_estimate" data-quote-name="' +
+        $("#name").text() +
+        '" data-email-address="' +
+        $(".email-link").attr("data-email-address") +
+        '" data-lead-id="' +
+        $("#leads_aos_quotes_1leads_ida").attr("data-id-value") +
+        '"   data-record-id="' +
+        $('input[name="record"]').val() +
+        '" type="button" id="sanden_freight_estimate" class="button sanden_freight_estimate" title="Sanden Freight Estimate" data-module="AOS_Quotes" onClick="SUGAR.sandenFreightEstimate(this);" >Sanden Freight Estimate<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
+    );
+
+    SUGAR.sandenFreightEstimate = function (elem) {
+      $(document).openComposeViewModal_sandenFreightEstimate(elem);
+    };
+
+    $.fn.openComposeViewModal_sandenFreightEstimate = function (source) {
+      var self = this;
+
+      self.emailComposeView = null;
+      var opts = $.extend({}, $.fn.EmailsComposeViewModal.defaults);
+      var composeBox = $("<div></div>").appendTo(opts.contentSelector);
+      composeBox.messageBox({ showHeader: false, showFooter: false, size: "lg" });
+      composeBox.setBody('<div class="email-in-progress"><img src="themes/' + SUGAR.themes.theme_name + '/images/loading.gif"></div>');
+      composeBox.show();
+      var record_id = $(source).attr("data-record-id");
+      var email_type = $(source).attr("data-email-type");
+      var email_module = $(source).attr("data-module");
+      var url_email =
+        "index.php?module=Emails&action=ComposeView&in_popup=1" + (record_id != "" ? "&record_id=" + record_id : "") + (email_type != "" ? "&email_type=" + email_type : "") + (email_module != "" ? "&email_module=" + email_module : "");
+
+      $.ajax({
+        type: "GET",
+        cache: false,
+        url: url_email,
+      })
+        .done(function (data) {
+          if (data.length === 0) {
+            console.error("Unable to display ComposeView");
+            composeBox.setBody(SUGAR.language.translate("", "ERR_AJAX_LOAD"));
+            return;
+          }
+          composeBox.setBody(data);
+          self.emailComposeView = composeBox.controls.modal.body.find(".compose-view").EmailsComposeView();
+
+          let populateModule = $(source).attr("data-module");
+          let populateModuleRecord = $(source).attr("data-record-id");
+          let populateModuleName = $(source).attr("data-module-name");
+
+          // var populateEmailAddress = $(source).attr('data-email-address');
+          // // get email address
+          // if(typeof(pulateEmailAddress) == 'undefined'){
+          //     populateEmailAddress = $("#group_custom_template_col_1").find(".email-link").attr('data-email-address');
+          // }
+
+          // if(typeof($(source).attr('data-contact-name')) != 'undefined'){
+          //     populateEmailAddress = $(source).attr('data-contact-name') + ' <' + populateEmailAddress + '>';
+          // }else if (populateModuleName !== '' && typeof($(source).attr('data-contact-name')) == 'undefined') {
+          //     populateEmailAddress = populateModuleName + ' <' + populateEmailAddress + '>';
+          // }
+          $(self.emailComposeView)
+            .find("#from_addr_name")
+            .append(
+              `<option value="Test Customer <operations@pure-electric.com.au>" inboundid="437e3cdd-6e46-e6e5-a33f-5c94522c7d4c" infos="(<b>Reply-to:</b> Test Customer <b>From:</b> operations@pure-electric.com.au)">Test Customer &lt;operations@pure-electric.com.au&gt;</option>`
+            );
+          let infos = "(<b>Reply-to:</b> Test Customer <b>From:</b> operations@pure-electric.com.au)";
+          // $(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
+          $(self.emailComposeView).find("#parent_type").val(populateModule);
+          $(self.emailComposeView).find("#parent_name").val(populateModuleName);
+          $(self.emailComposeView).find("#cc_addrs_names").val("Pure Info <info@pure-electric.com.au>");
+          $(self.emailComposeView).find("#from_addr_name").val("Test Customer <operations@pure-electric.com.au>");
+          $(self.emailComposeView).find("#from_addr_name_infos").html(infos);
+
+          $(self.emailComposeView).find("#parent_id").val(populateModuleRecord);
+          $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
+          $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);
+
+          //   $(self.emailComposeView).find("#emails_email_templates_idb").val("5b618685-ec7e-14d2-56d4-609dd973ed74");
+          $(self.emailComposeView).find("#to_addrs_names").val("Sanden Sales <sales@sanden.com.au>");
+
+          $(self.emailComposeView).on("sentEmail", function (event, composeView) {
+            composeBox.hide();
+            composeBox.remove();
+          });
+          $(self.emailComposeView).on("disregardDraft", function (event, composeView) {
+            if (typeof messageBox !== "undefined") {
+              var mb = messageBox({ size: "lg" });
+              mb.setTitle(SUGAR.language.translate("", "LBL_CONFIRM_DISREGARD_DRAFT_TITLE"));
+              mb.setBody(SUGAR.language.translate("", "LBL_CONFIRM_DISREGARD_DRAFT_BODY"));
+              mb.on("ok", function () {
+                mb.remove();
+                composeBox.hide();
+                composeBox.remove();
+              });
+              mb.on("cancel", function () {
+                mb.remove();
+              });
+              mb.show();
+            } else {
+              if (confirm(self.translatedErrorMessage)) {
+                composeBox.hide();
+                composeBox.remove();
+              }
+            }
+          });
+          composeBox.on("cancel", function () {
+            composeBox.remove();
+          });
+          composeBox.on("hide.bs.modal", function () {
+            composeBox.remove();
+          });
+        })
+        .fail(function (data) {
+          composeBox.controls.modal.content.html(SUGAR.language.translate("", "LBL_EMAIL_ERROR_GENERAL_TITLE"));
+        });
+      return $(self);
+    };
+  });
+});
