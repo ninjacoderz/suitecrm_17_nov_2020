@@ -79,6 +79,8 @@ class AOS_QuotesViewDetail extends ViewDetail
     {
         $this->populateQuoteTemplates();
         $this->displayPopupHtml();
+        //thienpb
+        $this->alterRelateLeadField();
         parent::display();
     }
 
@@ -118,6 +120,16 @@ class AOS_QuotesViewDetail extends ViewDetail
             echo $template->fetch('modules/AOS_Quotes/templates/showPopupWithTemplates.tpl');
         } else {
             echo $template->fetch('modules/AOS_Quotes/templates/showPopupWithOutTemplates.tpl');
+        }
+    }
+    //thienpb
+    function alterRelateLeadField(){
+        $db = DBManagerFactory::getInstance();
+        $sql = "SELECT id, account_name FROM leads WHERE deleted='0' AND id='".$this->bean->leads_aos_quotes_1leads_ida."'";
+        $res = $db->query($sql);
+        if($res->num_rows > 0){
+            $row = $db->fetchByAssoc($res);
+            $this->bean->leads_aos_quotes_1_name = $row['account_name'];
         }
     }
 }

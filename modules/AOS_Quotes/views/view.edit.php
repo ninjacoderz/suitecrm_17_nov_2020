@@ -53,6 +53,7 @@ class AOS_QuotesViewEdit extends ViewEdit
     {
         global $current_user;
         $this->populateQuoteTemplates();
+        $this->alterRelateLeadField(); //thienpb
         parent::display();
         $template = new Sugar_Smarty();
         echo $template->fetch('modules/AOS_Quotes/templates/popupTemplateSpecialNotes.tpl');
@@ -95,6 +96,17 @@ class AOS_QuotesViewEdit extends ViewEdit
         $app_list_strings['template_ddown_c_list'] = array();
         while ($row = $this->bean->db->fetchByAssoc($res)) {
             $app_list_strings['template_ddown_c_list'][$row['id']] = $row['name'];
+        }
+    }
+    
+    //thienpb
+    function alterRelateLeadField(){
+        $db = DBManagerFactory::getInstance();
+        $sql = "SELECT id, account_name FROM leads WHERE deleted='0' AND id='".$this->bean->leads_aos_quotes_1leads_ida."'";
+        $res = $db->query($sql);
+        if($res->num_rows > 0){
+            $row = $db->fetchByAssoc($res);
+            $this->bean->leads_aos_quotes_1_name = $row['account_name'];
         }
     }
 }
