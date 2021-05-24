@@ -58,6 +58,7 @@ class AOS_Products_sugar extends Basic
     public $assigned_user_link;
     public $maincode;
     public $part_number;
+    public $number;
     public $category;
     public $type;
     public $cost;

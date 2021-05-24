@@ -90,5 +90,6 @@ $mod_strings = array(
     'LBL_ITEM_CODE_XERO' => 'Item Code Xero',
     'LBL_ID_PRODUCT_DRUPAL' => 'ID Product Drupal',
     'LBL_EXPECTED_PRICE' => 'Expected Price',
+    'LBL_PRODUCT_NUMBER' => 'Product Number',
 
 );

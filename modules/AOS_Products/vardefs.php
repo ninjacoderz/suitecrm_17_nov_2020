@@ -119,6 +119,21 @@ $dictionary['AOS_Products'] = array(
                 'reportable' => true,
                 'len' => '10',
             ),
+        //Nhat code https://trello.com/c/rCLPLWbM/
+        'number' => 
+            array(
+            'name' => 'number',
+            'vname' => 'LBL_PRODUCT_NUMBER',
+            'type' => 'int',
+            'len' => 11,
+            'isnull' => 'false',
+            'unified_search' => true,
+            'comments' => '',
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+            'reportable' => true,
+            'disable_num_format' => true,
+            ),
         'category' =>
             array(
                 'required' => false,
