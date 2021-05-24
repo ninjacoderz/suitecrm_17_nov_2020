@@ -245,6 +245,8 @@
                 $new_quote->quote_type_c = 'ValveCosy';
                 $new_quote->save();
             }else{
+                $title = explode('-',$product['title']);
+                $product['title'] = trim($title[0]);
                 array_push($products_title,$product['title']);
             }
         }

@@ -97,6 +97,8 @@
         if($product['title'] == 'ValveCosy' || $product['title'] == 'Valvecosy Insulator'){
             array_push($products_title,'Valvecosy Insulator');
         }else{
+            $title = explode('-',$product['title']);
+            $product['title'] = trim($title[0]);
             array_push($products_title,$product['title']);
         }
     }
