@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    'use strict';
 //for test
     $('input[id="SAVE"]').next().after('&nbsp;<button type="button" id="test" class="button" >TEST<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
     $(document).on('click', '#test', function(){

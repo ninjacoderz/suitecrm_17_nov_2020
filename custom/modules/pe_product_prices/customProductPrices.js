@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  'use strict';
 // S - set product relate
     sqs_objects["name"] = {
         "form": "EditView",
