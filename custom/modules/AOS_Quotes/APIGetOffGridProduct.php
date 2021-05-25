@@ -13,6 +13,8 @@ $data_return['og_inverter_data'] = getDataByCategoryName($db, "Microgrid", "og_i
 $data_return['battery_data'] = getDataByCategoryName($db, "Microgrid", "battery_storage");
 // Get Accessories
 $data_return['accessory_data'] = getDataByCategoryName($db, "Microgrid", "accessories");
+// Get RE Generator
+$data_return['re_generator_data'] = getDataByCategoryName($db, "Microgrid", "re_generator");
 
 // Return
 echo json_encode($data_return);
@@ -24,6 +26,9 @@ function getDataByCategoryName($db, $category_name, $solar_category){
       , c.name AS category_name
       , p.cost
       , p.price
+      , p.description
+      , p.part_number
+      , p.currency_id
       , pc.product_status_c
       , pc.capacity_c
       , pc.solar_category_c
@@ -48,6 +53,9 @@ function getDataByCategoryName($db, $category_name, $solar_category){
         'short_name' => $record['short_name'],
         'cost' => $record['cost'],
         'price' => $record['price'],
+        'description' => $record['description'],
+        'part_number' => $record['part_number'],
+        'currency' => $record['currency_id'],
         'product_status' => $record['product_status'],
         'category_name' => $record['category_name'],
         'capacity' => $record['capacity_c'],
