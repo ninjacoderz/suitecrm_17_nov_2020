@@ -47,15 +47,11 @@ $(document).ready(function() {
 
 // S - Show link product
 showLinkProduct();
-$(document).on('change', '#name, #part_number, #product_id', function() {
-  showLinkProduct();
-});
+YAHOO.util.Event.addListener(["product_id"], "change", showLinkProduct);
 // E - Show link product
 // S - Show link Supplier
-showLinkAccount();
-$(document).on('change', '#account_id', function() {
-  showLinkAccount();
-});
+showLinkSupplier();
+YAHOO.util.Event.addListener(["account_id"], "change", showLinkSupplier);
 // E - Show link Supplier
 
 // S - HIDE FIELDS/PANEL */
@@ -94,8 +90,9 @@ function showLinkProduct() {
 }
 }
 
-function showLinkAccount() {
+function showLinkSupplier() {
   let acc = $(document).find('#account_id');
+  $(document).find('.link_supplier').remove();
   if (acc.val() != '') {
     let link = "<p class='link_supplier'><a  href='/index.php?module=Accounts&action=EditView&record=" + acc.val() + "' target='_blank'>Open Supplier</a></p>";
     acc.parent().append(link);

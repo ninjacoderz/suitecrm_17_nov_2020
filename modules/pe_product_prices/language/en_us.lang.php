@@ -84,6 +84,6 @@ $mod_strings = array (
   'LBL_ACCOUNT' => 'Account',
   'LBL_WEBSITE' => 'Website',
   'LBL_PRODUCT_ID' => 'Product ID',
-  // 'LBL_PART_NUMBER' => 'Billing Country',
+  'LBL_PRICE_NOTE' => 'Notes',
   // 'LBL_PART_NUMBER' => 'Billing Country',
 );

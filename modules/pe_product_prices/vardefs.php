@@ -187,10 +187,16 @@ $dictionary['pe_product_prices'] = array(
     'date_release' => array(
         'name' => 'date_release',
         'vname' => 'LBL_DATE_RELEASE',
-        'type' => 'date',
+        'type' => 'datetimecombo',
+        'dbType' => 'datetime',
+        'group' => 'date_release',
         'required' => false,
         'comment' => 'Date Release',
-        'inline_edit' => false
+        'inline_edit' => false,
+        // 'studio' => array('required' => true, 'no_duplicate' => true),
+        // 'enable_range_search' => true,
+        // 'options' => 'date_range_search_dom',
+
     ),
     'website' =>
     array(
@@ -206,7 +212,13 @@ $dictionary['pe_product_prices'] = array(
             'returns' => 'html',
             'include' => 'modules/pe_product_prices/customField.php'
         ),
-),
+    ),
+    'price_note' => array(
+        'name' => 'price_note',
+        'vname' => 'LBL_PRICE_NOTE',
+        'type' => 'text',
+        'comment' => 'Notes'
+    ),
 //Relate field
     'account_id' =>
     array(
