@@ -94,7 +94,12 @@ $dictionary['pe_product_prices'] = array(
             'len' => '255',
             'comment' => 'Message name',
             'importable' => 'required',
-            'required' => true
+            'required' => true,
+            'function' =>  array(
+                'name' => 'link_product',
+                'returns' => 'html',
+                'include' => 'modules/pe_product_prices/customField.php'
+            ),
         ),
         'description' => array(
             'name' => 'description',
@@ -126,6 +131,11 @@ $dictionary['pe_product_prices'] = array(
         'audited' => 1,
         'reportable' => true,
         'len' => '25',
+        'function' =>  array(
+            'name' => 'link_product',
+            'returns' => 'html',
+            'include' => 'modules/pe_product_prices/customField.php'
+        ),
     ),
     'product_id' =>
     array(
@@ -191,7 +201,12 @@ $dictionary['pe_product_prices'] = array(
         'len' => 255,
         // 'link_target' => '_blank',
         'comment' => 'URL of website for the Product',
-    ),
+        'function' =>  array(
+            'name' => 'link_website',
+            'returns' => 'html',
+            'include' => 'modules/pe_product_prices/customField.php'
+        ),
+),
 //Relate field
     'account_id' =>
     array(

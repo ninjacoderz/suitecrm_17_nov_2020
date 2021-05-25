@@ -91,5 +91,5 @@ $mod_strings = array(
     'LBL_ID_PRODUCT_DRUPAL' => 'ID Product Drupal',
     'LBL_EXPECTED_PRICE' => 'Expected Price',
     'LBL_PRODUCT_NUMBER' => 'Product Number',
-
+    'LBL_AOS_PRODUCT_PRICES' => 'Product Prices',
 );

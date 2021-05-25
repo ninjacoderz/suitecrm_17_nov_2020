@@ -39,10 +39,10 @@ $(document).ready(function() {
     "no_match_text": "No Match"
     };
 // E - set product relate
-// S - Add sqlEnable
-    $(document).find('#name').addClass('sqsEnabled').attr('autocomplete', 'off');
-    $(document).find('#part_number').addClass('sqsEnabled').attr('autocomplete', 'off');
-// E - Add sqlEnable
+// // S - Add sqlEnable
+//     $(document).find('#name').addClass('sqsEnabled').attr('autocomplete', 'off');
+//     $(document).find('#part_number').addClass('sqsEnabled').attr('autocomplete', 'off');
+// // E - Add sqlEnable
 /**E-For autocomplete product */
 
 // S - Show link product
@@ -104,7 +104,7 @@ function showLinkAccount() {
 
 function showFieldWebsite() {
   let price_src = $(document).find('#pricing_source').val();
-  if (price_src == 'price_list') {
+  if (price_src == 'website') {
     $(document).find('#website').closest('.edit-view-row-item').show();
   } else {
     $(document).find('#website').closest('.edit-view-row-item').hide();
