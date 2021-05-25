@@ -8022,7 +8022,7 @@ class EmailsController extends SugarController
                         }
                         $totalSize += filesize($image);
                     } catch (Exception $e) {
-                        throw new Exception('Exception:' . $e->getMessage());
+                        //throw new Exception('Exception:' . $e->getMessage());
                     }
                 } else { //other files
                     $totalSize += filesize($image);
@@ -8031,7 +8031,7 @@ class EmailsController extends SugarController
         }
     
         if ($totalSize > $limitSize) {
-            throw new Exception('Error: totalSize > 24MB');
+            //throw new Exception('Error: totalSize > 24MB');
         }
     }
 
