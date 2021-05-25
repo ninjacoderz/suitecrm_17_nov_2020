@@ -6,9 +6,6 @@ solarProductCal["Standard_PV_Module_Installation"] = "PV-Module-Installation";
 solarProductCal["Solar_PV_Balance_of_System"] = "PV-BOS";
 solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Monitoring-In";
 
-// .:nhantv:. PE Admin %
-const PEAdminPercent = 0.3;
-
 /** JS LOAD CUSTOM QUOTE INPUT  */
     $(function () {
         'use strict';
@@ -85,7 +82,7 @@ const PEAdminPercent = 0.3;
         $(document).on('focusin', "#total_amount", function(){
             old_total_amount = get_value('total_amount');
         }).on('change', "#total_amount", function(){
-            let new_total_amount = roundTo90(get_value('total_amount'));
+            let new_total_amount = get_value('total_amount');
             let product0 = $('.product_group').find('tbody[id*=product_body]:visible')[0];
             let list0 = $(product0).find('input[id*=product_product_list_price]');
             let qty = get_value($(product0).find('input[id*=product_product_qty]').attr('id'));
@@ -270,11 +267,10 @@ const PEAdminPercent = 0.3;
             } else {
                 totalAmount += 50;
             }
-            // PE Admin
-            // totalAmount += 1020.00;
-            totalAmount += totalAmount * PEAdminPercent;
-            // console.log(totalAmount);
         }
+
+        // PE Admin
+        totalAmount += totalAmount * (parseFloat($('#pe_admin_percent').val()) / 100);
 
         // Set value to first line
         list = $(productVisible[0]).find('input[id*=product_product_list_price]');
@@ -288,47 +284,8 @@ const PEAdminPercent = 0.3;
         await wait(200);
         $("#total_amount").trigger("change");
 
-        // Equipment cost
-        var sanden_equipment_cost = calculate_equipment_cost_gp();
-        $('#sanden_supply_bill').val(parseFloat(sanden_equipment_cost).formatMoney(2, ',', '.'));
-
         // Scroll top offset
         jQuery('html,body').animate({scrollTop: jQuery('.panel-heading a div:contains(Line Items)').offset().top - 200}, 500);
-    }
-    // .:nhantv:. 
-    function calculate_equipment_cost_gp() {
-        let lineItems_products = $('#line_items_span').find('.product_group').children('tbody');
-        let i;
-        let sanden_groups = {};
-        //get product in LineItem at Invoice
-        for (i = 0; i < lineItems_products.length; i++) {
-            let product_partNumber = $(`#product_part_number${i}`).val();
-            let product_id = $(`#product_product_id${i}`).val();
-            let product_qty = $(`#product_product_qty${i}`).val();
-            sanden_groups[product_id] = {
-                'partNumber': product_partNumber,
-                'qty': parseInt(product_qty),
-            };
-        }
-        //get product's price, cost in AOS_Product
-        var total_equipment_cost = 0;
-
-        $.each(sanden_groups, function (key, value) {
-            let price, cost;
-            $.ajax({
-                url: "?entryPoint=getProductInfos&type=gp_profit&product_id=" + key,
-                async: false
-            }).done(function (data) {
-                if (data == '' || typeof data === 'undefined') return;
-                let jsonObj = JSON.parse(data);
-                price = jsonObj.price;
-                cost = jsonObj.cost;
-            });
-            sanden_groups[key].price = parseFloat(price);
-            sanden_groups[key].cost = parseFloat(cost);
-            total_equipment_cost += value.cost * value.qty;
-        });
-        return total_equipment_cost;
     }
     // .:nhantv:. Round to 90
     function roundTo90(val){
@@ -343,7 +300,7 @@ const PEAdminPercent = 0.3;
         return parseFloat(firstDigit + "90.00").toFixed(2);
     }
     // .:nhantv:. Get Product Line Item info 
-    async function autoCreateLineItem(shortName, total_item){
+    async function autoCreateLineItem(shortName, total_item, total_kw = 1){
         let productInfo = {};
         // Get Product info by Short name
         await $.ajax({
@@ -366,7 +323,7 @@ const PEAdminPercent = 0.3;
                 var info_pro = JSON.parse(data);
                 if(info_pro['product_product_id'] !== undefined){
                     insertProductLine('product_group0', '0');
-                    lineno  = prodln-1;  
+                    lineno  = prodln-1;
                     var popupReplyData = {};
                     popupReplyData.form_name = "EditView";
                     var name_to_value_array = {};
@@ -377,8 +334,8 @@ const PEAdminPercent = 0.3;
                     name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
         
                     name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
-                    name_to_value_array["product_product_list_price"+lineno] = info_pro['product_product_cost_price'];
-                    name_to_value_array["product_product_qty"+lineno] = "" + parseInt(total_item);
+                    name_to_value_array["product_product_list_price"+lineno] = "" + (info_pro['product_product_cost_price'] * parseFloat(total_kw));
+                    name_to_value_array["product_product_qty"+lineno] = "" + parseFloat(total_item);
                     popupReplyData["name_to_value_array"] = name_to_value_array;            
                     $('#product_product_list_price'+lineno).focus();
                     $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ productInfo.id +'">Link</a></div>');
