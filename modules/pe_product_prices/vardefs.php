@@ -113,7 +113,7 @@ $dictionary['pe_product_prices'] = array(
     //create
     'part_number' =>
     array(
-        'required' => false,
+        'required' => true,
         'name' => 'part_number',
         'vname' => 'LBL_PART_NUMBER',
         'type' => 'varchar',
@@ -126,6 +126,16 @@ $dictionary['pe_product_prices'] = array(
         'audited' => 1,
         'reportable' => true,
         'len' => '25',
+    ),
+    'product_id' =>
+    array(
+        'name' => 'product_id',
+        'vname' => 'LBL_PRODUCT_ID',
+        'type' => 'varchar',
+        'len' => 36,
+        'inline_edit' => false,
+        'importable' => 'true',
+        'duplicate_merge' => 'disabled',
     ),
     'cost' =>
     array(
@@ -167,7 +177,7 @@ $dictionary['pe_product_prices'] = array(
     'date_release' => array(
         'name' => 'date_release',
         'vname' => 'LBL_DATE_RELEASE',
-        'type' => 'datetime',
+        'type' => 'date',
         'required' => false,
         'comment' => 'Date Release',
         'inline_edit' => false
@@ -176,10 +186,10 @@ $dictionary['pe_product_prices'] = array(
     array(
         'name' => 'website',
         'vname' => 'LBL_WEBSITE',
-        'type' => 'url',
+        'type' => 'varchar',
         'dbType' => 'varchar',
         'len' => 255,
-        'link_target' => '_blank',
+        // 'link_target' => '_blank',
         'comment' => 'URL of website for the Product',
     ),
 //Relate field
