@@ -14,7 +14,7 @@ function link_website($focus, $field, $value, $view)
 }
 
 function link_product($focus, $field, $value, $view) {
-    // $html = '';
+    $html = '';
     if ($view == 'DetailView') {
         $return_html = '';
         if ($focus->product_id != '') {

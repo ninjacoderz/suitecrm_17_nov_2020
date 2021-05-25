@@ -60,21 +60,5 @@ $layout_defs['AOS_Products'] = array(
             ),
         ),
 
-        //Subpanel Module PRODUCT PRICES
-        'aos_products_prices' => array(
-            'order' => 101,
-            'module' => 'pe_product_prices',
-            'subpanel_name' => 'default',
-            'sort_order' => 'desc',
-            'sort_by' => 'number',
-            'title_key' => 'PRODUCT PRICES',
-            'function_parameters' => array(
-                'import_function_file' => 'modules/AOS_Products/customSubpanelFunction.php',
-                // 'type' => 'collection',
-            ),
-            'get_subpanel_data' => 'function:get_product_prices',
-            ),
-
-
     ),
 );
