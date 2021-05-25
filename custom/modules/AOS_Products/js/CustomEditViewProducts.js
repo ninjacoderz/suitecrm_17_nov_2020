@@ -175,7 +175,7 @@ $(function () {
             }); 
         }
         //Nhat code https://trello.com/c/luUR9WQ4/
-        $("#number").attr("disabled"); // disable product input field
+        $("#number").prop("disabled", true);; // disable product input field
         let productCategoryValue = $("#aos_product_category_name").val(); 
         if (productCategoryValue != "Solar Panels" || productCategoryValue != "Solar") {
           $("#solar_category_c").parent().parent().css("display", "none");
