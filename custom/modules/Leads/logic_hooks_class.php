@@ -672,7 +672,12 @@
                   $account = new Account();
                   $account->retrieve($bean->account_id);
                   if( $account->id != '') {
-                      $account->name = $bean->first_name ." " . $bean->last_name;
+                      //thienpb change logic
+                      if(empty($bean->account_name)){
+                          $account->name = $bean->first_name ." " . $bean->last_name;
+                      }else{
+                        $account->name = $bean->account_name;
+                      }                      
                       $account->phone_office = $bean->phone_office;
                       $account->phone_fax = $bean->phone_fax;
                       $account->mobile_phone_c = $bean->phone_mobile;
@@ -731,7 +736,12 @@
 
                     //create account
                     $account = new Account();
-                    $account->name = $bean->first_name ." " . $bean->last_name;
+                    //thienpb change logic
+                    if(empty($bean->account_name)){
+                        $account->name = $bean->first_name ." " . $bean->last_name;
+                    }else{
+                        $account->name = $bean->account_name;
+                    }
                     $account->phone_office = $bean->phone_office;
                     $account->phone_fax = $bean->phone_fax;
                     $account->mobile_phone_c = $bean->phone_mobile;

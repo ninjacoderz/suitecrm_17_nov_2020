@@ -411,6 +411,22 @@ $dictionary['Account'] = array(
             'bean_name' => 'AOS_Contracts',
             'source' => 'non-db',
         ),
+        'account_address_detail' =>
+            array(
+                'required' => false,
+                'name' => 'account_address_detail',
+                'vname' => 'LBL_ACCOUNT_ADDRESS_DETAIL',
+                'type' => 'unknow',
+                'source' => 'non-db',
+                'massupdate' => 0,
+                'importable' => 'false',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => 0,
+                'audited' => false,
+                'reportable' => false,
+                'studio' => true,
+            ),
+    
     ),
     'indices' => array(
         array('name' => 'idx_accnt_id_del', 'type' => 'index', 'fields' => array('id', 'deleted')),

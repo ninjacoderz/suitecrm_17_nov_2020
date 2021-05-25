@@ -92,14 +92,18 @@
     $couponCode = $data_json['couponCode'];
     $ship_method_id = $data_json['ship_method_id'];
     $products_title = [];
-
+    $products_clone = [];
     foreach($products as $product){
+        $title = explode('-',$product['title']);
+        $product['title'] = trim($title[0]);
         if($product['title'] == 'ValveCosy' || $product['title'] == 'Valvecosy Insulator'){
             array_push($products_title,'Valvecosy Insulator');
         }else{
             array_push($products_title,$product['title']);
         }
+        array_push($products_clone,$product);
     }
+    
     if( $ship_method_id == "1"){
         array_push($products_title,"Methven Shipping and Handling Standard");
         $type_shipping = "B30";
@@ -128,9 +132,9 @@
     $ret = $db->query($sql);
 
     while($row = $db->fetchByAssoc($ret)){
-        foreach ($products as $key => $value) {
+        foreach ($products_clone as $key => $value) {
             if($value['title'] == $row['name'] || $row['name'] == 'Valvecosy Insulator'){
-                $check_qty = (int) $products[$key]['quantity'] ;
+                $check_qty = (int) $products_clone[$key]['quantity'] ;
             }
         }
         if ($check_qty != 0) {

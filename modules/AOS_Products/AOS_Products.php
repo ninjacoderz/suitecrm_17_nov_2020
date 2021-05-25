@@ -68,6 +68,23 @@ class AOS_Products extends AOS_Products_sugar
     public function save($check_notify = false)
     {
         global $sugar_config, $mod_strings;
+        
+        //Nhat code https://trello.com/c/rCLPLWbM/
+        $db = DBManagerFactory::getInstance();
+        $db->query("ALTER TABLE aos_products DROP COLUMN number");
+        $db->query("ALTER TABLE aos_products ADD COLUMN number INT");
+        $sql_set_count = "SET @count = 0;";
+        $result = $db->query($sql_set_count);
+        $sql_number = "UPDATE `aos_products` SET number = @count:=@count+1 WHERE deleted != 1 ORDER BY date_entered ASC";
+        $result = $db->query($sql_number);
+        
+        if (empty($this->id) || $this->new_with_id || empty($this->number)){
+			if($sugar_config['dbconfig']['db_type'] == 'mssql'){
+				$this->number = $this->db->getOne("SELECT MAX(CAST(number as INT))+1 FROM aos_products");
+			} else {
+				$this->number = $this->db->getOne("SELECT MAX(CAST(number as UNSIGNED))+1 FROM aos_products");
+			}
+		}
 
         if (isset($_POST['deleteAttachment']) && $_POST['deleteAttachment'] == '1') {
             $this->product_image = '';

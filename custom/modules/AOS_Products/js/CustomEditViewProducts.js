@@ -1,7 +1,7 @@
 $(function () {
     'use strict';
     $( document ).ready(function() {
-
+        $('#accounts_aos_products_1_name').closest('.edit-view-row-item').find('div[data-label="LBL_ACCOUNTS_AOS_PRODUCTS_1_FROM_ACCOUNTS_TITLE"]').html('<br>Product Brand:');
         $("#SAVE").after(
             ' <button style="background:#009acf;" type="button" id="CRUD_Xero_Products" class="button CRUD_Xero_Products" title="Create And Update Xero Products" onClick="SUGAR.CRUD_Xero_Products(this);" >Create & Update Xero <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>'
         );
@@ -174,7 +174,12 @@ $(function () {
                 }
             }); 
         }
-
+        //Nhat code https://trello.com/c/luUR9WQ4/
+        $("#number").prop("disabled", true);; // disable product input field
+        let productCategoryValue = $("#aos_product_category_name").val(); 
+        if (productCategoryValue != "Solar Panels" || productCategoryValue != "Solar") {
+          $("#solar_category_c").parent().parent().css("display", "none");
+        }
     });
 
 });

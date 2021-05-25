@@ -238,7 +238,10 @@
         //product methven
         $type_shipping = "";
         $products_title = array();
+        $products_clone = [];
         foreach($products as $product){
+            $title = explode('-',$product['title']);
+            $product['title'] = trim($title[0]);
             if($product['title'] == 'ValveCosy'){
                 array_push($products_title,'Valvecosy Insulator');
                 $new_quote->name = $bean->first_name .' ' .$bean->last_name .' ' .$bean->primary_address_city.' ' .$bean->primary_address_state.' ValveCosy' ;
@@ -247,6 +250,7 @@
             }else{
                 array_push($products_title,$product['title']);
             }
+            array_push($products_clone,$product);
         }
         if( $ship_method_id == "1"){
             array_push($products_title,"Methven Shipping and Handling Standard");
@@ -305,10 +309,10 @@
             if($row['part_number'] == 'Australia_Post_Standard' || $row['part_number'] == 'Australia_Post_Express' || $row['part_number'] == 'Pure_Electric_Promo_Code'){
                 $product_line->product_qty = 1; 
             }else{
-                foreach ($products as $key => $value) {
+                foreach ($products_clone as $key => $value) {
                     if($value['title'] == $row['name'] || $value['title'] == 'ValveCosy'){
                         $product_line->product_qty = (int) $products[$key]['quantity'] ; 
-                        $check_qty = (int) $products[$key]['quantity'] ;
+                        $check_qty = (int) $products_clone[$key]['quantity'] ;
                     }
                 }
             }

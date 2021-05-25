@@ -59,10 +59,10 @@ $(function () {
         if($("#inverter_type_"+index).val().indexOf("3P") >= 0){
             var choose = confirm("Change site to 3P");
             if(choose){
-                $("#meter_phase_c").val(3);
+                $("#phase").val("Three Phases");
                 SUGAR.ajaxUI.showLoadingPanel();
                 setTimeout(function() {
-                    var build_url_quote = "?entryPoint=updateQuoteToSGQuote&meter_phase_c="+encodeURIComponent($("#meter_phase_c").val())+"&type=updateMeterPhase&record="+ encodeURIComponent($('input[name="record"]').val())+"&quoteSG_ID="+encodeURIComponent($("#solargain_quote_number_c").val());
+                    var build_url_quote = "?entryPoint=updateQuoteToSGQuote&meter_phase_c="+encodeURIComponent($("#phases option:selected").attr("data-value-item"))+"&type=updateMeterPhase&record="+ encodeURIComponent($('input[name="record"]').val())+"&quoteSG_ID="+encodeURIComponent($("#solargain_quote_number_c").val());
                     $.ajax({
                         url: build_url_quote,
                         type : 'POST',
@@ -428,7 +428,7 @@ $(function () {
     }
 
     function init(state,installYear){
-        var panel_type = ['','Jinko Tiger P-type Mono 370',/*'Jinko 330W Mono PERC HC',*/'Q CELLS Q.MAXX-G3 385W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W','Sunpower P3 325 BLACK'*/'Sunpower P3 370 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
+        var panel_type = ['','Jinko Tiger N-type Mono 370',/*'Jinko 330W Mono PERC HC',*/'Q CELLS Q.MAXX-G3 385W',/*'Longi Hi-MO X 350W''Q CELLS Q.MAXX 330W''Q CELLS Q.PEAK DUO G6+ 350W','Sunpower P3 325 BLACK'*/'Sunpower P3 370 BLACK',/*'Sunpower X22 360W',*/'Sunpower Maxeon 3 400W'/*'Sunpower Maxeon 2 350','Sunpower Maxeon 3 395'*/];
         var inverter_type = ['','Primo 3','Primo 4','Primo 5','Primo 6','Primo 8.2','Symo 5','Symo 6','Symo 8.2','Symo 10','Symo 15','SYMO 20','S Edge 3G','S Edge 5G','S Edge 6G','S Edge 8G','S Edge 8 3P','S Edge 10G','IQ7 plus',/*'IQ7',*/'IQ7X',/*'Growatt 3','Growatt 5','Growatt 6','Growatt8','Growatt 8.2',*/'Sungrow 3','Sungrow 5','Sungrow 8','Sungrow 10 3P','Sungrow 15 3P'];
         var extra_1 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
         var extra_2 = ["","Fro. Smart Meter (1P)","Fro. Smart Meter (3P)","Fronius Service Partner Plus 10YR Warranty", "Switchboard UPG", "ENPHS Envoy-S Met.", "SE Smart Meter", "SE Wifi",'Sungrow Smart Meter (1P)','Sungrow Three Phase Smart Meter DTSU666'/*,'Sungrow Smart Meter (3P)'*/];
@@ -593,8 +593,8 @@ $(function () {
             case 'Sunpower Maxeon 3 400W':
                 panel_type = 'Sunpower Maxeon 3 400';
                 break;
-            case 'Jinko Tiger P-type Mono 370':
-                panel_type = 'Jinko 370W Tiger P-type JKM370M-6HLM';
+            case 'Jinko Tiger N-type Mono 370':
+                panel_type = 'Jinko 370W Tiger N-type JKM370N-6TL3';
                 break;
         }
 
@@ -658,8 +658,8 @@ $(function () {
             case 'Sunpower Maxeon 3 400W':
                 panel_type = 'Sunpower Maxeon 3 400';
                 break;
-            case 'Jinko Tiger P-type Mono 370':
-                panel_type = 'Jinko 370W Tiger P-type JKM370M-6HLM';
+            case 'Jinko Tiger N-type Mono 370':
+                panel_type = 'Jinko 370W Tiger N-type JKM370N-6TL3';
                 break;
         }
         
@@ -1203,10 +1203,12 @@ $(function () {
 
     function action_changed_extra(index){
         if($("#inverter_type_"+index).val().toLowerCase().indexOf('primo ') >= 0 ){
-            if($("#meter_phase_c").val() == '1'){
+            if($("#phases").val() == 'Single Phase'){
                 $("#extra_1_"+index).val('Fro. Smart Meter (1P)'); 
-            }else if($("#meter_phase_c").val() == '3'){
+            }else if($("#phases").val() == 'Three Phases'){
                 $("#extra_1_"+index).val('Fro. Smart Meter (3P)');
+            }else{
+                
             }
             // $("#extra_2_"+index).val('Fronius Service Partner Plus 10YR Warranty');
             $("#extra_2_"+index).val('');
@@ -1277,7 +1279,7 @@ $(function () {
             build_url_quote_price += '&state='+ encodeURIComponent($("#install_address_state_c").val());
         }
         var option_models =    {
-                                'Jinko Tiger P-type Mono 370': '195',
+                                'Jinko Tiger N-type Mono 370': '196',
                                 // 'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
                                 //'Longi Hi-MO X 350W':'162',
                                 // 'Q CELLS Q.MAXX 330W':'156',

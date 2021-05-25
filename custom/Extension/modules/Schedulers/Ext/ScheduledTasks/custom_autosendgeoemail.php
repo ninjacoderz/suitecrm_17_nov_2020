@@ -599,7 +599,7 @@ function config_sendGeoEmail_type_is_installer($invoice_id,$email_type){
      */
     $emailTemplate = BeanFactory::getBean(
         'EmailTemplates',
-        '965f4158-7b03-c91f-6f68-5f69b005cc36'
+        '6b4a9555-3fad-266b-095f-5f69a004a7a9'
     );
     $emailTemplate->subject = str_replace("STCs/VEECs",$request['geo_name'],$emailTemplate->subject);
     $emailTemplate->subject = str_replace("\$productType",$request['productType'],$emailTemplate->subject);

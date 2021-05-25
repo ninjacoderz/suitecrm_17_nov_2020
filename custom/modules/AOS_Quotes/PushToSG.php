@@ -209,7 +209,7 @@ function update_solar_quote($SGquote_ID, $quoteSuite) {
   }
   //THIENPB UPDATE
   $option_models = array(
-    'Jinko Tiger P-type Mono 370' => '195',
+    'Jinko Tiger N-type Mono 370' => '196',
     //   'Jinko 370W Cheetah Plus JKM370M-66H' => '171',
       // 'Q CELLS Q.MAXX 330W' => '156',
       'Q CELLS Q.MAXX-G3 385W' => '202',

@@ -96,7 +96,11 @@ $account->save();
 
     if($type_button == 'convert_sanden_button'){
         $quote = new AOS_Quotes();
-        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden';  
+        if(empty($bean->account_name)){
+            $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden';  
+        }else{
+            $quote->name = trim($bean->account_name," ").' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden';  
+        }
         $quote->name = str_replace("&rsquo;","'",$quote->name);
         $quote->quote_type_c = 'quote_type_sanden';
         
@@ -264,7 +268,11 @@ $account->save();
     //create Daikin Quote
     if($type_button == 'convert_daikin_button'){
         $quote = new AOS_Quotes();
-        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Daikin';
+        if(empty($bean->account_name)){
+            $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Daikin';
+        }else{
+            $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Daikin';
+        }
         $quote->name = str_replace("&rsquo;","'",$quote->name);
         $quote->quote_type_c = 'quote_type_daikin';
         $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -424,7 +432,11 @@ $account->save();
     //create Methven Quote
     if($type_button == 'convert_mathven_button'){
         $quote = new AOS_Quotes();
-        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Methven' ;
+        if(empty($bean->account_name)){
+            $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Methven' ;
+        }else{
+            $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Methven';
+        }
         $quote->name = str_replace("&rsquo;","'",$quote->name);
         $quote->quote_type_c = 'quote_type_methven';
         $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -440,7 +452,11 @@ $account->save();
     //create solar Quote
     if($type_button == 'convert_solar_button' && $product_type == "quote_type_solar"){
         $quote = new AOS_Quotes();
-        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ")  .' Solar';
+        if(empty($bean->account_name)){
+            $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ")  .' Solar';
+        }else{
+            $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Solar';
+        }
         $quote->name = str_replace("&rsquo;","'",$quote->name);
         $quote->quote_type_c = 'quote_type_solar';
         $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -475,7 +491,11 @@ $account->save();
     //create solar Quote
     if($type_button == 'convert_solar_button' && $product_type == "quote_type_tesla"){
         $quote = new AOS_Quotes();
-        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Tesla';
+        if(empty($bean->account_name)){
+            $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Tesla';
+        }else{
+            $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Tesla';
+        }
         $quote->name = str_replace("&rsquo;","'",$quote->name);
         $quote->quote_type_c = 'quote_type_tesla';
         $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -498,7 +518,11 @@ $account->save();
     //Create Convert Off Grid Quote
     if($type_button == 'convert_off_grid_button'){
         $quote = new AOS_Quotes();
-        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Off Grid' ;
+        if(empty($bean->account_name)){
+            $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Off Grid' ;
+        }else{
+            $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Off Grid';
+        }
         $quote->name = str_replace("&rsquo;","'",$quote->name);
         $quote->quote_type_c = 'quote_type_off_grid_system';
         $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -1437,7 +1461,7 @@ function update_solar_quote($SGquote_ID, $quoteSuite) {
     }
     //THIENPB UPDATE
     $option_models = array(
-        'Jinko Tiger P-type Mono 370' => '195',
+        'Jinko Tiger N-type Mono 370' => '196',
         // 'Jinko 370W Cheetah Plus JKM370M-66H' => '171',
         'Q CELLS Q.MAXX-G3 385W'=> '202',
         // 'Q CELLS Q.PEAK DUO G6+ 350W' => '173',

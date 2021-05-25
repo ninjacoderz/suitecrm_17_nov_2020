@@ -275,7 +275,119 @@ $(function () {
         $(document).find('#install_address_state_c').parent().append('<p><a target="_blank" href="https://reps.escosa.sa.gov.au/Account/Login.aspx"><span>open SA REPS</span></a></p>');
     }
     
+    //Nhat code create Edit Status
+    $("#stage").after(
+        `<div id="dialog-form" title="Edit Status" class="yui-hidden"><span id='whatup'></span></div>`,
+        '&nbsp;<button type="button" id="config_status" class="button config_status" title="">CONFIG STATUS<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>'
+    );
 
+    let dialog = $("#dialog-form").dialog({
+        dialogClass: "ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle",
+        autoOpen: false,
+        height: 400,
+        width: 790,
+        modal: true,
+        buttons: [
+        {
+            text: "CLOSE",
+            class: "button ",
+            click: function () {
+            $(this).dialog("close");
+            },
+        },
+        ],
+        close: function () {
+          /*Remove old status content on dialog*/
+          $("#status_content").remove();
+        },
+    });
+
+    let status_render = () => {
+        let itemList;
+        for (let i = 0; i < $(".draggable").length; i++) {
+          itemList = decodeURI($(`input[id='value_${$(".draggable")[i].id}']`).attr("value"));
+          $("#stage").append(`<option label="${itemList}" value=${$(".draggable")[i].id}>${itemList}</option>`);
+        }
+    };
+    /*get libary*/
+    $("#content").prepend(`<script type="text/javascript" src="modules/ModuleBuilder/javascript/JSTransaction.js"></script>
+                            <script>
+                                var jstransaction = new JSTransaction();
+                                if (SUGAR.themes.tempHideLeftCol) {
+                                SUGAR.themes.tempHideLeftCol();
+                                }
+                            </script>
+                            <link rel="stylesheet" type="text/css" href="include/ytree/TreeView/css/folders/tree.css" />
+                            <script type="text/javascript" src="modules/ModuleBuilder/javascript/studio2.js"></script>
+                            <script type="text/javascript" src="modules/ModuleBuilder/javascript/studio2PanelDD.js"></script>
+                            <script type="text/javascript" src="modules/ModuleBuilder/javascript/studio2RowDD.js"></script>
+                            <script type="text/javascript" src="modules/ModuleBuilder/javascript/studio2FieldDD.js"></script>
+                            <script type="text/javascript" src="modules/ModuleBuilder/javascript/studiotabgroups.js"></script>
+                            <script type="text/javascript" src="modules/ModuleBuilder/javascript/studio2ListDD.js"></script>
+                            <script type="text/javascript" language="Javascript" src="modules/ModuleBuilder/javascript/ModuleBuilder.js"></script>
+                            <script type="text/javascript" language="Javascript" src="modules/ModuleBuilder/javascript/SimpleList.js"></script>
+                            <script type="text/javascript" src="modules/ModuleBuilder/javascript/JSTransaction.js"></script>
+                            <script type="text/javascript" src="include/javascript/tiny_mce/tiny_mce.js"></script>
+                            <link rel="stylesheet" type="text/css" href="modules/ModuleBuilder/tpls/MB.css" />`);
+
+    $("#config_status").on("click", (e) => {
+        $.ajax({
+        url: "?to_pdf=1&sugar_body_only=1&module=ModuleBuilder&action=dropdown&dropdown_name=quote_stage_dom",
+        method: "POST",
+        }).done((data) => {
+          let jsonData = JSON.parse(data);
+          let statusContent = jsonData.east2.content;
+          /*Add status content on dialog*/
+          $("#whatup").before(`<div id="status_content" class="content">
+                                <div id="status_pagecontent" class=".pagecontent">
+                                <input id="yui-history-field" type="hidden" />
+                                <div class="ytheme-gray yui-layout" id="mblayout" style="position: relative; overflow: visible">
+                                    <div class="yui-layout-doc">
+                                    <div id="yui-gen0" class="yui-layout-unit yui-layout-unit-center yui-layout-scroll" style="position: absolute; top: 0px; left: 25px">
+                                        <div class="yui-layout-wrap" id="yui-gen1" style="height: auto; top: 0px; left: 0px">
+                                        <div class="yui-layout-bd yui-layout-bd-nohd yui-layout-bd-noft" style="top: 0px">
+                                        <div id="mbcenter"></div>
+                                        </div>
+                                        <div id="mbtabs" class="yui-navset yui-navset-top">
+                                            <div class="yui-content" style="overflow-y: auto">
+                                            <div class="">
+                                                <div class="bodywrapper">
+                                                <script>
+                                                    ModuleBuilder.scriptTest = true;
+                                                </script>
+                                                ${statusContent}
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>`);
+
+          $("#saveBtn").on("click", function (e) {
+            $.ajax({
+              url: `?module=ModuleBuilder&action=savedropdown&type=studio`,
+              data: `view_package=studio&list_value=${$("#list_value").val()}&view_module=AOS_Quotes&dropdown_name=quote_stage_dom&dropdown_lang=en_us`,
+              type: "POST",
+              beforeSend: function () {
+                /*Cancel delete confirm*/
+                if (!$("#list_value").val()) {
+                  return false;
+                } else {
+                  $("#stage").empty(); /*Delete old select field*/
+                  status_render(); /*Render new select field*/
+                }
+              },
+            }).done(function () {              
+              confirm("Done"); /*Alert when done*/
+            });
+          });
+        });
+        dialog.dialog("open");
+    });
 
     //render_info_contact();
     var customer_phone_number;
@@ -736,13 +848,13 @@ $(document).ready(function () {
             title="Copy '+install_addr+'" onclick="$(document).copy_email_address(this);"\
             style="cursor: pointer; position: relative;display: inline-block;border-bottom: 1px dotted black;" data-toggle="tooltip">&nbsp;<span class="glyphicon glyphicon-copy"></span>\
             <span class="tooltiptext" style="display:none;width:200px;background:#94a6b5;color:#fff;text-align: center;border-radius: 6px;padding: 5px 0; position: absolute;z-index: 1;">Copied '+install_addr+'</span></a>')
-            $('#pvwatts_nrel_gov_c').parent().append("<a id='redirecttoPVwatts' style='cursor:pointer'>Open NREL's PVWatts® Calculator</a>");//href='https://pvwatts.nrel.gov"+data+"'
+            $('#pvwatts_nrel_gov_c').parent().append("<a  id='redirecttoPVwatts' style='cursor:pointer'>Open NREL's PVWatts® Calculator</a>");// target='_blank' href='https://pvwatts.nrel.gov/pvwatts.php?myloc="+install_addr+"'
             $('#redirecttoPVwatts').click( function (){
                 $.ajax({
                     url: "index.php?entryPoint=APIrederectToPVwatts&mylocation="+install_addr,
                     success: function (data) {
-                        if( data == "/pvwatts.php"){
-                            window.open('https://pvwatts.nrel.gov'+data, '_blank');
+                        if( data == "/pvwatts.php" || data == "/index.php" ){
+                            window.open("https://pvwatts.nrel.gov/pvwatts.php?myloc="+install_addr, '_blank');
                         }
                     },
                 });
@@ -3237,7 +3349,7 @@ $(document).ready(function () {
         //Travel option and Price option
         var count_option = 0;
         var option_models = {
-            'Jinko Tiger P-type Mono 370': '195',
+            'Jinko Tiger N-type Mono 370': '196',
             // 'Jinko 370W Cheetah Plus JKM370M-66H' : '171',
             //'Longi Hi-MO X 350W':'162',
             // 'Q CELLS Q.MAXX 330W':'156',

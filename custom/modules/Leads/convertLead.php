@@ -114,7 +114,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
                 if($_REQUEST['create_sanden_quote_c'] == '1' &&  $bean->create_sanden_quote_num_c == ''){
                     $quote = new AOS_Quotes();
-                    $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ").' Sanden';
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ").' Sanden';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden';
+                    }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_sanden';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -260,14 +264,19 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 //create Sanden Quote FQS     
                 if($_REQUEST['create_solar_quote_fqs_c'] == '1' &&  $bean->create_solar_quote_fqs_num_c == ''){
                     $quote = new AOS_Quotes();
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ").' Sanden';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden';
+                    }
                     if($_REQUEST['sanden_fqs_300'] !== ''){
-                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden 300FQS';
+                        $quote->name = $quote->name.' 300FQS';
                     }
                     if($_REQUEST['sanden_fqs_250'] !== ''){
-                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden 250FQS';
+                        $quote->name = $quote->name.' 250FQS';
                     }
                     if($_REQUEST['sanden_fqs_315'] !== ''){
-                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ")  .' Sanden 315FQS';
+                        $quote->name = $quote->name.' 315FQS';
                     }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_sanden';
@@ -450,7 +459,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 //create Sanden Quote FQV     
                 if($_REQUEST['create_solar_quote_fqv_c'] == '1' &&  $bean->create_solar_quote_fqv_num_c == ''){
                     $quote = new AOS_Quotes();
-                    $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden FQV';
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden FQV';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Sanden FQV';
+                    }
                     $quote->quote_type_c = 'quote_type_sanden';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
                     $quote->save();
@@ -602,7 +615,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 //create Daikin Quote
                 if($_REQUEST['create_daikin_quote_c'] == '1' && $bean->create_daikin_quote_num_c == ''){
                     $quote = new AOS_Quotes();
-                    $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Daikin';
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Daikin';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Daikin';
+                    }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_daikin';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -788,7 +805,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 //create Daikin Nexura Quote
                 if($_REQUEST['create_daikin_nexura_quote_c'] == '1' && $bean->daikin_nexura_quote_num_c == ''){
                     $quote = new AOS_Quotes();
-                    $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ")  .' Daikin Nexura';
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ")  .' Daikin Nexura';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Daikin Nexura';
+                    }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_nexura';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -960,7 +981,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 //create Methven Quote
                 if($_REQUEST['create_methven_quote_c'] == '1' && $bean->create_methven_quote_num_c == ''){
                     $quote = new AOS_Quotes();
-                    $quote->name = $bean->first_name.' ' .$bean->last_name .' ' .$bean->primary_address_city.' ' .$bean->primary_address_state .' Methven' ;
+                    if(empty($bean->account_name)){
+                        $quote->name = $bean->first_name.' ' .$bean->last_name .' ' .$bean->primary_address_city.' ' .$bean->primary_address_state .' Methven' ;
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Methven';
+                    }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_methven';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -1048,7 +1073,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 //create solar Quote
                 if($_REQUEST['create_solar_quote_c'] == '1' && $bean->create_solar_quote_num_c == ''){
                     $quote = new AOS_Quotes();
-                    $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ")  .' Solar';
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ")  .' Solar';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Solar';
+                    }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_solar';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -1079,7 +1108,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 // create tesla Quote 
                 if($_REQUEST['create_tesla_quote_c'] == '1' && $bean->create_tesla_quote_num_c == '' ){
                     $quote = new AOS_Quotes();
-                    $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Tesla';
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Tesla';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Tesla';
+                    }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_tesla';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -1101,7 +1134,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
                 // create off grid Quote
                 if($_REQUEST['create_off_grid_quote_c'] == '1' && $bean->create_off_grid_button_num_c == ''){
                     $quote = new AOS_Quotes();
-                    $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .'  Off Grid';
+                    if(empty($bean->account_name)){
+                        $quote->name = trim($bean->first_name," ") .' '.trim($bean->last_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .'  Off Grid';
+                    }else{
+                        $quote->name = trim($bean->account_name," ") .' '.trim($bean->primary_address_city," ").' '.trim($bean->primary_address_state," ") .' Off Grid';
+                    }
                     $quote->name = str_replace("&rsquo;","'",$quote->name);
                     $quote->quote_type_c = 'quote_type_off_grid_system';
                     $quote = convert_info_basic_quote($quote,$bean ,$contact ,$account);
@@ -2224,7 +2261,7 @@ function update_solar_quote($SGquote_ID, $quoteSuite) {
         }
         //THIENPB UPDATE
         $option_models = array(
-            'Jinko Tiger P-type Mono 370' => '195',
+            'Jinko Tiger N-type Mono 370' => '196',
             // 'Jinko 370W Cheetah Plus JKM370M-66H' => '171',
             // 'Q CELLS Q.MAXX 330W' => '156',
             'Q CELLS Q.MAXX-G3 385W'=> '202',

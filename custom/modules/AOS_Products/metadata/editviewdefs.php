@@ -131,7 +131,12 @@ array (
             'name' => 'id_product_drupal',
             'label' => 'LBL_ID_PRODUCT_DRUPAL',
           ),
-          1 => '',
+          1 => 
+          array(
+            'name' => 'number',
+            'label' => 'LBL_PRODUCT_NUMBER',
+            'customCode' => '{$fields.number.value}',
+          ),
         ),
         7 => 
         array (
