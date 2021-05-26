@@ -23,6 +23,12 @@ if(!($current_hour > 7 && $current_hour < 19)) {
 }else{
     $schedule_time = time();
 }
+// if( (int) $current_hour >= 9 && (int) $current_hour <= 13){
+//     $bean->assigned_user_name = 'Michael Golden';
+//     $bean->assigned_user_id = "71adfe6a-5e9e-1fc2-3b6c-6054c8e33dcb"; //MGolden
+//     $bean->save();
+// }
+send_sms_notication_for_assigned_user($bean,$array_products);
 // internal notes
 $internal_notes = new pe_internal_note();
 $internal_notes->name = $bean->created_by_name;
@@ -2241,4 +2247,36 @@ function send_email_notication_for_customer($lead, $emailTemplateID){
 
     $email->save();
     return $email_id ;
+}
+function send_sms_notication_for_assigned_user($lead,$array_products){
+    global $sugar_config;
+    $smsTemplate = BeanFactory::getBean(
+        'pe_smstemplate',
+        '2a1008d6-f9e4-9b6a-d737-60adca4e3166' 
+    );
+    $user_assign = new User();
+    $user_assign->retrieve($lead->assigned_user_id);
+    $phone_assigned = $user_assign->phone_mobile;
+
+    foreach ($array_products as $key_product => $value_product) {
+        if( $value_product != "" ){
+            $productType .= $value_product.", ";
+        }
+    }
+    // $link_leads = 'https://suitecrm.pure-electric.com.au/index.php?module=Leads&action=EditView&record='.$lead->id;
+    $description = $smsTemplate->description;
+    $body = $smsTemplate->body_c;
+
+    $body = str_replace("\$assigned_first_name", $user_assign->first_name, $body);
+    $body = str_replace("\$customer_first_name", $lead->first_name, $body);
+    $body = str_replace("\$customer_last_name", $lead->first_name, $body);
+    $body = str_replace("\$lead_number", $lead->number, $body);
+    $body = str_replace("\$address_subub", $lead->primary_address_city, $body);
+    $body = str_replace("\$address_state", $lead->primary_address_state, $body);
+    $body = str_replace("\$productType", $productType, $body);
+
+    $phone_assigned = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $phone_assigned));
+    $phone_assigned = preg_replace("/^61/", "+61", $phone_assigned);
+  
+    exec("cd ".$sugar_config["message_command_dir"]."; php send-message.php sms ".$phone_assigned.' "'.$description.'<br>'.$body.'"');
 }
