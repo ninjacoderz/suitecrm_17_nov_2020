@@ -778,7 +778,6 @@
     self.sendEmail = function (e) {
       "use strict";
       
-      return false;
       e.preventDefault();
       $(this).find('[name=action]').val('send');
       if (self.validate()) {
