@@ -178,7 +178,7 @@ $(function () {
         $("#number").prop("disabled", true);; // disable product input field
         dynamicSolarCategory();
         dynamicCapacityLabel();
-        YAHOO.util.Event.addListener(["aos_product_category_id", "billing_contact_id", "solar_category_c"], "change", function(){
+        YAHOO.util.Event.addListener(["aos_product_category_id", "solar_category_c"], "change", function(){
             setTimeout(function(){
                 dynamicSolarCategory();
                 dynamicCapacityLabel();
