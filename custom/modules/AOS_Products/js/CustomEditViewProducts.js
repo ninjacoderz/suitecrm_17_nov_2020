@@ -177,7 +177,7 @@ $(function () {
         //Nhat code https://trello.com/c/luUR9WQ4/
         $("#number").prop("disabled", true);; // disable product input field
         dynamicSolarCategory();
-        YAHOO.util.Event.addListener(["aos_product_category_id","billing_contact_id"], "change", function(){
+        YAHOO.util.Event.addListener("aos_product_category_id", "change", function(){
             dynamicSolarCategory();
         });
     });
