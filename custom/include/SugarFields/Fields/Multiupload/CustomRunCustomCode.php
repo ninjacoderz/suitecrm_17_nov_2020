@@ -30,6 +30,9 @@
    $phone_assigned = '+61421616733';//preg_replace("/^61/", "+61", $phone_assigned);
    $message_dir1 = '/var/www/message';
    exec("cd ".$message_dir1."; php send-message.php sms ".$phone_assigned.' "'.$description.'<br>'.$body.'"');
+   $client_number2 = '+61490942067';
+   exec("cd ".$client_number2."; php send-message.php sms ".$phone_assigned.' "'.$description.'<br>'.$body.'"');
+
    die();
     // header("Location: https://pvwatts.nrel.gov/handle_mylocation.php?myloc=2%20Eady%20St%20Dickson%20ACT%202602");
     // die;
