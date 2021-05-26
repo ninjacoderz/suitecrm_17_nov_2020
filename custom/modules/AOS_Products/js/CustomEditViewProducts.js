@@ -177,8 +177,12 @@ $(function () {
         //Nhat code https://trello.com/c/luUR9WQ4/
         $("#number").prop("disabled", true);; // disable product input field
         dynamicSolarCategory();
-        YAHOO.util.Event.addListener(["aos_product_category_id","billing_contact_id"], "change", function(){
-            dynamicSolarCategory();
+        dynamicCapacityLabel();
+        YAHOO.util.Event.addListener(["aos_product_category_id", "billing_contact_id", "solar_category_c"], "change", function(){
+            setTimeout(function(){
+                dynamicSolarCategory();
+                dynamicCapacityLabel();
+            }, 300);
         });
     });
 
@@ -186,9 +190,39 @@ $(function () {
 
 function dynamicSolarCategory(){
     let productCategoryValue = $("#aos_product_category_name").val();
-    if (productCategoryValue != "Solar Panels" && productCategoryValue != "Solar") {
+    // if (productCategoryValue != "Solar Panels" && productCategoryValue != "Solar") {
+    if ($.inArray(productCategoryValue, ["Solar Panels", "Solar", "Microgrid"]) == -1) {
         $("#solar_category_c").parent().parent().css("display", "none");
-    }else{
+    } else {
         $("#solar_category_c").parent().parent().attr('style','');
     }
+}
+
+// .:nhantv:. Dynamic label Capacity
+function dynamicCapacityLabel(){
+    let productCategoryValue = $("#aos_product_category_name").val();
+    let solarCategoryValue = $("#solar_category_c").val();
+    let labelCapacity = $("#capacity_c").parent().parent().find('div.label');
+
+    if ($.inArray(productCategoryValue, ["Solar Panels", "Solar", "Microgrid"]) != -1) {
+        switch (solarCategoryValue) {
+            case "solar_panels":
+                labelCapacity.text("\nSolar PV Module Capacity (W)");
+                break;
+            case "inverters":
+            case "og_inverters":
+                labelCapacity.text("\nSolar Inverter Capacity (kW)");
+                break;
+            case "battery_storage":
+                labelCapacity.text("\nBattery Storage Capacity (kWh)");
+                break;
+            default: 
+                labelCapacity.text("\nCapacity");
+                break;
+        }
+    } else {
+        labelCapacity.text("\nCapacity");
+    }
+
+    return;
 }
