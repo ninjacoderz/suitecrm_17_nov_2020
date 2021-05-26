@@ -777,6 +777,7 @@
      */
     self.sendEmail = function (e) {
       "use strict";
+      
       e.preventDefault();
       $(this).find('[name=action]').val('send');
       if (self.validate()) {
@@ -1759,6 +1760,8 @@
               var l_id = $(this).siblings( "select" ).attr("id");
               $(this).parent().find('[name="' + inputName + '"]').attr('name', removeName);
               if (isDraft) {
+                removeDraftAttachmentInput.val(removeDraftAttachmentInput.val() + '::' + l_id);
+              } else {
                 removeDraftAttachmentInput.val(removeDraftAttachmentInput.val() + '::' + l_id);
               }
            }else {
