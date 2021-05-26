@@ -1,4 +1,54 @@
 <?php
+   $record_lead_id = trim('a32f96d4-2a80-dc71-10cc-5e142cca51bd');
+    $products = 'Sanden,solar,methven,';
+$lead = new Lead();
+   $lead->retrieve($record_lead_id);
+   $smsTemplate = BeanFactory::getBean(
+       'pe_smstemplate',
+       '357303ad-8b3b-5f42-b9c5-60ae1a915a22' 
+   );
+   $user_assign = new User();
+   $user_assign->retrieve($lead->assigned_user_id);
+//    $phone_assigned = $user_assign->phone_mobile;
+
+   foreach ($array_products as $key_product => $value_product) {
+       if( $value_product != "" ){
+           $productType .= $value_product.", ";
+       }
+   }
+   $link_leads = 'https://suitecrm.pure-electric.com.au/index.php?module=Leads&action=EditView&record='.$lead->id;
+   $description = $smsTemplate->description;
+   $body = $smsTemplate->body_c;
+
+   $body = str_replace("\$assigned_first_name", $user_assign->first_name, $body);
+   $body = str_replace("\$customer_first_name", $lead->first_name, $body);
+   $body = str_replace("\$customer_last_name", $lead->first_name, $body);
+   $body = str_replace("\$lead_number", $lead->number, $body);
+   $body = str_replace("\$address_subub", $lead->primary_address_city, $body);
+   $body = str_replace("\$address_state", $lead->primary_address_state, $body);
+   $body = str_replace("\$productType", $productType, $body);
+
+//    $phone_assigned = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $phone_assigned));
+   $phone_assigned = '+61421616733';//preg_replace("/^61/", "+61", $phone_assigned);
+   $message_dir1 = '/var/www/message';
+   exec("cd ".$message_dir1."; php send-message.php sms ".$phone_assigned.' "'.$description.'<br>'.$body.'"');
+   $client_number2 = '+61490942067';
+   exec("cd ".$client_number2."; php send-message.php sms ".$phone_assigned.' "'.$description.'<br>'.$body.'"');
+
+   die();
+    // header("Location: https://pvwatts.nrel.gov/handle_mylocation.php?myloc=2%20Eady%20St%20Dickson%20ACT%202602");
+    // die;
+    // $quote = new AOS_Quotes();
+    // $quote->retrieve('92252f14-4f95-9578-c236-6063b6f5b3b5');
+    // $saleperson = new User();
+    // $saleperson->retrieve($quote->assigned_user_id);
+    // echo $saleperson->email1;
+// $date = strtotime(); $dateAUS = date('m/d/Y H:i:s a', time());
+
+date_default_timezone_set('Australia/Melbourne');
+$dateAUS = date('H', time());
+echo $dateAUS; 
+die;
 $db = DBManagerFactory::getInstance();
 $sql = "SELECT DISTINCT calls_aos_quotes_1calls_ida as id FROM `calls_aos_quotes_1_c` WHERE `date_modified` >= '2020-06-25 04:50:53' AND `deleted` = 0";
 $ret = $db->query($sql);
