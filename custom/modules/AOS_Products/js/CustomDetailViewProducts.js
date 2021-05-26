@@ -40,7 +40,6 @@ function dynamicCapacityLabel(){
                 labelCapacity.text("\nCapacity");
                 break;
         }
-        $("#capacity_c").val('');
     } else {
         labelCapacity.text("\nCapacity");
     }

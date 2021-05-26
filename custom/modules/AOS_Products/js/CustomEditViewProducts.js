@@ -220,8 +220,6 @@ function dynamicCapacityLabel(){
                 labelCapacity.text("\nCapacity");
                 break;
         }
-        $("#capacity_c").trigger('focus');
-        $("#capacity_c").val('');
     } else {
         labelCapacity.text("\nCapacity");
     }
