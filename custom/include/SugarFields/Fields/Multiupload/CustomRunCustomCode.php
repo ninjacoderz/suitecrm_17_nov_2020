@@ -1,6 +1,8 @@
 <?php
    $record_lead_id = trim('a32f96d4-2a80-dc71-10cc-5e142cca51bd');
     $products = 'Sanden,solar,methven,';
+$lead = new Lead();
+   $lead->retrieve($record_lead_id);
    $smsTemplate = BeanFactory::getBean(
        'pe_smstemplate',
        '357303ad-8b3b-5f42-b9c5-60ae1a915a22' 
