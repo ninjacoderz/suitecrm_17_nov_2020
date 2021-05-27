@@ -878,6 +878,10 @@ if($_POST['to_module'] == "aos_invoice"){
         
         $mail->Body .= "<p><a href='https://suitecrm.pure-electric.com.au/index.php?entryPoint=converToInvoice&record=".$quote->id."' target='_blank'>Convert Invoice</a></p>";
         $mail->Body .= "<p>PE Sales Consultant: <strong>".$user->name."</strong></p>";
+        if($quote->quote_type_c == 'quote_type_sanden') {
+            $mail->Body .= "<p>Proposed Plumber Installer: <strong>".$quote->plumber_new_c."</strong> - Distance to Plumber: <strong>".$quote->distance_to_travel_c."</strong></p>";
+            $mail->Body .= "<p>Proposed Electrical Installer: <strong>".$quote->plumber_electrician_c."</strong> - Distance to Electrician: <strong>".$quote->distance_to_electrician_c."</strong></p>";
+        }
         $mail->Body .= $list_photos;
         email_notification_for_client($quote->account_firstname_c,$quote->account_lastname_c,$account->email1,$list_photos);
 
