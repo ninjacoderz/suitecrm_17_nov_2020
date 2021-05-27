@@ -153,6 +153,10 @@ array (
         array (
           'file' => 'custom/modules/AOS_Quotes/CustomOwnSolarPricing.js',
         ),
+        7 => 
+        array (
+          'file' => 'custom/modules/AOS_Quotes/CustomOffGridPricing.js',
+        ),
       ),
     ),
     'panels' => 
@@ -1269,13 +1273,7 @@ array (
         ),
         2 => 
         array (
-          0 => 
-          array (
-            'name' => 'pricing_option_type_c',
-            'studio' => 'visible',
-            'label' => 'LBL_PRICING_OPTION_TYPE_C',
-          ),
-          1 => '',
+          0 => ''
         ),
       ),
       'lbl_editview_panel9' => 
@@ -1313,7 +1311,12 @@ array (
       array (
         0 => 
         array (
-          0 => '',
+          0 => 
+          array (
+            'name' => 'offgrid_option_c',
+            'studio' => 'visible',
+            'label' => 'LBL_OFFGRID_OPTION',
+          ),
           1 => '',
         ),
       ),
