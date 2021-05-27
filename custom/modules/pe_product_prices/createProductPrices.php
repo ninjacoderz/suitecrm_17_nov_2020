@@ -9,6 +9,7 @@ if ($product->id) {
     $price->name = $product->name;
     $price->part_number = $product->part_number;
     $price->description = $product->description;
+    $price->product_id = $product->id;
     $price->save();
     echo trim($price->id);
 } else {
