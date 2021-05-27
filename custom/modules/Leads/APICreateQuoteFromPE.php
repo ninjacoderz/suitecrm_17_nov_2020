@@ -2269,7 +2269,7 @@ function send_sms_notication_for_assigned_user($lead,$array_products){
 
     $body = str_replace("\$assigned_first_name", $user_assign->first_name, $body);
     $body = str_replace("\$customer_first_name", $lead->first_name, $body);
-    $body = str_replace("\$customer_last_name", $lead->first_name, $body);
+    $body = str_replace("\$customer_last_name", $lead->last_name, $body);
     $body = str_replace("\$lead_number", $lead->number, $body);
     $body = str_replace("\$address_subub", $lead->primary_address_city, $body);
     $body = str_replace("\$address_state", $lead->primary_address_state, $body);
@@ -2278,5 +2278,5 @@ function send_sms_notication_for_assigned_user($lead,$array_products){
     $phone_assigned = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $phone_assigned));
     $phone_assigned = preg_replace("/^61/", "+61", $phone_assigned);
   
-    exec("cd ".$sugar_config["message_command_dir"]."; php send-message.php sms ".$phone_assigned.' "'.$description.'<br>'.$body.'"');
+    exec("cd ".$sugar_config["message_command_dir"]."; php send-message.php sms ".$phone_assigned.' "'.$description.' '.$body.'"');
 }
