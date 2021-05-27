@@ -1762,7 +1762,7 @@
               if (isDraft) {
                 removeDraftAttachmentInput.val(removeDraftAttachmentInput.val() + '::' + l_id);
               } else {
-                removeDraftAttachmentInput.val(removeDraftAttachmentInput.val() + '::' + l_id);
+                // removeDraftAttachmentInput.val(removeDraftAttachmentInput.val() + '::' + l_id);
               }
            }else {
               return;

@@ -327,7 +327,6 @@ $(function () {
                             <script type="text/javascript" language="Javascript" src="modules/ModuleBuilder/javascript/ModuleBuilder.js"></script>
                             <script type="text/javascript" language="Javascript" src="modules/ModuleBuilder/javascript/SimpleList.js"></script>
                             <script type="text/javascript" src="modules/ModuleBuilder/javascript/JSTransaction.js"></script>
-                            <script type="text/javascript" src="include/javascript/tiny_mce/tiny_mce.js"></script>
                             <link rel="stylesheet" type="text/css" href="modules/ModuleBuilder/tpls/MB.css" />`);
 
     $("#config_status").on("click", (e) => {
