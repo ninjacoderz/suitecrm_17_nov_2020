@@ -417,6 +417,20 @@ function calcEquipmentCost(currState){
     return cost;
 }
 
+// .:nhantv:. Calc Installation Cost
+function calcInstallationCost(currState){
+    let cost = 0;
+    // Microgrid Solar PV Supply and Install
+    cost += parseFloat(getAttributeFromName(extra_products[0], og_extra, "cost"));
+    // Microgrid Standard Install
+    cost += parseFloat(getAttributeFromName(extra_products[1], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
+    // Sunpower Split Panel Fee
+    if (currState.panel_type.toLowerCase().indexOf("sunpower") != -1) {
+        cost += parseFloat(getAttributeFromName(extra_products[2], og_extra, "cost"));
+    }
+    return cost;
+}
+
 // .:nhantv:. Get max panels
 function getMaxPanelAndTotalKw(currState, isTotalPanel){
     const ratio = 1.5;
@@ -578,6 +592,10 @@ async function generateOffgridItem(){
         let equipmentCost = calcEquipmentCost(currState);
         $('#sanden_supply_bill').val(parseFloat(roundTo90(equipmentCost)).formatMoney(2, ',', '.'));
         $('#sanden_supply_bill').trigger('change');
+        // Calc Installation Cost
+        let installationCost = calcInstallationCost(currState);
+        $('#electrician_bill').val(parseFloat(roundTo90(installationCost)).formatMoney(2, ',', '.'));
+        $('#electrician_bill').trigger('change');
     } catch(err) {
         console.log(err);
     } finally {
@@ -650,7 +668,7 @@ async function init_table_offgrid() {
         console.log(ex);
     }
 
-    let offgrid_pricing_table   = $('<div id="offgrid_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row" style="margin-bottom: 20px;"></div>');
+    let offgrid_pricing_table = $('<div id="offgrid_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row" style="margin-bottom: 20px;"></div>');
     let data = [
         ["Selected Option"
             ,"<input data-attr='1' type='checkbox' class='offgrid_option offgrid_pricing' name='offgrid_option' id='offgrid_option_1' style='margin-bottom:5px'> Option 1"
@@ -771,6 +789,7 @@ async function init_table_offgrid() {
     //css Table
     $(".offgrid_pricing td").css({"padding":"0px 5px"});
     $(".offgrid_pricing th").css({"padding":"0px 5px"});
+    $(".offgrid_pricing th:first-child").css({"width":"160px"});
     $(".offgrid_pricing select, .offgrid_pricing input[class*='offgrid_pricing']:not([type='checkbox'])").css({"width":"100%"});
 
     // Load Off-Grid Option

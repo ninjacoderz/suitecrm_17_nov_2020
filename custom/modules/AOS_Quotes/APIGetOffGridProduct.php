@@ -14,13 +14,14 @@ $data_return['battery_data'] = getDataByCategoryName($db, "Microgrid", "battery_
 // Get Accessories
 $data_return['accessory_data'] = getDataByCategoryName($db, "Microgrid", "accessories");
 // Get RE Generator
-$data_return['re_generator_data'] = getDataByCategoryName($db, "Microgrid", "re_generator");
+$data_return['re_generator_data'] = getDataByCategoryName($db, "Generator", "");
 
 // Return
 echo json_encode($data_return);
 
 function getDataByCategoryName($db, $category_name, $solar_category){
   $data = array();
+  $solar_condition = ($solar_category != "") ? "AND pc.solar_category_c = '". $solar_category ."'" : "";
   $sql = "SELECT p.id, p.name AS product_name
       , pc.short_name_c AS short_name
       , c.name AS category_name
@@ -37,9 +38,8 @@ function getDataByCategoryName($db, $category_name, $solar_category){
     ON p.aos_product_category_id = c.id
     LEFT JOIN aos_products_cstm pc
     ON p.id = pc.id_c
-    WHERE c.name = '". $category_name ."'
-    AND pc.solar_category_c = '". $solar_category ."'
-    AND pc.product_status_c = 'available'
+    WHERE c.name = '". $category_name ."'". $solar_condition .
+    "AND pc.product_status_c = 'available'
     ORDER BY pc.short_name_c ASC";
     
   $result = $db->query($sql);
