@@ -883,13 +883,31 @@
             $message_dir = '/var/www/message';
             $admin_name = "Paul";
 
-            $body_sms = "Hi ".$contact->first_name.", Thank you for your solar pricing request, we have sent your solar PV pricing options to your email inbox. Kind regards, Pure Electric";
+            if($_POST['sms_template'] != '') {
+                $body_sms =  trim(strip_tags($_POST['sms_template']));
+            } else {
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    // 'e6bb1903-be28-255f-31eb-60aef9387034' 
+                    'e887fbad-fd6d-00a4-0ec9-60af0f5812fe'
+                );
+                $body_sms = trim(strip_tags(parse_sms_template($smsTemplate,$contact->first_name)));
+            }
+
+
+            // $body_sms = "Hi ".$contact->first_name.", Thank you for your solar pricing request, we have sent your solar PV pricing options to your email inbox. Kind regards, Pure Electric";
             $body_sms .= "To firm the quote, upload photos via this link : https://pure-electric.com.au/pesolarform/confirm?quote-id=".$quote_id;
             $body_sms .= "To approve option of the quote via this link : https://pure-electric.com.au/confirm_option_acceptance?quote-id=".$quote_id;
 
             exec("cd " . $message_dir . "; php send-message.php sms " . $phone . ' "' . $body_sms . '"');
         }
 
+    }
+    function parse_sms_template($smsTemplate, $first_name)
+    {
+        $body =  $smsTemplate->body_c;
+        $body = str_replace("\$first_name", $first_name, $body);
+        return $body;
     }
     function upload_file_form_solar($quote_id){    
         global $sugar_config;
