@@ -32,12 +32,17 @@ array (
       'useTabs' => false,
       'tabDefs' => 
       array (
-        'LBL_ACCOUNT_INFORMATION' => 
+        'LBL_EDITVIEW_PANEL19' => 
         array (
           'newTab' => false,
           'panelDefault' => 'expanded',
         ),
-        'LBL_EDITVIEW_PANEL15' => 
+        'LBL_EDITVIEW_PANEL18' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_ACCOUNT_INFORMATION' => 
         array (
           'newTab' => false,
           'panelDefault' => 'expanded',
@@ -48,6 +53,16 @@ array (
           'panelDefault' => 'expanded',
         ),
         'LBL_EDITVIEW_PANEL10' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_EDITVIEW_PANEL15' => 
+        array (
+          'newTab' => false,
+          'panelDefault' => 'expanded',
+        ),
+        'LBL_EDITVIEW_PANEL17' => 
         array (
           'newTab' => false,
           'panelDefault' => 'expanded',
@@ -146,6 +161,144 @@ array (
     ),
     'panels' => 
     array (
+      'lbl_editview_panel19' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_line_items',
+            'studio' => true,
+            'label' => 'LBL_ELECTRICIAN_LINE_ITEMS',
+          ),
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_total_amt',
+            'label' => 'LBL_ELECTRICIAN_TOTAL_AMT',
+          ),
+        ),
+        2 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_discount_amount',
+            'label' => 'LBL_ELECTRICIAN_DISCOUNT_AMOUNT',
+          ),
+        ),
+        3 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_subtotal_amount',
+            'label' => 'LBL_ELECTRICIAN_SUBTOTAL_AMOUNT',
+          ),
+        ),
+        4 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_shipping_amount',
+            'label' => 'LBL_ELECTRICIAN_SHIPPING_AMOUNT',
+          ),
+        ),
+        5 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_shipping_tax',
+            'studio' => 'visible',
+            'label' => 'LBL_ELECTRICIAN_SHIPPING_TAX',
+          ),
+        ),
+        6 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_tax_amount',
+            'label' => 'LBL_ELECTRICIAN_TAX_AMOUNT',
+          ),
+        ),
+        7 => 
+        array (
+          0 => 
+          array (
+            'name' => 'electrician_total_amount',
+            'label' => 'LBL_ELECTRICIAN_GRAND_TOTAL',
+          ),
+        ),
+      ),
+      'lbl_editview_panel18' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_line_items',
+            'studio' => true,
+            'label' => 'LBL_PLUMBER_LINE_ITEMS',
+          ),
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_total_amt',
+            'label' => 'LBL_PLUMBER_TOTAL_AMT',
+          ),
+        ),
+        2 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_discount_amount',
+            'label' => 'LBL_PLUMBER_DISCOUNT_AMOUNT',
+          ),
+          1 => '',
+        ),
+        3 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_subtotal_amount',
+            'label' => 'LBL_PLUMBER_SUBTOTAL_AMOUNT',
+          ),
+        ),
+        4 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_shipping_amount',
+            'label' => 'LBL_PLUMBER_SHIPPING_AMOUNT',
+          ),
+        ),
+        5 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_shipping_tax_amt',
+            'label' => 'LBL_PLUMBER_SHIPPING_TAX_AMT',
+          ),
+        ),
+        6 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_tax_amount',
+            'label' => 'LBL_PLUMBER_TAX_AMOUNT',
+          ),
+        ),
+        7 => 
+        array (
+          0 => 
+          array (
+            'name' => 'plumber_total_amount',
+            'label' => 'LBL_PLUMBER_GRAND_TOTAL',
+          ),
+        ),
+      ),
       'lbl_account_information' => 
       array (
         0 => 
@@ -385,27 +538,6 @@ array (
           array (
             'name' => 'proposed_install_date_c',
             'label' => 'LBL_PROPOSED_INSTALL_DATE',
-          ),
-        ),
-      ),
-      'lbl_editview_panel15' => 
-      array (
-        0 => 
-        array (
-          0 => 
-          array (
-            'name' => 'quote_note_inputs_c',
-            'studio' => 'visible',
-            'label' => 'LBL_QUOTE_NOTE_INPUTS',
-          ),
-        ),
-        1 => 
-        array (
-          0 => 
-          array (
-            'name' => 'pricing_option_type_c',
-            'studio' => 'visible',
-            'label' => 'LBL_PRICING_OPTION_TYPE_C',
           ),
         ),
       ),
@@ -773,6 +905,32 @@ array (
           ),
         ),
       ),
+      'lbl_editview_panel15' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'quote_note_inputs_c',
+            'studio' => 'visible',
+            'label' => 'LBL_QUOTE_NOTE_INPUTS',
+          ),
+          1 => '',
+        ),
+      ),
+      'lbl_editview_panel17' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            'name' => 'quote_cl_rebate_c',
+            'studio' => 'visible',
+            'label' => 'LBL_QUOTE_CL_REBATE',
+          ),
+          1 => '',
+        ),
+      ),
       'lbl_line_items' => 
       array (
         0 => 
@@ -1103,12 +1261,7 @@ array (
             'studio' => 'visible',
             'label' => 'LBL_SPECIAL_NOTES',
           ),
-          1 => 
-          array (
-            'name' => 'solargain_options_c',
-            'studio' => 'visible',
-            'label' => 'LBL_SOLARGAIN_OPTIONS_C',
-          ),
+          1 => '',
         ),
         1 => 
         array (
@@ -1120,12 +1273,7 @@ array (
         ),
         2 => 
         array (
-          0 => 
-          array (
-            'name' => 'first_solar_c',
-            'studio' => 'visible',
-            'label' => 'LBL_FIRST_SOLAR_C',
-          ),
+          0 => ''
         ),
       ),
       'lbl_editview_panel9' => 
