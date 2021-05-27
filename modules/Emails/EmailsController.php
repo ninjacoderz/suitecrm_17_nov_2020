@@ -1139,41 +1139,43 @@ class EmailsController extends SugarController
 
                 /**Custom Attachments */
                 // $noteArray = array();
-                $file_attachments = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c ."/");
-                $name_file_include = 'Proposed_Install_Location';
-                if (count($file_attachments)>0 ) {
-                    $this->bean->status = "draft";
-                    $this->bean->save();
-                    foreach ($file_attachments as $att) {
-                        $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c ."/" . $att ;
-                        if(!is_file($source)) continue;
-                        if (strpos(strtolower($att),strtolower($name_file_include))) {
-                            $noteTemplate = new Note();
-                            $noteTemplate->id = create_guid();
-                            $noteTemplate->new_with_id = true; // duplicating the note with files
-                            $noteTemplate->parent_id = $this->bean->id;
-                            $noteTemplate->parent_type = 'Emails';
-                            $noteTemplate->date_entered = '';
-                            $noteTemplate->filename = $att;
-                            $noteTemplate->name = $att;
-                            if(strpos(strtolower($att), "png") !== false) {
-                                $noteTemplate->file_mime_type = 'image/png';
-                            } elseif (strpos(strtolower($att), "pdf") !== false) {
-                                $noteTemplate->file_mime_type = 'application/pdf';
-                            } else {
-                                $noteTemplate->file_mime_type = 'image/jpg';
-                            }
+
+                // $file_attachments = scandir(realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c ."/");
+                // $name_file_include = 'Proposed_Install_Location';
+                // if (count($file_attachments)>0 ) {
+                //     $this->bean->status = "draft";
+                //     $this->bean->save();
+                //     foreach ($file_attachments as $att) {
+                //         $source =  realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c ."/" . $att ;
+                //         if(!is_file($source)) continue;
+                //         if (strpos(strtolower($att),strtolower($name_file_include))) {
+                //             $noteTemplate = new Note();
+                //             $noteTemplate->id = create_guid();
+                //             $noteTemplate->new_with_id = true; // duplicating the note with files
+                //             $noteTemplate->parent_id = $this->bean->id;
+                //             $noteTemplate->parent_type = 'Emails';
+                //             $noteTemplate->date_entered = '';
+                //             $noteTemplate->filename = $att;
+                //             $noteTemplate->name = $att;
+                //             if(strpos(strtolower($att), "png") !== false) {
+                //                 $noteTemplate->file_mime_type = 'image/png';
+                //             } elseif (strpos(strtolower($att), "pdf") !== false) {
+                //                 $noteTemplate->file_mime_type = 'application/pdf';
+                //             } else {
+                //                 $noteTemplate->file_mime_type = 'image/jpg';
+                //             }
                                 
-                            $noteTemplate->save();
+                //             $noteTemplate->save();
         
-                            $destination = realpath(dirname(__FILE__) . '/../../').'/upload/'.$noteTemplate->id;
-                            if (!symlink($source, $destination)) {
-                                $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
-                            }
-                            $this->bean->attachNote($noteTemplate);
-                        }
-                    }
-                }
+                //             $destination = realpath(dirname(__FILE__) . '/../../').'/upload/'.$noteTemplate->id;
+                //             if (!symlink($source, $destination)) {
+                //                 $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                //             }
+                //             $this->bean->attachNote($noteTemplate);
+                //         }
+                //     }
+                // }
+
                 //get infomation from quote
                 /**Check product type => select installer */
 

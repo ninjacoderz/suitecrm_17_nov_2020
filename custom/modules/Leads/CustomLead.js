@@ -3712,6 +3712,7 @@ $(document).ready(function(){
                         var parent_solargain_tesla_quote_number_c =  $('#solargain_tesla_quote_number_c').parent().parent();
                         $("#solargain_quote_number_c").parent().parent().detach().insertAfter(parent_solargain_tesla_quote_number_c);
                         $("#site_detail_addr__c").parent().parent().before('<div class="col-xs-12 edit-view-field"> <label>Copy address from billing address:</label><input id="check_addr_site_detail_c" name="check_addr_site_detail_c"  type="checkbox"></div>');
+                        $("#group_address_site_detail fieldset").after($("#open_map_popup_site").parent().parent().removeClass("col-sm-6")); //Nhat code https://trello.com/c/ISA6X0yY/
                     }, 3000)
                 }
             //THIEN FIX

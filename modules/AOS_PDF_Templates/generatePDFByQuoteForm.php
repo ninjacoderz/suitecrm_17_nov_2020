@@ -825,16 +825,9 @@ if ($task == 'pdf' || $task == 'emailpdf') {
                     $body = '';
                     $body_sms_link = "";
 
-                    if($_REQUEST['type_form'] == 'daikin_form'){
-
-                        $smsTemplate = BeanFactory::getBean(
-                            'pe_smstemplate',
-                            '4cfa35e8-c49c-6b3c-b6de-5de8b14da844' 
-                            // 'a36070a9-e51b-f1a7-8d7e-5d96adaf4300'
-                        );
-                        $body = trim(strip_tags(parse_sms_template($smsTemplate,$first_name_quote)));
-                        
-                    } elseif($_REQUEST['type_form'] == 'sanden_sms') {
+                    if($_POST['list_infomation']['sms_template'] != '') {
+                        $body =  trim(strip_tags($_POST['list_infomation']['sms_template']));
+                    } else {
                         $smsTemplate = BeanFactory::getBean(
                             'pe_smstemplate',
                             '3e22c117-8ecf-597c-550b-5de8b1026b5b' 
