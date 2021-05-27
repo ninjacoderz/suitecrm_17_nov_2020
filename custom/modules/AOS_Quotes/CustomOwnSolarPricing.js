@@ -71,9 +71,10 @@ $(function () {
         e.preventDefault();
         for (var i = 1; i < 7; i++) {
             var panel_type = $("#panel_og_type_"+i).val();
-            var inverter_type = $("#inverter_og_type_"+i).val();
+            var inverter_type1 = $("#inverter_og_type1_"+i).val();
+            var inverter_type2 = $("#inverter_og_type2_"+i).val();
             // Get suggested
-            if(panel_type != '' && inverter_type != ""){
+            if(panel_type != '' && (inverter_type1 != "" || inverter_type2 != "")){
                 // Calculate option
                 calcOption(i);
             }
@@ -326,7 +327,8 @@ function getCurrentOptionState(index){
     let result = {};
     result['total_kw'] = $('#total_og_kW_' + index).val();
     result['panel_type'] = $('#panel_og_type_' + index).val();
-    result['inverter_type'] = $('#inverter_og_type_' + index).val();
+    result['inverter_type1'] = $('#inverter_og_type1_' + index).val();
+    result['inverter_type2'] = $('#inverter_og_type2_' + index).val();
     result['total_panels'] = $('#total_og_panels_' + index).val();
     result['number_stcs'] = $('#number_og_stcs_' + index).val();
     result['offgrid_inverter'] = $('#offgrid_inverter_' + index).val();
@@ -368,7 +370,9 @@ function calcGrandTotal(currState){
     // Microgrid Standard Install
     grandTotal += parseFloat(getAttributeFromName(extra_products[1], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
     // Sunpower Split Panel Fee
-    grandTotal += parseFloat(getAttributeFromName(extra_products[2], og_extra, "cost"));
+    if (currState.panel_type.toLowerCase().indexOf("sunpower") != -1) {
+        grandTotal += parseFloat(getAttributeFromName(extra_products[2], og_extra, "cost"));
+    }
     // PE Admin %
     grandTotal += grandTotal * (parseFloat($('#pe_admin_percent').val()) / 100);
     // GST 10%
@@ -387,8 +391,11 @@ function calcEquipmentCost(currState){
     if(currState.panel_type != ''){
         cost += parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels);
     }
-    if(currState.inverter_type != ''){
-        cost += parseFloat(getAttributeFromName(currState.inverter_type, sol_inverter, "cost"));
+    if(currState.inverter_type1 != ''){
+        cost += parseFloat(getAttributeFromName(currState.inverter_type1, sol_inverter, "cost"));
+    }
+    if(currState.inverter_type2 != ''){
+        cost += parseFloat(getAttributeFromName(currState.inverter_type2, sol_inverter, "cost"));
     }
     if(currState.offgrid_inverter != ''){
         cost += parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"));
@@ -413,8 +420,14 @@ function calcEquipmentCost(currState){
 // .:nhantv:. Get max panels
 function getMaxPanelAndTotalKw(currState, isTotalPanel){
     const ratio = 1.5;
-    const panel_kw = getAttributeFromName(currState.panel_type, sol_panel, "capacity");
-    const inverter_kw = getAttributeFromName(currState.inverter_type, sol_inverter, "capacity");
+    const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
+    // Get inverter kw
+    let inverter_kw = 0;
+    for (let i = 1; i < 3; i++) {
+        if (currState['inverter_type' + i] != "") {
+            inverter_kw += parseFloat(getAttributeFromName(currState['inverter_type' + i], sol_inverter, "capacity"));
+        }
+    }
     const maxPanel = Math.floor(inverter_kw * ratio / panel_kw);
     const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
     let result = [];
@@ -438,7 +451,7 @@ async function calcOption(index, isTotalPanel = false) {
     var postcode = $("#install_address_postalcode_c").val();
     if(index != '' && index != undefined){
         let currState = getCurrentOptionState(index);
-        if(currState.panel_type != '' && currState.inverter_type != ''){
+        if(currState.panel_type != '' && (currState.inverter_type1 != '' || currState.inverter_type2 != '')){
             // Get max panels and total kw
             let maxPnAndTotalKw = getMaxPanelAndTotalKw(currState, isTotalPanel);
             // Set value
@@ -550,17 +563,17 @@ async function generateOffgridItem(){
         await autoCreateLineItemOg("Microgrid Solar PV Supply and Install", og_extra, 1);
         await autoCreateLineItemOg("Microgrid Standard Install", og_extra, 1, currState.total_kw * 1000);
         currState.panel_type && await autoCreateLineItemOg(currState.panel_type, sol_panel, currState.total_panels);
-        currState.inverter_type && await autoCreateLineItemOg(currState.inverter_type, sol_inverter, 1);
+        currState.inverter_type1 && await autoCreateLineItemOg(currState.inverter_type1, sol_inverter, 1);
+        currState.inverter_type2 && await autoCreateLineItemOg(currState.inverter_type2, sol_inverter, 1);
         currState.offgrid_inverter && await autoCreateLineItemOg(currState.offgrid_inverter, og_inverter, 1);
         currState.offgrid_batery && await autoCreateLineItemOg(currState.offgrid_batery, og_battery, currState.offgrid_howmany);
         currState.offgrid_accessory1 && await autoCreateLineItemOg(currState.offgrid_accessory1, og_accessory, 1);
         currState.offgrid_accessory2 && await autoCreateLineItemOg(currState.offgrid_accessory2, og_accessory, 1);
         currState.re_generator && await autoCreateLineItemOg(currState.re_generator, re_generator, 1);
-        await autoCreateLineItemOg("Sunpower Split Panel Fee", og_extra, 1);
         await autoCreateLineItemOg("Microgrid Balance Of System", og_extra, 1, currState.total_kw * 1000);
         await autoCreateLineItemOg("STCs", og_extra, currState.number_stcs);
         // Calculate
-        await calculatePrice(currState.total_panels, currState.total_kw, "off-grid");
+        await calculatePrice(currState.total_panels, currState.total_kw, "off-grid", currState);
         // Calc Equipment Cost
         let equipmentCost = calcEquipmentCost(currState);
         $('#sanden_supply_bill').val(parseFloat(roundTo90(equipmentCost)).formatMoney(2, ',', '.'));
@@ -667,13 +680,20 @@ async function init_table_offgrid() {
             , makeSelectBox(convertJSONToArrayInit(sol_panel), "panel_og_type_4 offgrid_pricing", "panel_og_type_4")
             , makeSelectBox(convertJSONToArrayInit(sol_panel), "panel_og_type_5 offgrid_pricing", "panel_og_type_5")
             , makeSelectBox(convertJSONToArrayInit(sol_panel), "panel_og_type_6 offgrid_pricing", "panel_og_type_6")],
-        ["Inverter Type"
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_og_type_1 offgrid_pricing", "inverter_og_type_1")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_og_type_2 offgrid_pricing", "inverter_og_type_2")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_og_type_3 offgrid_pricing", "inverter_og_type_3")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_og_type_4 offgrid_pricing", "inverter_og_type_4")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_og_type_5 offgrid_pricing", "inverter_og_type_5")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_og_type_6 offgrid_pricing", "inverter_og_type_6")],
+        ["Inverter Type 1"
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type1_1")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type1_2")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type1_3")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type1_4")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type1_5")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type1_6")],
+        ["Inverter Type 2"
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_1")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_2")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_3")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_4")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_5")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_6")],
         ["Total Panels"
             , makeInputBox("total_og_panels_1 offgrid_pricing", "total_og_panels_1", false)
             , makeInputBox("total_og_panels_2 offgrid_pricing", "total_og_panels_2", false)
@@ -691,35 +711,35 @@ async function init_table_offgrid() {
         ["", "&nbsp;"],
         ["<button id='calculate_og' class='button default'>Max</button>", "&nbsp;"],
         ["", "&nbsp;"],
-        ["Off-Grid Inverter:"
+        ["Off-Grid Inverter"
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_1")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_2")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_3")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_4")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_5")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_6")],
-        ["Battery Storage:"
+        ["Battery Storage"
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_1 offgrid_pricing", "offgrid_batery_1",)
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_2 offgrid_pricing", "offgrid_batery_2",)
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_3 offgrid_pricing", "offgrid_batery_3",)
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_4 offgrid_pricing", "offgrid_batery_4",)
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_5 offgrid_pricing", "offgrid_batery_5",)
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_6 offgrid_pricing", "offgrid_batery_6",)],
-        ["How Many Batteries:"
+        ["How Many Batteries"
             , makeInputBox("offgrid_howmany_1 offgrid_pricing", "offgrid_howmany_1", false)
             , makeInputBox("offgrid_howmany_2 offgrid_pricing", "offgrid_howmany_2", false)
             , makeInputBox("offgrid_howmany_3 offgrid_pricing", "offgrid_howmany_3", false)
             , makeInputBox("offgrid_howmany_4 offgrid_pricing", "offgrid_howmany_4", false)
             , makeInputBox("offgrid_howmany_5 offgrid_pricing", "offgrid_howmany_5", false)
             , makeInputBox("offgrid_howmany_6 offgrid_pricing", "offgrid_howmany_6", false)],
-        ["OG Accessory 1:"
+        ["OG Accessory 1"
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory1_1 offgrid_pricing", "offgrid_accessory1_1")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory1_2 offgrid_pricing", "offgrid_accessory1_2")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory1_3 offgrid_pricing", "offgrid_accessory1_3")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory1_4 offgrid_pricing", "offgrid_accessory1_4")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory1_5 offgrid_pricing", "offgrid_accessory1_5")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory1_6 offgrid_pricing", "offgrid_accessory1_6")],
-        ["OG Accessory 2:"
+        ["OG Accessory 2"
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_1 offgrid_pricing", "offgrid_accessory2_1")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_2 offgrid_pricing", "offgrid_accessory2_2")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_3 offgrid_pricing", "offgrid_accessory2_3")
@@ -734,14 +754,14 @@ async function init_table_offgrid() {
             , makeSelectBox(convertJSONToArrayInit(re_generator), "re_generator_5 offgrid_pricing", "re_generator_5")
             , makeSelectBox(convertJSONToArrayInit(re_generator), "re_generator_6 offgrid_pricing", "re_generator_6")],
         ["", "&nbsp;"],
-        ["Grand total:"
+        ["Grand total"
             , makeInputBox("offgrid_pricing", "og_total_1", true)
             , makeInputBox("offgrid_pricing", "og_total_2", true)
             , makeInputBox("offgrid_pricing", "og_total_3", true)
             , makeInputBox("offgrid_pricing", "og_total_4", true)
             , makeInputBox("offgrid_pricing", "og_total_5", true)
             , makeInputBox("offgrid_pricing", "og_total_6", true)],
-        ["PE Admin (%):", "<input type='number' class='offgrid_pricing' name='pe_admin_percent' id='pe_admin_percent' value='30' />"],
+        ["PE Admin (%)", "<input type='number' class='offgrid_pricing' name='pe_admin_percent' id='pe_admin_percent' value='30' />"],
     ];
     
     // .:nhantv:. Update to set order before "Save and Generate Quote" field

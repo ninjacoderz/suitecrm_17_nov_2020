@@ -194,7 +194,7 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         }
     }
     // .:nhantv:. Calculate total price
-    async function calculatePrice(panelTotal, totalKw, type){
+    async function calculatePrice(panelTotal, totalKw, type, currState = {}){
         // await wait(200);
         let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
         var totalList = 0, totalDiscount = 0, totalAmount = 0;
@@ -222,55 +222,64 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             list.trigger("blur");
         });
 
-        if(type == "solar"){
-            // Get solar product need to calculate
-            var solarProductCalData = {};
-            await $.ajax({
-                url: "/index.php?entryPoint=APIGetDataProduct",
-                data: solarProductCal,
-                type: 'POST'})
-                .then(function(data) {
-                    if(data !== undefined || data !== ''){
-                        solarProductCalData = JSON.parse(data);
-                        // console.log(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"], data);
-                    }
-                });
-            // Solar product calculate: 
-                // Solar_PV_Site_Visit_Module_Load_Up
-            if(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"] !== undefined 
-            && solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"] != 0){
-                totalAmount += parseInt(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"]);
-            } else {
-                totalAmount += 180;
-            }
-            // Single_Phase_1Ph_Inverter_Installation
-            if(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"] !== undefined
-                && solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"] != 0){
-                totalAmount += parseInt(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"]);
-            } else {
-                totalAmount += 120;
-            }
-            // Standard_PV_Module_Installation
-            if(solarProductCalData["Standard_PV_Module_Installation"] !== undefined
-                && solarProductCalData["Standard_PV_Module_Installation"]["cost"] != 0){
-                totalAmount += parseInt(solarProductCalData["Standard_PV_Module_Installation"]["cost"]) * parseInt(panelTotal);
-            } else {
-                totalAmount += 50 * parseInt(panelTotal);
-            }
-            // Solar_PV_Balance_of_System
-            if(solarProductCalData["Solar_PV_Balance_of_System"] !== undefined
-                && solarProductCalData["Solar_PV_Balance_of_System"]["cost"] != 0){
-                totalAmount += parseFloat(solarProductCalData["Solar_PV_Balance_of_System"]["cost"]) * parseFloat(totalKw);
-            } else {
-                totalAmount += 120 * parseFloat(totalKw);
-            }
-            // Smart_Meter_Solar_Monitoring_Installation
-            if(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"] !== undefined
-                && solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"] != 0){
-                totalAmount += parseInt(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"]);
-            } else {
-                totalAmount += 50;
-            }
+        switch (type) {
+            case "solar":
+                // Get solar product need to calculate
+                var solarProductCalData = {};
+                await $.ajax({
+                    url: "/index.php?entryPoint=APIGetDataProduct",
+                    data: solarProductCal,
+                    type: 'POST'})
+                    .then(function(data) {
+                        if(data !== undefined || data !== ''){
+                            solarProductCalData = JSON.parse(data);
+                            // console.log(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"], data);
+                        }
+                    });
+                // Solar product calculate: 
+                    // Solar_PV_Site_Visit_Module_Load_Up
+                if(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"] !== undefined 
+                && solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"] != 0){
+                    totalAmount += parseInt(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"]);
+                } else {
+                    totalAmount += 180;
+                }
+                // Single_Phase_1Ph_Inverter_Installation
+                if(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"] !== undefined
+                    && solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"] != 0){
+                    totalAmount += parseInt(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"]);
+                } else {
+                    totalAmount += 120;
+                }
+                // Standard_PV_Module_Installation
+                if(solarProductCalData["Standard_PV_Module_Installation"] !== undefined
+                    && solarProductCalData["Standard_PV_Module_Installation"]["cost"] != 0){
+                    totalAmount += parseInt(solarProductCalData["Standard_PV_Module_Installation"]["cost"]) * parseInt(panelTotal);
+                } else {
+                    totalAmount += 50 * parseInt(panelTotal);
+                }
+                // Solar_PV_Balance_of_System
+                if(solarProductCalData["Solar_PV_Balance_of_System"] !== undefined
+                    && solarProductCalData["Solar_PV_Balance_of_System"]["cost"] != 0){
+                    totalAmount += parseFloat(solarProductCalData["Solar_PV_Balance_of_System"]["cost"]) * parseFloat(totalKw);
+                } else {
+                    totalAmount += 120 * parseFloat(totalKw);
+                }
+                // Smart_Meter_Solar_Monitoring_Installation
+                if(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"] !== undefined
+                    && solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"] != 0){
+                    totalAmount += parseInt(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"]);
+                } else {
+                    totalAmount += 50;
+                }
+                break;
+            case "off-grid":
+                // Sunpower Split Panel Fee
+                if (currState.panel_type.toLowerCase().indexOf("sunpower") != -1) {
+                    totalAmount += parseFloat(getAttributeFromName(extra_products[2], og_extra, "cost"));
+                }
+                break;
+            default: break;
         }
 
         // PE Admin
