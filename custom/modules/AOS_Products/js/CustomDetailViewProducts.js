@@ -5,6 +5,22 @@ $(function () {
         // .:nhantv:. Hide Solar category and Capacity field
         dynamicSolarCategory();
         dynamicCapacityLabel();
+        //VUT - S - Button create Product Price
+        $('#tab-actions').parent().append('<li><input type="button" name="Add New Product Price" value="Add New Product Price" id="add_new_product_price" class="button primary"/></li>'); 
+        $(document).on('click', '#add_new_product_price', function() {
+            var parent_id = $("input[name='record']").val();
+            $.ajax({
+                url: "index.php?entryPoint=createProductPrice&parent_id=" +parent_id,
+                success:function (data) {
+                    if(data != 'error'){
+                        window.open('/index.php?module=pe_product_prices&action=EditView&record='+data.trim(),'_blank');
+                    }else{
+                        alert('Create fail!');
+                    }
+                }
+            })
+        });
+        //VUT - E - Button create Product Price
     });
 
 });

@@ -336,6 +336,30 @@ $(function () {
         }).done((data) => {
           let jsonData = JSON.parse(data);
           let statusContent = jsonData.east2.content;
+        //   ModuleBuilder.tabPanel = new YAHOO.widget.TabView("mbtabs");
+        // let tabs = ModuleBuilder.tabPanel.get("tabs");
+        //   let panel = ModuleBuilder.findTabById("relEditor");
+          
+        //   if (!panel) {
+        //     panel = new YAHOO.SUGAR.ClosableTab(
+        //       {
+        //         label: SUGAR.language.get("ModuleBuilder", "LBL_RELATIONSHIP_EDIT"),
+        //         id: "relEditor",
+        //         scroll: true,
+        //         cacheData: true,
+        //         active: true,
+        //       },
+        //       ModuleBuilder.tabPanel
+        //     );
+        //     ModuleBuilder.tabPanel.addTab(panel);
+        //   } else {
+        //     ModuleBuilder.tabPanel.set("activeTab", panel);
+        //   }
+        try {
+            if (typeof ModuleBuilder.tabPanel.get("activeTab") == "undefined") throw "";
+        } catch(err) {
+            err;
+        };
           /*Add status content on dialog*/
           $("#whatup").before(`<div id="status_content" class="content">
                                 <div id="status_pagecontent" class=".pagecontent">
@@ -6416,7 +6440,7 @@ $(function () {
         $('#sanden_gross_profit').val(parseFloat(GrossProfit).formatMoney(2, ',', '.'));
         $('#sanden_gprofit_percent').val(`${parseFloat(GrossProfit_percent).formatMoney(2, ',', '.')} %`);
     }
-    $('#sanden_gross_profit').parent().parent().append('<br><button type="button" class="button" id="calculation_profit_sanden_quote">Calculation Profit Sanden</button>');
+    $("#sanden_gross_profit").parent().parent().append('<br><button type="button" class="button" id="calculation_profit_sanden_quote">RE-CALCULATE</button>');
     $("#calculation_profit_sanden_quote").on('click', function () {
         GP_manual();
     })

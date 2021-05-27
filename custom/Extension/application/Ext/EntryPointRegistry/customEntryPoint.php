@@ -1548,3 +1548,8 @@ $entry_point_registry['showDetailViewOtherModule'] = array(
     'auth' => false
 );
 
+//VUT - create product prices
+$entry_point_registry['createProductPrice'] = array( 
+    'file' => 'custom/modules/pe_product_prices/createProductPrices.php',
+    'auth' => false
+);
