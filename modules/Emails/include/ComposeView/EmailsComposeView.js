@@ -2796,6 +2796,8 @@ $(function(){
     content_sms = content_email;
     content_sms = content_sms.replaceAll('<br>', ' ') + "\n" +$('textarea#sms_signture').val();
     content_sms = content_sms.replace(/\s\s+/g, ' ');
+    //thienpb fix
+    content_sms = content_sms.replace(/&#?[a-z0-9]{2,8};/ig,' ');
     $('textarea#sms_message').val(content_sms);
     /**s */
   });
