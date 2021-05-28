@@ -155,6 +155,10 @@
 										if($('#serial_number_filter').val() !== ''){						
 												$('#serial_number_advanced').val($('#serial_number_filter').val());
 												$('#search_form_submit_advanced').trigger('click');
+												if($('#search_form_submit').length) {
+													$('#serial_number_basic').val($('#serial_number_filter').val());
+													$('#search_form_submit').trigger('click');
+												}
 										}
 									})
 								{/literal}
