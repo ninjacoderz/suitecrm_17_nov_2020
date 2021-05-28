@@ -1507,7 +1507,7 @@ async function generatePOLineItem(){
             for (i = 0; i < select_inputs.length; i++){
                 var el = select_inputs[i];
                 if(el.checked == true){
-                    await autoCreateLineItem(el.attributes[1].value,1);
+                    await autoCreateLineItem(el.attributes[2].value,1);
                 }
                 
             }

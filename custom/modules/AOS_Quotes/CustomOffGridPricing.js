@@ -31,13 +31,34 @@ $(function () {
         checkBoxOptionHandle($(this), "offgrid_option");
     });
 
+    // .:nhantv:. Total panels change handle
+    $(document).on('change', 'input[id*="total_og_panels"]', function(e){
+        e.preventDefault();
+        optionChangeHandle($(this));
+    });
+
     // .:nhantv:. PE Admin % handle 
     $(document).on('change', '#pe_admin_percent', function(){
         $('#calculate_og').trigger('click');
     });
 
-    // .:nhantv:. Calculate Button Click handle 
+    // .:nhantv:. Max Button Click handle 
     $(document).on('click', '#calculate_og', function(e){
+        e.preventDefault();
+        for (var i = 1; i < 7; i++) {
+            var panel_type = $("#panel_og_type_"+i).val();
+            var inverter_type1 = $("#inverter_og_type1_"+i).val();
+            var inverter_type2 = $("#inverter_og_type2_"+i).val();
+            // Get suggested
+            if(panel_type != '' && (inverter_type1 != "" || inverter_type2 != "")){
+                // Calculate option
+                calcOption(i, false, true);
+            }
+        }
+    });
+
+    // .:nhantv:. Calculate Price Button Click handle 
+    $(document).on('click', '#calculate_og_price', function(e){
         e.preventDefault();
         for (var i = 1; i < 7; i++) {
             var panel_type = $("#panel_og_type_"+i).val();
@@ -251,48 +272,50 @@ function getMaxPanelAndTotalKw(currState, isTotalPanel){
 }
 
 // .:nhantv:. Calculate Total Kwh and STCs of Option
-async function calcOption(index, isTotalPanel = false) {
+async function calcOption(index, isTotalPanel = false, isMax = false) {
     var postcode = $("#install_address_postalcode_c").val();
     if(index != '' && index != undefined){
         let currState = getCurrentOptionState(index);
         if(currState.panel_type != '' && (currState.inverter_type1 != '' || currState.inverter_type2 != '')){
-            // Get max panels and total kw
-            let maxPnAndTotalKw = getMaxPanelAndTotalKw(currState, isTotalPanel);
-            // Set value
-            $("#total_og_panels_"+index).val(maxPnAndTotalKw['max']);
-            currState.total_panels = maxPnAndTotalKw['max'];
-            $('#total_og_kW_'+index).val(maxPnAndTotalKw['kw']);
-            currState.total_kw = maxPnAndTotalKw['kw'];
-            $('#total_inverter_og_kW_'+index).val(maxPnAndTotalKw['inverter_kw']);
+            if(isMax){
+                // Get max panels and total kw
+                let maxPnAndTotalKw = getMaxPanelAndTotalKw(currState, isTotalPanel);
+                // Set value
+                $("#total_og_panels_"+index).val(maxPnAndTotalKw['max']);
+                currState.total_panels = maxPnAndTotalKw['max'];
+                $('#total_og_kW_'+index).val(maxPnAndTotalKw['kw']);
+                currState.total_kw = maxPnAndTotalKw['kw'];
+                $('#total_inverter_og_kW_'+index).val(maxPnAndTotalKw['inverter_kw']);
 
-            // Get STCs value
-            try {
-                // Show loading
-                SUGAR.ajaxUI.showLoadingPanel();
-                await $.ajax({
-                    url: 'index.php?entryPoint=getSTCsNumberForQuotePricing&total_kw='+maxPnAndTotalKw['kw']+'&postcode='+postcode,
-                    type : 'GET',
-                    dataType: 'text',
-                }).then(function (data) {
-                    var result = JSON.parse(data);
-                    if(result['NumberOfSTCs'] != ''){
-                        $("#number_og_stcs_"+index).val(result['NumberOfSTCs']);
-                        currState.number_stcs = result['NumberOfSTCs'];
-                    }
-                    // Save current option
-                    saveCurrentState();
-                    // Grand Total
-                    let grandTotal = calcGrandTotal(currState);
-                    $("#og_total_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
-                });
-            } catch (err) {
-                console.log(err);
-            } finally {
-                // Hide loading
-                setTimeout(function (){
-                    SUGAR.ajaxUI.hideLoadingPanel();
-                }, 300);
+                // Get STCs value
+                try {
+                    // Show loading
+                    SUGAR.ajaxUI.showLoadingPanel();
+                    await $.ajax({
+                        url: 'index.php?entryPoint=getSTCsNumberForQuotePricing&total_kw='+maxPnAndTotalKw['kw']+'&postcode='+postcode,
+                        type : 'GET',
+                        dataType: 'text',
+                    }).then(function (data) {
+                        var result = JSON.parse(data);
+                        if(result['NumberOfSTCs'] != ''){
+                            $("#number_og_stcs_"+index).val(result['NumberOfSTCs']);
+                            currState.number_stcs = result['NumberOfSTCs'];
+                        }
+                    });
+                } catch (err) {
+                    console.log(err);
+                } finally {
+                    // Hide loading
+                    setTimeout(function (){
+                        SUGAR.ajaxUI.hideLoadingPanel();
+                    }, 300);
+                }
             }
+            // Grand Total
+            let grandTotal = calcGrandTotal(currState);
+            $("#og_total_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
+            // Save current option
+            saveCurrentState();
         }
     }
 }
@@ -584,7 +607,7 @@ async function init_table_offgrid() {
     $('body').find("#generate_quote").before(offgrid_pricing_table);
 
     // .:nhantv:. Add button "Calculate Price"
-    // $('body').find("#generate_quote").before("<button id='calculate_og_price' class='button default' style='display: block'>Calculate Price</button>");
+    $('body').find("#generate_quote").before("<button id='calculate_og_price' class='button default' style='display: block'>Calculate Price</button>");
 
     makeTable(offgrid_pricing_table, data, "offgrid_pricing", "offgrid_pricing");
     //css Table
