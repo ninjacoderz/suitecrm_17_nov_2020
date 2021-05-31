@@ -9,19 +9,18 @@ $bean->retrieve($record_id);
 if ($bean->id) {
     $price ='';
     switch ($supplier_id) {
-        // case '789f75aa-6918-dca7-d563-5ea248f01d4c': //SPRINGERS SOLAR = c29c99ff-83bd-a46c-504c-60ac48462af4
-        //     $price = priceSpringerSolar($web);
-        //     break;
-        // case '789f75aa-6918-dca7-d563-5ea248f01d4c': //MC4 Connect = 4c0f2eb6-b037-bb29-f55b-60ac4134cd0a
-        //     $price = priceMC4Connect($web);
-        //     break;
-        // case '789f75aa-6918-dca7-d563-5ea248f01d4c': //TradeZone = 2bdc4cd7-d215-0cc6-4265-60ac757905fb
-        //     $price = priceTradeZone($web);
-        //     break;
-        case '789f75aa-6918-dca7-d563-5ea248f01d4c': //EVolution Australia = 12a49a38-638a-07c7-ad5b-60b42f79cc34
+        case 'c29c99ff-83bd-a46c-504c-60ac48462af4': //SPRINGERS SOLAR = c29c99ff-83bd-a46c-504c-60ac48462af4
+            $price = priceSpringerSolar($web);
+            break;
+        case '4c0f2eb6-b037-bb29-f55b-60ac4134cd0a': //MC4 Connect = 4c0f2eb6-b037-bb29-f55b-60ac4134cd0a
+            $price = priceMC4Connect($web);
+            break;
+        case '2bdc4cd7-d215-0cc6-4265-60ac757905fb': //TradeZone = 2bdc4cd7-d215-0cc6-4265-60ac757905fb
+            $price = priceTradeZone($web);
+            break;
+        case '12a49a38-638a-07c7-ad5b-60b42f79cc34': //EVolution Australia = 12a49a38-638a-07c7-ad5b-60b42f79cc34
             $price = priceEVolutionAustralia($web);
             break;
-                
         default:
             $price ='Not yet!';
             break;
