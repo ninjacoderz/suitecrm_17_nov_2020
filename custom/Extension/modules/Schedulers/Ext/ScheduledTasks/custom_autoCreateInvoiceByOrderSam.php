@@ -6,7 +6,16 @@ function custom_autoCreateInvoiceByOrderSam(){
         $quoteJSON_MT = GetJson_CRMSolargainOrders('matthew.wright','MW@pure733');
         $quoteJSON_PS = GetJson_CRMSolargainOrders('paul.szuster@solargain.com.au','S0larga1n$');
         $quoteJSON_michael = GetJson_CRMSolargainOrders('michael.golden@solargain.com.au','michaelg@sg79');
-        $data_json = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results,$quoteJSON_michael->Results),SORT_REGULAR);
+        if(!empty($quoteJSON_MT->Results)){
+            $data_json = array_unique(array_merge($quoteJSON_MT->Results),SORT_REGULAR);
+        }
+        if(!empty($quoteJSON_PS->Results)){
+            $data_json = array_unique(array_merge($quoteJSON_PS->Results),SORT_REGULAR);
+        }
+        if(!empty($quoteJSON_michael->Results)){
+            $data_json = array_unique(array_merge($quoteJSON_michael->Results),SORT_REGULAR);
+        }
+        // $data_json = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results,$quoteJSON_michael->Results),SORT_REGULAR);
         $aray_order_number = [];
         foreach ($data_json as $key => $value) {
             $aray_order_number[] = $value->ID;
@@ -517,9 +526,9 @@ function Email_Report_Invoice_Sam_Daily($data_inv) {
                 $link_html_xero =  '';
             }else{
                 //update only once a week
-                if($res['xero_invoice_c'] !='') {
-                    Create_Update_Invoice_Xero($res['id'],'update');
-                }
+                // if($res['xero_invoice_c'] !='') {
+                //     Create_Update_Invoice_Xero($res['id'],'update');
+                // }
                 
                 $link_pe = $pe_domain_crm . '/index.php?module=AOS_Invoices&action=EditView&record=' .$res['id'];
                 $link_sam= $sam_domain_crm .'/order/edit/'.$res['order_number'];
