@@ -6,7 +6,7 @@
         " FROM `aos_products` p LEFT JOIN `aos_products_cstm` pc ON p.id = pc.id_c".
         " WHERE LCASE(TRIM(pc.short_name_c)) = LCASE(TRIM('".$short_name."'))".
         " OR LCASE(TRIM(p.name)) = LCASE(TRIM('".$short_name."'))".
-        " AND p.deleted = 0";
+        " AND p.deleted = 0 AND pc.product_status_c = 'available'";
     $result = $db->query($sql);
     $item = array();
     while ($row = $result->fetch_assoc()) {
