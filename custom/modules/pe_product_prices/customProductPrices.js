@@ -45,31 +45,60 @@ $(document).ready(function() {
 // // E - Add sqlEnable
 /**E-For autocomplete product */
 
-// S - Show link product
-showLinkProduct();
-YAHOO.util.Event.addListener(["product_id"], "change", showLinkProduct);
-// E - Show link product
-// S - Show link Supplier
-showLinkSupplier();
-YAHOO.util.Event.addListener(["account_id"], "change", showLinkSupplier);
-// E - Show link Supplier
+  // S - Show link product
+  showLinkProduct();
+  YAHOO.util.Event.addListener(["product_id"], "change", showLinkProduct);
+  // E - Show link product
+  // S - Show link Supplier
+  showLinkSupplier();
+  YAHOO.util.Event.addListener(["account_id"], "change", showLinkSupplier);
+  // E - Show link Supplier
 
-// S - HIDE FIELDS/PANEL */
-$('body').find('div[class="panel-content"] div[class="panel panel-default"]').each(function(){
-  var name_panel = $(this).find('.panel-heading').text().trim();
-  if (name_panel.toLowerCase() == 'data hidden') {
-      $(this).hide();
-      return;
-  }
-});
-// E - HIDE FIELDS/PANEL */
+  // S - HIDE FIELDS/PANEL */
+  $('body').find('div[class="panel-content"] div[class="panel panel-default"]').each(function(){
+    var name_panel = $(this).find('.panel-heading').text().trim();
+    if (name_panel.toLowerCase() == 'data hidden') {
+        $(this).hide();
+        return;
+    }
+  });
+  // E - HIDE FIELDS/PANEL */
 
-// S - Show/Hide field Website
-showFieldWebsite();
-$(document).on('change', '#pricing_source', function() {
+  // S - Show/Hide field Website
   showFieldWebsite();
-});
-// E - Show/Hide field Website
+  $(document).on('change', '#pricing_source', function() {
+    showFieldWebsite();
+  });
+  // E - Show/Hide field Website
+
+  // S - GET Price from website
+  $(document).on('click', '#get_price_from_web', function() {
+    let supplier_id = $('#account_id').val();
+    let web = $('#website').val();
+    let price_source = $('#pricing_source').val();
+    if (supplier_id == '' || web == '') {
+      alert('Please select Supplier/ enter website !');
+      return;
+    } else {
+      $.ajax({
+        url: "index.php?entryPoint=getPriceFromWeb",
+        type: 'POST',
+        data: {
+          supplier_id : encodeURIComponent(supplier_id),
+          web: encodeURIComponent(web),
+          record_id : encodeURIComponent($("input[name='record']").val()),
+        },
+        async: false,
+        success:function (price) {
+            console.log(price);
+            alert(price);
+        }
+      });
+    }
+
+
+  });
+  // E - GET Price from website
 
 });
 
@@ -103,6 +132,8 @@ function showFieldWebsite() {
   let price_src = $(document).find('#pricing_source').val();
   if (price_src == 'website') {
     $(document).find('#website').closest('.edit-view-row-item').show();
+    $(document).find('#get_price_from_web').remove();
+    $(document).find('#website').parent().after('<button type="button" id="get_price_from_web" class="button primary">Get Price</button>'); 
   } else {
     $(document).find('#website').closest('.edit-view-row-item').hide();
   }
