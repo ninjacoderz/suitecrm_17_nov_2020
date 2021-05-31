@@ -18,8 +18,8 @@ if ($bean->id) {
         case '2bdc4cd7-d215-0cc6-4265-60ac757905fb': //TradeZone = 2bdc4cd7-d215-0cc6-4265-60ac757905fb
             $price = priceTradeZone($web);
             break;
-        case '12a49a38-638a-07c7-ad5b-60b42f79cc34': //EVolution Australia = 12a49a38-638a-07c7-ad5b-60b42f79cc34
-            $price = priceEVolutionAustralia($web);
+        case 'e9af6464-6f3d-8602-fb54-60b43250a958': //E-Station = e9af6464-6f3d-8602-fb54-60b43250a958
+            $price = priceEStation($web);
             break;
         default:
             $price ='Not yet!';
@@ -29,7 +29,7 @@ if ($bean->id) {
     if (is_numeric($price)) {
         echo $price;
     } else {
-        echo 'Fail' . $price;
+        echo 'Fail ' . $price;
     }
 } else {
     echo 'Product Price is not exist!';
@@ -178,7 +178,7 @@ function getInputData($form) {
     return $inputs;
 }
 
-function priceEVolutionAustralia($url) {
+function priceEStation($url) {
     $curl = curl_init();
 
     curl_setopt($curl, CURLOPT_URL, $url);
