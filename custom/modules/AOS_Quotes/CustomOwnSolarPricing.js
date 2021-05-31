@@ -233,11 +233,6 @@ async function SL_calcOption(index, isTotalPanel = false) {
                         $("#number_sl_stcs_"+index).val(result['NumberOfSTCs']);
                         currState.number_stcs = result['NumberOfSTCs'];
                     }
-                    // Save current option
-                    SL_saveCurrentState();
-                    // Grand Total
-                    let grandTotal = SL_calcGrandTotal(currState);
-                    $("#total_sl_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
                 });
             } catch (err) {
                 console.log(err);
@@ -247,6 +242,12 @@ async function SL_calcOption(index, isTotalPanel = false) {
                     SUGAR.ajaxUI.hideLoadingPanel();
                 }, 300);
             }
+            // Save current option
+            // Grand Total
+            let grandTotal = SL_calcGrandTotal(currState);
+            $("#total_sl_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
+            SL_saveCurrentState();
+
         }
     }
 }
@@ -265,9 +266,9 @@ function SL_getCurrentOptionState(index){
 }
 //Load solar option
 function SL_loadOption(){
-    if($("#solar_option_c").val() != ""){
+    if($("#own_solar_pv_pricing_c").val() != ""){
         try{
-            var json_val = JSON.parse($("#solar_option_c").val());
+            var json_val = JSON.parse($("#own_solar_pv_pricing_c").val());
             for (let key in json_val) {
                 if($("#"+key).attr('type') == 'checkbox'){
                     $("#"+key).prop( "checked", json_val[key] );
@@ -302,8 +303,8 @@ function SL_calcEquipmentCost(currState){
 
 function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
     const ratio = 1.333;
-    const panel_kw = getAttributeFromName(currState.panel_type, sol_panel, "capacity");
-    const inverter_kw = getAttributeFromName(currState.inverter_type, sol_inverter, "capacity");
+    const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity"));
+    const inverter_kw = parseFloat(getAttributeFromName(currState.inverter_type, sol_inverter, "capacity"));
     const maxPanel = Math.floor(inverter_kw * ratio / panel_kw);
     const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
     let result = [];
