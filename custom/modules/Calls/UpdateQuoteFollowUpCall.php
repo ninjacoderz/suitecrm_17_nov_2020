@@ -71,7 +71,7 @@ function I_Need_More_Time($quote_fb){
     $email->AddAddress($account->email1);
     // $email->AddAddress('ngoanhtuan2510@gmail.com');
     $email->AddCC('info@pure-electric.com.au');  
-    $email->AddCC('michael.golden@pure-electric.com.au');  
+    // $email->AddCC('michael.golden@pure-electric.com.au');  
     $email->prepForOutbound();
     $email->setMailerForSystem();  
     $email->Send();
@@ -96,7 +96,7 @@ function I_Have_More_Questions($quote_fb){
     $email->AddAddress($account->email1);
     // $email->AddAddress('ngoanhtuan2510@gmail.com');
     $email->AddCC('info@pure-electric.com.au');  
-    $email->AddCC('michael.golden@pure-electric.com.au');  
+    // $email->AddCC('michael.golden@pure-electric.com.au');  
     $email->prepForOutbound();
     $email->setMailerForSystem();  
     $email->Send();
@@ -122,7 +122,7 @@ function Not_Proceeding_With_Quote($quote_fb){
     $email->AddAddress($account->email1);
     // $email->AddAddress('ngoanhtuan2510@gmail.com');
     $email->AddCC('info@pure-electric.com.au');  
-    $email->AddCC('michael.golden@pure-electric.com.au');  
+    // $email->AddCC('michael.golden@pure-electric.com.au');  
     $email->prepForOutbound();
     $email->setMailerForSystem();  
     $email->Send();
