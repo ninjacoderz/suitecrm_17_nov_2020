@@ -348,7 +348,7 @@ function CRMSolargainQuoteTesla($username,$password){
 function generate_email_content(){
     //create array id quote tesla
     $quoteJSON_MT = CRMSolargainQuoteTesla('matthew.wright','MW@pure733');
-    $quoteJSON_PS = CRMSolargainQuoteTesla('paul.szuster@solargain.com.au','S0larga1n$');
+    $quoteJSON_PS = CRMSolargainQuoteTesla('paul.szuster@solargain.com.au','WalkingElephant#256');
     $quoteJSON = array_unique(array_merge($quoteJSON_MT,$quoteJSON_PS),SORT_REGULAR);
     $aray_quote_tesla_number = [];
     foreach ($data_json as $key => $value) {
@@ -360,7 +360,7 @@ function generate_email_content(){
     $quoteJSON = "";
     for($i = 0; $i < count($status_arr); $i++){
         $quoteJSON_MT = wrapperCRMSolargain($status_arr[$i],'matthew.wright','MW@pure733');
-        $quoteJSON_PS = wrapperCRMSolargain($status_arr[$i],'paul.szuster@solargain.com.au','S0larga1n$');
+        $quoteJSON_PS = wrapperCRMSolargain($status_arr[$i],'paul.szuster@solargain.com.au','WalkingElephant#256');
         $quoteJSON = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results),SORT_REGULAR);
     
         $html_content .= "<div><h3>".$status_arr[$i]."</h3></div>";
@@ -470,7 +470,7 @@ function generate_email_content(){
     $status_arr = array("NETWORK_APPROVAL_SUBMITTED","NETWORK_APPROVAL_APPROVED","SALES_ORDER_SENT","RECEIVED","APPROVALS_RECEIVED","INSTALLATION_PENDING","INSTALLATION_DATE_CONFIRMED","SYSTEM_INSTALLED","QUOTE_ACCEPTED");
     for($i = 0; $i < count($status_arr); $i++){
         $quoteJSON_MT = wrapperCRMSolargainOrders($status_arr[$i],'matthew.wright','MW@pure733');
-        $quoteJSON_PS = wrapperCRMSolargainOrders($status_arr[$i],'paul.szuster@solargain.com.au','S0larga1n$');
+        $quoteJSON_PS = wrapperCRMSolargainOrders($status_arr[$i],'paul.szuster@solargain.com.au','WalkingElephant#256');
         $orderJSON = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results),SORT_REGULAR);
     
         $html_content .= "<div><h3>".$status_arr[$i]."</h3></div>";
@@ -582,7 +582,7 @@ function generate_email_content(){
 
     //get PV_SERVICES_CASES
     $quoteJSON_MT = CRMSolargainPV_SERVICES_CASES('matthew.wright','MW@pure733');
-    $quoteJSON_PS = CRMSolargainPV_SERVICES_CASES('paul.szuster@solargain.com.au','S0larga1n$');
+    $quoteJSON_PS = CRMSolargainPV_SERVICES_CASES('paul.szuster@solargain.com.au','WalkingElephant#256');
     $quoteJSON = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results),SORT_REGULAR);
 
     $html_content .= "<div><h3>PV SERVICES CASES</h3></div>";
@@ -668,7 +668,7 @@ function generate_email_content(){
     
     //thienpb code -- Upcoming Solargain Installs 
     $quoteJSON_MT = CRMSolargainOrderUpcomming('matthew.wright','MW@pure733');
-    $quoteJSON_PS = CRMSolargainOrderUpcomming('paul.szuster@solargain.com.au','S0larga1n$');
+    $quoteJSON_PS = CRMSolargainOrderUpcomming('paul.szuster@solargain.com.au','WalkingElephant#256');
     $order_result_search = array_unique(array_merge($quoteJSON_MT,$quoteJSON_PS),SORT_REGULAR);
     $html_content .= "<div><h3>UPCOMING SOLARGAIN INSTALLS</h3></div>";
 
@@ -752,7 +752,7 @@ function generate_email_content(){
 
     // Get Quote Tesla
         $quoteJSON_MT = CRMSolargainQuoteTesla('matthew.wright','MW@pure733');
-        $quoteJSON_PS = CRMSolargainQuoteTesla('paul.szuster@solargain.com.au','S0larga1n$');
+        $quoteJSON_PS = CRMSolargainQuoteTesla('paul.szuster@solargain.com.au','WalkingElephant#256');
         $orderJSON = array_unique(array_merge($quoteJSON_MT,$quoteJSON_PS),SORT_REGULAR);
         $html_content .= "<div><h3>Tesla Quotes</h3></div>";
     

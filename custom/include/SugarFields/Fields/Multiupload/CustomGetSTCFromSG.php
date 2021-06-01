@@ -36,7 +36,7 @@
             $password =  "MW@pure733";
         }else{
             $username = 'paul.szuster@solargain.com.au';
-            $password = 'S0larga1n$';
+            $password = 'WalkingElephant#256';
         }
             $url = "https://crm.solargain.com.au/APIv2/quotes/". $quote_id;
             $curl = curl_init();

@@ -5519,6 +5519,7 @@ class EmailsController extends SugarController
                 elseif( $_POST['number_send_sms'] == "+61490942067"){
                     $message_dir = '/var/www/message';
                 }
+                die;
                 foreach($client_numbers as $phone_number){
                     exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." ".escapeshellarg($sms_body) ,$outputs);
                     if(count($outputs) > 0){
@@ -6026,7 +6027,7 @@ class EmailsController extends SugarController
                                             $password =  "MW@pure733";
                                         }else{
                                             $username = 'paul.szuster@solargain.com.au';
-                                            $password = 'S0larga1n$';
+                                            $password = 'WalkingElephant#256';
                                         }
                                         
                                         //get data from SG quote

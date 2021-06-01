@@ -16,7 +16,7 @@
         $password =  "MW@pure733";
     }else{
         $username = 'paul.szuster@solargain.com.au';
-        $password = 'S0larga1n$';
+        $password = 'WalkingElephant#256';
     }
 
     function calc_panel($totalPanel,$min,$max,$line,$groupmax,$index=0){
@@ -448,7 +448,7 @@
                     $password =  "MW@pure733";
                 }else{
                     $username = 'paul.szuster@solargain.com.au';
-                    $password = 'S0larga1n$';
+                    $password = 'WalkingElephant#256';
                 }
             }else{
                 die;

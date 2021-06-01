@@ -7,7 +7,7 @@ $quote_id = $_GET['quote_solorgain'];
         $password =  "MW@pure733";
     }else {
         $username = "paul.szuster@solargain.com.au";
-        $password = "S0larga1n$";
+        $password = "WalkingElephant#256";
     };
 
 //1. login and get json quotes

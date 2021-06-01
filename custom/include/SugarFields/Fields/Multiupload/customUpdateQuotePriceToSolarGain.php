@@ -109,7 +109,7 @@ if($bean_module_data->id){
         $password =  "MW@pure733";
     }else{
         $username = 'paul.szuster@solargain.com.au';
-        $password = 'S0larga1n$';
+        $password = 'WalkingElephant#256';
     }
     if($bean_module_data->solargain_quote_number_c == $SGquote_ID){
         $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$SGquote_ID;
@@ -154,7 +154,7 @@ if($bean_module_data->id){
                 $password =  "MW@pure733";
             }else{
                 $username = 'paul.szuster@solargain.com.au';
-                $password = 'S0larga1n$';
+                $password = 'WalkingElephant#256';
             }
             $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$SGquote_ID;
             //set the url, number of POST vars, POST data

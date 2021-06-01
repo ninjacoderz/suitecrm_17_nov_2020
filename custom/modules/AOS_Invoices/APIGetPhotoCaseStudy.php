@@ -33,7 +33,7 @@
         $decode_result = json_decode($result,true);
         if( $decode_result['Message'] == 'An error has occurred.' || $decode_result == "" ){
             $username = 'paul.szuster@solargain.com.au';
-            $password = 'S0larga1n$';
+            $password = 'WalkingElephant#256';
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, "https://crm.solargain.com.au/apiv2/orders/$sg_order_number/formbayfiles");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
