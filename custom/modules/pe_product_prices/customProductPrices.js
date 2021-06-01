@@ -100,6 +100,36 @@ $(document).ready(function() {
   });
   // E - GET Price from website
 
+  // S - Add button Today
+  var bt_today  ='<button style="padding: 0px 10px;margin: 0px 1px;" type="button" class="button get_date" title="Get Today" data-type="today" >T</button>';
+  $('div[field="date_release"]').find('tr[valign="middle"]').append('<td>'+bt_today+'</td>');
+  $('.get_date').click(function(){
+    var field_date = $(this).closest('.edit-view-field').attr('field');
+    var type_field = $(this).closest('.edit-view-field').attr('type');
+    var type_button = $(this).attr('data-type');
+    var date_click = getDate_Inv(type_button);
+    if (type_field == 'date') {
+        $('#'+field_date).val(date_click);
+    } else {
+        var today_date = new Date();
+        var hour_date = ((today_date.getHours() < 10) ? '0' : '') + today_date.getHours();
+        var minutes_date = today_date.getMinutes();
+        if(minutes_date<15){
+            minutes_date = $("#"+field_date+"_minutes option:eq(1)").val();
+        }else if(minutes_date>=15 && minutes_date < 30){
+            minutes_date = $("#"+field_date+"_minutes option:eq(2)").val();
+        }else if(minutes_date>=30 && minutes_date < 45){
+            minutes_date = $("#"+field_date+"_minutes option:eq(3)").val();
+        }else{
+            minutes_date = $("#"+field_date+"_minutes option:eq(4)").val();      
+        }
+        $('#'+field_date+'_date').val(date_click);
+        $('#'+field_date+'_hours').val(hour_date);
+        $('#'+field_date+'_minutes').val(minutes_date);
+        $('#'+field_date).val(date_click+' '+hour_date+':'+minutes_date);
+    }
+  });     
+  // E - Add button Today
 });
 
 
@@ -159,3 +189,57 @@ function setProductRelate(popupReplyData){
     set_return(popupReplyData);
 }
  
+/**
+ * 3 button TODAY +7 , TODAY +1, TODAY
+ * @param {STRING} type  'data-type' of element
+ */
+ function getDate_Inv(type) {
+  var date_return = '';
+  var date = new Date();
+  let day = date.getDay();
+  switch(type){
+      case 'today':
+          var data = defaultDateTime_Inv(new Date());
+          if(data['day'] < 10) {
+              data['day'] = '0'+data['day'];
+          }
+          if(data['month'] < 10) {
+              data['month'] = '0' + data['month'];
+          }
+          date_return = data['day']+'/'+data['month']+'/'+data['year']; 
+          break;
+      case '1':
+          if (day === 5) {
+              var data = defaultDateTime_Inv(new Date(date.getTime() + 3*(24*60*60*1000)));
+          } else {
+              var data = defaultDateTime_Inv(new Date(date.getTime() + (24*60*60*1000)));
+          }
+          if(data['day'] < 10) {
+              data['day'] = '0'+data['day'];
+          }
+          if(data['month'] < 10) {
+              data['month'] = '0' + data['month'];
+          }
+          date_return = data['day']+'/'+data['month']+'/'+data['year']; 
+          break;
+      case '7':
+          var data = defaultDateTime_Inv(new Date(date.getTime() + 7*(24*60*60*1000)));
+          if(data['day'] < 10) {
+              data['day'] = '0'+data['day'];
+          }
+          if(data['month'] < 10) {
+              data['month'] = '0' + data['month'];
+          }
+          date_return = data['day']+'/'+data['month']+'/'+data['year']; 
+          break;
+  }
+  return date_return;
+}
+
+function defaultDateTime_Inv(date){
+  var now     = date;
+  var year    = now.getFullYear();
+  var month   = now.getMonth()+1; 
+  var day     = now.getDate();
+  return {'day':day,'month':month,'year':year,}
+}
