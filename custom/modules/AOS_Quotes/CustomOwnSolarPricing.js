@@ -306,7 +306,7 @@ function SL_calcEquipmentCost(currState){
 
 function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
     const ratio = 1.333;
-    const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity"));
+    const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
     const inverter_kw = parseFloat(getAttributeFromName(currState.inverter_type, sol_inverter, "capacity"));
     const maxPanel = Math.floor(inverter_kw * ratio / panel_kw);
     const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
