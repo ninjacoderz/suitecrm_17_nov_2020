@@ -5,7 +5,10 @@ $(function () {
     'use strict';
     //INIT
     $(document).find('#own_solar_pv_pricing_c').attr('readonly', 'readonly');
-    init_table_solar();
+    var quote_type = $("#quote_type_c").val();
+    if(quote_type == 'quote_type_solar'){
+        init_table_solar();
+    }
 
     //************************************************ THIENPB ************************************************ */
     /** Clear sl button */
@@ -336,8 +339,6 @@ function SL_calcGrandTotal(currState){
     grandTotal += currState.accessory1;
     // Extra 2
     grandTotal += currState.accessory2;
-    // PM
-    grandTotal += currState.pm;
     // PE Admin %
     grandTotal += grandTotal * (parseFloat($('#sl_pe_admin_percent').val()) / 100);
     // GST 10%
@@ -346,6 +347,9 @@ function SL_calcGrandTotal(currState){
     grandTotal += parseFloat(getAttributeFromName(extra_solar_products[2], solar_extra, "cost")) * parseFloat(currState.number_stcs);
     // Include GST above
     grandTotal += gst;
+
+     // PM
+     grandTotal += currState.pm;
 
     return grandTotal;
 }
