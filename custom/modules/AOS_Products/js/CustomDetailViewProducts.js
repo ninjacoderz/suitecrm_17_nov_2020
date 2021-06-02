@@ -32,6 +32,13 @@ function dynamicSolarCategory(){
     } else {
         $("#solar_category_c").parent().parent().attr('style','');
     }
+    if ($.inArray(productCategoryValue, ["Solar Panels", "Solar"]) == -1) {
+        $("#module_efficiency").parent().parent().css("display", "none");
+        $("#warranty").parent().parent().css("display", "none");
+    } else {
+        $("#module_efficiency").parent().parent().attr('style','');
+        $("#warranty").parent().parent().attr('style','');
+    }
 }
 
 // .:nhantv:. Dynamic label Capacity
