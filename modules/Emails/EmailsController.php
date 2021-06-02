@@ -5519,7 +5519,6 @@ class EmailsController extends SugarController
                 elseif( $_POST['number_send_sms'] == "+61490942067"){
                     $message_dir = '/var/www/message';
                 }
-                die;
                 foreach($client_numbers as $phone_number){
                     exec("cd ".$message_dir."; php send-message.php sms ".$phone_number." ".escapeshellarg($sms_body) ,$outputs);
                     if(count($outputs) > 0){
