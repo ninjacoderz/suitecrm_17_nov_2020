@@ -29,7 +29,7 @@ function satellite_view($focus, $field, $value, $view)
             if ($focus->map_data) {
                 $map_data = json_decode(html_entity_decode($focus->map_data));
                 $zoom = '20';
-                $satellite_url = "http://www.google.com/maps?z={$zoom}&t=k&q={$map_data->location->lat},{$map_data->location->lng}&output=embed";
+                $satellite_url = "https://www.google.com/maps?z={$zoom}&t=k&q={$map_data->location->lat},{$map_data->location->lng}&output=embed";
                 $result_data = '<iframe id="satellite-view-google" src="'.$satellite_url.'" height="300" title="Satellite View"></iframe>';
             }
         }
