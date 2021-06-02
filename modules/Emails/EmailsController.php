@@ -1091,8 +1091,8 @@ class EmailsController extends SugarController
                  * @var EmailTemplate $emailTemplate
                  */
 
-                // $emailTemplateID = '4f9d33bc-347c-d77d-04c5-609ca866758e'; //suitecrm server
-                $emailTemplateID = '5b618685-ec7e-14d2-56d4-609dd973ed74'; //test devel
+                $emailTemplateID = '4f9d33bc-347c-d77d-04c5-609ca866758e'; //suitecrm server
+                // $emailTemplateID = '5b618685-ec7e-14d2-56d4-609dd973ed74'; //test devel
 
                 $emailTemplate = BeanFactory::getBean(
                     'EmailTemplates',
