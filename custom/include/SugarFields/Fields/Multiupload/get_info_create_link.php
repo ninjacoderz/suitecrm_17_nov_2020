@@ -36,10 +36,11 @@ if($record_id != '') {
                 aos_invoices.id as aos_invoices_id ,aos_invoices.name as aos_invoices_name ,
                 leads.id as leads_id , leads.account_name as leads_name
                 FROM aos_quotes  
-                LEFT JOIN leads ON aos_quotes.billing_account_id = leads.account_id 
+                LEFT JOIN leads_aos_quotes_1_c ON aos_quotes.id = leads_aos_quotes_1_c.leads_aos_quotes_1aos_quotes_idb 
+                LEFT JOIN leads ON leads.id = leads_aos_quotes_1_c.leads_aos_quotes_1leads_ida
                 LEFT JOIN aos_quotes_aos_invoices_c ON aos_quotes_aos_invoices_c.aos_quotes77d9_quotes_ida = aos_quotes.id
                 LEFT JOIN aos_invoices ON aos_invoices.id = aos_quotes_aos_invoices_c.aos_quotes6b83nvoices_idb 
-                WHERE  aos_quotes.id = '$record_id' AND leads.account_id != '' AND aos_quotes.deleted = 0";
+                WHERE  aos_quotes.id = '$record_id' AND aos_quotes.deleted = 0";
             $ret = $db->query($sql);
             while($row = $ret->fetch_assoc()){
                 $result = render_json_data($result,$row);

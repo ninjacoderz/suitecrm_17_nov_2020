@@ -1553,3 +1553,15 @@ $entry_point_registry['createProductPrice'] = array(
     'file' => 'custom/modules/pe_product_prices/createProductPrices.php',
     'auth' => false
 );
+
+//VUT - get price from web - module Product Prices
+$entry_point_registry['getPriceFromWeb'] = array( 
+    'file' => 'custom/modules/pe_product_prices/getPriceFromWeb.php',
+    'auth' => false
+);
+
+//Thienpb - Show detailview in other module
+$entry_point_registry['APIGetSolarProduct'] = array(
+    'file' => 'custom/modules/AOS_Quotes/APIGetSolarProduct.php',
+    'auth' => false
+);

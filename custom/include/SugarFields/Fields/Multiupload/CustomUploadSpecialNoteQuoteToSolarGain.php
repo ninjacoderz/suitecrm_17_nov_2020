@@ -47,7 +47,7 @@ if(isset($specialNotes )&&$specialNotes != ""){
     if(!isset($quote_decode->ID)){
 
         $username = 'paul.szuster@solargain.com.au';
-        $password = 'S0larga1n$';
+        $password = 'WalkingElephant#256';
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

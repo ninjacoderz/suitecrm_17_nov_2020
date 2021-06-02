@@ -49,7 +49,7 @@
         if(!isset($quote_decode->ID)){
             
             $username = 'paul.szuster@solargain.com.au';
-            $password = 'S0larga1n$';
+            $password = 'WalkingElephant#256';
             
             //get data from SG quote
             $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$quote_id;

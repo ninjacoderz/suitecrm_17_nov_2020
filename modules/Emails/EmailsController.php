@@ -6408,7 +6408,7 @@ class EmailsController extends SugarController
                                             $password =  "MW@pure733";
                                         }else{
                                             $username = 'paul.szuster@solargain.com.au';
-                                            $password = 'S0larga1n$';
+                                            $password = 'WalkingElephant#256';
                                         }
                                         
                                         //get data from SG quote

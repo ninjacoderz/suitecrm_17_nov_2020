@@ -204,7 +204,7 @@
 
                 if(!isset($quote_decode->ID)){
                     $GLOBALS['username'] = 'paul.szuster@solargain.com.au';
-                    $GLOBALS['password'] = 'S0larga1n$';
+                    $GLOBALS['password'] = 'WalkingElephant#256';
                     //get data from SG quote
                         $url = 'https://crm.solargain.com.au/APIv2/quotes/'.$quoteSG_id;
                         $quoteSG = $this->curlSG('GET','',$url,$quoteSG_id);

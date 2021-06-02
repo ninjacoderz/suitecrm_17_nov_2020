@@ -86,7 +86,7 @@
         //change account paul
         if(!isset($json_result->ID)) {
             $username = 'paul.szuster@solargain.com.au';
-            $password = 'S0larga1n$';
+            $password = 'WalkingElephant#256';
             $assigned_user_name = 'Paul Szuster';
 
             $ch = curl_init();
