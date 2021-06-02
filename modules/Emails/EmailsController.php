@@ -1091,8 +1091,8 @@ class EmailsController extends SugarController
                  * @var EmailTemplate $emailTemplate
                  */
 
-                $emailTemplateID = '4f9d33bc-347c-d77d-04c5-609ca866758e'; //suitecrm server
-                // $emailTemplateID = '5b618685-ec7e-14d2-56d4-609dd973ed74'; //test devel
+                // $emailTemplateID = '4f9d33bc-347c-d77d-04c5-609ca866758e'; //suitecrm server
+                $emailTemplateID = '5b618685-ec7e-14d2-56d4-609dd973ed74'; //test devel
 
                 $emailTemplate = BeanFactory::getBean(
                     'EmailTemplates',
@@ -1106,8 +1106,8 @@ class EmailsController extends SugarController
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
                 //parse value
-                $name = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city, $name);
-                $description_html = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . ", " . $focus->billing_address_state .", " . $focus->billing_address_postalcode , $description_html);
+                $name = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . " " . $focus->billing_address_state . " " . $focus->billing_address_postalcode.".", $name);
+                $description_html = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . " " . $focus->billing_address_state ." ". $focus->billing_address_postalcode , $description_html);
 
                 $templateData = $emailTemplate->parse_email_template(
                     array(

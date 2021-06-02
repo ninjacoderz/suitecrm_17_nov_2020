@@ -1332,18 +1332,20 @@ $(function () {
           // }else if (populateModuleName !== '' && typeof($(source).attr('data-contact-name')) == 'undefined') {
           //     populateEmailAddress = populateModuleName + ' <' + populateEmailAddress + '>';
           // }
-          $(self.emailComposeView)
-            .find("#from_addr_name")
-            .append(
-              `<option value="Test Customer <operations@pure-electric.com.au>" inboundid="437e3cdd-6e46-e6e5-a33f-5c94522c7d4c" infos="(<b>Reply-to:</b> Test Customer <b>From:</b> operations@pure-electric.com.au)">Test Customer &lt;operations@pure-electric.com.au&gt;</option>`
-            );
-          let infos = "(<b>Reply-to:</b> Test Customer <b>From:</b> operations@pure-electric.com.au)";
+
+        //   $(self.emailComposeView)
+        //     .find("#from_addr_name")
+        //     .append(
+        //       `<option value="Test Customer <operations@pure-electric.com.au>" inboundid="437e3cdd-6e46-e6e5-a33f-5c94522c7d4c" infos="(<b>Reply-to:</b> Test Customer <b>From:</b> operations@pure-electric.com.au)">Test Customer &lt;operations@pure-electric.com.au&gt;</option>`
+        //     );
+
+        //   let infos = "(<b>Reply-to:</b> Test Customer <b>From:</b> operations@pure-electric.com.au)";
           // $(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
           $(self.emailComposeView).find("#parent_type").val(populateModule);
           $(self.emailComposeView).find("#parent_name").val(populateModuleName);
           $(self.emailComposeView).find("#cc_addrs_names").val("Pure Info <info@pure-electric.com.au>");
-          $(self.emailComposeView).find("#from_addr_name").val("Test Customer <operations@pure-electric.com.au>");
-          $(self.emailComposeView).find("#from_addr_name_infos").html(infos);
+        //   $(self.emailComposeView).find("#from_addr_name").val("Test Customer <operations@pure-electric.com.au>");
+        //   $(self.emailComposeView).find("#from_addr_name_infos").html(infos);
 
           $(self.emailComposeView).find("#parent_id").val(populateModuleRecord);
           $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
