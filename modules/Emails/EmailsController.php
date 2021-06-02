@@ -3506,6 +3506,339 @@ class EmailsController extends SugarController
             }
             //end
 
+            // .:nhantv:. off-grid pricing
+            if($_REQUEST['email_type'] == "off_grid_pricing"){
+                $macro_nv = array();
+                $focusName = "AOS_Quotes";
+                $quote = new AOS_Quotes();
+                $focus = $quote->retrieve($_REQUEST['record_id']);
+                $this->bean->return_module = 'AOS_Quotes';
+                $this->bean->return_id = $focus->id;
+                $lead =  new Lead();
+                $lead->retrieve($focus->leads_aos_quotes_1leads_ida);
+
+                $contact =  new Contact();
+                $contact->retrieve($focus->billing_contact_id);
+
+                if(!$focus->id) return;
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',
+                    '9d9f03ae-fe75-68d0-72ad-5d5b95cda15b'
+                );
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true;
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+
+                $source = realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c;
+                $filesDesigns = $this->check_exist_file($source, 'Design');
+                $filesSolar = $this->check_exist_file($source, 'Quote_');
+                $filesSolar_Pdf = [];
+                foreach ($filesSolar as $value) {
+                    if (strpos(strtolower($value), "pdf") !== false) {
+                        $filesSolar_Pdf[] =   $value;
+                    }
+                }
+                $all_files_send  = array_merge($filesDesigns,$filesSolar_Pdf);
+                foreach ($all_files_send as $file) {
+                    $this->bean->save();
+                    $noteTemplate = new Note();
+                    $noteTemplate->id = create_guid();
+                    $noteTemplate->new_with_id = true;
+                    $noteTemplate->parent_id = $this->bean->id; 
+                    $noteTemplate->parent_type = 'Emails';
+                    $noteTemplate->date_entered = '';
+                    $noteTemplate->filename = $file;
+                    $noteTemplate->name = $file;   
+                    $noteTemplate->save();
+                    global $sugar_config;
+                    $destination = $sugar_config['upload_dir'].$noteTemplate->id;
+                    $sourcefile = $source.'/'.$file;
+
+                    if(strpos(strtolower($file), "png") !== false) {
+                        $noteTemplate->file_mime_type = 'image/png';
+                    } elseif (strpos(strtolower($file), "pdf") !== false) {
+                        $noteTemplate->file_mime_type = 'image/jpg';
+                    } else {
+                        $noteTemplate->file_mime_type = 'image/jpg';
+                    }
+                    if (!symlink($sourcefile, $destination)) {
+                    $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                    }
+                    $this->bean->attachNote($noteTemplate);
+                }
+                
+                $this->bean->to_addrs_names = $lead->first_name.' '.$lead->last_name." <$lead->email1>";
+                $this->bean->name = $name;
+                $this->bean->description_html = $description_html;
+                $this->bean->description = $description;
+
+                //VUT - S - replace Quote Inputs  
+                if ($quote->quote_note_inputs_c !='') {
+                    $solar_quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c), true);
+                    if (count(array_filter($solar_quote_input)) == 0) {
+                        $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                        // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                    } else {
+                        $this->bean->description_html = $this->renderTableQuoteInputSolarPricing($solar_quote_input, $this->bean->description_html);
+                    }
+                } else {
+                    $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                    // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                } 
+                //VUT - E - replace Quote Inputs 
+                //replace data for subject - VUT - 2020/03/04
+                $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                
+                //replace data for body
+                $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
+                
+                $this->bean->description_html = str_replace("\$aos_quotes_installation address_c", $_REQUEST['address'] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_stroreys_c", $_REQUEST['storey'] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_preferred_c", "No" , $this->bean->description_html);
+
+                if( strpos($_REQUEST['address'],"VIC") == TRUE){
+                    $html_vic = '<table style="text-align:left;border-collapse:collapse;width:735px;">
+                                <tbody>
+                                <tr>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;width: 47%">'. $_REQUEST['vic_rebate'] .'</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Loan to your solar pricing?</td>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;" >'.  $_REQUEST['vic_loan'] .'</td>
+                                </tr>
+                                </tbody></table>';
+                    $this->bean->description_html = str_replace("\$aos_solar_vic_loan_c", $html_vic ,$this->bean->description_html);
+                    // $body_html = str_replace("\$aos_quotes_loan_c",    ($vic_loan == "yes_loan") ? "Yes": 'No' , $body_html);
+                } else {
+                    $this->bean->description_html = str_replace("\$aos_solar_vic_loan_c"," " ,$this->bean->description_html);
+                }
+
+                // .:nhantv:. 
+                $pricing_options = $focus->offgrid_option_c;
+                $solar_pricing_options = '';
+
+                if($pricing_options != ''){
+                    $pricings = json_decode(html_entity_decode($pricing_options));
+                    // Inverter line
+                    $inverter_line = (int)$pricings->inverter_line + 1;
+                    // Init Option price area
+                    $solar_pricing_options .= '<div style="margin:0;padding:0;box-sizing:border-box;width:100%;max-width:1125px;line-height:1.8;font-family:sans-serif;font-size:16px">';
+                    // Get Product bean
+                    $productBean = BeanFactory::newBean('AOS_Products');
+
+                    // Loop through options
+                    for ($i=1; $i < 7 ; $i++) {
+                        // Inverter optimize
+                        $inverter_og = array();
+                        for ($line = 1; $line < $inverter_line; $line++){
+                            $tmpName = 'inverter_og_type'.$line.'_'.$i;
+                            if($pricings->$tmpName != ''){
+                                // Get Product name from DB
+                                $inverter_name = $this->getProductNameByShortName($productBean, $pricings->$tmpName);
+                                // Check exist on array
+                                if($inverter_og[$inverter_name] != null){
+                                    $newQty = $inverter_og[$inverter_name] + 1;
+                                    $inverter_og[$inverter_name] = $newQty;
+                                } else {
+                                    $inverter_og[$inverter_name] = 1;
+                                }
+                            }
+                        }
+
+                        // Curent Products name from DB
+                        $curr_product = $this->getCurrentProductName($productBean, $pricings, $i);
+                        
+                        // Check if option has value to render
+                        if($pricings->{'og_total_'.$i} != "" || $pricings->{'og_total_'.$i} != 0){
+                            // Format og_total
+                            $grandTotal = substr($pricings->{'og_total_'.$i}, 0, -3);
+                            // Render Option
+                            $solar_pricing_options .= '<div style="float:left;padding:0;width:30%;min-width:365px;background:#fff;color:#444;text-align:center;overflow:hidden;margin:0">
+                            <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
+                              <div style="border-top-left-radius:2rem;border-top-right-radius:2rem;clear:both;margin:0;font-weight:bold;padding:0 0 0.25rem 0;color:#fff;background:#C32177;">
+                                <div style="width:100%;clear: both;">
+                                    <div style="width:60px;text-align:center;float: left;">
+                                        <h1 style="margin: 0;padding:0;color:#fb2a5c;font-size:2rem;background:white;border-radius:2rem;border:2px solid rgba(196, 33, 120, 0.7)">'.$i.'</h1>
+                                    </div>
+                                    <div style="text-align:center;">
+                                        <h1 style="margin:0;padding:0;font-size:2rem;color: white;">'.(float)$pricings->{'total_og_kW_'.$i}.' kW</h1>
+                                    </div>
+                                </div>
+                              </div>
+                              <div style="margin:0;padding:0.5rem;height:300px;overflow:auto;min-height:300px;">
+                                <div style="padding:0;color:#444;list-style:none;text-align:left;margin:0.5rem 0 0 0;">
+                                  <table style="width: 100%;">
+                                    <tbody>
+                                      <tr>
+                                        <td style="text-align:left">
+                                          <h1 style="margin:0 0 0.25rem 0;padding:5px 0;font-size:1rem;font-weight:bold">'.$pricings->{'total_og_panels_'.$i}.'x '.$curr_product['panel'].'</h1>
+                                        </td>
+                                      </tr>';
+                                    // Render inverter
+                                    foreach ($inverter_og as $key => $value) {
+                                        $tmpStr = ($value > 1) ? $value.'x '.$key : $key;
+                                        $solar_pricing_options .= '<tr>
+                                            <td>
+                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$tmpStr.'</div>
+                                            </td>
+                                        </tr>';
+                                    }
+                            $solar_pricing_options .= '<tr>
+                                        <td>
+                                          <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['offgrid_inverter'].'</div>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$pricings->{'offgrid_howmany_'.$i}.'x '.$curr_product['offgrid_batery'].'</div>
+                                        </td>
+                                      </tr>';
+                                    // Render Accessories
+                                    if ($pricings->{'offgrid_accessory1_'.$i} != '') {
+                                        $solar_pricing_options .= '<tr>
+                                            <td>
+                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['offgrid_accessory1'].'</div>
+                                            </td>
+                                        </tr>';
+                                    }
+                                    if ($pricings->{'offgrid_accessory2_'.$i} != '') {
+                                        $solar_pricing_options .= '<tr>
+                                            <td>
+                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['offgrid_accessory2'].'</div>
+                                            </td>
+                                        </tr>';
+                                    }
+                                    // Render Generator
+                                    if ($pricings->{'re_generator_'.$i} != '') {
+                                        $solar_pricing_options .= '<tr>
+                                            <td>
+                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['re_generator'].'</div>
+                                            </td>
+                                        </tr>';
+                                    }
+                            $solar_pricing_options .= '</tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <h1 style="border-bottom-left-radius: 2rem;border-bottom-right-radius: 2rem;margin: 0.8rem 0 0 0;font-size:2rem;font-weight:bold;color:#FB2A5D;padding:0.5rem 2rem;border-top:1px solid rgb(235, 235, 235);">
+                                <span style="margin: 0;padding:0;font-size: 1.5rem;">$</span> '.$grandTotal.'</h1>
+                            </div>
+                          </div>';
+                        }
+                    }
+                    $solar_pricing_options .= '<div style="clear: both;"></div></div>';
+                }
+                $this->bean->description_html = str_replace("\$solar_pricing_options",  $solar_pricing_options , $this->bean->description_html);
+
+                $meter_phase_c  = array('','Single Phase','Two Phase (Rural Only)','Three Phase');
+                $distributor_c = array("0"=>"",
+                        "4" => "Citipower",
+                        "5" => "Jemena",
+                        "6"=>"Powercor",
+                        "7"=>"SP Ausnet",
+                        "8"=>"United Energy Distribution",
+                        "1"=>"Western Power",
+                        "13"=>"South Australia Power Network",
+                        "2"=>"Energex",
+                        "3" => "Ergon",
+                        "9" => "Essential Energy",
+                        "10"=>"Ausgrid",
+                        "12"=>"Endeavour Energy",
+                        "11"=>"ActewAGL",
+                        "14"=>"AusNet Electricity Services Pty Ltd",
+                );
+                
+                if(  $_REQUEST['storey'] == 'Double Storey'){
+                    $gutter_height_c = "3-5m";
+                }else {
+                    $gutter_height_c = "0-3m";
+                }
+                $roof_type_c    = array('Tin'=>'Tin',
+                                        'Tile'=>'Tile',
+                                        'klip_loc'=>'Klip Loc',
+                                        'Concrete'=>'Concrete',
+                                        'Trim_Deck'=>'Trim Deck',
+                                        'Insulated'=>'Insulated',
+                                        'Asbestos'=>'Asbestos',
+                                        'Ground_Mount'=>'Ground Mount',
+                                        'Terracotta'=>'Terracotta',
+                                        'Other'=>'Other');
+                $roof_pitch_c    = array('0-25 Degrees'=>'0-25 Degrees',
+                                        '25-30 Degrees'=>'25-30 Degrees',
+                                        '30+ Degrees'=>'30+ Degrees');
+                
+                $this->bean->description_html = str_replace("\$aos_quotes_meter_phase_c",  $meter_phase_c[$focus->meter_phase_c] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_distributor_c",  $distributor_c[$focus->distributor_c] , $this->bean->description_html);
+                // $this->bean->description_html = str_replace("\$aos_quotes_first_solar_c",   'No' , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_gutter_height_c",   $gutter_height_c , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_roof_pitch_c",   $roof_pitch_c[$focus->roof_pitch_c] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_roof_type_c",  $roof_type_c[$focus->roof_type_c] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_main_switch_c",$focus->main_switch_c , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_external_internal_c", $focus->external_or_internal_c, $this->bean->description_html);
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $this->bean->name,
+                        'body_html' => $this->bean->description_html,
+                        'body' => $this->bean->description_html,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client = $phone_number;//$_REQUEST['sms_received'];
+                $this->bean->number_receive_sms = "matthew_paul_client";
+                //start - code render sms_template  
+                global $current_user;
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    '1d4462d6-1a54-45af-3a7c-5d647d113e0e' 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$first_name", $contact->first_name, $body);
+                $body = str_replace("\$aos_quote_id", $_REQUEST['record_id'], $body);
+                $smsTemplate->body_c = $body;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                //end - code render sms_template
+            }
+            //end
+
             //Thienpb code -- solar pricing options
             if($_REQUEST['email_type'] == "send_solar_pricing"){
                 $macro_nv = array();
@@ -5422,6 +5755,55 @@ class EmailsController extends SugarController
             $relateLine .= 'data-relate-name="' . $relateBean->name . '">';
             echo $relateLine;
         }
+    }
+
+    // .:nhantv:. Get Product Name by Short Name
+    protected function getProductNameByShortName($productBean, $shortName){
+        $productObj = $productBean->retrieve_by_string_fields(
+            array(
+            'short_name_c' => $shortName
+            )
+        );
+        return ($productObj != null) ? $productObj->name : $shortName;
+    }
+
+    // .:nhantv:. Get Curent product name
+    protected function getCurrentProductName($productBean, $pricings, $i){
+        $curr_product = array();
+        $name = "";
+
+        // Panel
+        if($pricings->{'panel_og_type_'.$i} != ''){
+            $name = $this->getProductNameByShortName($productBean, $pricings->{'panel_og_type_'.$i});
+            $curr_product['panel'] = $name;
+        }
+        // Og Inverter
+        if($pricings->{'offgrid_inverter_'.$i} != ''){
+            $name = $this->getProductNameByShortName($productBean, $pricings->{'offgrid_inverter_'.$i});
+            $curr_product['offgrid_inverter'] = $name;
+        }
+        // Battery
+        if($pricings->{'offgrid_batery_'.$i} != ''){
+            $name = $this->getProductNameByShortName($productBean, $pricings->{'offgrid_batery_'.$i});
+            $curr_product['offgrid_batery'] = $name;
+        }
+        // Accessory 1
+        if($pricings->{'offgrid_accessory1_'.$i} != ''){
+            $name = $this->getProductNameByShortName($productBean, $pricings->{'offgrid_accessory1_'.$i});
+            $curr_product['offgrid_accessory1'] = $name;
+        }
+        // Accessory 2
+        if($pricings->{'offgrid_accessory2_'.$i} != ''){
+            $name = $this->getProductNameByShortName($productBean, $pricings->{'offgrid_accessory2_'.$i});
+            $curr_product['offgrid_accessory2'] = $name;
+        }
+        // Generator
+        if($pricings->{'re_generator_'.$i} != ''){
+            $name = $this->getProductNameByShortName($productBean, $pricings->{'re_generator_'.$i});
+            $curr_product['re_generator'] = $name;
+        }
+
+        return $curr_product;
     }
 
     /**

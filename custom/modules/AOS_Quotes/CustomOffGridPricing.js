@@ -8,8 +8,13 @@ $(function () {
 
     //Variables
     var quote_type = $("#quote_type_c").val();
+    var div_buttons = $('td.buttons div.buttons');
     switch (quote_type) {
         case 'quote_type_off_grid_system':
+            // Add button send mail
+            $(div_buttons).append('<button type="button" style="margin:4px;" class="button" id="send_og_pricing" class="button send_og_pricing" onclick="$(document).openComposeViewModal_SendOffGridPricing(this);" data-email-type="off_grid_pricing"  data-module="AOS_Quotes" data-module-name="' + $("#name").val() + '" data-record-id="' + $("input[name='record']").val() + '">SEND OFFGRID PRICING OPTIONS</button>');
+            // $(div_buttons).append('<button type="button" style="margin:4px;" class="button" id="send_og_pricing" class="button send_og_pricing" onclick="$(document).openComposeViewModal_SendOffGridPricing(this);" data-email-type="send_solar_pricing"  data-module="AOS_Quotes" data-module-name="' + $("#name").val() + '" data-record-id="' + $("input[name='record']").val() + '">SEND OFFGRID PRICING OPTIONS</button>');
+            // Init table grid
             init_table_offgrid();
             break;
         default: break;
@@ -76,6 +81,111 @@ $(function () {
 
 });
 
+$.fn.openComposeViewModal_SendOffGridPricing = function (source) {
+    "use strict";
+    var record_id = $(source).attr('data-record-id');
+    if (record_id == '') {
+        alert('Please Save before !');
+        return;
+    }
+
+    /**Save before*/
+    $('#save_and_edit').trigger('click');
+
+    var self = this;
+
+    self.emailComposeView = null;
+    var opts = $.extend({}, $.fn.EmailsComposeViewModal.defaults);
+    var composeBox = $('<div></div>').appendTo(opts.contentSelector);
+    composeBox.messageBox({ "showHeader": false, "showFooter": false, "size": 'lg' });
+    composeBox.setBody('<div class="email-in-progress"><img src="themes/' + SUGAR.themes.theme_name + '/images/loading.gif"></div>');
+    composeBox.show();
+    var email_type = $(source).attr('data-email-type');
+    var email_module = $(source).attr('data-module');
+    var address = $('#install_address_c').val() + ' ' + $('#install_address_city_c').val() + ' ' + $('#install_address_state_c').val() + ' ' + $('#install_address_postalcode_c').val();
+    if ($('#Vic_Rebate').prop('checked') == true) {
+        var vic_rebate = "Yes";
+    } else {
+        var vic_rebate = "No";
+    }
+    if ($('#Loan_Rebate').prop('checked') == true) {
+        var vic_loan = "Yes";
+    } else {
+        var vic_loan = "No";
+    }
+    if ($('#Double_Storey').prop('checked') == true) {
+        var storey = "Double Storey";
+    } else {
+        var storey = "Single Storey";
+    }
+    var url_email = 'index.php?module=Emails&action=ComposeView&address=' + address + '&storey=' + storey + '&vic_rebate=' + vic_rebate + '&vic_loan=' + vic_loan + '&in_popup=1' + ((record_id != "") ? ("&record_id=" + record_id) : "") + ((email_type != "") ? ("&email_type=" + email_type) : "") + ((email_module != "") ? ("&email_module=" + email_module) : "");
+
+    $.ajax({
+        type: "GET",
+        cache: false,
+        url: url_email,
+    }).done(function (data) {
+        if (data.length === 0) {
+            console.error("Unable to display ComposeView");
+            composeBox.setBody(SUGAR.language.translate('', 'ERR_AJAX_LOAD'));
+            return;
+        }
+        composeBox.setBody(data);
+        self.emailComposeView = composeBox.controls.modal.body.find('.compose-view').EmailsComposeView();
+
+
+        var populateModule = $(source).attr('data-module');
+        var populateModuleRecord = $(source).attr('data-record-id');
+        var populateModuleName = $(source).attr('data-module-name');
+
+        //$(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
+        $(self.emailComposeView).find('#parent_type').val(populateModule);
+        $(self.emailComposeView).find('#parent_name').val(populateModuleName);
+        $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
+        $(self.emailComposeView).find('#parent_id').val(populateModuleRecord);
+        $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
+        $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);
+
+
+        $(self.emailComposeView).on('sentEmail', function (event, composeView) {
+            composeBox.hide();
+            composeBox.remove();
+        });
+        $(self.emailComposeView).on('disregardDraft', function (event, composeView) {
+            if (typeof messageBox !== "undefined") {
+                var mb = messageBox({ size: 'lg' });
+                mb.setTitle(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_TITLE'));
+                mb.setBody(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_BODY'));
+                mb.on('ok', function () {
+                    mb.remove();
+                    composeBox.hide();
+                    composeBox.remove();
+                });
+                mb.on('cancel', function () {
+                    mb.remove();
+                });
+                mb.show();
+            } else {
+                if (confirm(self.translatedErrorMessage)) {
+                    composeBox.hide();
+                    composeBox.remove();
+                }
+            }
+        });
+
+
+        composeBox.on('cancel', function () {
+            composeBox.remove();
+        });
+        composeBox.on('hide.bs.modal', function () {
+            composeBox.remove();
+        });
+    }).fail(function (data) {
+        composeBox.controls.modal.content.html(SUGAR.language.translate('', 'LBL_EMAIL_ERROR_GENERAL_TITLE'));
+    });
+    return $(self);
+};
+
 // .:nhantv:. Create new Inverter line
 function createInverterLine(){
     let next_index = getCountInverterLine() + 1;
@@ -110,7 +220,7 @@ function getCountInverterLine(){
 // .:nhantv:. Clear Offgrid Option
 function clearOgOption(option){
     $("#offgrid_option_"+(option)).prop('checked', false);
-    $('#offgrid_pricing_table td:nth-child('+ (option + 1) +')').find('input').val('');
+    $('#offgrid_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="pe_admin_percent"])').val('');
     $('#offgrid_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
 
@@ -307,7 +417,7 @@ function getMaxPanelAndTotalKw(currState, isTotalPanel){
     let result = [];
     result['max'] = maxPanel;
     result['kw'] = maxKw;
-    result['inverter_kw'] = inverter_kw.toFixed(3);
+    result['inverter_kw'] = inverter_kw.toFixed(2);
     // check total panel manually input
     if (isTotalPanel) {
         // Check inut panel is greater than max value
@@ -447,7 +557,7 @@ async function generateOffgridItem(){
     } else {
         $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
     }
-    $("#group0name").val("Off-Grid Option " + index);
+    // $("#group0name").val("Off-Grid Option " + index);
 
     // Get value
     let currState = getCurrentOptionState(index);
@@ -547,8 +657,7 @@ async function calculatePriceOg(panelTotal, totalKw, currState = {}){
     // Set value to grand total
     $("#total_amount").trigger("focusin");
     let grandTotal = $("#total_amount").val();
-    $("#total_amount").val(roundTo90(grandTotal));
-    await wait(200);
+    $("#total_amount").val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
     $("#total_amount").trigger("change");
 
     // Scroll top offset
