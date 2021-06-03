@@ -32,12 +32,12 @@ function dynamicSolarCategory(){
     } else {
         $("#solar_category_c").parent().parent().attr('style','');
     }
-    if ($.inArray(productCategoryValue, ["Solar Panels", "Solar"]) == -1) {
-        $("#module_efficiency").parent().parent().css("display", "none");
-        $("#warranty").parent().parent().css("display", "none");
-    } else {
+    if ($.inArray(productCategoryValue, ["Solar"]) != -1 && $('#solar_category_c').val() == 'solar_panels') {
         $("#module_efficiency").parent().parent().attr('style','');
         $("#warranty").parent().parent().attr('style','');
+    } else {
+        $("#module_efficiency").parent().parent().css("display", "none");
+        $("#warranty").parent().parent().css("display", "none");
     }
 }
 
