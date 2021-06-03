@@ -78,28 +78,29 @@ if ($bean->id) {
                 $i++;
             }
         }
-        $tr = "<tbody>{$tr}</tbody>";
-        
-        $th = " <thead>
-                    <tr class='footable-header'>
-                        <th data-type='html' class='footable-first-visible' style='display: table-cell;'><!-- extra th for the plus button -->&nbsp;</th>
-                        <th data-type='html' style='display: table-cell;'><!-- extra th for the plus button -->&nbsp;</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Number</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Quote Type</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Installer</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Type</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Base Rate</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Bend</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Piping</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Wall Bracket</th>
-                        <th data-breakpoints='' data-type='html' style='display: table-cell;'>Entry W-Bracket</th>
-                    </tr>
-                </thead>
-        ";
+        if ($tr != "") {
+            $tr = "<tbody>{$tr}</tbody>";
+            
+            $th = " <thead>
+                        <tr class='footable-header'>
+                            <th data-type='html' class='footable-first-visible' style='display: table-cell;'><!-- extra th for the plus button -->&nbsp;</th>
+                            <th data-type='html' style='display: table-cell;'><!-- extra th for the plus button -->&nbsp;</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Number</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Quote Type</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Installer</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Type</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Base Rate</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Bend</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Piping</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Wall Bracket</th>
+                            <th data-breakpoints='' data-type='html' style='display: table-cell;'>Entry W-Bracket</th>
+                        </tr>
+                    </thead>
+            ";
 
-        $table = "<table cellpadding='0' cellspacing='0' border='0' class='list view table-responsive subpanel-table footable footable-2 breakpoint-lg' data-empty='No results found.' data-breakpoints='{ 'xs': 754, 'sm': 750, 'md': 768, 'lg': 992}' style=''>";
-        $table .= "{$th}{$tr}</table>";
-
+            $table = "<table cellpadding='0' cellspacing='0' border='0' class='list view table-responsive subpanel-table footable footable-2 breakpoint-lg' data-empty='No results found.' data-breakpoints='{ 'xs': 754, 'sm': 750, 'md': 768, 'lg': 992}' style=''>";
+            $table .= "{$th}{$tr}</table>";
+        }
     }
     $html = $table;
 }
