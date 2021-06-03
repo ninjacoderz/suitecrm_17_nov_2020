@@ -20,11 +20,6 @@ $(function () {
         default: break;
     }
 
-    // .:nhantv:. Add a checkbox to Itemise in LINE ITEMS
-    $('input[name="sl_quote_option"]').on('change', function() {
-        checkBoxOptionHandle($(this), "sl_quote_option");
-    });
-
     // .:nhantv:. Clear Off Grid Option
     $(document).on('click', '*[id*="clear_og_option"]', function(e){
         e.preventDefault();
@@ -266,9 +261,6 @@ function checkBoxOptionHandle(el, inputClass){
         $("#lineItems").find(".group_body").each((index) => {
             markGroupDeleted(index);
         });
-    }
-    if(inputClass == "sl_quote_option"){
-        generateJSONForInput();
     }
 }
 // .:nhantv:. Convert JSON to Array data
