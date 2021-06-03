@@ -8,7 +8,7 @@ $(document).ready(function() {
 // //for test
     
     //Hide field data JSON
-    $(document).find('#map_data').closest('.edit-view-row-item').hide();
+    // $(document).find('#map_data').closest('.edit-view-row-item').hide();
     if ($("input[name='record']").val() == '') {
         $(document).find('[field="installation_pictures_c"]').closest('.panel.panel-default').hide();
     }
@@ -139,6 +139,28 @@ function getGEOGoogle(hasImg = 0) {
         return '';
     } else {
         showStreetView(dataGEO, hasImg);
+        dataGEO.data_img = '';
+        if (hasImg == 0) {
+            SUGAR.ajaxUI.showLoadingPanel();
+            setTimeout(function () {
+                let promises = [];
+                promises.push(convertasbinaryimage());
+                Promise.all(promises).then(responseList => {
+                    setTimeout(function() {
+                        // debugger;
+                        let data_img = $(document).find('#image_satellite').attr('src');
+                        if (data_img != '' && typeof data_img != 'undefined') {
+                            dataGEO.data_img = data_img;
+                            $(document).find('#map_data').val(JSON.stringify(dataGEO));
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                            return;
+                        }
+                        SUGAR.ajaxUI.hideLoadingPanel();
+                    }, 1000);
+                    
+                });
+            }, 3000);
+        }
     }
     $(document).find('#map_data').val(JSON.stringify(dataGEO));
 }
@@ -161,9 +183,9 @@ function showStreetView(data,hasImg) {
                 $("#satellite_view_span").empty().append(result);
             }
         });
-        setTimeout(function () {
-            convertasbinaryimage();
-        }, 3000);
+        // setTimeout(function () {
+        //     convertasbinaryimage();
+        // }, 3000);
     }
 }
 
@@ -176,15 +198,16 @@ function convertasbinaryimage() {
             $('#satellite_view_span').empty().append('<img id="image_satellite" src="'+img+'"/>');
             // let generateUUID = $('input[name="installation_pictures_c"]').val();
             let record_id = $('input[name="record"]').val();
-            $.ajax({
-                type: "POST", 
-                async: false,
-                url: "index.php?entryPoint=googleForAddress", 
-                data: { data: img, id: record_id, module: module_sugar_grp1}      
-                }).done(function(data){
-                    // console.log();
+            if (record != '') {
+                $.ajax({
+                    type: "POST", 
+                    async: false,
+                    url: "index.php?entryPoint=googleForAddress", 
+                    data: { data: img, id: record_id, module: module_sugar_grp1}      
+                    }).done(function(data){
+                        // console.log();
                 });
-
+            }
          }
     });
 }
