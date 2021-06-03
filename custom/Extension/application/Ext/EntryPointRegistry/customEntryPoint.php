@@ -1565,3 +1565,9 @@ $entry_point_registry['APIGetSolarProduct'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetSolarProduct.php',
     'auth' => false
 );
+
+//VUT - panel Quote Installer
+$entry_point_registry['panelQuoteInstaller'] = array( 
+    'file' => 'custom/modules/Leads/panel_Quote_installers.php',
+    'auth' => false
+);
