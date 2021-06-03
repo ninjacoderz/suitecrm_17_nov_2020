@@ -92,4 +92,6 @@ $mod_strings = array(
     'LBL_EXPECTED_PRICE' => 'Expected Price',
     'LBL_PRODUCT_NUMBER' => 'Product Number',
     'LBL_AOS_PRODUCT_PRICES' => 'Product Prices',
+    'LBL_MODULE_EFFICIENCY' => 'Module Efficiency',
+    'LBL_WARRANTY' => 'Product Warranty',
 );

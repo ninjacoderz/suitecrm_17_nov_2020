@@ -1,14 +1,17 @@
 $(document).ready(function() {
     'use strict';
-//for test
-    $('input[id="SAVE"]').next().after('&nbsp;<button type="button" id="test" class="button" >TEST<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
-    $(document).on('click', '#test', function(){
-        convertasbinaryimage(true);
-    });
-//for test
+// //for test
+//     $('input[id="SAVE"]').next().after('&nbsp;<button type="button" id="test" class="button" >TEST<span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
+//     $(document).on('click', '#test', function(){
+//         convertasbinaryimage(true);
+//     });
+// //for test
     
     //Hide field data JSON
-    // $(document).find('#map_data').closest('.edit-view-row-item').hide();
+    $(document).find('#map_data').closest('.edit-view-row-item').hide();
+    if ($("input[name='record']").val() == '') {
+        $(document).find('[field="installation_pictures_c"]').closest('.panel.panel-default').hide();
+    }
     //init Geo Data
     // debugger
     if( $('#image_satellite').length == 0) {
@@ -90,8 +93,8 @@ $(document).ready(function() {
                                 window.onbeforeunload = null;
                                 window.onunload = null;
                             });
-                            // var url = 'https://suitecrm.pure-electric.com.au';
-                            var url = 'http://locsuitecrm.com/';
+                            var url = 'https://suitecrm.pure-electric.com.au';
+                            // var url = 'http://locsuitecrm.com/';
                             window.location.href = url+"index.php?module="+module_sugar_grp1+"&action=EditView&record="+records[1];
                         }
                     }

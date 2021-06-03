@@ -362,6 +362,26 @@ $dictionary['AOS_Products'] = array(
                 'enable_range_search' => true,
                 'options' => 'numeric_range_search_dom',
             ),
+            'module_efficiency' =>
+            array(
+                'name' => 'module_efficiency',
+                'vname' => 'LBL_MODULE_EFFICIENCY',
+                'type' => 'varchar',
+                'len' => 255,
+                'inline_edit' => false,
+                'importable' => 'true',
+                'duplicate_merge' => 'disabled',
+            ),
+            'warranty' =>
+            array(
+                'name' => 'warranty',
+                'vname' => 'LBL_WARRANTY',
+                'type' => 'varchar',
+                'len' => 255,
+                'inline_edit' => false,
+                'importable' => 'true',
+                'duplicate_merge' => 'disabled',
+            ),
         //VUT - add field
         "aos_product_category" => array(
             'name' => 'aos_product_category',

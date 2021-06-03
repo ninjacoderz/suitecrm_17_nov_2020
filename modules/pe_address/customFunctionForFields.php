@@ -26,7 +26,12 @@ function satellite_view($focus, $field, $value, $view)
         if ($folderID != '' && file_exists($_SERVER["DOCUMENT_ROOT"] . $url_image_site_details) ) {   
             $result_data = '<img id="image_satellite" src="'.$url_image_site_details.'"/>';
         }else{
-            $result_data = '';
+            if ($focus->map_data) {
+                $map_data = json_decode(html_entity_decode($focus->map_data));
+                $zoom = '20';
+                $satellite_url = "https://www.google.com/maps?z={$zoom}&t=k&q={$map_data->location->lat},{$map_data->location->lng}&output=embed";
+                $result_data = '<iframe id="satellite-view-google" src="'.$satellite_url.'" height="300" title="Satellite View"></iframe>';
+            }
         }
         $html = $result_data;
     }
