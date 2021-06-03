@@ -36,47 +36,49 @@ if ($bean->id) {
     $ret = $db->query($sql);
     $table = '';
     if ($ret->num_rows > 0) {
-        $tr = "<tbody>";
+        $tr = "";
         $i=0;
         while ($row = $db->fetchByAssoc($ret)) {
-            switch ($row['acc_id']) {
-                case $row['account_id3_c']:
-                    $installer_type = "Plumber";
-                    break;
-                case $row['account_id2_c']:
-                    $installer_type = "Electrician";
-                    break;
-                case $row['proposed_solar_installer_acccount_id']:
-                    $installer_type = "Solar Installer";
-                    break;
-                case $row['account_id4_c']:
-                    $installer_type = "Daikin Installer";
-                    break;
-                default:
-                    $installer_type = "";
-                    break;
-            } 
-            $tr .= " <tr class='ListRowS{$i}'>
-                        <td class='footable-first-visible' style='display: table-cell;'>&nbsp;</td>
-                        <td style='display: table-cell;'>
-                            <a target='_blank' href='?module=AOS_Quotes&action=EditView&record={$row['id']}'>[E]</a>
-                            </td>
-                        <td style='display: table-cell;'>{$row['number']}</td>
-                        <td style='display: table-cell;'>{$app_list_strings['quote_type_list'][$row['quote_type_c']]}</td>
-                        <td style='display: table-cell;'>
-                            <a target='_blank' href='?module=Accounts&action=EditView&record={$row['acc_id']}'>{$row['acc_name']}</a>
-                            </td>
-                        <td style='display: table-cell;'>{$installer_type}</td>
-                        <td style='display: table-cell;'>{$row['acc_base_install_rate']}</td>
-                        <td style='display: table-cell;'>{$row['acc_bend']}</td>
-                        <td style='display: table-cell;'>{$row['acc_add_piping']}</td>
-                        <td style='display: table-cell;'>{$row['acc_wall_bracket']}</td>
-                        <td style='display: table-cell;'>{$row['acc_entry_wall_bracket']}</td>
-                    </tr>
-            ";
-            $i++;
+            if ($row['acc_id'] != '') {
+                switch ($row['acc_id']) {
+                    case $row['account_id3_c']:
+                        $installer_type = "Plumber";
+                        break;
+                    case $row['account_id2_c']:
+                        $installer_type = "Electrician";
+                        break;
+                    case $row['proposed_solar_installer_acccount_id']:
+                        $installer_type = "Solar Installer";
+                        break;
+                    case $row['account_id4_c']:
+                        $installer_type = "Daikin Installer";
+                        break;
+                    default:
+                        $installer_type = "";
+                        break;
+                } 
+                $tr .= " <tr class='ListRowS{$i}'>
+                            <td class='footable-first-visible' style='display: table-cell;'>&nbsp;</td>
+                            <td style='display: table-cell;'>
+                                <a target='_blank' href='?module=AOS_Quotes&action=EditView&record={$row['id']}'>[E]</a>
+                                </td>
+                            <td style='display: table-cell;'>{$row['number']}</td>
+                            <td style='display: table-cell;'>{$app_list_strings['quote_type_list'][$row['quote_type_c']]}</td>
+                            <td style='display: table-cell;'>
+                                <a target='_blank' href='?module=Accounts&action=EditView&record={$row['acc_id']}'>{$row['acc_name']}</a>
+                                </td>
+                            <td style='display: table-cell;'>{$installer_type}</td>
+                            <td style='display: table-cell;'>{$row['acc_base_install_rate']}</td>
+                            <td style='display: table-cell;'>{$row['acc_bend']}</td>
+                            <td style='display: table-cell;'>{$row['acc_add_piping']}</td>
+                            <td style='display: table-cell;'>{$row['acc_wall_bracket']}</td>
+                            <td style='display: table-cell;'>{$row['acc_entry_wall_bracket']}</td>
+                        </tr>
+                ";
+                $i++;
+            }
         }
-        $tr .= "</tbody>";
+        $tr = "<tbody>{$tr}</tbody>";
         
         $th = " <thead>
                     <tr class='footable-header'>
