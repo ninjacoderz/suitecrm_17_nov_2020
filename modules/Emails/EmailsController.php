@@ -3857,9 +3857,10 @@ class EmailsController extends SugarController
                 $this->bean->number_receive_sms = "matthew_paul_client";
                 //start - code render sms_template  
                 global $current_user;
+                // live: 25817940-0e0d-3d72-5e1b-60b853000a9a
                 $smsTemplate = BeanFactory::getBean(
                     'pe_smstemplate',
-                    '1d4462d6-1a54-45af-3a7c-5d647d113e0e' 
+                    '25817940-0e0d-3d72-5e1b-60b853000a9a' 
                 );
                 $body =  $smsTemplate->body_c;
                 $body = str_replace("\$first_name", $contact->first_name, $body);
