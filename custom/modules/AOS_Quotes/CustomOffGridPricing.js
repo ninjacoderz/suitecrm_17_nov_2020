@@ -338,7 +338,7 @@ function calcGrandTotal(currState){
     // Include GST above
     grandTotal += gst;
     // PM price
-    if(currState.pm != undefined || currState.pm != ''){
+    if(currState.pm != undefined && currState.pm != ''){
         grandTotal += parseFloat(currState.pm);
     }
 
@@ -637,7 +637,7 @@ async function calculatePriceOg(panelTotal, totalKw, currState = {}){
     totalAmount += totalAmount * (parseFloat($('#pe_admin_percent').val()) / 100);
 
     // PM price
-    if(currState.pm != undefined || currState.pm != ''){
+    if(currState.pm != undefined && currState.pm != ''){
         totalAmount += parseFloat(currState.pm);
     }
 
@@ -688,7 +688,7 @@ function getExtraProduct(){
             url: "/index.php?entryPoint=APIGetProductInfoByShortName&short_name=" + element,
             type: 'GET'})
         .then(function(data) {
-            if(data !== undefined || data !== ""){
+            if(data !== undefined && data !== ""){
                 og_extra.push(JSON.parse(data));
             }
         });

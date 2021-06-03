@@ -1106,8 +1106,8 @@ class EmailsController extends SugarController
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
                 //parse value
-                $name = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . " " . $focus->billing_address_state . " " . $focus->billing_address_postalcode.".", $name);
-                $description_html = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . " " . $focus->billing_address_state ." ". $focus->billing_address_postalcode , $description_html);
+                $name = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city, $name);
+                $description_html = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . ", " . $focus->billing_address_state .", " . $focus->billing_address_postalcode , $description_html);
 
                 $templateData = $emailTemplate->parse_email_template(
                     array(
@@ -3524,10 +3524,11 @@ class EmailsController extends SugarController
                 /**
                  * @var EmailTemplate $emailTemplate
                  */
-
+                // Live: c11048a6-4055-49f1-0b3f-60b7500751a2
+                // Local: 3677ce10-b644-b632-0ce5-60b7531891e0
                 $emailTemplate = BeanFactory::getBean(
                     'EmailTemplates',
-                    '9d9f03ae-fe75-68d0-72ad-5d5b95cda15b'
+                    'c11048a6-4055-49f1-0b3f-60b7500751a2'
                 );
                 $name = $emailTemplate->subject;
                 $description_html = $emailTemplate->body_html;
@@ -3622,23 +3623,23 @@ class EmailsController extends SugarController
                 $this->bean->description_html = str_replace("\$aos_quotes_stroreys_c", $_REQUEST['storey'] , $this->bean->description_html);
                 $this->bean->description_html = str_replace("\$aos_quotes_preferred_c", "No" , $this->bean->description_html);
 
-                if( strpos($_REQUEST['address'],"VIC") == TRUE){
-                    $html_vic = '<table style="text-align:left;border-collapse:collapse;width:735px;">
-                                <tbody>
-                                <tr>
-                                    <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
-                                    <td style="padding: 5px; border: .5px solid #8a8a8a;width: 47%">'. $_REQUEST['vic_rebate'] .'</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Loan to your solar pricing?</td>
-                                    <td style="padding: 5px; border: .5px solid #8a8a8a;" >'.  $_REQUEST['vic_loan'] .'</td>
-                                </tr>
-                                </tbody></table>';
-                    $this->bean->description_html = str_replace("\$aos_solar_vic_loan_c", $html_vic ,$this->bean->description_html);
-                    // $body_html = str_replace("\$aos_quotes_loan_c",    ($vic_loan == "yes_loan") ? "Yes": 'No' , $body_html);
-                } else {
+                // if( strpos($_REQUEST['address'],"VIC") == TRUE){
+                //     $html_vic = '<table style="text-align:left;border-collapse:collapse;width:735px;">
+                //                 <tbody>
+                //                 <tr>
+                //                     <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
+                //                     <td style="padding: 5px; border: .5px solid #8a8a8a;width: 47%">'. $_REQUEST['vic_rebate'] .'</td>
+                //                 </tr>
+                //                 <tr>
+                //                     <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Loan to your solar pricing?</td>
+                //                     <td style="padding: 5px; border: .5px solid #8a8a8a;" >'.  $_REQUEST['vic_loan'] .'</td>
+                //                 </tr>
+                //                 </tbody></table>';
+                //     $this->bean->description_html = str_replace("\$aos_solar_vic_loan_c", $html_vic ,$this->bean->description_html);
+                //     // $body_html = str_replace("\$aos_quotes_loan_c",    ($vic_loan == "yes_loan") ? "Yes": 'No' , $body_html);
+                // } else {
                     $this->bean->description_html = str_replace("\$aos_solar_vic_loan_c"," " ,$this->bean->description_html);
-                }
+                // }
 
                 // .:nhantv:. 
                 $pricing_options = $focus->offgrid_option_c;
@@ -3674,6 +3675,9 @@ class EmailsController extends SugarController
 
                         // Curent Products name from DB
                         $curr_product = $this->getCurrentProductName($productBean, $pricings, $i);
+
+                        // STCs price
+                        $stc_price = $this->calcStcs($productBean, $pricings->{'number_og_stcs_'.$i});
                         
                         // Check if option has value to render
                         if($pricings->{'og_total_'.$i} != "" || $pricings->{'og_total_'.$i} != 0){
@@ -3692,46 +3696,45 @@ class EmailsController extends SugarController
                                     </div>
                                 </div>
                               </div>
-                              <div style="margin:0;padding:0.5rem;height:300px;overflow:auto;min-height:300px;">
-                                <div style="padding:0;color:#444;list-style:none;text-align:left;margin:0.5rem 0 0 0;">
+                              <div style="margin:0;padding:0.5rem;">
+                                <div style="padding:0;color:#444;list-style:none;text-align:left;margin:0.5rem 0 0 0;height:250px;overflow:auto;max-height:250px;">
                                   <table style="width: 100%;">
                                     <tbody>
                                       <tr>
                                         <td style="text-align:left">
-                                          <h1 style="margin:0 0 0.25rem 0;padding:5px 0;font-size:1rem;font-weight:bold">'.$pricings->{'total_og_panels_'.$i}.'x '.$curr_product['panel'].'</h1>
+                                          <h1 style="margin:0 0 0.25rem 0;padding:0;font-size:1rem;font-weight:bold">'.$pricings->{'total_og_panels_'.$i}.'x '.$curr_product['panel'].'</h1>
                                         </td>
                                       </tr>';
                                     // Render inverter
                                     foreach ($inverter_og as $key => $value) {
-                                        $tmpStr = ($value > 1) ? $value.'x '.$key : $key;
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$tmpStr.'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; '.$value.'x '.$key.'</div>
                                             </td>
                                         </tr>';
                                     }
                             $solar_pricing_options .= '<tr>
                                         <td>
-                                          <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['offgrid_inverter'].'</div>
+                                          <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['offgrid_inverter'].'</div>
                                         </td>
                                       </tr>
                                       <tr>
                                         <td>
-                                          <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$pricings->{'offgrid_howmany_'.$i}.'x '.$curr_product['offgrid_batery'].'</div>
+                                          <div style="margin:0;padding:0;font-size:0.8rem">&#8226; '.$pricings->{'offgrid_howmany_'.$i}.'x '.$curr_product['offgrid_batery'].'</div>
                                         </td>
                                       </tr>';
                                     // Render Accessories
                                     if ($pricings->{'offgrid_accessory1_'.$i} != '') {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['offgrid_accessory1'].'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['offgrid_accessory1'].'</div>
                                             </td>
                                         </tr>';
                                     }
                                     if ($pricings->{'offgrid_accessory2_'.$i} != '') {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['offgrid_accessory2'].'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['offgrid_accessory2'].'</div>
                                             </td>
                                         </tr>';
                                     }
@@ -3739,15 +3742,45 @@ class EmailsController extends SugarController
                                     if ($pricings->{'re_generator_'.$i} != '') {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:5px 0;font-size:0.8rem">&#8226; '.$curr_product['re_generator'].'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['re_generator'].'</div>
                                             </td>
                                         </tr>';
                                     }
                             $solar_pricing_options .= '</tbody>
                                   </table>
                                 </div>
-                              </div>
-                              <h1 style="border-bottom-left-radius: 2rem;border-bottom-right-radius: 2rem;margin: 0.8rem 0 0 0;font-size:2rem;font-weight:bold;color:#FB2A5D;padding:0.5rem 2rem;border-top:1px solid rgb(235, 235, 235);">
+                                <div style="color:#444;text-align:left;margin:0.5rem 0 0 0;padding:0.5rem 0 0 0;border-top:1px solid rgb(235,235,235)">
+                                    <table style="width:100%;font-weight:bold">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:70%;text-align:left">
+                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:gray">Full Purchase Price (inc GST)</p>
+                                                </td>
+                                                <td style="width:30%;text-align:right">
+                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:gray;font-weight:bold">$ '.((float)str_replace(',', '', $grandTotal) - $stc_price).'</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:70%;text-align:left">
+                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:gray">Less STCs (GST N/A)</p>
+                                                </td>
+                                                <td style="width:30%;text-align:right">
+                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:#f77422;font-weight:bold">$ '.$stc_price.'</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:70%;text-align:left">
+                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:gray">Discounted Purchase Price</p>
+                                                </td>
+                                                <td style="width:30%;text-align:right">
+                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:gray;font-weight:bold"></p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                              <h1 style="border-bottom-left-radius: 2rem;border-bottom-right-radius: 2rem;margin:0;font-size:2rem;font-weight:bold;color:#FB2A5D;padding:0.5rem 2rem;border-top:1px solid rgb(235, 235, 235);">
                                 <span style="margin: 0;padding:0;font-size: 1.5rem;">$</span> '.$grandTotal.'</h1>
                             </div>
                           </div>';
@@ -5765,6 +5798,16 @@ class EmailsController extends SugarController
             )
         );
         return ($productObj != null) ? $productObj->name : $shortName;
+    }
+
+    // .:nhantv:. Calculate STCs price
+    protected function calcStcs($productBean, $num_stc){
+        $productObj = $productBean->retrieve_by_string_fields(
+            array(
+            'short_name_c' => 'STCs'
+            )
+        );
+        return ($productObj != null) ? (float)$productObj->cost * $num_stc : -34 * $num_stc;
     }
 
     // .:nhantv:. Get Curent product name
