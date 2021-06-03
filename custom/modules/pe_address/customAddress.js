@@ -8,7 +8,7 @@ $(document).ready(function() {
 // //for test
     
     //Hide field data JSON
-    // $(document).find('#map_data').closest('.edit-view-row-item').hide();
+    $(document).find('#map_data').closest('.edit-view-row-item').hide();
     if ($("input[name='record']").val() == '') {
         $(document).find('[field="installation_pictures_c"]').closest('.panel.panel-default').hide();
     }
@@ -148,8 +148,9 @@ function getGEOGoogle(hasImg = 0) {
                 Promise.all(promises).then(responseList => {
                     setTimeout(function() {
                         // debugger;
+                        let record_id = $('input[name="record"]').val();
                         let data_img = $(document).find('#image_satellite').attr('src');
-                        if (data_img != '' && typeof data_img != 'undefined') {
+                        if (data_img != '' && typeof data_img != 'undefined' && record_id == '') {
                             dataGEO.data_img = data_img;
                             $(document).find('#map_data').val(JSON.stringify(dataGEO));
                             SUGAR.ajaxUI.hideLoadingPanel();
