@@ -3650,7 +3650,7 @@ class EmailsController extends SugarController
                     // Inverter line
                     $inverter_line = (int)$pricings->inverter_line + 1;
                     // Init Option price area
-                    $solar_pricing_options .= '<div style="margin:0;padding:0;box-sizing:border-box;width:100%;max-width:1125px;line-height:1.8;font-family:sans-serif;font-size:16px">';
+                    $solar_pricing_options .= '<div style="margin:0;padding:0;box-sizing:border-box;width:100%;max-width:735px;line-height:1.8;font-family:sans-serif;font-size:16px">';
                     // Get Product bean
                     $productBean = BeanFactory::newBean('AOS_Products');
 
@@ -3683,6 +3683,10 @@ class EmailsController extends SugarController
                         if($pricings->{'og_total_'.$i} != "" || $pricings->{'og_total_'.$i} != 0){
                             // Format og_total
                             $grandTotal = substr($pricings->{'og_total_'.$i}, 0, -3);
+                            // Check 2n + 1 item
+                            if($i > 1 && fmod($i, 2) == 1){
+                                $solar_pricing_options .= '<div style="clear: both;"></div>';
+                            }
                             // Render Option
                             $solar_pricing_options .= '<div style="float:left;padding:0;width:30%;min-width:365px;background:#fff;color:#444;text-align:center;overflow:hidden;margin:0">
                             <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
@@ -3697,7 +3701,7 @@ class EmailsController extends SugarController
                                 </div>
                               </div>
                               <div style="margin:0;padding:0.5rem;">
-                                <div style="padding:0;color:#444;list-style:none;text-align:left;margin:0.5rem 0 0 0;height:250px;overflow:auto;max-height:250px;">
+                                <div style="padding:0;color:#444;list-style:none;text-align:left;margin:0.5rem 0 0 0;">
                                   <table style="width: 100%;">
                                     <tbody>
                                       <tr>
@@ -3709,32 +3713,32 @@ class EmailsController extends SugarController
                                     foreach ($inverter_og as $key => $value) {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; '.$value.'x '.$key.'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">'.$value.'x '.$key.'</div>
                                             </td>
                                         </tr>';
                                     }
                             $solar_pricing_options .= '<tr>
                                         <td>
-                                          <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['offgrid_inverter'].'</div>
+                                          <div style="margin:0;padding:0;font-size:0.8rem">1x '.$curr_product['offgrid_inverter'].'</div>
                                         </td>
                                       </tr>
                                       <tr>
                                         <td>
-                                          <div style="margin:0;padding:0;font-size:0.8rem">&#8226; '.$pricings->{'offgrid_howmany_'.$i}.'x '.$curr_product['offgrid_batery'].'</div>
+                                          <div style="margin:0;padding:0;font-size:0.8rem">'.$pricings->{'offgrid_howmany_'.$i}.'x '.$curr_product['offgrid_batery'].'</div>
                                         </td>
                                       </tr>';
                                     // Render Accessories
                                     if ($pricings->{'offgrid_accessory1_'.$i} != '') {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['offgrid_accessory1'].'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">1x '.$curr_product['offgrid_accessory1'].'</div>
                                             </td>
                                         </tr>';
                                     }
                                     if ($pricings->{'offgrid_accessory2_'.$i} != '') {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['offgrid_accessory2'].'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">1x '.$curr_product['offgrid_accessory2'].'</div>
                                             </td>
                                         </tr>';
                                     }
@@ -3742,7 +3746,7 @@ class EmailsController extends SugarController
                                     if ($pricings->{'re_generator_'.$i} != '') {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:0;font-size:0.8rem">&#8226; 1x '.$curr_product['re_generator'].'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">1x '.$curr_product['re_generator'].'</div>
                                             </td>
                                         </tr>';
                                     }
@@ -3858,6 +3862,7 @@ class EmailsController extends SugarController
                 //start - code render sms_template  
                 global $current_user;
                 // live: 25817940-0e0d-3d72-5e1b-60b853000a9a
+                // local: 1d4462d6-1a54-45af-3a7c-5d647d113e0e
                 $smsTemplate = BeanFactory::getBean(
                     'pe_smstemplate',
                     '25817940-0e0d-3d72-5e1b-60b853000a9a' 
