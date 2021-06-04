@@ -1565,3 +1565,15 @@ $entry_point_registry['APIGetSolarProduct'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetSolarProduct.php',
     'auth' => false
 );
+
+//VUT - panel Quote Installer
+$entry_point_registry['panelQuoteInstaller'] = array( 
+    'file' => 'custom/modules/Leads/panel_Quote_installers.php',
+    'auth' => false
+);
+
+//VUT - create Address in other module
+$entry_point_registry['createAddress'] = array( 
+    'file' => 'custom/modules/pe_address/createAddress.php',
+    'auth' => false
+);

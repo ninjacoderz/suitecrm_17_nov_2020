@@ -2878,7 +2878,53 @@ $(document).ready(function () {
 
     });
 
-
+    //VUT - Create button Address - Billing Address
+    $(document).find('#billing_address_country').after('<button type="button" id="create_address" class="button primary">Create Address</button>');
+    $(document).on('click', '#create_address', function(){
+        debugger;
+        let street = $('#billing_address_street').val();
+        let city = $('#billing_address_city').val();
+        let state = $('#billing_address_state').val();
+        let postcode = $('#billing_address_postalcode').val();
+        let acc_id = $('#billing_account_id').val();
+        let contact_id = $('#billing_contact_id').val();
+        if (street == '' || city == '' || state == '' || postcode == '') {
+            alert('Please filled Billing Address!');
+            return false;
+        }
+        if (acc_id == '' || contact_id == '') {
+            alert('Please filled Account and Contact Customer!');
+            return false;
+        }
+        SUGAR.ajaxUI.showLoadingPanel();
+        $.ajax({
+            url: "index.php?entryPoint=createAddress",
+            type: 'POST',
+            data: {
+                user : $('#assigned_user_id').val(),
+                acc_id : acc_id,
+                contact_id : contact_id,
+                street : street,
+                city : city,
+                state : state,
+                postcode : postcode,
+                country : $('#billing_address_country').val(),
+                distributor : $('#distributor_c').val(),
+                retailer : $('#energy_retailer_c').val(),
+                nmi : $('#nmi_c').val(),
+                address_nmi : $('#address_nmi_c').val(),
+                meter_number : $('#meter_number_c').val(),
+            },
+            async: false,
+            success:function (address_id) {
+                // debugger
+                SUGAR.ajaxUI.hideLoadingPanel();
+                if (address_id == '' || typeof (address_id) == 'undefined') return;
+                window.open('/index.php?module=pe_address&action=EditView&record='+address_id.trim(),'_blank');
+            }
+          });
+    });
+    //VUT - Create button Address - Billing Address
 
     //dung code css address in quote
     // if(module_sugar_grp1 == 'AOS_Quotes') {

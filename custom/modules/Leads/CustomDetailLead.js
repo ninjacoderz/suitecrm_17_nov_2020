@@ -668,6 +668,28 @@ $(function () {
                 return;
             }
         }
+
+        //VUT - show Quote - relate
+        var record = $('#formDetailView').find('input[name="record"]').val();
+        var module = $('#formDetailView').find('input[name="module"]').val();
+        $(document).find('#quote_installers').closest('.detail-view-row-item').hide();
+        SUGAR.ajaxUI.showLoadingPanel();
+        $.ajax({
+            url: "index.php?entryPoint=panelQuoteInstaller",
+            type: 'GET',
+            async: false,
+            data: {
+                record: record,
+                module: module,
+            },
+            success: function(data) {
+                // debugger
+                SUGAR.ajaxUI.hideLoadingPanel();
+                if (data == '' || typeof data === 'undefined') return;
+                $(document).find('#quote_installers').closest('.detail-view-row').before(data);
+            }
+        });
+    
     })
     // .:nhantv:. Generate customer's link
     function generateCustomerLink(){

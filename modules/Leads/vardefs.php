@@ -759,6 +759,21 @@ $dictionary['Lead'] = array('table' => 'leads', 'audited' => true, 'unified_sear
                     'include' => 'modules/AOS_Quotes/CustomFunctionSiteDetail.php'
                 ),
             ),
+        'quote_installers' =>
+        array(
+            'required' => false,
+            'name' => 'quote_installers',
+            'vname' => 'Quote Installer',
+            'type' => 'unknow',
+            'source' => 'non-db',
+            'massupdate' => 0,
+            'importable' => 'false',
+            'duplicate_merge' => 'disabled',
+            'duplicate_merge_dom_value' => 0,
+            'audited' => false,
+            'reportable' => false,
+            'studio' => true,
+        ),
         //VUT - S - Create Proposed Installers
         'proposed_plumber_acccount_id' =>
             array(

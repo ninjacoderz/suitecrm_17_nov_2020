@@ -7728,6 +7728,18 @@ class EmailsController extends SugarController
             }
         }
 
+        // Add BCC email address Saler for PO Email
+        if($_GET['return_module'] == "PO_purchase_order" && $_REQUEST['return_id'] != ""){  
+            $focus = BeanFactory::getBean($_GET['return_module'], $_REQUEST['return_id']);
+            $assign_user = new User();
+            $assign_user->retrieve($focus->assigned_user_id);
+            $this->bean->bcc_addrs_names = ' ';
+            if(!empty($this->bean->bcc_addrs_names) && trim($this->bean->bcc_addrs_names) != '') {
+                $this->bean->bcc_addrs_names .= ',';
+            }
+            $this->bean->bcc_addrs_names .= $assign_user->name.' <'.$assign_user->email1.'>'; 
+        }
+        
         //VUT-S-Attach file "proposed install location" 2020/06/30
         if ($_GET['return_module'] == "AOS_Invoices" && $_REQUEST['return_id'] != "") {
             $focus = BeanFactory::getBean($_GET['return_module'], $_REQUEST['return_id']);
