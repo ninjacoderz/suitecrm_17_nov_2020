@@ -3687,6 +3687,8 @@ class EmailsController extends SugarController
                             if($i > 1 && fmod($i, 2) == 1){
                                 $solar_pricing_options .= '<div style="clear: both;"></div>';
                             }
+                            // Check total battery
+                            $total_battery = ($pricings->{'total_battery_'.$i} != null && $pricings->{'total_battery_'.$i} != '') ? (float)$pricings->{'total_battery_'.$i} : 0;
                             // Render Option
                             $solar_pricing_options .= '<div style="float:left;padding:0;width:30%;min-width:365px;background:#fff;color:#444;text-align:center;overflow:hidden;margin:0">
                             <div style="margin:0.5rem;border-radius:2rem;border:3px solid rgb(235,235,235)">
@@ -3696,7 +3698,7 @@ class EmailsController extends SugarController
                                         <h1 style="margin: 0;padding:0;color:#fb2a5c;font-size:2rem;background:white;border-radius:2rem;border:2px solid rgba(196, 33, 120, 0.7)">'.$i.'</h1>
                                     </div>
                                     <div style="text-align:center;">
-                                        <h1 style="margin:0;padding:0;font-size:2rem;color: white;">'.(float)$pricings->{'total_og_kW_'.$i}.' kW</h1>
+                                        <h1 style="margin:0;padding:7px 0;font-size:1.5rem;color: white;">'.(float)$pricings->{'total_og_kW_'.$i}.' kW / '.$total_battery.' kWh</h1>
                                     </div>
                                 </div>
                               </div>

@@ -482,6 +482,9 @@ async function calcOption(index, isTotalPanel = false, isMax = false) {
                     }, 300);
                 }
             }
+            // Calc Battery kwh
+            let battery_total = parseFloat(currState.offgrid_howmany) * parseFloat(getAttributeFromName(currState.offgrid_batery, og_battery, "capacity"));
+            $('#total_battery_' + index).val(battery_total);
             // Grand Total
             let grandTotal = calcGrandTotal(currState);
             $("#og_total_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
@@ -811,6 +814,13 @@ async function init_table_offgrid() {
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_4")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_5")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_6")],
+        [""
+            , "<input type='hidden' class='offgrid_pricing' name='total_battery_1' id='total_battery_1' value='0' />"
+            , "<input type='hidden' class='offgrid_pricing' name='total_battery_2' id='total_battery_2' value='0' />"
+            , "<input type='hidden' class='offgrid_pricing' name='total_battery_3' id='total_battery_3' value='0' />"
+            , "<input type='hidden' class='offgrid_pricing' name='total_battery_4' id='total_battery_4' value='0' />"
+            , "<input type='hidden' class='offgrid_pricing' name='total_battery_5' id='total_battery_5' value='0' />"
+            , "<input type='hidden' class='offgrid_pricing' name='total_battery_6' id='total_battery_6' value='0' />"],
         ["Battery Storage"
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_1 offgrid_pricing", "offgrid_batery_1",)
             , makeSelectBox(convertJSONToArrayInit(og_battery), "offgrid_batery_2 offgrid_pricing", "offgrid_batery_2",)
@@ -839,7 +849,7 @@ async function init_table_offgrid() {
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_4 offgrid_pricing", "offgrid_accessory2_4")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_5 offgrid_pricing", "offgrid_accessory2_5")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_6 offgrid_pricing", "offgrid_accessory2_6")],
-        ["RE Generator"
+        ["Generator"
             , makeSelectBox(convertJSONToArrayInit(re_generator), "re_generator_1 offgrid_pricing", "re_generator_1")
             , makeSelectBox(convertJSONToArrayInit(re_generator), "re_generator_2 offgrid_pricing", "re_generator_2")
             , makeSelectBox(convertJSONToArrayInit(re_generator), "re_generator_3 offgrid_pricing", "re_generator_3")
@@ -896,6 +906,9 @@ function writeHint(key, value, isBreakLine = false, isHeader = false){
 }
 
 function calcHint(){
+    $('#hint1').html('');
+    $('#hint2').html('');
+    // Check index
     let index = $('input[name="offgrid_option"]:checked').attr('data-attr');
     if (!index){
         $('#hint1').html("You must choose the Option to see calc hint");
@@ -903,8 +916,6 @@ function calcHint(){
     }
     let currState = getCurrentOptionState(index);
     let str = "";
-    $('#hint1').html('');
-    $('#hint2').html('');
 
     /** ==================== Grand total calc =======================*/ 
     let cost = 0;
