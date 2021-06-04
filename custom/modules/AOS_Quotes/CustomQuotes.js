@@ -2879,13 +2879,12 @@ $(document).ready(function () {
     });
 
     //VUT - Create button Address - Billing Address
-    $(document).find('#billing_address_country').after('<button type="button" id="create_address" class="button primary">Create Address</button>');
     $(document).on('click', '#create_address', function(){
-        debugger;
-        let street = $('#billing_address_street').val();
-        let city = $('#billing_address_city').val();
-        let state = $('#billing_address_state').val();
-        let postcode = $('#billing_address_postalcode').val();
+        // debugger;
+        let street = $('#install_address_c').val();
+        let city = $('#install_address_city_c').val();
+        let state = $('#install_address_state_c').val();
+        let postcode = $('#install_address_postalcode_c').val();
         let acc_id = $('#billing_account_id').val();
         let contact_id = $('#billing_contact_id').val();
         if (street == '' || city == '' || state == '' || postcode == '') {
@@ -2908,7 +2907,7 @@ $(document).ready(function () {
                 city : city,
                 state : state,
                 postcode : postcode,
-                country : $('#billing_address_country').val(),
+                country : $('#install_address_country_c').val(),
                 distributor : $('#distributor_c').val(),
                 retailer : $('#energy_retailer_c').val(),
                 nmi : $('#nmi_c').val(),
@@ -2958,6 +2957,7 @@ $(document).ready(function () {
     //check box sync address in quote from billing address to site detail address
     if (module_sugar_grp1 == 'AOS_Quotes') {
         $("#install_address_c").parent().parent().before('<div class="col-xs-12 edit-view-field"> <label>Copy address from billing address:</label><input id="check_addr_site_detail_c" name="check_addr_site_detail_c"  type="checkbox"></div>');
+        $(document).find('#check_addr_site_detail_c').after('<button tyle="margin: 0px 5px;"type="button" id="create_address" class="button primary">Create Address</button>');
     }
     function syncFieldsBillingQuotes(check) {
         if (check) {
