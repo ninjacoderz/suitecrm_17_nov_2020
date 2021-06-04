@@ -66,12 +66,20 @@ $(function () {
                 calcOption(i);
             }
         }
+        // .:nhantv:. call hint
+        calcHint();
     });
 
     // .:nhantv:. Inverter Add Button Click handle 
     $(document).on('click', '#inverter_add', function(e){
         e.preventDefault();
         createInverterLine();
+    });
+
+    // .:nhantv:. Show calc hint
+    $(document).on('click', '#show_hint', function(e){
+        e.preventDefault();
+        $('#hint').toggle();
     });
 
 });
@@ -864,4 +872,251 @@ async function init_table_offgrid() {
 
     // Load Off-Grid Option
     loadOffgridOption();
+
+    // Add Hint
+    initHint();
+}
+
+// .:nhantv:. Hint area ====================================
+function initHint(){
+    // Show button
+    $('body').find("#generate_quote").before("<button id='show_hint' class='button default' style='display: block'>Hide Calc Hint</button>");
+    // Append texarea
+    $('body').find("#generate_quote").before("<div id='hint'>"
+        +"<div id='hint1' style='display: inline-block;width: 500px;'></div>"
+        +"<div id='hint2' style='display: inline-block;width: 500px;'></div>"
+        +"</div>");
+}
+
+function writeHint(key, value, isBreakLine = false, isHeader = false){
+    return (isBreakLine ? '<p style="width: 400px; text-align: center;display: block;">-----------------------------------------------------------------------</p>' : '') 
+        + '<'+ (isHeader ? 'h3' : 'p') +' style="width: 250px; display: inline-block;margin:0;">'+ key 
+        + '</'+ (isHeader ? 'h3' : 'p') +'><p style="width: 150px; text-align: right;display: inline-block;">' + (value != '' ? parseFloat(value).toFixed(2) : '') + '</p></br>' 
+        + (isBreakLine ? '</br>' : '');
+}
+
+function calcHint(){
+    let index = $('input[name="offgrid_option"]:checked').attr('data-attr');
+    if (!index){
+        $('#hint1').html("You must choose the Option to see calc hint");
+        return;
+    }
+    let currState = getCurrentOptionState(index);
+    let str = "";
+    $('#hint1').html('');
+    $('#hint2').html('');
+
+    /** ==================== Grand total calc =======================*/ 
+    let cost = 0;
+    if(currState.panel_type != ''){
+        cost += parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels);
+        str += writeHint(
+            currState.panel_type
+            , parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels)
+        );
+    }
+    let num_of_line = getCountInverterLine();
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['inverter_type' + (i + 1)] != ''){
+            cost += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"));
+            str += writeHint(
+                currState['inverter_type' + (i + 1)]
+                , parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"))
+            );
+        }
+    }
+    if(currState.offgrid_inverter != ''){
+        cost += parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"));
+        str += writeHint(
+            currState.offgrid_inverter
+            , parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"))
+        );
+    }
+    if(currState.offgrid_batery != ''){
+        cost += parseFloat(getAttributeFromName(currState.offgrid_batery, og_battery, "cost")) * parseFloat(currState.offgrid_howmany);
+        str += writeHint(
+            currState.offgrid_batery
+            , parseFloat(getAttributeFromName(currState.offgrid_batery, og_battery, "cost")) * parseFloat(currState.offgrid_howmany)
+        );
+    }
+    if(currState.offgrid_accessory1 != ''){
+        cost += parseFloat(getAttributeFromName(currState.offgrid_accessory1, og_accessory, "cost"));
+        str += writeHint(
+            currState.offgrid_accessory1
+            , parseFloat(getAttributeFromName(currState.offgrid_accessory1, og_accessory, "cost"))
+        );
+    }
+    if(currState.offgrid_accessory2 != ''){
+        cost += parseFloat(getAttributeFromName(currState.offgrid_accessory2, og_accessory, "cost"));
+        str += writeHint(
+            currState.offgrid_accessory2
+            , parseFloat(getAttributeFromName(currState.offgrid_accessory2, og_accessory, "cost"))
+        );
+    }
+    if(currState.re_generator != ''){
+        cost += parseFloat(getAttributeFromName(currState.re_generator, re_generator, "cost"));
+        str += writeHint(
+            currState.re_generator
+            , parseFloat(getAttributeFromName(currState.re_generator, re_generator, "cost"))
+        );
+    }
+    // Microgrid Balance Of System
+    cost += (parseFloat(getAttributeFromName(extra_products[3], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000);
+    str += writeHint(
+        extra_products[3]
+        , (parseFloat(getAttributeFromName(extra_products[3], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000)
+    );
+    // total equipment cost
+    str += writeHint(
+        "TOTAL EQUIPMENT COST"
+        , cost
+        , true
+        , true
+    );
+
+    /** ==================== Grand total calc =======================*/ 
+    let grandTotal = 0;
+    
+    // Microgrid Solar PV Supply and Install
+    grandTotal += parseFloat(getAttributeFromName(extra_products[0], og_extra, "cost"));
+    str += writeHint(
+        extra_products[0]
+        , parseFloat(getAttributeFromName(extra_products[0], og_extra, "cost"))
+        ,true
+    );
+    // Microgrid Standard Install
+    grandTotal += parseFloat(getAttributeFromName(extra_products[1], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
+    str += writeHint(
+        extra_products[1]
+        , parseFloat(getAttributeFromName(extra_products[1], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000
+    );
+    // Sunpower Split Panel Fee
+    if (currState.panel_type.toLowerCase().indexOf("sunpower") != -1) {
+        grandTotal += parseFloat(getAttributeFromName(extra_products[2], og_extra, "cost"));
+        str += writeHint(
+            extra_products[2]
+            , parseFloat(getAttributeFromName(extra_products[2], og_extra, "cost"))
+        );
+    }
+    // Installation cost
+    str += writeHint(
+        'INSTALLATION COST'
+        , grandTotal
+        , true
+        , true
+    );
+    // Installation cost + Equipment cost
+    grandTotal += parseFloat(cost);
+    let sub_total = grandTotal;
+    // Sub total
+    str += writeHint(
+        'SUB TOTAL'
+        , grandTotal
+        , true
+        , true
+    );
+    // PE Admin %
+    str += writeHint(
+        'PE Admin %'
+        , parseFloat($('#pe_admin_percent').val()) / 100
+    );
+    grandTotal += grandTotal * (parseFloat($('#pe_admin_percent').val()) / 100);
+    str += writeHint(
+        'Sub total + PE Admin %'
+        , grandTotal
+    );
+    let sub_price_toal = grandTotal;
+    // GST 10%
+    let gst = grandTotal * 0.1;
+    str += writeHint(
+        'GST 10%'
+        , gst
+    );
+    // STCs
+    let stc_client = parseFloat(getAttributeFromName(extra_products[4], og_extra, "cost")) * parseFloat(currState.number_stcs);
+    grandTotal += parseFloat(stc_client);
+    str += writeHint(
+        'STCs (Client show)'
+        , stc_client
+    );
+    str += '</br>';
+    str += writeHint(
+        'Sub total + PE Admin + STCs (Client show)'
+        , grandTotal
+    );
+    // Include GST above
+    grandTotal += gst;
+    str += writeHint(
+        'Sub total + PE Admin + STCs (Client show) + GST'
+        , grandTotal
+    );
+    // PM price
+    if(currState.pm != undefined && currState.pm != ''){
+        grandTotal += parseFloat(currState.pm);
+        str += writeHint(
+            'Sub total + PE Admin + STCs (Client show) + GST + PM'
+            , grandTotal
+        );
+    }
+    // Grand total
+    str += writeHint(
+        'GRAND TOTAL'
+        , grandTotal
+        , true
+        , true
+    );
+
+    /** ==================== GP calc =======================*/ 
+    let str2 = '';
+    // Sub Price Total
+    str2 += writeHint(
+        'SUB PRICE TOTAL = Sub total + PE Admin %'
+        , sub_price_toal
+        , true
+        , true
+    );
+    // Customer Revenue
+    let customer_revenue = parseFloat(sub_price_toal) + parseFloat(stc_client);
+    str2 += writeHint(
+        'Customer Revenue = Sub Price Total + STCs (Client show)'
+        , customer_revenue
+    );
+    // STCs Revenue
+    let stc_revenue = 37.25 * parseFloat(currState.number_stcs);
+    str2 += writeHint(
+        'STCs Revenue'
+        , stc_revenue
+    );
+    // Sub Total for GP
+    let sub_total_gp = customer_revenue + stc_revenue;
+    str2 += writeHint(
+        'SUB TOTAL (Revenue) = STCs + Customer'
+        , sub_total_gp
+        , true
+        , true
+    );
+    // Gross Profit
+    let gross_profit = parseFloat(sub_total_gp) - parseFloat(sub_total);
+    str2 += writeHint(
+        'Gross Profit = Sub Total (Revenue) - Sub total'
+        , gross_profit
+    );
+    // % Gross Profit
+    let gross_profit_percent = (parseFloat(gross_profit) / parseFloat(sub_total));
+    str2 += writeHint(
+        '% Gross Profit = Gross Profit / Sub total'
+        , gross_profit_percent
+    );
+    if (parseFloat(gross_profit_percent) < parseFloat($('#pe_admin_percent').val()) / 100) {
+        str2 += writeHint(
+            '-> Need to Go Seek: SUB PRICE TOTAL'
+            , ''
+            , true
+            , true
+        );
+    }
+
+    // Return
+    $('#hint1').append(str);
+    $('#hint2').append(str2);
 }
