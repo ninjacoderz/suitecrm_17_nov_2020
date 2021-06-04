@@ -2888,7 +2888,7 @@ $(document).ready(function () {
         let acc_id = $('#billing_account_id').val();
         let contact_id = $('#billing_contact_id').val();
         if (street == '' || city == '' || state == '' || postcode == '') {
-            alert('Please filled Billing Address!');
+            alert('Please filled Site Address!');
             return false;
         }
         if (acc_id == '' || contact_id == '') {
