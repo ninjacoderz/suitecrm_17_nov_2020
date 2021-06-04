@@ -2957,7 +2957,7 @@ $(document).ready(function () {
     //check box sync address in quote from billing address to site detail address
     if (module_sugar_grp1 == 'AOS_Quotes') {
         $("#install_address_c").parent().parent().before('<div class="col-xs-12 edit-view-field"> <label>Copy address from billing address:</label><input id="check_addr_site_detail_c" name="check_addr_site_detail_c"  type="checkbox"></div>');
-        $(document).find('#check_addr_site_detail_c').after('<button tyle="margin: 0px 5px;"type="button" id="create_address" class="button primary">Create Address</button>');
+        $(document).find('#check_addr_site_detail_c').after('<button style="margin: 0px 5px;"type="button" id="create_address" class="button primary">Create Address</button>');
     }
     function syncFieldsBillingQuotes(check) {
         if (check) {
