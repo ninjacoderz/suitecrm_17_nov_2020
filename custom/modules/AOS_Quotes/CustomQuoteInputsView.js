@@ -146,14 +146,15 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
     // .:nhantv:. Generate Line Item from Quote Options
     async function generateLineItem() {
 
-        SL_saveCurrentState();
-
         // Get Option Quote
-        let optSelected = $('input[name="solar_option"]:checked').attr('data-attr');
         if (!optSelected){
             alert("You must choose the Option to generate line item");
             return;
         }
+        SL_autoFillAccessory(optSelected);
+        SL_calcOption(optSelected,true);
+
+        await wait(300);
         // Show loading
         SUGAR.ajaxUI.showLoadingPanel();
         // Mark line deleted
