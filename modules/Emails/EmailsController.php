@@ -1434,6 +1434,82 @@ class EmailsController extends SugarController
                 $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
                 //end - code render sms_template
             }
+            // tuan info pack daikin alira
+            if($_REQUEST['email_type'] == 'InfoPackAlira'){ 
+
+                $macro_nv = array();
+                $focusName = "Leads";
+                $focus = BeanFactory::getBean($focusName, $_REQUEST['lead_id']);
+                if(!$focus->id) return;
+
+                $emailTemplateID = '56ff8695-7163-315a-e1e8-60b9ae967c1a'; //local c36e9173-54eb-79b5-cc58-60bd72c6a78a';
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+                $emailTemplate = BeanFactory::getBean(
+                        'EmailTemplates',
+                        $emailTemplateID
+                    );
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+                // //start - code render sms_template  
+                // global $current_user;
+                // $smsTemplateID = '1d415167-da0b-628f-9e36-601a68d8a93c';
+                // $smsTemplate = BeanFactory::getBean(
+                //     'pe_smstemplate',
+                //     $smsTemplateID 
+                // );
+                // $body =  $smsTemplate->body_c;
+                // $body = str_replace("\$aos_invoices_customer", $focus->first_name, $body);
+                // $body = str_replace("\$aos_invoices_link_upload", $string_link_upload_files, $body);
+
+                // $smsTemplate->body_c = $body;
+                // $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                // $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                // $this->bean->number_receive_sms = "matthew_paul_client";
+                // $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $focus->phone_mobile));
+                // $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                // $this->bean->number_client =  $phone_number; 
+                // $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                //end - code render sms_template
+            }
             if($_REQUEST['email_type'] == 'client_warranty_registration'){ 
                 $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
 

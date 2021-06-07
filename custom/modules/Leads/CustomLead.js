@@ -3031,7 +3031,89 @@ $(document).ready(function(){
             });
             return $(self);
         };
-        
+        // tuan code send email info pack alira
+        $.fn.openComposeViewModal_sendInfoPackAlira = function (source) {
+            "use strict";
+            console.log("s");
+            var self = this;
+            self.emailComposeView = null;
+            var opts = $.extend({}, $.fn.EmailsComposeViewModal.defaults);
+            var composeBox = $('<div></div>').appendTo(opts.contentSelector);
+            composeBox.messageBox({"showHeader": false, "showFooter": false, "size": 'lg'});
+            composeBox.setBody('<div class="email-in-progress"><img src="themes/' + SUGAR.themes.theme_name + '/images/loading.gif"></div>');
+            composeBox.show();
+            var record_id= $(source).attr('data-record-id') ;
+            var email_type = $(source).attr('data-email-type');
+            console.log(record_id);
+            $.ajax({
+                type: "GET",
+                cache: false,
+                url: 'index.php?module=Emails&action=ComposeView&in_popup=1' + ((record_id!="")? ("&lead_id="+record_id):"") + ((email_type!="")? ("&email_type="+email_type):""),
+            }).done(function (data) {
+                if (data.length === 0) {
+                console.error("Unable to display ComposeView");
+                composeBox.setBody(SUGAR.language.translate('', 'ERR_AJAX_LOAD'));
+                return;
+                }
+                composeBox.setBody(data);
+                self.emailComposeView = composeBox.controls.modal.body.find('.compose-view').EmailsComposeView();
+    
+                // Populate fields
+                if ($(source).attr('data-record-id') !== '') {
+                var populateModule = $(source).attr('data-module');
+                var populateModuleRecord = $(source).attr('data-record-id');
+                var populateModuleName = $(source).attr('data-module-name');
+                var populateEmailAddress = $(source).attr('data-email-address');
+    
+                if (populateModuleName !== '') {
+                    populateEmailAddress = populateModuleName + ' <' + populateEmailAddress + '>';
+                }
+    
+                $(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
+                $(self.emailComposeView).find('#parent_type').val(populateModule);
+                $(self.emailComposeView).find('#parent_name').val(populateModuleName);
+                $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
+                $(self.emailComposeView).find('#parent_id').val(populateModuleRecord);
+    
+                }
+                $(self.emailComposeView).on('sentEmail', function (event, composeView) {
+                composeBox.hide();
+                composeBox.remove();
+                });
+                $(self.emailComposeView).on('disregardDraft', function (event, composeView) {
+                if (typeof messageBox !== "undefined") {
+                    var mb = messageBox({size: 'lg'});
+                    mb.setTitle(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_TITLE'));
+                    mb.setBody(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_BODY'));
+                    mb.on('ok', function () {
+                    mb.remove();
+                    composeBox.hide();
+                    composeBox.remove();
+                    });
+                    mb.on('cancel', function () {
+                    mb.remove();
+                    });
+                    mb.show();
+                } else {
+                    if (confirm(self.translatedErrorMessage)) {
+                    composeBox.hide();
+                    composeBox.remove();
+                    }
+                }
+                });
+    
+    
+                composeBox.on('cancel', function () {
+                composeBox.remove();
+                });
+                composeBox.on('hide.bs.modal', function () {
+                composeBox.remove();
+                });
+            }).fail(function (data) {
+                composeBox.controls.modal.content.html(SUGAR.language.translate('', 'LBL_EMAIL_ERROR_GENERAL_TITLE'));
+                });
+                return $(self);
+            };    
         // TUAN GET LEAD SOURSE SG CRM
         $("select[name='how_did_you_hear_about_pe_c']").on("change", function(){
             GET_lead_sourse_SG(this)
@@ -3120,7 +3202,9 @@ $(document).ready(function(){
 
 //dung code - button Get ALl Files
 $(document).ready(function(){
-
+    $("#btn_view_change_log").after(
+        ' <button type="button" data-email-type="InfoPackAlira" data-record-id="'+$('input[name="record"]').val()+'" data-module-name="'+ $("#first_name").val() + ' ' + $("#last_name").val() +'" type="button" class="button infopackalira" data-module="Leads"  title="Email Info Pack Daikin Alira" onClick="$(document).openComposeViewModal_sendInfoPackAlira(this);">Info Pack Daikin Alira</button>'
+    );
     $("#subpanel_leads_pe_internal_note_1 tr").each(function() {
         var recordId = getParameterByName('record', $(this).find("td:nth-child(4) a").attr('href'));
         var module_name = getParameterByName('module', $(this).find("td:nth-child(4) a").attr('href'));
