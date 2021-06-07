@@ -1577,3 +1577,9 @@ $entry_point_registry['createAddress'] = array(
     'file' => 'custom/modules/pe_address/createAddress.php',
     'auth' => false
 );
+
+//API FOr Module Ask Questions
+$entry_point_registry['API_DATA_Ask_Questions_SuiteCRM'] = array( 
+    'file' => 'custom/modules/PO_purchase_order/API_DATA_Ask_Questions_SuiteCRM.php',
+    'auth' => false
+);
