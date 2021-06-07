@@ -39,7 +39,7 @@
     $dataReturn = [];
 
     if($type == 'save'){
-        if ($quote->quote_type_c == 'quote_type_solar'){
+        if (in_array($quote->quote_type_c, array('quote_type_solar', 'quote_type_off_grid_system'))){
             $quoteType = 'Solar';
             $path = dirname(__FILE__)."/server/php/files/".$quote->pre_install_photos_c;
             $files = scandir($path, SCANDIR_SORT_DESCENDING);
