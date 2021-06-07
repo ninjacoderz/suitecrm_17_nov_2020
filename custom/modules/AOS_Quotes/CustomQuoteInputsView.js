@@ -57,8 +57,8 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             let productType = $("#quote_type_c").val();
             switch (productType) {
                 case "quote_type_solar":
-                    generateLineItem();
                     generateJSONForInput();
+                    generateLineItem();
                     break;
                 case "quote_type_sanden":
                     generateJSONForInput();
@@ -202,7 +202,7 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         } finally {
             // Hide loading
             setTimeout(function (){
-                SUGAR.ajaxUI.hideLoadingPanel();
+                autoSaveData();
             }, 300);
         }
     }
@@ -721,6 +721,23 @@ function autoCreateLineItem_Rebate(id,total_item){
 
 function DynamicField(id) {
     var sellector = $('#'+id).find('select');
+}
+
+function autoSaveData(){
+    try {
+        $("#EditView input[name='action']").val('Save');
+        $.ajax({
+            type: $("#EditView").attr('method'),
+            url: $("#EditView").attr('action'),
+            data: $("#EditView").serialize(),
+            success: function (data) {
+                SUGAR.ajaxUI.hideLoadingPanel();
+            }
+        });
+    } catch (error) {
+        SUGAR.ajaxUI.hideLoadingPanel();
+        console.log(error)
+    }
 }
 /** END - DECLARE FUNCTION FOR REBATE PROVIDED */
 

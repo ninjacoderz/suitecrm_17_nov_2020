@@ -605,7 +605,7 @@ async function generateOffgridItem(){
     } finally {
         // Hide loading
         setTimeout(function (){
-            SUGAR.ajaxUI.hideLoadingPanel();
+            autoSaveData();
         }, 300);
     }
 }
