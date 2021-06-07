@@ -89,7 +89,12 @@ foreach ($array_products as $key_product => $value_product) {
             // $type_button = 'convert_daikin_nexura_button';
             // convert_lead_to_quote_api_from_pe($bean,$type_button);
             send_email_schedule_info_pack($bean,'5ad80115-b756-ea3e-ca83-5abb005602bf',$schedule_time); 
-            break;                     
+            break;  
+        case 'daikin alira':
+            // $type_button = 'convert_daikin_nexura_button';
+            // convert_lead_to_quote_api_from_pe($bean,$type_button);
+            send_email_schedule_info_pack($bean,'56ff8695-7163-315a-e1e8-60b9ae967c1a',$schedule_time); 
+            break;                      
         default:
             # code...
             break;
