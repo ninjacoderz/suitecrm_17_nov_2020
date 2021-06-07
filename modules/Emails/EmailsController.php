@@ -3771,7 +3771,7 @@ class EmailsController extends SugarController
                                                     <p style="margin:0;padding:0;font-size:0.8rem;color:gray">Less STCs (GST N/A)</p>
                                                 </td>
                                                 <td style="width:30%;text-align:right">
-                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:#f77422;font-weight:bold">$ '.$stc_price.'</p>
+                                                    <p style="margin:0;padding:0;font-size:0.8rem;color:#F2283C;font-weight:bold">$ '.$stc_price.'</p>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -3786,7 +3786,7 @@ class EmailsController extends SugarController
                                     </table>
                                 </div>
                             </div>
-                              <h1 style="border-bottom-left-radius: 2rem;border-bottom-right-radius: 2rem;margin:0;font-size:2rem;font-weight:bold;color:#FB2A5D;padding:0.5rem 2rem;border-top:1px solid rgb(235, 235, 235);">
+                              <h1 style="border-bottom-left-radius: 2rem;border-bottom-right-radius: 2rem;margin:0;font-size:2rem;font-weight:bold;color:#f77422;padding:0.5rem 2rem;border-top:1px solid rgb(235, 235, 235);">
                                 <span style="margin: 0;padding:0;font-size: 1.5rem;">$</span> '.$grandTotal.'</h1>
                             </div>
                           </div>';

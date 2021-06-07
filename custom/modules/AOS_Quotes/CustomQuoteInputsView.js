@@ -307,7 +307,7 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         let last2Digit = strNum.substr(strNum.length - 2, strNum.length);
         // alway UP if last 2 digit > 90
         if(parseInt(last2Digit) > 90){
-            return ((parseFloat(firstDigit) + 1) * 100).toFixed(2);
+            return parseFloat((parseFloat(firstDigit) + 1) + "90.00").toFixed(2);
         }
         // round to **90.00
         return parseFloat(firstDigit + "90.00").toFixed(2);
