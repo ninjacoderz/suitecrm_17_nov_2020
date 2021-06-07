@@ -94,6 +94,6 @@ $mod_strings = array (
   'LBL_STREET_VIEW' => 'Google Street View',
   'LBL_SATELLITE_VIEW' => 'Gooogle Satellite',
   'LBL_ADDRESS_NUMBER' => 'Number',
-  // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
+  'LBL_RELATED_QUOTE' => 'Quotes',
   // 'LBL_BILLING_ADDRESS_COUNTRY' => 'Billing Country',
 );
