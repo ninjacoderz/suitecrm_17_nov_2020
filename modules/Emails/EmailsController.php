@@ -3600,6 +3600,9 @@ class EmailsController extends SugarController
                 //VUT - S - replace Quote Inputs  
                 if ($quote->quote_note_inputs_c !='') {
                     $solar_quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c), true);
+                    if ($_REQUEST['view'] == 'detailview') {
+                        $_REQUEST['storey'] = $solar_quote_input['storeys'];
+                    }
                     if (count(array_filter($solar_quote_input)) == 0) {
                         $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
                         // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
