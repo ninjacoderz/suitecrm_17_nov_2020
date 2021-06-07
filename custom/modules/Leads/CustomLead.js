@@ -3203,7 +3203,7 @@ $(document).ready(function(){
 //dung code - button Get ALl Files
 $(document).ready(function(){
     $("#btn_view_change_log").after(
-        ' <button type="button" data-email-type="InfoPackAlira" data-record-id="'+$('input[name="record"]').val()+'" data-module-name="'+ $("#first_name").val() + ' ' + $("#last_name").val() +'" type="button" class="button infopackalira" data-module="Leads"  title="Email Info Pack Daikin Alira" onClick="$(document).openComposeViewModal_sendInfoPackAlira(this);">Info Pack Daikin Alira</button>'
+        ' <button type="button" data-email-type="InfoPackAlira" data-email-address="'+$('#Leads0emailAddress0').val()+'" data-record-id="'+$('input[name="record"]').val()+'" data-module-name="'+ $("#first_name").val() + ' ' + $("#last_name").val() +'" type="button" class="button infopackalira" data-module="Leads"  title="Email Info Pack Daikin Alira" onClick="$(document).openComposeViewModal_sendInfoPackAlira(this);">Info Pack Daikin Alira</button>'
     );
     $("#subpanel_leads_pe_internal_note_1 tr").each(function() {
         var recordId = getParameterByName('record', $(this).find("td:nth-child(4) a").attr('href'));
