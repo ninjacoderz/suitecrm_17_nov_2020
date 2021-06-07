@@ -1,5 +1,5 @@
 var sol_accessory,solar_extra = [];
-const extra_solar_products = ["Solar PV Standard Install", "Solar PV Balance Of System", "STCs"];
+const extra_solar_products = ["Solar PV Standard Install", "Solar PV Balance Of System", "STCs","Solar PV Supply and Install"];
 
 $(function () {
     'use strict';
@@ -26,8 +26,8 @@ $(function () {
             // Get suggested
             if(panel_type != '' && inverter_type != ""){
                 // Calculate option
-                SL_calcOption(i);
                 SL_autoFillAccessory(i);
+                SL_calcOption(i);
             }
         }
     });
@@ -36,12 +36,14 @@ $(function () {
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
         SL_autoFillAccessory(index);
+        SL_calcOption(index);
     });
 
     $(document).on("change", "select[id*=inverter_sl_type] ,select[id*=panel_sl_type_]", function(e){
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
         if($("#panel_sl_type_"+index).val() != "" && $("#inverter_sl_type_"+index).val() != ""){
+            SL_autoFillAccessory(i);
             SL_calcOption(index);
         }
     });
@@ -49,6 +51,7 @@ $(function () {
     $(document).on("change", "input[id*=total_sl_panels_]", function(e){
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
+        SL_autoFillAccessory(i);
         SL_calcOption(index,true);
     });
 
@@ -217,11 +220,6 @@ async function SL_calcOption(index, isTotalPanel = false) {
             $('#total_inverter_sl_kW_'+index).val(maxPnAndTotalKw['inverter_kw']);
             currState.inverter_kw = maxPnAndTotalKw['inverter_kw'];
 
-            currState.accessory1 = ($("#sl_accessory1_"+index).val() != '') ? parseFloat(getAttributeFromName($("#sl_accessory1_"+index).val(), sol_accessory , "cost")) : 0;
-            currState.accessory2 = ($("#sl_accessory1_"+index).val() != '') ? parseFloat(getAttributeFromName($("#sl_accessory1_"+index).val(), sol_accessory , "cost")) : 0;
-            currState.pm = ($("#sl_pm"+index).val() != '') ? parseFloat($("#sl_pm"+index).val()) : 0;
-
-
             // Get STCs value
             try {
                 // Show loading
@@ -265,6 +263,9 @@ function SL_getCurrentOptionState(index){
     result['total_panels'] = $('#total_sl_panels_' + index).val();
     result['number_stcs'] = $('#number_sl_stcs_' + index).val();
     result['solar_inverter'] = $('#inverter_sl_type_' + index).val();
+    result['accessory1'] = $('#sl_accessory1_' + index).val();
+    result['accessory2'] = $('#sl_accessory2_' + index).val();
+    result['pm'] = ($("#sl_pm"+index).val() != '') ? parseFloat($("#sl_pm"+index).val()) : 0;
     return result;
 }
 //Load solar option
@@ -305,10 +306,10 @@ function SL_calcEquipmentCost(currState){
 }
 
 function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
-    const ratio = 1.333;
+    //const ratio = 1.333;
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
     const inverter_kw = parseFloat(getAttributeFromName(currState.inverter_type, sol_inverter, "capacity"));
-    const maxPanel = Math.floor(inverter_kw * ratio / panel_kw);
+    const maxPanel = Math.floor((inverter_kw / 0.75) / panel_kw);
     const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
     let result = [];
     result['max'] = maxPanel;
@@ -330,15 +331,15 @@ function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
 function SL_calcGrandTotal(currState){
     let grandTotal = 0;
     // Equipment cost
-    grandTotal += SL_calcEquipmentCost(currState);
+    grandTotal += SL_calcEquipmentCost(currState);35156.999999
     // Solar Standard Install
     grandTotal += parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState.total_kw);
     // PV Balance of System
     grandTotal += parseFloat(getAttributeFromName(extra_solar_products[1], solar_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
     // Extra 1
-    grandTotal += currState.accessory1;
+    grandTotal += (currState.accessory1 != '') ? parseFloat(getAttributeFromName(currState.accessory1, sol_accessory , "cost")) : 0;
     // Extra 2
-    grandTotal += currState.accessory2;
+    grandTotal += (currState.accessory2 != '') ? parseFloat(getAttributeFromName(currState.accessory2, sol_accessory , "cost")) : 0;
     // PE Admin %
     grandTotal += grandTotal * (parseFloat($('#sl_pe_admin_percent').val()) / 100);
     // GST 10%
@@ -350,7 +351,7 @@ function SL_calcGrandTotal(currState){
 
      // PM
      grandTotal += currState.pm;
-
+    
     return grandTotal;
 }
 
@@ -403,8 +404,6 @@ function SL_autoFillAccessory(index){
         $("#sl_accessory1_"+index).val('');
         $("#sl_accessory2_"+index).val(''); 
     }
-    extra_solar_products.push($("#sl_accessory1_"+index).val());
-    extra_solar_products.push($("#sl_accessory2_"+index).val());
 }
 
 function SL_getExtraProduct(){
@@ -419,6 +418,12 @@ function SL_getExtraProduct(){
         });
     });
 }
+
+// Solar Checkbox handle 
+$(document).on('change', 'input[id*="solar_option"]', function(){
+    checkBoxOptionHandle($(this), "solar_option");
+});
+
 
 function setInputFilter(textbox, inputFilter) {
     ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {

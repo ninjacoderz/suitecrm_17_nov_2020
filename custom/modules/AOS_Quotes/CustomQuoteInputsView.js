@@ -145,11 +145,17 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
 
     // .:nhantv:. Generate Line Item from Quote Options
     async function generateLineItem() {
+
+        let optSelected = $('input[name="solar_option"]:checked').attr('data-attr');
         // Get Option Quote
-        let optSelected = $('input[id*=own][name="sl_quote_option"]:checked').attr('data-attr');
         if (!optSelected){
+            alert("You must choose the Option to generate line item");
             return;
         }
+        SL_autoFillAccessory(optSelected);
+        SL_calcOption(optSelected,true);
+
+        await wait(300);
         // Show loading
         SUGAR.ajaxUI.showLoadingPanel();
         // Mark line deleted
@@ -163,38 +169,45 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         } else {
             $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
         }
+
+        let currState = SL_getCurrentOptionState(optSelected);
+
         // Get value
-        let panelSelected = $('#own_panelType_' + optSelected).val();
-        let panelTotal = $('#own_totalPanels_' + optSelected).val();
-        let totalKw = $('#own_totalkW_' + optSelected).val();
-        let inverterSelected = $('#inverter_type_' + optSelected).val();
-        let extra1Selected = $('#extra_1_' + optSelected).val();
-        let extra2Selected = $('#extra_2_' + optSelected).val();
-        let extra3Selected = $('#extra_3_' + optSelected).val();
-        let stcTotal = $('#number_of_stcs_' + optSelected).val();
+        // let panelSelected = $('#panel_sl_type_' + optSelected).val();
+        // let panelTotal = $('#total_sl_panels_' + optSelected).val();
+        // let totalKw = $('#total_sl_kW_' + optSelected).val();
+        // let inverterSelected = $('#inverter_sl_type_' + optSelected).val();
+        // let extra1Selected = $('#sl_accessory1_' + optSelected).val();
+        // let extra2Selected = $('#sl_accessory2_' + optSelected).val();
+        // let stcTotal = $('#number_sl_stcs_' + optSelected).val();
         // Create line item
         try{
             // Alway add this product: Solar PV Supply and Install
-            await autoCreateLineItem("Solar PV Supply and Install", 1);
-            panelSelected && await autoCreateLineItem(panelSelected, panelTotal);
-            inverterSelected && await autoCreateLineItem(inverterSelected, 1);
-            extra1Selected && await autoCreateLineItem(extra1Selected, 1);
-            extra3Selected && await autoCreateLineItem(extra3Selected, 1);
-            extra2Selected && await autoCreateLineItem(extra2Selected, 1);
+            await autoCreateLineItem("Solar PV Supply and Install", solar_extra, 1);
+            currState.panel_type && await autoCreateLineItem(currState.panel_type, sol_panel, currState.total_panels);
+            currState.solar_inverter && await autoCreateLineItem(currState.solar_inverter, sol_inverter, 1);
+
+            currState.accessory1 && await autoCreateLineItem(currState.accessory1, sol_accessory, 1);
+            currState.accessory2 && await autoCreateLineItem(currState.accessory2, sol_accessory, 1);
+
+            await autoCreateLineItem("Solar PV Balance Of System", solar_extra, 1, currState.total_kw * 1000);
+            await autoCreateLineItem("Solar PV Standard Install", solar_extra, 1, currState.total_kw);
             // Alway add this product: STCs
-            await autoCreateLineItem("STCs", stcTotal);
+            await autoCreateLineItem("STCs", solar_extra, currState.number_stcs);
             // Calculate
-            await calculatePrice(panelTotal, totalKw, "solar");
+            await calculatePrice(currState.total_panels, currState.total_kw, currState);
+
+        } catch(err) {
+            console.log(err);
+        } finally {
             // Hide loading
             setTimeout(function (){
                 SUGAR.ajaxUI.hideLoadingPanel();
             }, 300);
-        } catch(err) {
-            console.log(err);
         }
     }
     // .:nhantv:. Calculate total price
-    async function calculatePrice(panelTotal, totalKw, type, currState = {}){
+    async function calculatePrice(panelTotal, totalKw, currState = {}){
         // await wait(200);
         let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
         var totalList = 0, totalDiscount = 0, totalAmount = 0;
@@ -206,7 +219,7 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             dis = $(el).find('input[id*=product_product_discount]');
             amount = $(el).find('input[id*=product_product_total_price]');
             tax = $(el).find('select[id*=product_vat]');
-
+    
             if(index !== 0 && index < productVisible.length - 1){
                 // calculate line item exclude first line and last line
                 totalList += get_value(list.attr('id'));
@@ -221,85 +234,35 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             // blur
             list.trigger("blur");
         });
-
-        switch (type) {
-            case "solar":
-                // Get solar product need to calculate
-                var solarProductCalData = {};
-                await $.ajax({
-                    url: "/index.php?entryPoint=APIGetDataProduct",
-                    data: solarProductCal,
-                    type: 'POST'})
-                    .then(function(data) {
-                        if(data !== undefined || data !== ''){
-                            solarProductCalData = JSON.parse(data);
-                            // console.log(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"], data);
-                        }
-                    });
-                // Solar product calculate: 
-                    // Solar_PV_Site_Visit_Module_Load_Up
-                if(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"] !== undefined 
-                && solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"] != 0){
-                    totalAmount += parseInt(solarProductCalData["Solar_PV_Site_Visit_Module_Load_Up"]["cost"]);
-                } else {
-                    totalAmount += 180;
-                }
-                // Single_Phase_1Ph_Inverter_Installation
-                if(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"] !== undefined
-                    && solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"] != 0){
-                    totalAmount += parseInt(solarProductCalData["Single_Phase_1Ph_Inverter_Installation"]["cost"]);
-                } else {
-                    totalAmount += 120;
-                }
-                // Standard_PV_Module_Installation
-                if(solarProductCalData["Standard_PV_Module_Installation"] !== undefined
-                    && solarProductCalData["Standard_PV_Module_Installation"]["cost"] != 0){
-                    totalAmount += parseInt(solarProductCalData["Standard_PV_Module_Installation"]["cost"]) * parseInt(panelTotal);
-                } else {
-                    totalAmount += 50 * parseInt(panelTotal);
-                }
-                // Solar_PV_Balance_of_System
-                if(solarProductCalData["Solar_PV_Balance_of_System"] !== undefined
-                    && solarProductCalData["Solar_PV_Balance_of_System"]["cost"] != 0){
-                    totalAmount += parseFloat(solarProductCalData["Solar_PV_Balance_of_System"]["cost"]) * parseFloat(totalKw);
-                } else {
-                    totalAmount += 120 * parseFloat(totalKw);
-                }
-                // Smart_Meter_Solar_Monitoring_Installation
-                if(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"] !== undefined
-                    && solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"] != 0){
-                    totalAmount += parseInt(solarProductCalData["Smart_Meter_Solar_Monitoring_Installation"]["cost"]);
-                } else {
-                    totalAmount += 50;
-                }
-                break;
-            case "off-grid":
-                // Sunpower Split Panel Fee
-                if (currState.panel_type.toLowerCase().indexOf("sunpower") != -1) {
-                    totalAmount += parseFloat(getAttributeFromName(extra_products[2], og_extra, "cost"));
-                }
-                break;
-            default: break;
-        }
-
+        
+        // // Sunpower Split Panel Fee
+        // if (currState.panel_type.toLowerCase().indexOf("sunpower") != -1) {
+        //     totalAmount += parseFloat(getAttributeFromName(extra_solar_products[2], solar_extra, "cost"));
+        // }
+    
         // PE Admin
-        totalAmount += totalAmount * (parseFloat($('#pe_admin_percent').val()) / 100);
-
+        totalAmount += totalAmount * (parseFloat($('#sl_pe_admin_percent').val()) / 100);
+    
+        // PM price
+        if(currState.pm != undefined && currState.pm != ''){
+            totalAmount += parseFloat(currState.pm);
+        }
+    
         // Set value to first line
         list = $(productVisible[0]).find('input[id*=product_product_list_price]');
         set_value(list.attr('id'), totalAmount);
         list.trigger("blur");
-
+    
         // Set value to grand total
         $("#total_amount").trigger("focusin");
         let grandTotal = $("#total_amount").val();
-        $("#total_amount").val(roundTo90(grandTotal));
-        await wait(200);
+        $("#total_amount").val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
         $("#total_amount").trigger("change");
-
+    
         // Scroll top offset
         jQuery('html,body').animate({scrollTop: jQuery('.panel-heading a div:contains(Line Items)').offset().top - 200}, 500);
     }
+
     // .:nhantv:. Round to 90
     function roundTo90(val){
         let strNum = typeof val == "String" ? val.replaceAll(',','').split('.')[0] : val.toString().replaceAll(',','').split('.')[0];
@@ -313,48 +276,73 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         return parseFloat(firstDigit + "90.00").toFixed(2);
     }
     // .:nhantv:. Get Product Line Item info 
-    async function autoCreateLineItem(shortName, total_item, total_kw = 1){
-        let productInfo = {};
-        // Get Product info by Short name
-        await $.ajax({
-            url: "/index.php?entryPoint=APIGetProductInfoByShortName&short_name=" + shortName,
-            type: 'GET'})
-        .then(function(data) {
-            if(data !== undefined || data !== ""){
-                productInfo = JSON.parse(data);
-            }
-        });
-        // Case: id == ""
-        if(productInfo.id === undefined || productInfo.id === ""){
-            return;
-        }
-        // Case: id !== ""
-        await $.ajax({
-            url: "/index.php?entryPoint=getInfoProduct&product_id=" + productInfo.id,
-            type: 'GET'})
-            .then(function(data) {
-                var info_pro = JSON.parse(data);
-                if(info_pro['product_product_id'] !== undefined){
-                    insertProductLine('product_group0', '0');
-                    lineno  = prodln-1;
-                    var popupReplyData = {};
-                    popupReplyData.form_name = "EditView";
-                    var name_to_value_array = {};
-                    name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
-                    name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
-                    name_to_value_array["product_name"+lineno] = info_pro['product_name'];
-                    name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
-                    name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
+    // async function autoCreateLineItem(shortName, target, total_item, total_kw = 1){
+    //     let productInfo = {};
+    //     // Get Product info by Short name
+    //     await $.ajax({
+    //         url: "/index.php?entryPoint=APIGetProductInfoByShortName&short_name=" + shortName,
+    //         type: 'GET'})
+    //     .then(function(data) {
+    //         if(data !== undefined || data !== ""){
+    //             productInfo = JSON.parse(data);
+    //         }
+    //     });
+    //     // Case: id == ""
+    //     if(productInfo.id === undefined || productInfo.id === ""){
+    //         return;
+    //     }
+    //     // Case: id !== ""
+    //     await $.ajax({
+    //         url: "/index.php?entryPoint=getInfoProduct&product_id=" + productInfo.id,
+    //         type: 'GET'})
+    //         .then(function(data) {
+    //             var info_pro = JSON.parse(data);
+    //             if(info_pro['product_product_id'] !== undefined){
+    //                 insertProductLine('product_group0', '0');
+    //                 lineno  = prodln-1;
+    //                 var popupReplyData = {};
+    //                 popupReplyData.form_name = "EditView";
+    //                 var name_to_value_array = {};
+    //                 name_to_value_array["product_currency"+lineno] = info_pro['product_currency'];
+    //                 name_to_value_array["product_item_description"+lineno] = info_pro['product_item_description'];
+    //                 name_to_value_array["product_name"+lineno] = info_pro['product_name'];
+    //                 name_to_value_array["product_part_number"+lineno] =  info_pro['product_part_number'];
+    //                 name_to_value_array["product_product_cost_price"+lineno] = info_pro['product_product_cost_price'];
         
-                    name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
-                    name_to_value_array["product_product_list_price"+lineno] = "" + (info_pro['product_product_cost_price'] * parseFloat(total_kw));
-                    name_to_value_array["product_product_qty"+lineno] = "" + parseFloat(total_item);
-                    popupReplyData["name_to_value_array"] = name_to_value_array;            
-                    $('#product_product_list_price'+lineno).focus();
-                    $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ productInfo.id +'">Link</a></div>');
-                    setProductReturn(popupReplyData);
-                }
-            });
+    //                 name_to_value_array["product_product_id"+lineno] = info_pro['product_product_id'];
+    //                 name_to_value_array["product_product_list_price"+lineno] = "" + (info_pro['product_product_cost_price'] * parseFloat(total_kw));
+    //                 name_to_value_array["product_product_qty"+lineno] = "" + parseFloat(total_item);
+    //                 popupReplyData["name_to_value_array"] = name_to_value_array;            
+    //                 $('#product_product_list_price'+lineno).focus();
+    //                 $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ productInfo.id +'">Link</a></div>');
+    //                 setProductReturn(popupReplyData);
+    //             }
+    //         });
+    // }
+
+    // .:nhantv:. Get Product Line Item info 
+    async function autoCreateLineItem(shortName, target, total_item, total_kw = 1){
+        var info_pro = getItemFromName(shortName, target);
+        if(info_pro['id'] !== undefined){
+            insertProductLine('product_group0', '0');
+            lineno  = prodln-1;
+            var popupReplyData = {};
+            popupReplyData.form_name = "EditView";
+            var name_to_value_array = {};
+            name_to_value_array["product_currency"+lineno] = info_pro['currency'];
+            name_to_value_array["product_item_description"+lineno] = info_pro['description'];
+            name_to_value_array["product_name"+lineno] = info_pro['name'];
+            name_to_value_array["product_part_number"+lineno] =  info_pro['part_number'];
+            name_to_value_array["product_product_cost_price"+lineno] = info_pro['cost'];
+
+            name_to_value_array["product_product_id"+lineno] = info_pro['id'];
+            name_to_value_array["product_product_list_price"+lineno] = "" + (info_pro['cost'] * parseFloat(total_kw));
+            name_to_value_array["product_product_qty"+lineno] = "" + parseFloat(total_item);
+            popupReplyData["name_to_value_array"] = name_to_value_array;            
+            $('#product_product_list_price'+lineno).focus();
+            $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ info_pro['id'] +'">Link</a></div>');
+            setProductReturn(popupReplyData);
+        }
     }
     
     // .:nhantv:. Wait function

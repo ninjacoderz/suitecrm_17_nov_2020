@@ -16,11 +16,15 @@ echo json_encode($data_return);
 
 function getDataByCategoryName($db, $category_name, $solar_category){
   $data = array();
+  $solar_condition = ($solar_category != "") ? "AND pc.solar_category_c = '". $solar_category ."'" : "";
   $sql = "SELECT p.id, p.name AS product_name
       , pc.short_name_c AS short_name
       , c.name AS category_name
       , p.cost
       , p.price
+      , p.description
+      , p.part_number
+      , p.currency_id
       , pc.product_status_c
       , pc.capacity_c
       , pc.solar_category_c
@@ -29,9 +33,8 @@ function getDataByCategoryName($db, $category_name, $solar_category){
     ON p.aos_product_category_id = c.id
     LEFT JOIN aos_products_cstm pc
     ON p.id = pc.id_c
-    WHERE c.name = '". $category_name ."'
-    AND pc.solar_category_c = '". $solar_category ."'
-    AND pc.product_status_c = 'available'
+    WHERE c.name = '". $category_name ."'". $solar_condition .
+    "AND pc.product_status_c = 'available'
     ORDER BY pc.short_name_c ASC";
     
   $result = $db->query($sql);
@@ -45,6 +48,9 @@ function getDataByCategoryName($db, $category_name, $solar_category){
         'short_name' => $record['short_name'],
         'cost' => $record['cost'],
         'price' => $record['price'],
+        'description' => $record['description'],
+        'part_number' => $record['part_number'],
+        'currency' => $record['currency_id'],
         'product_status' => $record['product_status'],
         'category_name' => $record['category_name'],
         'capacity' => $record['capacity_c'],
