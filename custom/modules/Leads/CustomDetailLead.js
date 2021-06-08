@@ -292,6 +292,7 @@ $(function () {
 
         //thienpb fix get solargain_inverter_model_c
         var solargain_inverter_model = $("#solargain_inverter_model_c").val();
+        $("#tab-actions").after('<li><a id="InfoPackAlira" data-email-type="InfoPackAlira" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Alira</a></li>');
         $('#tab-actions').after('<li><a id="off-grid-email" data-email-type="off-grid" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Off Grid</a></li>');
         $('#tab-actions').after('<li><a id="methven-email" data-email-type="methven" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Methven</a></li>');
         $('#tab-actions').after('<li><a id="nexura-design" data-email-type="nexura-design" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Nexura</a></li>');
