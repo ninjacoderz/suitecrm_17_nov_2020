@@ -2056,6 +2056,49 @@ $(function () {
                 return false;
             },
         });
+        //VUT - S - autocomplete Site Address
+        $("#site_detail_addr__c").autocomplete({
+            source: function( request, response ) {
+                console.log(request["term"]);
+                Math.floor((Math.random() * 3) + 1);
+                if(request["term"].length > 3){
+                    $.ajax({
+                        url: "/index.php?entryPoint=customGetAddress&address="+request["term"],
+                        type: 'GET',
+                        success: function(data)
+                        {
+                            var suggest =[];
+                            var jsonObject = $.parseJSON(data);
+                            for (i = 1; i < jsonObject.length; i++) {
+                                suggest.push(jsonObject[i].name);
+                            }
+                            console.log(jsonObject);
+                            response(suggest);
+                        },
+                        error: function(response){console.log("Fail");},
+                    });
+                }
+            },
+            select: function( event, ui ) {
+                var value =  ui.item.value.split(",");
+                var valueLen = value.length;
+                var address1 = value[0];
+                for (var i = 1; i < valueLen - 1; i++) {
+                    address1 = address1 + value[i];
+                }
+                var address2 = value[valueLen - 1].trim();
+
+                $("#site_detail_addr__c").val(address1);
+
+                var address3 = address2.split("  ");
+
+                $("#site_detail_addr__city_c").val(address3[0]);
+                $("#site_detail_addr__state_c").val(address3[1]);
+                $("#site_detail_addr__postalcode_c").val(address3[2]);
+                return false;
+            }, 
+        });       
+        //VUT - E - autocomplete Site Address
         //Tuan code ------------------------------------
         //$("#btn_view_change_log").after('&nbsp;<button type="button" id="mark_as_SG_sent" class="button mark_as_SG_sent" title="Mark as SG sent" onClick="SUGAR.markAsSG_sent(this);" > Mark as SG Sent <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
         SUGAR.markAsSG_sent = function(elem) {
