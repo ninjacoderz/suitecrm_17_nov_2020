@@ -2917,10 +2917,10 @@ $(document).ready(function () {
             },
             async: false,
             success:function (address_id) {
-                // debugger
+                console.log(`/index.php?module=pe_address&action=EditView&record=${address_id}`);
                 SUGAR.ajaxUI.hideLoadingPanel();
                 if (address_id.trim() == 'error' || typeof (address_id) == 'undefined') return;
-                window.open('/index.php?module=pe_address&action=EditView&record='+address_id.trim(),'_blank');
+                // window.open('/index.php?module=pe_address&action=EditView&record='+address_id.trim(),'_blank');
             }
           });
     });
