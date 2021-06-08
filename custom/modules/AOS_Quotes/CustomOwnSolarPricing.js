@@ -43,7 +43,7 @@ $(function () {
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
         if($("#panel_sl_type_"+index).val() != "" && $("#inverter_sl_type_"+index).val() != ""){
-            SL_autoFillAccessory(i);
+            SL_autoFillAccessory(index);
             SL_calcOption(index);
         }
     });
@@ -51,7 +51,7 @@ $(function () {
     $(document).on("change", "input[id*=total_sl_panels_]", function(e){
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
-        SL_autoFillAccessory(i);
+        SL_autoFillAccessory(index);
         SL_calcOption(index,true);
     });
 
@@ -351,7 +351,7 @@ function SL_calcGrandTotal(currState){
 
      // PM
      grandTotal += currState.pm;
-    
+
     return grandTotal;
 }
 

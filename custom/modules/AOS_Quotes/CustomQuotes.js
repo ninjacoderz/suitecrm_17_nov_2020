@@ -2903,6 +2903,7 @@ $(document).ready(function () {
                 user : $('#assigned_user_id').val(),
                 acc_id : acc_id,
                 contact_id : contact_id,
+                quote_id : $('input[name="record"]').val(),
                 street : street,
                 city : city,
                 state : state,
@@ -2918,7 +2919,7 @@ $(document).ready(function () {
             success:function (address_id) {
                 // debugger
                 SUGAR.ajaxUI.hideLoadingPanel();
-                if (address_id == '' || typeof (address_id) == 'undefined') return;
+                if (address_id.trim() == 'error' || typeof (address_id) == 'undefined') return;
                 window.open('/index.php?module=pe_address&action=EditView&record='+address_id.trim(),'_blank');
             }
           });
