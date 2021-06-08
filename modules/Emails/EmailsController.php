@@ -3728,6 +3728,8 @@ class EmailsController extends SugarController
                     $pricings = json_decode(html_entity_decode($pricing_options));
                     // Inverter line
                     $inverter_line = (int)$pricings->inverter_line + 1;
+                    // Accesory line
+                    $accessory_line = (int)$pricings->og_accessory_line + 1;
                     // Init Option price area
                     $solar_pricing_options .= '<div style="margin:0;padding:0;box-sizing:border-box;width:100%;max-width:735px;line-height:1.8;font-family:sans-serif;font-size:16px">';
                     // Get Product bean
@@ -3748,6 +3750,22 @@ class EmailsController extends SugarController
                                     $inverter_og[$inverter_name] = $newQty;
                                 } else {
                                     $inverter_og[$inverter_name] = 1;
+                                }
+                            }
+                        }
+                        // Accessory optimize
+                        $accessory_og = array();
+                        for ($line = 1; $line < $accessory_line; $line++){
+                            $tmpName = 'offgrid_accessory'.$line.'_'.$i;
+                            if($pricings->$tmpName != ''){
+                                // Get Product name from DB
+                                $accessory_name = $this->getProductNameByShortName($productBean, $pricings->$tmpName);
+                                // Check exist on array
+                                if($accessory_og[$accessory_name] != null){
+                                    $newQty = $accessory_og[$accessory_name] + 1;
+                                    $accessory_og[$accessory_name] = $newQty;
+                                } else {
+                                    $accessory_og[$accessory_name] = 1;
                                 }
                             }
                         }
@@ -3809,17 +3827,10 @@ class EmailsController extends SugarController
                                         </td>
                                       </tr>';
                                     // Render Accessories
-                                    if ($pricings->{'offgrid_accessory1_'.$i} != '') {
+                                    foreach ($accessory_og as $key => $value) {
                                         $solar_pricing_options .= '<tr>
                                             <td>
-                                                <div style="margin:0;padding:0;font-size:0.8rem">1x '.$curr_product['offgrid_accessory1'].'</div>
-                                            </td>
-                                        </tr>';
-                                    }
-                                    if ($pricings->{'offgrid_accessory2_'.$i} != '') {
-                                        $solar_pricing_options .= '<tr>
-                                            <td>
-                                                <div style="margin:0;padding:0;font-size:0.8rem">1x '.$curr_product['offgrid_accessory2'].'</div>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">'.$value.'x '.$key.'</div>
                                             </td>
                                         </tr>';
                                     }

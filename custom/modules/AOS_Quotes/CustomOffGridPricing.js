@@ -71,9 +71,14 @@ $(function () {
     });
 
     // .:nhantv:. Inverter Add Button Click handle 
-    $(document).on('click', '#inverter_add', function(e){
+    $(document).on('click', '#inverter_add, #og_accessory_add', function(e){
         e.preventDefault();
-        createInverterLine();
+        let attr_id = $(e.target).attr('id');
+        if (attr_id.indexOf('inverter') != -1) {
+            createNewLine('inverter');
+        } else {
+            createNewLine('og_accessory');
+        }
     });
 
     // .:nhantv:. Show calc hint
@@ -189,9 +194,16 @@ $.fn.openComposeViewModal_SendOffGridPricing = function (source) {
     return $(self);
 };
 
-// .:nhantv:. Create new Inverter line
-function createInverterLine(){
-    let next_index = getCountInverterLine() + 1;
+// .:nhantv:. Create new line
+function createNewLine(target = 'inverter'){
+    var label = "Inverter Type ", id = "inverter_og_type", list = sol_inverter;
+    if (target == 'og_accessory') {
+        label = "OG Accessory ";
+        id = "offgrid_accessory";
+        list = og_accessory;
+    }
+
+    let next_index = getCountLine(target) + 1;
     let new_tr = document.createElement('tr');
     for (var i = 0; i < 7; i++) {
         let td = document.createElement('td');
@@ -200,24 +212,22 @@ function createInverterLine(){
         if(i == 0){
             // First td
             td.style.width = "160px";
-            td.innerHTML = "Inverter Type " + next_index;
+            td.innerHTML = label + next_index;
         } else {
             // Other td
-            let select = makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type" + next_index + "_" + i);
+            let select = makeSelectBox(convertJSONToArrayInit(list), "offgrid_pricing", id + next_index + "_" + i);
             select.css({"width":"100%"});
             $(td).html(select);
         }
         new_tr.appendChild(td);
     }
-    $('#inverter_add').closest('tr').before(new_tr);
-    $('#inverter_line').val(next_index);
+    $('#'+ target +'_add').closest('tr').before(new_tr);
+    $('#'+ target +'_line').val(next_index);
 }
 
-// .:nhantv:. Get count number of Inverter line
-function getCountInverterLine(){
-    // let length = $('#offgrid_pricing').find('select[id*="inverter_og_type"]').length;
-    // return (parseInt(length) / 6);
-    return parseInt($('#inverter_line').val());
+// .:nhantv:. Get count number of Inverter/OG Accessory line
+function getCountLine(target){
+    return parseInt($('#'+ target +'_line').val());
 }
 
 // .:nhantv:. Clear Offgrid Option
@@ -289,7 +299,7 @@ function getCurrentOptionState(index){
     result['total_kw'] = $('#total_og_kW_' + index).val();
     result['panel_type'] = $('#panel_og_type_' + index).val();
     // Inverter line
-    let num_of_line = getCountInverterLine();
+    let num_of_line = getCountLine('inverter');
     for (var i = 0; i < num_of_line; i++) {
         result['inverter_type' + (i + 1)] = $('#inverter_og_type' + (i + 1) + '_' + index).val();
     }
@@ -298,8 +308,11 @@ function getCurrentOptionState(index){
     result['offgrid_inverter'] = $('#offgrid_inverter_' + index).val();
     result['offgrid_batery'] = $('#offgrid_batery_' + index).val();
     result['offgrid_howmany'] = $('#offgrid_howmany_' + index).val();
-    result['offgrid_accessory1'] = $('#offgrid_accessory1_' + index).val();
-    result['offgrid_accessory2'] = $('#offgrid_accessory2_' + index).val();
+    // Accessory line
+    num_of_line = getCountLine('og_accessory');
+    for (var i = 0; i < num_of_line; i++) {
+        result['offgrid_accessory' + (i + 1)] = $('#offgrid_accessory' + (i + 1) + '_' + index).val();
+    }
     result['re_generator'] = $('#re_generator_' + index).val();
     return result;
 }
@@ -360,7 +373,7 @@ function calcEquipmentCost(currState){
         cost += parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels);
     }
     // Inverter cost
-    let num_of_line = getCountInverterLine();
+    let num_of_line = getCountLine('inverter');
     for (var i = 0; i < num_of_line; i++) {
         if(currState['inverter_type' + (i + 1)] != ''){
             cost += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"));
@@ -372,11 +385,12 @@ function calcEquipmentCost(currState){
     if(currState.offgrid_batery != ''){
         cost += parseFloat(getAttributeFromName(currState.offgrid_batery, og_battery, "cost")) * parseFloat(currState.offgrid_howmany);
     }
-    if(currState.offgrid_accessory1 != ''){
-        cost += parseFloat(getAttributeFromName(currState.offgrid_accessory1, og_accessory, "cost"));
-    }
-    if(currState.offgrid_accessory2 != ''){
-        cost += parseFloat(getAttributeFromName(currState.offgrid_accessory2, og_accessory, "cost"));
+    // Accessory cost
+    num_of_line = getCountLine('og_accessory');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['offgrid_accessory' + (i + 1)] != ''){
+            cost += parseFloat(getAttributeFromName(currState['offgrid_accessory' + (i + 1)], og_accessory, "cost"));
+        }
     }
     if(currState.re_generator != ''){
         cost += parseFloat(getAttributeFromName(currState.re_generator, re_generator, "cost"));
@@ -406,7 +420,7 @@ function getMaxPanelAndTotalKw(currState, isTotalPanel){
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
     // Get inverter kw
     let inverter_kw = 0;
-    let num_of_line = getCountInverterLine();
+    let num_of_line = getCountLine('inverter');
     for (let i = 0; i < num_of_line; i++) {
         if (currState['inverter_type' + (i + 1)] != "") {
             inverter_kw += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "capacity"));
@@ -433,7 +447,7 @@ function getMaxPanelAndTotalKw(currState, isTotalPanel){
 
 // .:nhantv:. Check at least 1 inverter has value
 function isInverterHasValue(index){
-    let num_of_line = getCountInverterLine();
+    let num_of_line = getCountLine('inverter');
     for (let i = 0; i < num_of_line; i++) {
         if ($("#inverter_og_type" + (i + 1) + "_" + index).val() != '') {
             return true;
@@ -504,7 +518,6 @@ function saveCurrentState(){
             values[id_name] = $(this).val();
         }
     });
-
     $("#offgrid_option_c").val(JSON.stringify(values));
 }
 
@@ -513,14 +526,23 @@ function loadOffgridOption(){
     if($("#offgrid_option_c").val() != ""){
         try{
             var json_val = JSON.parse($("#offgrid_option_c").val());
-
             // Check number of inverter line
-            let curr_line_num = getCountInverterLine();
+            let curr_line_num = getCountLine('inverter');
             let line_num = (json_val.inverter_line != undefined && json_val.inverter_line != '') ? json_val.inverter_line : 2;
             if (line_num > curr_line_num) {
                 // Create new Inverter line
                 for (let i = 0; i < (line_num - curr_line_num); i++) {
-                    createInverterLine();
+                    createNewLine('inverter');
+                }
+            }
+
+            // Check number of accesssory line
+            curr_line_num = getCountLine('og_accessory');
+            line_num = (json_val.og_accessory_line != undefined && json_val.og_accessory_line != '') ? json_val.og_accessory_line : 2;
+            if (line_num > curr_line_num) {
+                // Create new Accessory line
+                for (let i = 0; i < (line_num - curr_line_num); i++) {
+                    createNewLine('og_accessory');
                 }
             }
 
@@ -576,7 +598,7 @@ async function generateOffgridItem(){
         await autoCreateLineItemOg("Microgrid Solar PV Supply and Install", og_extra, 1);
         currState.panel_type && await autoCreateLineItemOg(currState.panel_type, sol_panel, currState.total_panels);
         // Inverter line
-        let num_of_line = getCountInverterLine();
+        let num_of_line = getCountLine('inverter');
         for (let i = 0; i < num_of_line; i++) {
             if (currState['inverter_type' + (i + 1)] != "") {
                 await autoCreateLineItemOg(currState['inverter_type' + (i + 1)], sol_inverter, 1);
@@ -584,8 +606,13 @@ async function generateOffgridItem(){
         }
         currState.offgrid_inverter && await autoCreateLineItemOg(currState.offgrid_inverter, og_inverter, 1);
         currState.offgrid_batery && await autoCreateLineItemOg(currState.offgrid_batery, og_battery, currState.offgrid_howmany);
-        currState.offgrid_accessory1 && await autoCreateLineItemOg(currState.offgrid_accessory1, og_accessory, 1);
-        currState.offgrid_accessory2 && await autoCreateLineItemOg(currState.offgrid_accessory2, og_accessory, 1);
+        // Accessory line
+        num_of_line = getCountLine('og_accessory');
+        for (let i = 0; i < num_of_line; i++) {
+            if (currState['offgrid_accessory' + (i + 1)] != "") {
+                await autoCreateLineItemOg(currState['offgrid_accessory' + (i + 1)], og_accessory, 1);
+            }
+        }
         currState.re_generator && await autoCreateLineItemOg(currState.re_generator, re_generator, 1);
         await autoCreateLineItemOg("Microgrid Balance Of System", og_extra, 1, currState.total_kw * 1000);
         await autoCreateLineItemOg("Microgrid Standard Install", og_extra, 1, currState.total_kw * 1000);
@@ -849,6 +876,8 @@ async function init_table_offgrid() {
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_4 offgrid_pricing", "offgrid_accessory2_4")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_5 offgrid_pricing", "offgrid_accessory2_5")
             , makeSelectBox(convertJSONToArrayInit(og_accessory), "offgrid_accessory2_6 offgrid_pricing", "offgrid_accessory2_6")],
+        ["<button id='og_accessory_add' class='button default'>+</button>"
+            , "<input type='hidden' class='offgrid_pricing' name='og_accessory_line' id='og_accessory_line' value='2' />"],
         ["Generator"
             , makeSelectBox(convertJSONToArrayInit(re_generator), "re_generator_1 offgrid_pricing", "re_generator_1")
             , makeSelectBox(convertJSONToArrayInit(re_generator), "re_generator_2 offgrid_pricing", "re_generator_2")
@@ -912,6 +941,7 @@ function calcHint(){
     let index = $('input[name="offgrid_option"]:checked').attr('data-attr');
     if (!index){
         $('#hint1').html("You must choose the Option to see calc hint");
+        alert("You must choose the Option to see calc hint");
         return;
     }
     let currState = getCurrentOptionState(index);
@@ -926,7 +956,7 @@ function calcHint(){
             , parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels)
         );
     }
-    let num_of_line = getCountInverterLine();
+    let num_of_line = getCountLine('inverter');
     for (var i = 0; i < num_of_line; i++) {
         if(currState['inverter_type' + (i + 1)] != ''){
             cost += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"));
@@ -950,19 +980,15 @@ function calcHint(){
             , parseFloat(getAttributeFromName(currState.offgrid_batery, og_battery, "cost")) * parseFloat(currState.offgrid_howmany)
         );
     }
-    if(currState.offgrid_accessory1 != ''){
-        cost += parseFloat(getAttributeFromName(currState.offgrid_accessory1, og_accessory, "cost"));
-        str += writeHint(
-            currState.offgrid_accessory1
-            , parseFloat(getAttributeFromName(currState.offgrid_accessory1, og_accessory, "cost"))
-        );
-    }
-    if(currState.offgrid_accessory2 != ''){
-        cost += parseFloat(getAttributeFromName(currState.offgrid_accessory2, og_accessory, "cost"));
-        str += writeHint(
-            currState.offgrid_accessory2
-            , parseFloat(getAttributeFromName(currState.offgrid_accessory2, og_accessory, "cost"))
-        );
+    num_of_line = getCountLine('og_accessory');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['offgrid_accessory' + (i + 1)] != ''){
+            cost += parseFloat(getAttributeFromName(currState['offgrid_accessory' + (i + 1)], og_accessory, "cost"));
+            str += writeHint(
+                currState['offgrid_accessory' + (i + 1)]
+                , parseFloat(getAttributeFromName(currState['offgrid_accessory' + (i + 1)], og_accessory, "cost"))
+            );
+        }
     }
     if(currState.re_generator != ''){
         cost += parseFloat(getAttributeFromName(currState.re_generator, re_generator, "cost"));
