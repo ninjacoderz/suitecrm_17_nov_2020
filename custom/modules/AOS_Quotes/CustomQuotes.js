@@ -5732,8 +5732,29 @@ $(window).load(function () {
             //Plumber
             if (sanden_quote_input['quote_plumbing_installation_by_pure'] == 'Yes') {
                 var plumber_group_id = ($('#plumber_lineItems input[name="plumber_group_id[]"]').length > 0) ? $('#plumber_lineItems input[name="plumber_group_id[]"]').val() : '';
-                if (plumber_group_id == '') {
+                if (plumber_group_id == '' || typeof plumber_group_id == 'undefined') {
                     console.log('CustomQuotes.js >> #plumber_group_id is null');
+                    SUGAR.ajaxUI.showLoadingPanel();
+                    showSubpanel('plumber','Yes');
+                    $.ajax({
+                        url: '/index.php?entryPoint=APICreateLineItemProposedPO',
+                        type: 'POST',
+                        async: false,
+                        data:
+                        {
+                            quote_id: encodeURIComponent($("input[name='record']").val()),
+                            po_type: 'sanden_plumber',
+                        },
+                        success: function (data) {
+                            // console.log(data);
+                            if (data == '') {
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                                return;
+                            }
+                            $(document).find('#plumber_line_items_span').append(data);
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                        }
+                    });
                 }
             } else {
                 showSubpanel('plumber','No');
@@ -5741,8 +5762,29 @@ $(window).load(function () {
             //Electrician
             if (sanden_quote_input['quote_electrical_installation_by_pure'] == 'Yes') {
                 var electrician_group_id = ($('#electrician_lineItems input[name="electrician_group_id[]"]').length > 0) ? $('#electrician_lineItems input[name="electrician_group_id[]"]').val() : '';
-                if (electrician_group_id == '') {
+                if (electrician_group_id == '' || typeof electrician_group_id == 'undefined') {
                     console.log('CustomQuotes.js >> #electrician_group_id is null');
+                    SUGAR.ajaxUI.showLoadingPanel();
+                    showSubpanel('electrician','Yes');
+                    $.ajax({
+                        url: '/index.php?entryPoint=APICreateLineItemProposedPO',
+                        type: 'POST',
+                        async: false,
+                        data:
+                        {
+                            quote_id: encodeURIComponent($("input[name='record']").val()),
+                            po_type: 'sanden_electrician',
+                        },
+                        success: function (data) {
+                            // console.log(data);
+                            if (data == '') {
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                                return;
+                            }
+                            $(document).find('#electrician_line_items_span').append(data);
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                        }
+                    });
                 }
             } else {
                 showSubpanel('electrician','No');
@@ -5764,7 +5806,7 @@ $(window).load(function () {
                     $.ajax({
                         url: '/index.php?entryPoint=APICreateLineItemProposedPO',
                         type: 'POST',
-                        async: true,
+                        async: false,
                         data:
                         {
                             quote_id: encodeURIComponent($("input[name='record']").val()),
@@ -5808,7 +5850,7 @@ $(window).load(function () {
                     $.ajax({
                         url: '/index.php?entryPoint=APICreateLineItemProposedPO',
                         type: 'POST',
-                        async: true,
+                        async: false,
                         data:
                         {
                             quote_id: encodeURIComponent($("input[name='record']").val()),
