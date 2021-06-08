@@ -1097,13 +1097,20 @@ if(isset($_REQUEST['po_record']) && $_REQUEST['po_record'] !== ""){
     $note->filename = $attached_file_name; 
     $noteId = $note->save();
     // get attach file to PE
+    $link_ask_questions = '';
     if($mail_format == "plumber") {
         $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=plumber&note_id='.$noteId.'">Link Review And Approve PO</a>' ;
+        $link_ask_questions = '<a target="_blank" href="https://pure-electric.com.au/pe-askquestions?return_id='.$invoice_id.'&action=GET&installer=plumber">Ask question about this Purchase Order</a>' ;
     } else if($mail_format == "electrical") {
         $link_review_approve = '<a href="https://pure-electric.com.au/pe-sanden-quote-form/review-approve-po?invoice_id='.$invoice_id.'&installer=electrical">Link Review And Approve PO</a>' ;
+        $link_ask_questions = '<a target="_blank" href="https://pure-electric.com.au/pe-askquestions?return_id='.$invoice_id.'&action=GET&installer=electrical">Ask question about this Purchase Order</a>' ;
     }
     $body_ = str_replace('$link_review_approve',$link_review_approve,$body_);
     $body_html_ = str_replace('$link_review_approve',$link_review_approve,$body_html_);
+
+    $body_ = str_replace('$link_ask_questions',$link_ask_questions,$body_);
+    $body_html_ = str_replace('$link_ask_questions',$link_ask_questions,$body_html_);
+
     if($noteID !== false && !empty($noteId)) {
         rename($sugar_config['upload_dir'] . $attached_file_name, $sugar_config['upload_dir'] . $note->id);
         $email->attachNote($note);
