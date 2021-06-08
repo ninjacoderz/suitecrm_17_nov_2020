@@ -5151,7 +5151,7 @@ $(function () {
                                 $("#map").hide();
                                 $("#Map_Template_Image").after(result);
                                 $("#download").remove();
-                                $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");
+                                $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");
                                 SUGAR.ajaxUI.hideLoadingPanel();
                             }
                         });
@@ -5178,7 +5178,7 @@ $(function () {
                     $("#map").hide();
                     $("#Map_Template_Image").after(result);
                     $("#download").remove();
-                    $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");
+                    $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");
                     var _DRAGGGING_STARTED = 0;
                     var _LAST_MOUSE_POSITION = { x: null, y: null };
                     var _DIV_OFFSET = $(document).find("#map").offset();
@@ -5389,6 +5389,54 @@ $(function () {
     $("#quote_type_c").change(function () {
         check_sg_quote_type($(this).val());
     });
+
+    //VUT - S - change site Address
+    $(document).on('change', '#install_address_c, #install_address_city_c',  function(){
+        // debugger;
+        SUGAR.ajaxUI.showLoadingPanel();
+        $("#ajaxloading_mask").css("position", 'fixed');
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?address='
+                + encodeURIComponent($('#install_address_c').val()) + ", "
+                + encodeURIComponent($('#install_address_city_c').val()) + ", "
+                + encodeURIComponent($('#install_address_state_c').val())
+                + ", " + encodeURIComponent($('#install_address_postalcode_c').val())
+                + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
+            type: 'GET',
+            success: function (result) {
+                if (result.status == "OK") {
+                    var location = result.results[0].geometry.location;
+                    $('#div_street_view').remove();
+                    var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
+                    $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 5em;" id="div_street_view"><iframe id="street-view" src="' + urlStreetView + '" height="223"  title="Street View"></iframe></div>');
+                    $.ajax({
+                        url: "index.php?entryPoint=Image_Site_Details_Get_From_Google&lat="
+                            + location.lat
+                            + "&lng=" + location.lng,
+                        type: 'GET',
+                        success: function (result) {
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                            $("#Map_Template_Image").hide();
+                            $("#map").hide();
+                            $("#Map_Template_Image").after(result);
+                            $("#download").remove();
+                            setTimeout(function () {
+                                debugger
+                                CopyToClipboardQuote();
+                            }, 3000);
+                            // $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");                            
+                        }
+                    }).done(function (data) {
+                        console.log('done'+data);
+                    });
+                } else {
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                }
+            }
+        });
+
+    });
+    //VUT - E - change site Address
 
     //thienpb code  -- show button preview pdf
     $(document).on('click', '#preview_pdf', function () {
@@ -5631,11 +5679,11 @@ $(window).load(function () {
                             $("#map").hide();
                             $("#Map_Template_Image").after(result);
                             $("#download").remove();
-                            // $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");                            
+                            // $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");                            
                         }
                     }).done(function (data) {
                         setTimeout(function () {
-                            CopyToClipboard();
+                            CopyToClipboardQuote();
                         }, 5000);
                     });
                 } else {
@@ -6060,7 +6108,7 @@ function showPopup() {
 function hidePopup() {
     $('#popup_image_site_detail').hide();
 }
-function CopyToClipboard() {
+function CopyToClipboardQuote() {
     if($(document).find('#map').length == 0)return;
     window.onbeforeunload = null;
     setTimeout(function () {
