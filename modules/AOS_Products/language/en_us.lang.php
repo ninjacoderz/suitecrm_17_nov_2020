@@ -94,4 +94,5 @@ $mod_strings = array(
     'LBL_AOS_PRODUCT_PRICES' => 'Product Prices',
     'LBL_MODULE_EFFICIENCY' => 'Module Efficiency',
     'LBL_WARRANTY' => 'Product Warranty',
+    'LBL_DAIKIN_CATEGORY' => 'Daikin Category',
 );

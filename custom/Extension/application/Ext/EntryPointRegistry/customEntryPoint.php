@@ -1595,3 +1595,9 @@ $entry_point_registry['APIGetProductByModuleID'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/APIGetProductByModuleID.php',
     'auth' => false
 );
+
+//VUT - Quote - Get Daikin Product for Pricing 
+$entry_point_registry['APIGetDaikinProduct'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetDaikinProduct.php',
+    'auth' => false
+);

@@ -382,6 +382,24 @@ $dictionary['AOS_Products'] = array(
                 'importable' => 'true',
                 'duplicate_merge' => 'disabled',
             ),
+            'daikin_category' =>
+            array(
+                'required' => false,
+                'name' => 'daikin_category',
+                'vname' => 'LBL_DAIKIN_CATEGORY',
+                'type' => 'enum',
+                'massupdate' => 0,
+                'comments' => '',
+                'help' => '',
+                'importable' => 'true',
+                'duplicate_merge' => 'disabled',
+                'duplicate_merge_dom_value' => '0',
+                'audited' => 0,
+                'reportable' => true,
+                'len' => 100,
+                'options' => 'daikin_category_list',
+                'studio' => 'visible',
+            ),
         //VUT - add field
         "aos_product_category" => array(
             'name' => 'aos_product_category',

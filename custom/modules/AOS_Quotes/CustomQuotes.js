@@ -3512,7 +3512,7 @@ $(document).ready(function () {
                 } else {
                     travel_km = 0;
                 }
-                debugger;
+                // debugger;
                 if (number_double_storey_panel == "") {
                     additional = 0;
                 } else if (parseInt(number_double_storey_panel) > 0) {
@@ -5054,7 +5054,7 @@ $(function () {
                 success: function (response) {
                     if (response != 0) {
                         var folder_id = $('body').find('input[name="pre_install_photos_c"]').val();
-                        debugger
+                        // debugger
                         $('body').find("#Map_Template_Image").remove();
                         var image_html = '<img id="Map_Template_Image" onclick="showPopup()" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:220px;height:auto;margin-top: 5em;margin-bottom:5px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/' + folder_id + '/Image_Site_Detail.jpg?' + new Date().getTime() + '">';
                         $('body').find("#maptemplate-img").append(image_html);
@@ -5424,7 +5424,7 @@ $(function () {
                             $("#Map_Template_Image").after(result);
                             $("#download").remove();
                             setTimeout(function () {
-                                debugger
+                                // debugger
                                 CopyToClipboardQuote();
                             }, 3000);
                             // $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");                            
@@ -6133,7 +6133,7 @@ function CopyToClipboardQuote() {
                     data: { img: image_data, id: generateUUID }
                 }).done(function (data) {
                     var folder_id = $('body').find('input[name="pre_install_photos_c"]').val();
-                    debugger
+                    // debugger
                     $('body').find("#Map_Template_Image").remove();
                     $('body').find("#nearmap").remove();
                     var image_html = '<img id="Map_Template_Image" onclick="showPopup()" style="border-radius:5px;background-color:#ffffff;border:1px solid #808080;padding:3px;width:100%;max-width:220px;height:auto;margin-top: 5em;margin-bottom:5px;" alt="Map Template Image" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/' + folder_id + '/Image_Site_Detail.jpg?' + new Date().getTime() + '">';
