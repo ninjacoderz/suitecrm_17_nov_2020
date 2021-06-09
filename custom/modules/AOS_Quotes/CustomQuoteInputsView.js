@@ -152,8 +152,9 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             alert("You must choose the Option to generate line item");
             return;
         }
+        $("#generate_quote").css({"pointer-events":'none'});
         SL_autoFillAccessory(optSelected);
-        SL_calcOption(optSelected,true);
+        SL_calcOption(optSelected,true,false);
 
         await wait(300);
         // Show loading
@@ -731,7 +732,29 @@ function autoSaveData(){
             url: $("#EditView").attr('action'),
             data: $("#EditView").serialize(),
             success: function (data) {
-                SUGAR.ajaxUI.hideLoadingPanel();
+                $.ajax({
+                    url: "?entryPoint=APIGetProductByModuleID",
+                    type : "POST",
+                    data : {moduleID:$("input[name='record']").val()},
+                    success: function (data) {
+                        if(data == '' || typeof data === 'undefined') return;
+                        var product_items = JSON.parse(data);
+                        var groupidx = $("#lineItems").find(".group_body").length -1;
+                        let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
+                        $("#group"+groupidx+"id").val(product_items[0]['group_id']);
+                        productVisible.each((index, el) => {
+                            if($(el).find('input[id*=product_part_number]').val() == product_items[index]['part_number']){
+                                $(el).find('input[id*=product_id]').val(product_items[index]['id']);
+                            }
+                        })
+                    }
+                }).done(function(){
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                    $("#generate_quote").removeAttr('style');
+                }).fail(function () {
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                    $("#generate_quote").removeAttr('style');
+                });
             }
         });
     } catch (error) {

@@ -1589,3 +1589,9 @@ $entry_point_registry['API_DATA_Ask_Questions_SuiteCRM'] = array(
     'file' => 'custom/modules/PO_purchase_order/API_DATA_Ask_Questions_SuiteCRM.php',
     'auth' => false
 );
+
+//Thienpb API Load product of quote
+$entry_point_registry['APIGetProductByModuleID'] = array( 
+    'file' => 'custom/include/SugarFields/Fields/Multiupload/APIGetProductByModuleID.php',
+    'auth' => false
+);

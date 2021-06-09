@@ -205,7 +205,7 @@ async function init_table_solar() {
     SL_loadOption();
 }
 
-async function SL_calcOption(index, isTotalPanel = false) {
+async function SL_calcOption(index, isTotalPanel = false,isloading = true) {
     var postcode = $("#install_address_postalcode_c").val();
     if(index != '' && index != undefined){
         let currState = SL_getCurrentOptionState(index);
@@ -240,7 +240,9 @@ async function SL_calcOption(index, isTotalPanel = false) {
             } finally {
                 // Hide loading
                 setTimeout(function (){
-                    SUGAR.ajaxUI.hideLoadingPanel();
+                    if(isloading){
+                        SUGAR.ajaxUI.hideLoadingPanel();
+                    }
                 }, 300);
             }
             // Save current option
