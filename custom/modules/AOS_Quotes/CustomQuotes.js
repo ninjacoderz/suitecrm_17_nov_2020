@@ -4427,9 +4427,12 @@ $(document).ready(function () {
     $("#btn_pe_solar_tool").on('click', function (e) {
         // .:nhantv:. Update link to Jarod's design tool
         let quoteId = $('input[name="record"]').val();
+        let address = $("#install_address_c").val() + ',' + $("#install_address_city_c").val() + ',' + $("#install_address_state_c").val() + ',' + $("#install_address_postalcode_c").val();
+        let url = 'http://solardesigndev.pure-electric.com.au/';
+        // let url = 'http://solar.design.local:3000/';
         if (quoteId != '') {
             window.open(
-                'http://solardesigndev.pure-electric.com.au/' + quoteId,
+                url + quoteId + '?address=' + address,
                 '_blank' // <- This is what makes it open in a new window.
             );
         } else {

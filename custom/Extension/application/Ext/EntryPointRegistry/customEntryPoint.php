@@ -1490,6 +1490,12 @@ $entry_point_registry['APISaveSolarDesign'] = array(
     'auth' => false
 );
 
+// .:nhantv:. Get Solar Panel for Solar design tool
+$entry_point_registry['APIGetPanelForSolarDesign'] = array(
+    'file' => 'custom/modules/AOS_Products/APIGetPanelForSolarDesign.php',
+    'auth' => false
+);
+
 // .:nhantv:. Get data Product for Off-grid
 $entry_point_registry['APIGetOffGridProduct'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetOffGridProduct.php',
