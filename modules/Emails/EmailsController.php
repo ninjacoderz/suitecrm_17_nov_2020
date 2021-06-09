@@ -4408,6 +4408,398 @@ class EmailsController extends SugarController
                 //end - code render sms_template
             }
             //end
+            //Thienpb code -- solar pricing options
+            if($_REQUEST['email_type'] == "send_pe_solar_pricing"){
+                $macro_nv = array();
+                $focusName = "AOS_Quotes";
+                $quote = new AOS_Quotes();
+                $focus = $quote->retrieve($_REQUEST['record_id']);
+                $this->bean->return_module = 'AOS_Quotes';
+                $this->bean->return_id = $focus->id;
+                $lead =  new Lead();
+                $lead->retrieve($focus->leads_aos_quotes_1leads_ida);
+
+                $contact =  new Contact();
+                $contact->retrieve($focus->billing_contact_id);
+
+                if(!$focus->id) return;
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',
+                    //'ba4a72df-d9e3-7a20-d7b2-5d5bb366c7a4'
+                    '9d9f03ae-fe75-68d0-72ad-5d5b95cda15b'
+                );
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                // $attachmentBeans = $emailTemplate->getAttachments();
+
+                // if($attachmentBeans) {
+                //     $this->bean->status = "draft";
+                //     $this->bean->save();
+                //     foreach($attachmentBeans as $attachmentBean) {
+                //         $noteTemplate = clone $attachmentBean;
+                //         $noteTemplate->id = create_guid();
+                //         $noteTemplate->new_with_id = true;
+                //         $noteTemplate->parent_id = $this->bean->id;
+                //         $noteTemplate->parent_type = 'Emails';
+
+                //         $noteFile = new UploadFile();
+                //         $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                //         $noteTemplate->save();
+                //         $this->bean->attachNote($noteTemplate);
+                //     }
+                // }
+
+                // $source = realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c;
+                // $filesDesigns = $this->check_exist_file($source, 'Design');
+                // $filesSolar = $this->check_exist_file($source, 'Quote_');
+                // $filesSolar_Pdf = [];
+                // foreach ($filesSolar as $value) {
+                //     if (strpos(strtolower($value), "pdf") !== false) {
+                //         $filesSolar_Pdf[] =   $value;
+                //     }
+                // }
+                // $all_files_send  = array_merge($filesDesigns,$filesSolar_Pdf);
+                // foreach ($all_files_send as $file) {
+                //     $this->bean->save();
+                //     $noteTemplate = new Note();
+                //     $noteTemplate->id = create_guid();
+                //     $noteTemplate->new_with_id = true;
+                //     $noteTemplate->parent_id = $this->bean->id; 
+                //     $noteTemplate->parent_type = 'Emails';
+                //     $noteTemplate->date_entered = '';
+                //     $noteTemplate->filename = $file;
+                //     $noteTemplate->name = $file;   
+                //     $noteTemplate->save();
+                //     global $sugar_config;
+                //     $destination = $sugar_config['upload_dir'].$noteTemplate->id;
+                //     $sourcefile = $source.'/'.$file;
+
+                //     if(strpos(strtolower($file), "png") !== false) {
+                //         $noteTemplate->file_mime_type = 'image/png';
+                //     } elseif (strpos(strtolower($file), "pdf") !== false) {
+                //         $noteTemplate->file_mime_type = 'image/jpg';
+                //     } else {
+                //         $noteTemplate->file_mime_type = 'image/jpg';
+                //     }
+                //     if (!symlink($sourcefile, $destination)) {
+                //     $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                //     }
+                //     $this->bean->attachNote($noteTemplate);
+                // }
+                
+                $this->bean->to_addrs_names = $lead->first_name.' '.$lead->last_name." <$lead->email1>";
+                $this->bean->name = $name;
+                $this->bean->description_html = $description_html;
+                $this->bean->description = $description;
+
+                //VUT - S - replace Quote Inputs  
+                if ($quote->quote_note_inputs_c !='') {
+                    $solar_quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c), true);
+                    if (count(array_filter($solar_quote_input)) == 0) {
+                        $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                        // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                    } else {
+                        $this->bean->description_html = $this->renderTableQuoteInputSolarPricing($solar_quote_input, $this->bean->description_html);
+                    }
+                } else {
+                    $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                    // $this->bean->description_html = str_replace("\$table_solar_quote_inputs", '' , $this->bean->description_html);
+                } 
+
+                //VUT - E - replace Quote Inputs 
+                //replace data for subject - VUT - 2020/03/04
+                $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                
+                //replace data for body
+                $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
+                
+                $this->bean->description_html = str_replace("\$aos_quotes_installation address_c", $_REQUEST['address'] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_stroreys_c", $_REQUEST['storey'] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_preferred_c", "No" , $this->bean->description_html);
+
+                if(   strpos($_REQUEST['address'],"VIC") == TRUE){
+                    $html_vic = '<table style="text-align:left;border-collapse:collapse;width:735px;">
+                                <tbody>
+                                <tr>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Rebate to your solar pricing?</td>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;width: 47%">'. $_REQUEST['vic_rebate'] .'</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;">Want to apply Solar VIC Loan to your solar pricing?</td>
+                                    <td style="padding: 5px; border: .5px solid #8a8a8a;" >'.  $_REQUEST['vic_loan'] .'</td>
+                                </tr>
+                                </tbody></table>';
+                    $this->bean->description_html = str_replace("\$aos_solar_vic_loan_c", $html_vic ,$this->bean->description_html);
+                    // $body_html = str_replace("\$aos_quotes_loan_c",    ($vic_loan == "yes_loan") ? "Yes": 'No' , $body_html);
+                }else {
+                    $this->bean->description_html = str_replace("\$aos_solar_vic_loan_c"," " ,$this->bean->description_html);
+                }
+
+                $pricing_options = $focus->own_solar_pv_pricing_c;
+
+                $solar_pricing_options = '';
+
+                if($pricing_options != ''){
+                    $pricings = json_decode(html_entity_decode($pricing_options));
+                    $productBean = BeanFactory::newBean('AOS_Products');
+
+                    for ($i=1; $i < 7 ; $i++) {
+                        // Inverter optimize
+                        $inverter_sol = array();
+                        $tmpName = 'inverter_sl_type_'.$i;
+                        if($pricings->$tmpName != ''){
+                            // Get Product name from DB
+                            $inverter_name = $this->getProductNameByShortName($productBean, $pricings->$tmpName);
+                            // Check exist on array
+                            if($inverter_sol[$inverter_name] != null){
+                                $newQty = $inverter_sol[$inverter_name] + 1;
+                                $inverter_sol[$inverter_name] = $newQty;
+                            } else {
+                                $inverter_sol[$inverter_name] = 1;
+                            }
+                        }
+                        // Accessory optimize
+                        $accessory_sol = array();
+                        for ($line = 1; $line < 3; $line++){
+                            $tmpName = 'sl_accessory'.$line.'_'.$i;
+                            if($pricings->$tmpName != ''){
+                                // Get Product name from DB
+                                $accessory_name = $this->getProductNameByShortName($productBean, $pricings->$tmpName);
+                                // Check exist on array
+                                if($accessory_sol[$accessory_name] != null){
+                                    $newQty = $accessory_sol[$accessory_name] + 1;
+                                    $accessory_sol[$accessory_name] = $newQty;
+                                } else {
+                                    $accessory_sol[$accessory_name] = 1;
+                                }
+                            }
+                        }
+                        if($i == 4 ){
+                            $solar_pricing_options .= '<div style="clear:left"></div>';
+                        }
+                         // STCs price
+                         $stc_price = $this->calcStcs($productBean, $pricings->{'number_sl_stcs_'.$i});
+                        // Check if option has value to render
+                        if($pricings->{'total_sl_'.$i} != "" || $pricings->{'total_sl_'.$i} != 0){
+                            $grandTotal = substr($pricings->{'total_sl_'.$i}, 0, -3);
+                            if( $_REQUEST['vic_rebate'] == 'Yes'){
+                                $str_vicreabte = 1850;
+                                if( $_REQUEST['vic_loan'] == 'Yes'){
+                                    $reabte_price = (Int)$pricings->{'total_sl_'.$i} - $str_vicreabte;
+                                    $loan_price = (Int)$pricings->{'total_sl_'.$i} - $str_vicreabte - $str_vicreabte;
+                                    $solar_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float:left;width: 290px;background-color: white;border: 1px solid #f6ebd9;;margin-top: 25px;margin-right: 10px;padding: 5px;">
+                                                                    <div class="op_header" style="width: 100%;position: inherit;">
+                                                                        <div class="number-options" style="float: left;border: 2px solid #efb352;width: 9%;height: 25px;text-align: center;line-height: 27px;">' . $i . '</div>
+                                                                        <div class="p" style="background-color: #efb352;float: right;width: 88.7%;border-radius: 0 20px 20px 0;height: 27px;osition: relative;border: 1px solid #efb352;text-align: center;line-height: 27px;">
+                                                                            <p style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;">' . $pricings->{'total_sl_kW_'.$i} . ' kW</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="select-inverter" style="clear: both;padding: 10px;;z-index: 7;position: relative;">
+                                                                        <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
+                                                                        // Render Accessories
+                                                                        foreach ($inverter_sol as $key => $value) {
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'. $key .'</div>';
+                                                                        }                                                                
+                                                                        // Render Accessories
+                                                                        foreach ($accessory_sol as $key => $value) {
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.($key) ? $key : '<br />'.'</div>';
+                                                                        }                                   
+                                                                        
+                                    $solar_pricing_options .=       '</div>
+                                                                    <div class="total-price-item" style="background-color: #fef9f2;padding: 10px;color: #333;font-size: 12px;font-weight: 600;">
+                                                                                <div><span >Full Purchase Price (inc GST)</span><span style="float: right;">$' . ((float)str_replace(',', '', $grandTotal) - $stc_price)  . '</span></div>
+                                                                                <div><span >Less STCs (GST N/A)</span><span  style="float: right;color:red;">$' . $stc_price . '</span></div>
+                                                                                <div style="height: 1px;border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
+                                                                                <div><span >Discounted Purchase Price</span><span  style="float:right;">$' . (float)str_replace(',', '', $grandTotal) . '</span></div>
+                                                                                <div><span >Solar VIC Rebate</span><span  style="float: right;color:red">$-' .$str_vicreabte.'</span></div>
+                                                                                <div><small>* Where eligible for the Solar VIC Rebate</small></div>
+                                                                                <div style="height: 1px;border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
+                                                                                <div><span style="margin-top:8px;">Out of Pocket Price <small>(inc. GST)</small></span><span  style="float: right;">$'.$reabte_price.'</span></div>
+                                                                                <div><span >Interest Free Loan <small>(inc. GST)</small></span><span  style="float:right;color:red;">$-'.$str_vicreabte.'</span></div>
+                                                                                <div><small>Payable to Solar VIC</small></div>
+                                                                                <div style="height: 1px;border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
+                                                                                <div><span >Up-front Price <small>(inc. GST)</small></span></div>
+                                                                                <div class="total-price" style="text-align: center;border: 1px solid #ea9e23;margin-top: 15px;">
+                                                                                    <span class="symbol" style="font-size: 20px;color: #3b3b3b;font-weight: 600;">$ </span>
+                                                                                    <span class="amount" style="letter-spacing: -2px;font-size: 35px;color: #ea9e23;">'.$loan_price.'</span>
+                                                                                </div>
+                                                                    </div>
+                                                                    <div class="op_footer" style="text-align: center;padding: 5px;background-color: #efb352;height: 3px;">
+                                                                    </div>
+                                                            </div>';
+                                }else {
+                                    $reabte_price = (Int)$pricings->{'customer_price_'.$i} - $str_vicreabte;
+                                    // $solar_pricing_options .= '<p style="font-size: medium;" data-mce-style="font-size: medium;"></br><strong>Option #'.$i.':</strong> '.$pricings->{'total_kW_'.$i}.'kW = '.$pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i}.' + '.$pricings->{'inverter_type_'.$i}.(($pricings->{'extra_1_'.$i})? ' + '.$pricings->{'extra_1_'.$i} : '').(($pricings->{'extra_2_'.$i})? ' + '.$pricings->{'extra_2_'.$i} : '').' = $'.$pricings->{'customer_price_'.$i}.' - $1888 (Solar VIC Rebate) = $'. $reabte_price.' ($'.$price_kw.'/W)</p>';
+                                    $solar_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float:left;width: 290px;background-color: white;border: 1px solid #f6ebd9;;margin-top: 25px;margin-right: 10px;padding: 5px;">
+                                                                    <div class="op_header" style="width: 100%;position: inherit;">
+                                                                        <div class="number-options" style="float: left;border: 2px solid #efb352;width: 9%;height: 25px;text-align: center;line-height: 27px;">' . $i . '</div>
+                                                                        <div class="p" style="background-color: #efb352;float: right;width: 88.7%;border-radius: 0 20px 20px 0;height: 27px;osition: relative;border: 1px solid #efb352;text-align: center;line-height: 27px;">
+                                                                            <p style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;">' . $pricings->{'total_kW_'.$i} . ' kW</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="select-inverter" style="clear: both;padding: 10px;;z-index: 7;position: relative;">
+                                                                        <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
+                                                                        // Render Accessories
+                                                                        foreach ($inverter_sol as $key => $value) {
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'. $key .'</div>';
+                                                                        }                                                                
+                                                                        // Render Accessories
+                                                                        foreach ($accessory_sol as $key => $value) {
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.($key) ? $key : '<br />'.'</div>';
+                                                                        }                                   
+                                                                        
+                                    $solar_pricing_options .=       '</div>
+                                                                    <div class="total-price-item" style="background-color: #fef9f2;padding: 10px;color: #333;font-size: 12px;font-weight: 600;">
+                                                                                <div><span >Full Purchase Price (inc GST)</span><span style="float: right;">$' . ((float)str_replace(',', '', $grandTotal) - $stc_price)  . '</span></div>
+                                                                                <div><span >Less STCs (GST N/A)</span><span  style="float: right;color: red;">$-' . $stc_price . '</span></div>
+                                                                                <div style="height: 1px;border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
+                                                                                <div><span >Discounted Purchase Price</span><span  style="float:right;">$' . (float)str_replace(',', '', $grandTotal) . '</span></div>
+                                                                                <div><span >Solar VIC Rebate</span><span  style="float: right;color:red">$-' .$str_vicreabte.'</span></div>
+                                                                                <div><small>* Where eligible for the Solar VIC Rebate</small></div>
+                                                                                <div style="height: 1px;border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
+                                                                                <div><span style="margin-top:8px;">Out of Pocket Price <small>(inc. GST)</small></span></div>
+                                                                                <div class="total-price" style="text-align: center;border: 1px solid #ea9e23;margin-top: 15px;">
+                                                                                    <span class="symbol" style="font-size: 20px;color: #3b3b3b;font-weight: 600;">$ </span>
+                                                                                    <span class="amount" style="letter-spacing: -2px;font-size: 35px;color: #ea9e23;">'.$reabte_price.'</span>
+                                                                                </div>
+                                                                    </div>
+                                                                    <div class="op_footer" style="text-align: center;padding: 5px;background-color: #efb352;height: 3px;">
+                                                                    </div>
+                                                            </div>';
+                                }
+                            }else{
+                                // $solar_pricing_options .= '<p style="font-size: medium;" data-mce-style="font-size: medium;"></br><strong>Option #'.$i.':</strong> '.$pricings->{'total_kW_'.$i}.'kW = '.$pricings->{'total_panels_'.$i}.'x '.$pricings->{'panel_type_'.$i}.' + '.$pricings->{'inverter_type_'.$i}.(($pricings->{'extra_1_'.$i})? ' + '.$pricings->{'extra_1_'.$i} : '').(($pricings->{'extra_2_'.$i})? ' + '.$pricings->{'extra_2_'.$i} : '').' = $'.$pricings->{'customer_price_'.$i}.' ($'.$price_kw.'/W)</p>';
+                                $solar_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float:left;width: 290px;background-color: white;border: 1px solid #f6ebd9;;margin-top: 25px;margin-right: 10px;padding: 5px;">
+                                                                <div class="op_header" style="width: 100%;position: inherit;">
+                                                                    <div class="number-options" style="float: left;border: 2px solid #efb352;width: 9%;height: 25px;text-align: center;line-height: 27px;">' . $i . '</div>
+                                                                    <div class="p" style="background-color: #efb352;float: right;width: 88.7%;border-radius: 0 20px 20px 0;height: 27px;osition: relative;border: 1px solid #efb352;text-align: center;line-height: 27px;">
+                                                                        <p style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;">' . $pricings->{'total_sl_kW_'.$i} . ' kW</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="select-inverter" style="clear: both;padding: 10px;;z-index: 7;position: relative;">
+                                                                    <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
+                                                                // Render Accessories
+                                                                foreach ($inverter_sol as $key => $value) {
+                                                                    $solar_pricing_options .= '<div style="font-size: 13px;">'. $key .'</div>';
+                                                                }                                                                
+                                                                // Render Accessories
+                                                                foreach ($accessory_sol as $key => $value) {
+                                                                    $solar_pricing_options .= '<div style="font-size: 13px;">'.($key) ? $key : '<br />'.'</div>';
+                                                                }                                   
+                                                                    
+                                $solar_pricing_options .=       '</div>
+                                                                <div class="total-price-item" style="background-color: #fef9f2;padding: 10px;color: #333;font-size: 12px;font-weight: 600;">
+                                                                            <div><span >Full Purchase Price (inc GST)</span><span style="float: right;">$' . ((float)str_replace(',', '', $grandTotal) - $stc_price) . '</span></div>
+                                                                            <div><span >Less STCs (GST N/A)</span><span  style="float: right;color: red;">$' . $stc_price . '</span></div>
+                                                                            <div style="height: 1px;border-bottom: 1px solid #c7c1c1;margin: 5px 0px 5px 0px;"></div>
+                                                                            <div><span >Discounted Purchase Price</span></div>
+                                                                            <div class="total-price" style="text-align: center;border: 1px solid #ea9e23;margin-top: 15px;">
+                                                                                <span class="symbol" style="font-size: 20px;color: #3b3b3b;font-weight: 600;">$ </span>
+                                                                                <span class="amount" style="letter-spacing: -2px;font-size: 35px;color: #ea9e23;">'. (float)str_replace(',', '', $grandTotal) .'</span>
+                                                                            </div>
+                                                                </div>
+                                                                <div class="op_footer" style="text-align: center;padding: 5px;background-color: #efb352;height: 3px;">
+                                                                </div>
+                                                        </div>';
+                            }
+                        }
+                    }
+                    $solar_pricing_options .= '<div style="clear:left"></div>';
+                    // $body_html = str_replace("\$solar_pricing_options",  $solar_pricing_options , $body_html);
+                }
+                $this->bean->description_html = str_replace("\$solar_pricing_options",  $solar_pricing_options , $this->bean->description_html);
+
+                $meter_phase_c  = array('','Single Phase','Two Phase (Rural Only)','Three Phase');
+                $distributor_c = array("0"=>"",
+                        "4" => "Citipower",
+                        "5" => "Jemena",
+                        "6"=>"Powercor",
+                        "7"=>"SP Ausnet",
+                        "8"=>"United Energy Distribution",
+                        "1"=>"Western Power",
+                        "13"=>"South Australia Power Network",
+                        "2"=>"Energex",
+                        "3" => "Ergon",
+                        "9" => "Essential Energy",
+                        "10"=>"Ausgrid",
+                        "12"=>"Endeavour Energy",
+                        "11"=>"ActewAGL",
+                        "14"=>"AusNet Electricity Services Pty Ltd",
+                );
+                
+                if(  $_REQUEST['storey'] == 'Double Storey'){
+                    $gutter_height_c = "3-5m";
+                }else {
+                    $gutter_height_c = "0-3m";
+                }
+                $roof_type_c    = array('Tin'=>'Tin',
+                                        'Tile'=>'Tile',
+                                        'klip_loc'=>'Klip Loc',
+                                        'Concrete'=>'Concrete',
+                                        'Trim_Deck'=>'Trim Deck',
+                                        'Insulated'=>'Insulated',
+                                        'Asbestos'=>'Asbestos',
+                                        'Ground_Mount'=>'Ground Mount',
+                                        'Terracotta'=>'Terracotta',
+                                        'Other'=>'Other');
+                $roof_pitch_c    = array('0-25 Degrees'=>'0-25 Degrees',
+                                        '25-30 Degrees'=>'25-30 Degrees',
+                                        '30+ Degrees'=>'30+ Degrees');
+                
+                $this->bean->description_html = str_replace("\$aos_quotes_meter_phase_c",  $meter_phase_c[$focus->meter_phase_c] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_distributor_c",  $distributor_c[$focus->distributor_c] , $this->bean->description_html);
+                // $this->bean->description_html = str_replace("\$aos_quotes_first_solar_c",   'No' , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_gutter_height_c",   $gutter_height_c , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_roof_pitch_c",   $roof_pitch_c[$focus->roof_pitch_c] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_roof_type_c",  $roof_type_c[$focus->roof_type_c] , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_main_switch_c",$focus->main_switch_c , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$aos_quotes_external_internal_c", $focus->external_or_internal_c, $this->bean->description_html);
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $this->bean->name,
+                        'body_html' => $this->bean->description_html,
+                        'body' => $this->bean->description_html,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client = $phone_number;//$_REQUEST['sms_received'];
+                $this->bean->number_receive_sms = "matthew_paul_client";
+                //start - code render sms_template  
+                global $current_user;
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    '1d4462d6-1a54-45af-3a7c-5d647d113e0e' 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$first_name", $contact->first_name, $body);
+                $body = str_replace("\$aos_quote_id", $_REQUEST['record_id'], $body);
+                $smsTemplate->body_c = $body;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                //end - code render sms_template
+            }
+            //end
+            
         }
 
         //Dung code

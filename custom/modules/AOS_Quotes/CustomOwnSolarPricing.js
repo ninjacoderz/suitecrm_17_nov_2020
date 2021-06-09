@@ -8,6 +8,7 @@ $(function () {
     var quote_type = $("#quote_type_c").val();
     if(quote_type == 'quote_type_solar'){
         init_table_solar();
+        $(document).find("#generate_quote").after('<br/><button type="button" class="button primary" id="send_pe_solar_pricing" class="button send_solar_pricing" onclick="$(document).openComposeViewModal_SendPESolarPricing(this);" data-email-type="send_pe_solar_pricing"  data-module="AOS_Quotes" data-module-name="'+$("#name").val()+'" data-record-id="'+$("input[name='record']").val()+'">SEND PE SOLAR PRICING OPTIONS</button></button>')
     }
 
     //************************************************ THIENPB ************************************************ */
@@ -15,7 +16,7 @@ $(function () {
     $(document).on('click', '*[id*="clear_sl_option"]', function(e){
         e.preventDefault();
         SL_clearOption($(this).data('option'));
-    });
+    }); 
    
     /** Clear sl button */
     $(document).on('click', '#calculate_sl', function(e){
@@ -55,6 +56,119 @@ $(function () {
         SL_calcOption(index,true);
     });
 
+    $(document).on('click', '#sl_inverter_add', function(e){
+        e.preventDefault();
+        let attr_id = $(e.target).attr('id');
+        if (attr_id.indexOf('inverter') != -1) {
+            SL_createNewLine('inverter');
+        } else {
+            SL_createNewLine('sol_accessory');
+        }
+    });
+
+    $.fn.openComposeViewModal_SendPESolarPricing = function (source) {
+        "use strict";
+        var module_name = $(source).attr('data-module');
+        var record_id = $(source).attr('data-record-id');
+        var emailType = $(source).data('email-type');
+        if (record_id == '') {
+            alert('Please Save before !');
+            return;
+        }
+
+        /**Save before*/
+        $('#save_and_edit').trigger('click');
+
+        var self = this;
+
+        self.emailComposeView = null;
+        var opts = $.extend({}, $.fn.EmailsComposeViewModal.defaults);
+        var composeBox = $('<div></div>').appendTo(opts.contentSelector);
+        composeBox.messageBox({ "showHeader": false, "showFooter": false, "size": 'lg' });
+        composeBox.setBody('<div class="email-in-progress"><img src="themes/' + SUGAR.themes.theme_name + '/images/loading.gif"></div>');
+        composeBox.show();
+        var record_id = $(source).attr('data-record-id');
+        var email_type = $(source).attr('data-email-type');
+        var email_module = $(source).attr('data-module');
+        var address = $('#install_address_c').val() + ' ' + $('#install_address_city_c').val() + ' ' + $('#install_address_state_c').val() + ' ' + $('#install_address_postalcode_c').val();
+        if ($('#vic_rebate_c').prop('checked') == true) {
+            var vic_rebate = "Yes";
+        } else {
+            var vic_rebate = "No";
+        }
+        if ($('#vic_loan_c').prop('checked') == true) {
+            var vic_loan = "Yes";
+        } else {
+            var vic_loan = "No";
+        }
+        var storey = $('#storeys').val();
+        var url_email = 'index.php?module=Emails&action=ComposeView&address=' + address + '&storey=' + storey + '&vic_rebate=' + vic_rebate + '&vic_loan=' + vic_loan + '&in_popup=1' + ((record_id != "") ? ("&record_id=" + record_id) : "") + ((email_type != "") ? ("&email_type=" + email_type) : "") + ((email_module != "") ? ("&email_module=" + email_module) : "");
+
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url_email,
+        }).done(function (data) {
+            if (data.length === 0) {
+                console.error("Unable to display ComposeView");
+                composeBox.setBody(SUGAR.language.translate('', 'ERR_AJAX_LOAD'));
+                return;
+            }
+            composeBox.setBody(data);
+            self.emailComposeView = composeBox.controls.modal.body.find('.compose-view').EmailsComposeView();
+
+
+            var populateModule = $(source).attr('data-module');
+            var populateModuleRecord = $(source).attr('data-record-id');
+            var populateModuleName = $(source).attr('data-module-name');
+
+            //$(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
+            $(self.emailComposeView).find('#parent_type').val(populateModule);
+            $(self.emailComposeView).find('#parent_name').val(populateModuleName);
+            $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
+            $(self.emailComposeView).find('#parent_id').val(populateModuleRecord);
+            $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
+            $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);
+
+
+            $(self.emailComposeView).on('sentEmail', function (event, composeView) {
+                composeBox.hide();
+                composeBox.remove();
+            });
+            $(self.emailComposeView).on('disregardDraft', function (event, composeView) {
+                if (typeof messageBox !== "undefined") {
+                    var mb = messageBox({ size: 'lg' });
+                    mb.setTitle(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_TITLE'));
+                    mb.setBody(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_BODY'));
+                    mb.on('ok', function () {
+                        mb.remove();
+                        composeBox.hide();
+                        composeBox.remove();
+                    });
+                    mb.on('cancel', function () {
+                        mb.remove();
+                    });
+                    mb.show();
+                } else {
+                    if (confirm(self.translatedErrorMessage)) {
+                        composeBox.hide();
+                        composeBox.remove();
+                    }
+                }
+            });
+
+
+            composeBox.on('cancel', function () {
+                composeBox.remove();
+            });
+            composeBox.on('hide.bs.modal', function () {
+                composeBox.remove();
+            });
+        }).fail(function (data) {
+            composeBox.controls.modal.content.html(SUGAR.language.translate('', 'LBL_EMAIL_ERROR_GENERAL_TITLE'));
+        });
+        return $(self);
+    };
     //************************************************ END THIENPB ************************************************ */
 
     // .:nhantv:. Add a checkbox to Itemise in LINE ITEMS
@@ -290,7 +404,7 @@ function SL_loadOption(){
 //
 function SL_clearOption(option){
     $("#solar_option_"+(option)).prop('checked', false);
-    $('#solar_pricing_table td:nth-child('+ (option + 1) +')').find('input').val('');
+    $('#solar_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="sl_pe_admin_percent"])').val('');
     $('#solar_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
 
@@ -302,8 +416,15 @@ function SL_calcEquipmentCost(currState){
     if(currState.inverter_type != ''){
         cost += parseFloat(getAttributeFromName(currState.inverter_type, sol_inverter, "cost"));
     }
-    // Microgrid Balance Of System
-    //cost += parseFloat(getAttributeFromName(extra_products[3], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
+
+    let num_of_line = 2;
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['accessory' + (i + 1)] != ''){
+            cost += parseFloat(getAttributeFromName(currState['accessory' + (i + 1)], sol_accessory, "cost"));
+        }
+    }
+    // PV Balance of System
+    cost += parseFloat(getAttributeFromName(extra_solar_products[1], solar_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
     return cost;
 }
 
@@ -333,15 +454,9 @@ function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
 function SL_calcGrandTotal(currState){
     let grandTotal = 0;
     // Equipment cost
-    grandTotal += SL_calcEquipmentCost(currState);35156.999999
+    grandTotal += SL_calcEquipmentCost(currState);
     // Solar Standard Install
     grandTotal += parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState.total_kw);
-    // PV Balance of System
-    grandTotal += parseFloat(getAttributeFromName(extra_solar_products[1], solar_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
-    // Extra 1
-    grandTotal += (currState.accessory1 != '') ? parseFloat(getAttributeFromName(currState.accessory1, sol_accessory , "cost")) : 0;
-    // Extra 2
-    grandTotal += (currState.accessory2 != '') ? parseFloat(getAttributeFromName(currState.accessory2, sol_accessory , "cost")) : 0;
     // PE Admin %
     grandTotal += grandTotal * (parseFloat($('#sl_pe_admin_percent').val()) / 100);
     // GST 10%
@@ -350,9 +465,8 @@ function SL_calcGrandTotal(currState){
     grandTotal += parseFloat(getAttributeFromName(extra_solar_products[2], solar_extra, "cost")) * parseFloat(currState.number_stcs);
     // Include GST above
     grandTotal += gst;
-
-     // PM
-     grandTotal += currState.pm;
+    // PM
+    grandTotal += currState.pm;
 
     return grandTotal;
 }
@@ -461,6 +575,41 @@ function getOwnSolarPricing(data, string='') {
         loadOwnOptionsPricing();
     }
 }
+
+function SL_getCountLine(target){
+    return parseInt($('#sl_'+ target +'_line').val());
+}
+
+function SL_createNewLine(target = 'inverter'){
+    var label = "Inverter Type ", id = "inverter_sl_type", list = sol_inverter;
+    if (target == 'sol_accessory') {
+        label = "Solar Accessory ";
+        id = "solar_accessory";
+        list = sol_accessory;
+    }
+
+    let next_index = SL_getCountLine(target) + 1;
+    let new_tr = document.createElement('tr');
+    for (var i = 0; i < 7; i++) {
+        let td = document.createElement('td');
+        td.style.padding = "0px 5px";
+        
+        if(i == 0){
+            // First td
+            td.style.width = "160px";
+            td.innerHTML = label + next_index;
+        } else {
+            // Other td
+            let select = makeSelectBox(convertJSONToArrayInit(list), "solar_pricing", id + next_index + "_" + i);
+            select.css({"width":"100%"});
+            $(td).html(select);
+        }
+        new_tr.appendChild(td);
+    }
+    $('#sl_'+ target +'_add').closest('tr').before(new_tr);
+    $('#sl_'+ target +'_line').val(next_index);
+}
+
 //***************************************** END THIENPB FUNCTION *********************************************************** */
 
     // //test

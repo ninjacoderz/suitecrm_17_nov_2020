@@ -198,6 +198,13 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             // Calculate
             await calculatePrice(currState.total_panels, currState.total_kw, currState);
 
+            let equipmentCost = SL_calcEquipmentCost(currState);
+            $('#sanden_supply_bill').val(parseFloat(equipmentCost).formatMoney(2, ',', '.'));
+            $('#sanden_supply_bill').trigger('change');
+            // Calc Installation Cost
+            let installationCost =  parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState.total_kw);
+            $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
+            $('#electrician_bill').trigger('change');
         } catch(err) {
             console.log(err);
         } finally {
