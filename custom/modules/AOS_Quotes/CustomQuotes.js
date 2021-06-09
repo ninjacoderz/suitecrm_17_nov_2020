@@ -2917,10 +2917,10 @@ $(document).ready(function () {
             },
             async: false,
             success:function (address_id) {
-                // debugger
+                console.log(`/index.php?module=pe_address&action=EditView&record=${address_id}`);
                 SUGAR.ajaxUI.hideLoadingPanel();
                 if (address_id.trim() == 'error' || typeof (address_id) == 'undefined') return;
-                window.open('/index.php?module=pe_address&action=EditView&record='+address_id.trim(),'_blank');
+                // window.open('/index.php?module=pe_address&action=EditView&record='+address_id.trim(),'_blank');
             }
           });
     });
@@ -5154,7 +5154,7 @@ $(function () {
                                 $("#map").hide();
                                 $("#Map_Template_Image").after(result);
                                 $("#download").remove();
-                                $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");
+                                $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");
                                 SUGAR.ajaxUI.hideLoadingPanel();
                             }
                         });
@@ -5181,7 +5181,7 @@ $(function () {
                     $("#map").hide();
                     $("#Map_Template_Image").after(result);
                     $("#download").remove();
-                    $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");
+                    $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");
                     var _DRAGGGING_STARTED = 0;
                     var _LAST_MOUSE_POSITION = { x: null, y: null };
                     var _DIV_OFFSET = $(document).find("#map").offset();
@@ -5392,6 +5392,54 @@ $(function () {
     $("#quote_type_c").change(function () {
         check_sg_quote_type($(this).val());
     });
+
+    //VUT - S - change site Address
+    $(document).on('change', '#install_address_c, #install_address_city_c',  function(){
+        // debugger;
+        SUGAR.ajaxUI.showLoadingPanel();
+        $("#ajaxloading_mask").css("position", 'fixed');
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?address='
+                + encodeURIComponent($('#install_address_c').val()) + ", "
+                + encodeURIComponent($('#install_address_city_c').val()) + ", "
+                + encodeURIComponent($('#install_address_state_c').val())
+                + ", " + encodeURIComponent($('#install_address_postalcode_c').val())
+                + '&key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo',
+            type: 'GET',
+            success: function (result) {
+                if (result.status == "OK") {
+                    var location = result.results[0].geometry.location;
+                    $('#div_street_view').remove();
+                    var urlStreetView = 'https://www.google.com/maps/embed/v1/streetview?key=AIzaSyCuMMCDEYH86TlV0BLA8VF3xU1wmdSaxEo&location=' + location.lat + ',' + location.lng;
+                    $('#maptemplate-img').after('<div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 5em;" id="div_street_view"><iframe id="street-view" src="' + urlStreetView + '" height="223"  title="Street View"></iframe></div>');
+                    $.ajax({
+                        url: "index.php?entryPoint=Image_Site_Details_Get_From_Google&lat="
+                            + location.lat
+                            + "&lng=" + location.lng,
+                        type: 'GET',
+                        success: function (result) {
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                            $("#Map_Template_Image").hide();
+                            $("#map").hide();
+                            $("#Map_Template_Image").after(result);
+                            $("#download").remove();
+                            setTimeout(function () {
+                                debugger
+                                CopyToClipboardQuote();
+                            }, 3000);
+                            // $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");                            
+                        }
+                    }).done(function (data) {
+                        console.log('done'+data);
+                    });
+                } else {
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                }
+            }
+        });
+
+    });
+    //VUT - E - change site Address
 
     //thienpb code  -- show button preview pdf
     $(document).on('click', '#preview_pdf', function () {
@@ -5634,11 +5682,11 @@ $(window).load(function () {
                             $("#map").hide();
                             $("#Map_Template_Image").after(result);
                             $("#download").remove();
-                            // $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboard()'>Save</button>");                            
+                            // $('#import_map').after("<button type='button' class='button'  id='download' onclick='CopyToClipboardQuote()'>Save</button>");                            
                         }
                     }).done(function (data) {
                         setTimeout(function () {
-                            CopyToClipboard();
+                            CopyToClipboardQuote();
                         }, 5000);
                     });
                 } else {
@@ -5735,8 +5783,29 @@ $(window).load(function () {
             //Plumber
             if (sanden_quote_input['quote_plumbing_installation_by_pure'] == 'Yes') {
                 var plumber_group_id = ($('#plumber_lineItems input[name="plumber_group_id[]"]').length > 0) ? $('#plumber_lineItems input[name="plumber_group_id[]"]').val() : '';
-                if (plumber_group_id == '') {
+                if (plumber_group_id == '' || typeof plumber_group_id == 'undefined') {
                     console.log('CustomQuotes.js >> #plumber_group_id is null');
+                    SUGAR.ajaxUI.showLoadingPanel();
+                    showSubpanel('plumber','Yes');
+                    $.ajax({
+                        url: '/index.php?entryPoint=APICreateLineItemProposedPO',
+                        type: 'POST',
+                        async: false,
+                        data:
+                        {
+                            quote_id: encodeURIComponent($("input[name='record']").val()),
+                            po_type: 'sanden_plumber',
+                        },
+                        success: function (data) {
+                            // console.log(data);
+                            if (data == '') {
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                                return;
+                            }
+                            $(document).find('#plumber_line_items_span').append(data);
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                        }
+                    });
                 }
             } else {
                 showSubpanel('plumber','No');
@@ -5744,8 +5813,29 @@ $(window).load(function () {
             //Electrician
             if (sanden_quote_input['quote_electrical_installation_by_pure'] == 'Yes') {
                 var electrician_group_id = ($('#electrician_lineItems input[name="electrician_group_id[]"]').length > 0) ? $('#electrician_lineItems input[name="electrician_group_id[]"]').val() : '';
-                if (electrician_group_id == '') {
+                if (electrician_group_id == '' || typeof electrician_group_id == 'undefined') {
                     console.log('CustomQuotes.js >> #electrician_group_id is null');
+                    SUGAR.ajaxUI.showLoadingPanel();
+                    showSubpanel('electrician','Yes');
+                    $.ajax({
+                        url: '/index.php?entryPoint=APICreateLineItemProposedPO',
+                        type: 'POST',
+                        async: false,
+                        data:
+                        {
+                            quote_id: encodeURIComponent($("input[name='record']").val()),
+                            po_type: 'sanden_electrician',
+                        },
+                        success: function (data) {
+                            // console.log(data);
+                            if (data == '') {
+                                SUGAR.ajaxUI.hideLoadingPanel();
+                                return;
+                            }
+                            $(document).find('#electrician_line_items_span').append(data);
+                            SUGAR.ajaxUI.hideLoadingPanel();
+                        }
+                    });
                 }
             } else {
                 showSubpanel('electrician','No');
@@ -5767,7 +5857,7 @@ $(window).load(function () {
                     $.ajax({
                         url: '/index.php?entryPoint=APICreateLineItemProposedPO',
                         type: 'POST',
-                        async: true,
+                        async: false,
                         data:
                         {
                             quote_id: encodeURIComponent($("input[name='record']").val()),
@@ -5811,7 +5901,7 @@ $(window).load(function () {
                     $.ajax({
                         url: '/index.php?entryPoint=APICreateLineItemProposedPO',
                         type: 'POST',
-                        async: true,
+                        async: false,
                         data:
                         {
                             quote_id: encodeURIComponent($("input[name='record']").val()),
@@ -6021,7 +6111,7 @@ function showPopup() {
 function hidePopup() {
     $('#popup_image_site_detail').hide();
 }
-function CopyToClipboard() {
+function CopyToClipboardQuote() {
     if($(document).find('#map').length == 0)return;
     window.onbeforeunload = null;
     setTimeout(function () {
