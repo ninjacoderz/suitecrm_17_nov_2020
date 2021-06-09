@@ -11,7 +11,31 @@ $(function () {
         <span class="glyphicon glyphicon-modal-window"></span> Async Product PE Site</button>';
 
         $("#id_product_drupal").parent().parent().append(html_CRUD_Product_SuiteCRM_PESite);
-        
+        // tuan code 
+        $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').hide();
+        if($('#aos_product_category_name').val() != "Daikin"){
+            $('#split_system_c').closest('.panel-default').hide();
+        }
+        if( $('#split_system_c').is(':checked') == true){
+            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').show();
+        }
+
+        $('#split_system_c').change(function (){
+            if($(this).is(':checked') == true ){
+                $('#multi_split_system_c').prop('checked', false);
+                $('#multi_split_system_c').trigger('change');
+                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').show();
+            }else{
+                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').hide();
+            }
+        })
+        $('#multi_split_system_c').change(function (){
+            if($(this).is(':checked') == true ){
+                $('#split_system_c').prop('checked', false);
+                $('#split_system_c').trigger('change');
+                // $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').hide();
+            }
+        })
 
         SUGAR.CRUDProductPESite = function(source){
             
