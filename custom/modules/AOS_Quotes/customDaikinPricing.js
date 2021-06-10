@@ -1,4 +1,4 @@
-// var sol_accessory,solar_extra = [];
+var dk_main,dk_extra;
 // const extra_solar_products = ["Solar PV Standard Install", "Solar PV Balance Of System", "STCs","Solar PV Supply and Install"];
 
 $(function () {
@@ -12,26 +12,35 @@ $(function () {
     }
 
     //************************************************ THIENPB ************************************************ */
+    /** Extra Add Button Click handle */ 
+    $(document).on('click', '#extra_add', function(e){
+        e.preventDefault();
+        let attr_id = $(e.target).attr('id');
+        if (attr_id.indexOf('extra') != -1) {
+            DK_createNewLine('extra');
+        }
+    });
+
     /** Clear sl button */
     $(document).on('click', '*[id*="clear_dk_option"]', function(e){
         e.preventDefault();
         DK_clearOption($(this).data('option'));
     });
    
-    /** Clear sl button */
-    $(document).on('click', '#calculate_dk', function(e){
-        e.preventDefault();
-        for (var i = 1; i < 7; i++) {
-            var panel_type = $("#panel_dk_type_"+i).val();
-            var inverter_type = $("#inverter_dk_type_"+i).val();
-            // Get suggested
-            if(panel_type != '' && inverter_type != ""){
-                // Calculate option
-                DK_autoFillAccessory(i);
-                DK_calcOption(i);
-            }
-        }
-    });
+    // /** Clear sl button */
+    // $(document).on('click', '#calculate_dk', function(e){
+    //     e.preventDefault();
+    //     for (var i = 1; i < 7; i++) {
+    //         var panel_type = $("#panel_dk_type_"+i).val();
+    //         var inverter_type = $("#inverter_dk_type_"+i).val();
+    //         // Get suggested
+    //         if(panel_type != '' && inverter_type != ""){
+    //             // Calculate option
+    //             DK_autoFillAccessory(i);
+    //             DK_calcOption(i);
+    //         }
+    //     }
+    // });
 
     $(document).on("change", "select[id*=inverter_dk_type]", function(e){
         var index  = $(this).attr("id").split('_');
@@ -122,65 +131,67 @@ async function init_table_daikin() {
             , makeInputBox("dk_pm4 daikin_pricing", "dk_pm4", false)
             , makeInputBox("dk_pm5 daikin_pricing", "dk_pm5", false)
             , makeInputBox("dk_pm6 daikin_pricing", "dk_pm6", false)],
-        ["Module Capacity kW:"
-            , makeInputBox("total_dk_kW_1 daikin_pricing", "total_dk_kW_1", true)
-            , makeInputBox("total_dk_kW_2 daikin_pricing", "total_dk_kW_2", true)
-            , makeInputBox("total_dk_kW_3 daikin_pricing", "total_dk_kW_3", true)
-            , makeInputBox("total_dk_kW_4 daikin_pricing", "total_dk_kW_4", true)
-            , makeInputBox("total_dk_kW_5 daikin_pricing", "total_dk_kW_5", true)
-            , makeInputBox("total_dk_kW_6 daikin_pricing", "total_dk_kW_6", true)],
-        ["Inverter Capacity kW:"
-            , makeInputBox("total_inverter_dk_kW_1 daikin_pricing", "total_inverter_dk_kW_1", true)
-            , makeInputBox("total_inverter_dk_kW_2 daikin_pricing", "total_inverter_dk_kW_2", true)
-            , makeInputBox("total_inverter_dk_kW_3 daikin_pricing", "total_inverter_dk_kW_3", true)
-            , makeInputBox("total_inverter_dk_kW_4 daikin_pricing", "total_inverter_dk_kW_4", true)
-            , makeInputBox("total_inverter_dk_kW_5 daikin_pricing", "total_inverter_dk_kW_5", true)
-            , makeInputBox("total_inverter_dk_kW_6 daikin_pricing", "total_inverter_dk_kW_6", true)],
-        ["Panel Type"
+        // ["Module Capacity kW:"
+        //     , makeInputBox("total_dk_kW_1 daikin_pricing", "total_dk_kW_1", true)
+        //     , makeInputBox("total_dk_kW_2 daikin_pricing", "total_dk_kW_2", true)
+        //     , makeInputBox("total_dk_kW_3 daikin_pricing", "total_dk_kW_3", true)
+        //     , makeInputBox("total_dk_kW_4 daikin_pricing", "total_dk_kW_4", true)
+        //     , makeInputBox("total_dk_kW_5 daikin_pricing", "total_dk_kW_5", true)
+        //     , makeInputBox("total_dk_kW_6 daikin_pricing", "total_dk_kW_6", true)],
+        // ["Inverter Capacity kW:"
+        //     , makeInputBox("total_inverter_dk_kW_1 daikin_pricing", "total_inverter_dk_kW_1", true)
+        //     , makeInputBox("total_inverter_dk_kW_2 daikin_pricing", "total_inverter_dk_kW_2", true)
+        //     , makeInputBox("total_inverter_dk_kW_3 daikin_pricing", "total_inverter_dk_kW_3", true)
+        //     , makeInputBox("total_inverter_dk_kW_4 daikin_pricing", "total_inverter_dk_kW_4", true)
+        //     , makeInputBox("total_inverter_dk_kW_5 daikin_pricing", "total_inverter_dk_kW_5", true)
+        //     , makeInputBox("total_inverter_dk_kW_6 daikin_pricing", "total_inverter_dk_kW_6", true)],
+        ["Main Type"
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "panel_dk_type_1 daikin_pricing", "panel_dk_type_1")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "panel_dk_type_2 daikin_pricing", "panel_dk_type_2")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "panel_dk_type_3 daikin_pricing", "panel_dk_type_3")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "panel_dk_type_4 daikin_pricing", "panel_dk_type_4")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "panel_dk_type_5 daikin_pricing", "panel_dk_type_5")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "panel_dk_type_6 daikin_pricing", "panel_dk_type_6")],
-        ["Inverter Type"
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_1 daikin_pricing", "inverter_dk_type_1")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_2 daikin_pricing", "inverter_dk_type_2")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_3 daikin_pricing", "inverter_dk_type_3")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_4 daikin_pricing", "inverter_dk_type_4")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_5 daikin_pricing", "inverter_dk_type_5")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_6 daikin_pricing", "inverter_dk_type_6")],
-        ["Total Panels"
+        // ["Extra"
+        //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_1 daikin_pricing", "inverter_dk_type_1")
+        //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_2 daikin_pricing", "inverter_dk_type_2")
+        //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_3 daikin_pricing", "inverter_dk_type_3")
+        //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_4 daikin_pricing", "inverter_dk_type_4")
+        //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_5 daikin_pricing", "inverter_dk_type_5")
+        //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_6 daikin_pricing", "inverter_dk_type_6")],
+        ["Number main"
             , makeInputBox("total_dk_panels_1 daikin_pricing", "total_dk_panels_1", false)
             , makeInputBox("total_dk_panels_2 daikin_pricing", "total_dk_panels_2", false)
             , makeInputBox("total_dk_panels_3 daikin_pricing", "total_dk_panels_3", false)
             , makeInputBox("total_dk_panels_4 daikin_pricing", "total_dk_panels_4", false)
             , makeInputBox("total_dk_panels_5 daikin_pricing", "total_dk_panels_5", false)
             , makeInputBox("total_dk_panels_6 daikin_pricing", "total_dk_panels_6", false)],
-        ["Number of STCs"
-            , makeInputBox("number_dk_stcs_1 daikin_pricing", "number_dk_stcs_1", true)
-            , makeInputBox("number_dk_stcs_2 daikin_pricing", "number_dk_stcs_2", true)
-            , makeInputBox("number_dk_stcs_3 daikin_pricing", "number_dk_stcs_3", true)
-            , makeInputBox("number_dk_stcs_4 daikin_pricing", "number_dk_stcs_4", true)
-            , makeInputBox("number_dk_stcs_5 daikin_pricing", "number_dk_stcs_5", true)
-            , makeInputBox("number_dk_stcs_6 daikin_pricing", "number_dk_stcs_6", true)],
+        // ["Number of STCs"
+        //     , makeInputBox("number_dk_stcs_1 daikin_pricing", "number_dk_stcs_1", true)
+        //     , makeInputBox("number_dk_stcs_2 daikin_pricing", "number_dk_stcs_2", true)
+        //     , makeInputBox("number_dk_stcs_3 daikin_pricing", "number_dk_stcs_3", true)
+        //     , makeInputBox("number_dk_stcs_4 daikin_pricing", "number_dk_stcs_4", true)
+        //     , makeInputBox("number_dk_stcs_5 daikin_pricing", "number_dk_stcs_5", true)
+        //     , makeInputBox("number_dk_stcs_6 daikin_pricing", "number_dk_stcs_6", true)],
         ["", "&nbsp;"],
-        ["<button id='calculate_dk' class='button default'>Max</button>", "&nbsp;"],
+        // ["<button id='calculate_dk' class='button default'>Max</button>", "&nbsp;"],
         ["", "&nbsp;"],
-        ["Solar Accessory 1"
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory1_1 daikin_pricing", "dk_accessory1_1")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory1_2 daikin_pricing", "dk_accessory1_2")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory1_3 daikin_pricing", "dk_accessory1_3")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory1_4 daikin_pricing", "dk_accessory1_4")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory1_5 daikin_pricing", "dk_accessory1_5")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory1_6 daikin_pricing", "dk_accessory1_6")],
-        ["Solar Accessory 2"
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory2_1 daikin_pricing", "dk_accessory2_1")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory2_2 daikin_pricing", "dk_accessory2_2")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory2_3 daikin_pricing", "dk_accessory2_3")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory2_4 daikin_pricing", "dk_accessory2_4")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory2_5 daikin_pricing", "dk_accessory2_5")
-            , makeSelectBox(DK_convertJSONToArrayInit(sol_accessory), "dk_accessory2_6 daikin_pricing", "dk_accessory2_6")],
+        ["Extra 1"
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_1 daikin_pricing", "inverter_dk_type1_1")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_2 daikin_pricing", "inverter_dk_type1_2")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_3 daikin_pricing", "inverter_dk_type1_3")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_4 daikin_pricing", "inverter_dk_type1_4")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_5 daikin_pricing", "inverter_dk_type1_5")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_6 daikin_pricing", "inverter_dk_type1_6")],
+        ["Extra 2"
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_1 daikin_pricing", "inverter_dk_type2_1")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_2 daikin_pricing", "inverter_dk_type2_2")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_3 daikin_pricing", "inverter_dk_type2_3")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_4 daikin_pricing", "inverter_dk_type2_4")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_5 daikin_pricing", "inverter_dk_type2_5")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "inverter_dk_type_6 daikin_pricing", "inverter_dk_type2_6")],
+        ["<button id='extra_add' class='button default'>+</button>"
+            , "<input type='hidden' class='daikin_pricing' name='extra_line' id='extra_line' value='2' />"],
         ["Grand total:"
             , makeInputBox("daikin_pricing", "total_dk_1", true)
             , makeInputBox("daikin_pricing", "total_dk_2", true)
@@ -214,6 +225,32 @@ function DK_convertJSONToArrayInit(jsonData){
         });
     }
     return result;
+}
+
+// .:nhantv:. Create new line
+function DK_createNewLine(target = 'extra'){
+    var label = "Extra ", id = "inverter_dk_type", list = dk_extra;
+
+    let next_index = getCountLine(target) + 1;
+    let new_tr = document.createElement('tr');
+    for (var i = 0; i < 7; i++) {
+        let td = document.createElement('td');
+        td.style.padding = "0px 5px";
+        
+        if(i == 0){
+            // First td
+            td.style.width = "160px";
+            td.innerHTML = label + next_index;
+        } else {
+            // Other td
+            let select = makeSelectBox(DK_convertJSONToArrayInit(list), "daikin_pricing", id + next_index + "_" + i);
+            select.css({"width":"100%"});
+            $(td).html(select);
+        }
+        new_tr.appendChild(td);
+    }
+    $('#'+ target +'_add').closest('tr').before(new_tr);
+    $('#'+ target +'_line').val(next_index);
 }
 
 
