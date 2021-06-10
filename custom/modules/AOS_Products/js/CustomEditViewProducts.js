@@ -225,6 +225,11 @@ function dynamicSolarCategory(){
         $("#module_efficiency").parent().parent().css("display", "none");
         $("#warranty").parent().parent().css("display", "none");
     }
+    if ($.inArray(productCategoryValue, ["Daikin"]) != -1) {
+        $('#daikin_category').closest('.edit-view-row-item').show();
+    } else {
+        $('#daikin_category').closest('.edit-view-row-item').hide();
+    }
 }
 
 // .:nhantv:. Dynamic label Capacity

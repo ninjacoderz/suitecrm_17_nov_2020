@@ -213,7 +213,7 @@ function DK_convertJSONToArrayInit(jsonData){
     let result = [''];
     if (typeof(jsonData) != 'undefined') {
         jsonData.forEach(element => {
-            result.push(element.name);
+            result.push(element.short_name);
         });
     }
     return result;
@@ -248,9 +248,7 @@ function DK_createNewLine(target = 'extra'){
         id2 = "ext_val";
         // list1 = dk_main;
     }
-
     
-
     let next_index = getCountLine(target) + 1;
     let new_tr = document.createElement('tr');
     let new_tr1 = document.createElement('tr');
