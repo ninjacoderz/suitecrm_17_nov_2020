@@ -3393,6 +3393,7 @@ $(document).ready(function(){
      // button Update Related
      
         $("#btn_clr_assigned_user_name").after('<button type="button" style="width: 150px;" id="update_relates" class="button update_relates">Update Related <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span></button>');
+        $("#assigned_user_name").parent().before('<a target="_blank" href="https://pure-electric.com.au/change_assigned_user">LINK CHANGE DEFAULT ASSIGN USER PE</a>');
         $("#update_relates").click(function(event){
             event.preventDefault();
             var assigned_id = $("#assigned_user_id").val();
