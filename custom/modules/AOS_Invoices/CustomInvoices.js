@@ -1767,6 +1767,7 @@ $(function () {
                     }
                     $(".reload_after_rename").trigger("click");
                     loadSelect_CES_Template();
+                    loadSelect_PCOC_Template();
                     SUGAR.ajaxUI.hideLoadingPanel();
                 }
             });
@@ -6963,7 +6964,9 @@ $(function () {
                                         id: $("#id_pcoc_template").val(),
                                         action: 'create',
                                         content: encodeURIComponent($("#content_pcoc_template").val()),
-                                        title: encodeURIComponent($("#title_pcoc_template").val())
+                                        title: encodeURIComponent($("#title_pcoc_template").val()),
+                                        module: module_sugar_grp1,
+                                        module_id: $("input[name='record']").val(),
                                     },
                                     success: function(result) {              
                                         render_select_pcoc_template(result);
@@ -6981,7 +6984,9 @@ $(function () {
                                         id: $("#id_pcoc_template").val(),
                                         action: 'update',
                                         content: encodeURIComponent($("#content_pcoc_template").val()),
-                                        title: encodeURIComponent($("#title_pcoc_template").val())
+                                        title: encodeURIComponent($("#title_pcoc_template").val()),
+                                        module: module_sugar_grp1,
+                                        module_id: $("input[name='record']").val(),
                                     },
                                     success: function(result) {                         
                                         render_select_pcoc_template(result);
@@ -7016,7 +7021,9 @@ $(function () {
                                         id: $("#id_pcoc_template").val(),
                                         action: 'delete',
                                         content: encodeURIComponent($("#content_pcoc_template").val()),
-                                        title: encodeURIComponent($("#title_pcoc_template").val())
+                                        title: encodeURIComponent($("#title_pcoc_template").val()),
+                                        module: module_sugar_grp1,
+                                        module_id: $("input[name='record']").val(),
                                     },
                                     success: function(result) {                         
                                         render_select_pcoc_template(result);
@@ -7073,50 +7080,8 @@ $(function () {
                     $("#content_pcoc_template").val(window.data_pcoc_notes[id].content);
                 });
         
-                function render_select_pcoc_template(result){
-                    // debugger
-                    try {
-                        var data_result = JSON.parse(result);
-                        window.data_pcoc_notes = data_result;
-                        $('#select_title_template_pcoc_notes').empty();
-                        $("#select_template_pcoc").empty();
-                        $('#select_title_template_pcoc_notes').append($('<option>', {
-                            value: '',
-                            text: ''
-                        }));
-                        $('#select_template_pcoc').append($('<option>', {
-                            value: '',
-                            text: 'Select Template PCOC'
-                        }));
-                        $.each(data_result,function(k,v){
-                            $('#select_title_template_pcoc_notes').append($('<option>', {
-                                value: k,
-                                text: v.title
-                            }));
-                            $('#select_template_pcoc').append($('<option>', {
-                                value: k,
-                                text: v.title
-                            }));
-                        });
-                        autosize.update($("#pcoc_cert_wording_c")); 
-                    } catch (err) {
-                        console.log('Invoice-Edit >> render_select_pcoc_template: '+err);
-                    }
-                }
                 // run first time
-                $.ajax({
-                    url: 'index.php?entryPoint=CRUD_Cert_Template&type_template=pcoc_type' ,
-                    type: 'POST',
-                    data: 
-                    {
-                        action: 'read',
-                    },
-                    async: true,
-                    success: function(result) {   
-                        if(result == '' || typeof result === 'undefined')return;
-                        render_select_pcoc_template(result);
-                    }
-                }); 
+                loadSelect_PCOC_Template();
         
                 $(document).find('#select_template_pcoc').change(function(){
                     $('#pcoc_cert_wording_c').val('');
@@ -7179,7 +7144,7 @@ $(function () {
                                         action: 'update',
                                         content: encodeURIComponent($("#content_ces_template").val()),
                                         title: encodeURIComponent($("#title_ces_template").val()),
-                                        module: module_sugar_grp1 ,
+                                        module: module_sugar_grp1,
                                         module_id: $("input[name='record']").val(),
             
                                     },
@@ -8587,6 +8552,58 @@ function render_select_ces_template(result){
     }
 }
 
+
+function loadSelect_PCOC_Template() {
+    SUGAR.ajaxUI.showLoadingPanel();
+    $("#ajaxloading_mask").css("position",'fixed');
+    $.ajax({
+        url: 'index.php?entryPoint=CRUD_Cert_Template&type_template=pcoc_type' ,
+        type: 'POST',
+        data: 
+        {
+            action: 'read',
+            module: module_sugar_grp1,
+            module_id: $("input[name='record']").val(),
+        },
+        async: true,
+        success: function(result) {  
+            if(result == '' || typeof result === 'undefined')return;
+            render_select_pcoc_template(result);
+            SUGAR.ajaxUI.hideLoadingPanel();
+        }
+    }); 
+}
+
+//VUT - move to here
+function render_select_pcoc_template(result){
+    try {
+        var data_result = JSON.parse(result);
+        window.data_pcoc_notes = data_result;
+        $('#select_title_template_pcoc_notes').empty();
+        $("#select_template_pcoc").empty();
+        $('#select_title_template_pcoc_notes').append($('<option>', {
+            value: '',
+            text: ''
+        }));
+        $('#select_template_pcoc').append($('<option>', {
+            value: '',
+            text: 'Select Template PCOC'
+        }));
+        $.each(data_result,function(k,v){
+            $('#select_title_template_pcoc_notes').append($('<option>', {
+                value: k,
+                text: v.title
+            }));
+            $('#select_template_pcoc').append($('<option>', {
+                value: k,
+                text: v.title
+            }));
+        });
+        autosize.update($("#pcoc_cert_wording_c")); 
+    } catch (err) {
+        console.log('Invoice-Edit >> render_select_pcoc_template: '+err);
+    }
+}
 /**
  * VUT - get distance selected for Quote/Invoice
  * @param {account_id} id_account 

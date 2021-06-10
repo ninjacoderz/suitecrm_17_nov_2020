@@ -52,7 +52,7 @@
 $json_encode_data = json_encode($json_data);
 file_put_contents($path_file_json_template,$json_encode_data);
 //parse variable /**$action == 'read' && */ 
-if ($_REQUEST['type_template'] == 'ces_type' && $module!='') {
+if ($module !='') {
    require_once('modules/AOS_PDF_Templates/templateParserQuoteForm.php');
    // require_once('modules/AOS_PDF_Templates/templateParser.php');
 
