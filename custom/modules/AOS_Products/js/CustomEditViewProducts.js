@@ -13,19 +13,25 @@ $(function () {
         $("#id_product_drupal").parent().parent().append(html_CRUD_Product_SuiteCRM_PESite);
         // tuan code 
         $('#heating_cooling_category_c').closest('.edit-view-row-item').hide();
-        $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').hide();
+        // for solar
+        $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').hide();
+        //for daikin
+        $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
         if($('#aos_product_category_name').val() == "Daikin" ){ // $('#aos_product_category_name').val().toLowerCase().includes('heating') == true
             $('#heating_cooling_category_c').closest('.edit-view-row-item').show();
         }
+        if($('#aos_product_category_name').val() == "Solar" ){ 
+            $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').show();
+        }
         if( $('#heating_cooling_category_c').val() == 'split_system' ){
-            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').show();
+            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
         }
 
         $('#heating_cooling_category_c').change(function (){
             if($(this).val() == 'split_system' ){
-                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').show();
+                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
             }else{
-                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c').closest('.edit-view-row-item').hide();
+                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
             }
         })
 
