@@ -6403,7 +6403,7 @@ $(function () {
      * VUT-get quantity STCs/VEECs from line item for GP Calculation
      */
     function getSTCsLineItem() {
-        let products = $('#line_items_span').find('.product_group').children('tbody');
+        let products = $('.product_group').find('tbody[id*=product_body]:visible');
         let i;
         let qty={
             STCs : 0,
@@ -6411,11 +6411,17 @@ $(function () {
             VEECs : 0,
             ex_VEECs: 0,
         };
-        for (i = 0; i < products.length; i++) {
-            if ($(`#product_name${i}`).val() == 'STCs') {
-                qty['STCs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+        var product_qty, product_id , product_name;
+
+        products.each((index, el) => {
+            product_qty          = $(el).find('input[id*=product_product_qty]');
+            product_id   = $(el).find('input[id*=product_product_id]');
+            product_name = $(el).find('input[id*=product_name]');
+
+            if ( $("#"+product_name.attr('id')).val() == 'STCs') {
+                qty['STCs'] = get_value(product_qty.attr('id'));
                 $.ajax({
-                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+ $("#"+product_id.attr('id')).val(),
                     async:false
                 }).done(function (data) {
                     if(data == '' || typeof data === 'undefined') return;
@@ -6423,10 +6429,10 @@ $(function () {
                     qty['ex_STCs'] = jsonObj.ex_price;
                 });
             }
-            if ($(`#product_name${i}`).val() == 'VEECs') {
-                qty['VEECs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+            if ( $("#"+product_name.attr('id')).val() == 'VEECs') {
+                qty['STCs'] = get_value(product_qty.attr('id'));
                 $.ajax({
-                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+                    url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+ $("#"+product_id.attr('id')).val(),
                     async:false
                 }).done(function (data) {
                     if(data == '' || typeof data === 'undefined') return;
@@ -6434,7 +6440,32 @@ $(function () {
                     qty['ex_VEECs'] = jsonObj.ex_price;
                 });
             }
-        }
+            
+        });
+        // for (i = 0; i < products.length; i++) {
+        //     if ($(`#product_name${i}`).val() == 'STCs') {
+        //         qty['STCs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+        //         $.ajax({
+        //             url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+        //             async:false
+        //         }).done(function (data) {
+        //             if(data == '' || typeof data === 'undefined') return;
+        //             let jsonObj = JSON.parse(data);
+        //             qty['ex_STCs'] = jsonObj.ex_price;
+        //         });
+        //     }
+        //     if ($(`#product_name${i}`).val() == 'VEECs') {
+        //         qty['VEECs'] = Number($(`#product_product_qty${i}`).val().replace(/[^0-9\.]+/g, ""));
+        //         $.ajax({
+        //             url: "?entryPoint=getProductInfos&type=gp_profit&product_id="+$(`#product_product_id${i}`).val(),
+        //             async:false
+        //         }).done(function (data) {
+        //             if(data == '' || typeof data === 'undefined') return;
+        //             let jsonObj = JSON.parse(data);
+        //             qty['ex_VEECs'] = jsonObj.ex_price;
+        //         });
+        //     }
+        // }
         return qty;
     }
 
@@ -6528,9 +6559,19 @@ $(function () {
                     $('#electrician_bill').val(parseFloat(250));
                 } else {
                     //get po plumb/elec total_amt
-                    var po_total_amt = getPOforQuote($("input[name='record']").val());
-                    $('#plumbing_bill').val(po_total_amt['plumb_po']);
-                    $('#electrician_bill').val(po_total_amt['elec_po']);
+                    if($("#quote_type_c").val() == 'quote_type_solar'){
+                        // Calc Installation Cost
+                        let optSelected_ = $('input[name="solar_option"]:checked').attr('data-attr');
+                        let currState_ = SL_getCurrentOptionState(optSelected_);
+                        let installationCost =  parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState_.total_kw);
+                        $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
+                        $('#electrician_bill').trigger('change');
+                    }else{
+                        var po_total_amt = getPOforQuote($("input[name='record']").val());
+                        $('#plumbing_bill').val(po_total_amt['plumb_po']);
+                        $('#electrician_bill').val(po_total_amt['elec_po']);
+                    }
+                    
                 }
                 calculateGP();
                 SUGAR.ajaxUI.hideLoadingPanel();
