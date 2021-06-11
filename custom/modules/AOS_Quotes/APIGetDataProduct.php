@@ -18,6 +18,8 @@ foreach ($listPartNumber as $key => $value) {
         'part_number' => $row['part_number'],
         'description' => trim(str_replace("\n", "<br />", $row['description'])),
         'cost' => round($row['cost'], 2),
+        'product_image_c' => $row['product_image'],
+        'product_status_c' => $row['product_status_c']
     );
 }
     
