@@ -10,7 +10,8 @@ $data_return = array();
 $db = DBManagerFactory::getInstance();
 
 foreach ($listPartNumber as $key => $value) {
-    $sql = "SELECT * FROM aos_products WHERE part_number = '".$value."' AND deleted = 0";
+    $sql = "SELECT * FROM aos_products LEFT JOIN aos_products_cstm 
+    ON aos_products.id = aos_products_cstm.id_c WHERE aos_products.part_number = '".$value."' AND aos_products.deleted = 0";
     $ret = $db->query($sql);
     $row = $db->fetchByAssoc($ret);
     $data_return[$key] = array(
