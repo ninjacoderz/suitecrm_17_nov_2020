@@ -186,10 +186,17 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             // Alway add this product: Solar PV Supply and Install
             await autoCreateLineItem("Solar PV Supply and Install", solar_extra, 1);
             currState.panel_type && await autoCreateLineItem(currState.panel_type, sol_panel, currState.total_panels);
-            currState.solar_inverter && await autoCreateLineItem(currState.solar_inverter, sol_inverter, 1);
 
-            currState.accessory1 && await autoCreateLineItem(currState.accessory1, sol_accessory, 1);
-            currState.accessory2 && await autoCreateLineItem(currState.accessory2, sol_accessory, 1);
+            // Inverter line
+            let invObject = makeDuplicateItem(currState,'inverter');
+            for (let i = 0; i < Object.keys(invObject).length ; i++) {
+                await autoCreateLineItem(Object.keys(invObject)[i], sol_inverter, Object.values(invObject)[i]);
+            }
+            // Accessory line
+            let accObject = makeDuplicateItem(currState,'accessory');
+            for (let i = 0; i < Object.keys(accObject).length; i++) {
+                await autoCreateLineItem(Object.keys(accObject)[i], sol_accessory, Object.values(accObject)[i]);
+            }
 
             await autoCreateLineItem("Solar PV Balance Of System", solar_extra, 1, currState.total_kw * 1000);
             await autoCreateLineItem("Solar PV Standard Install", solar_extra, 1, currState.total_kw);
@@ -768,6 +775,20 @@ function autoSaveData(){
         SUGAR.ajaxUI.hideLoadingPanel();
         console.log(error)
     }
+}
+
+function makeDuplicateItem(currState,type){
+    var arrayName = [] ;
+    if(type == 'inverter'){ 
+        Object.keys(currState).filter(function(key){ (key.indexOf('inverter_type') >= 0 && currState[key] != "") ? arrayName.push(currState[key]) : null  })
+    }else{
+        Object.keys(currState).filter(function(key){ (key.indexOf('accessory') >= 0 && currState[key] != "") ? arrayName.push(currState[key]) : null  })
+
+    }
+    var tempNames = {};
+    arrayName.forEach(function(x) { tempNames[x] = (tempNames[x] || 0)+1; });
+
+    return tempNames;
 }
 /** END - DECLARE FUNCTION FOR REBATE PROVIDED */
 

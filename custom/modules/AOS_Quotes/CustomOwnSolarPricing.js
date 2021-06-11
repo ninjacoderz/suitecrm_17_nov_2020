@@ -56,13 +56,13 @@ $(function () {
         SL_calcOption(index,true);
     });
 
-    $(document).on('click', '#sl_inverter_add', function(e){
+    $(document).on('click', '#sl_inverter_add, #sl_accessory_add', function(e){
         e.preventDefault();
         let attr_id = $(e.target).attr('id');
         if (attr_id.indexOf('inverter') != -1) {
-            SL_createNewLine('inverter');
+            SL_createNewLine('sl_inverter');
         } else {
-            SL_createNewLine('sol_accessory');
+            SL_createNewLine('sl_accessory');
         }
     });
 
@@ -257,13 +257,22 @@ async function init_table_solar() {
             , makeSelectBox(convertJSONToArrayInit(sol_panel), "panel_sl_type_4 solar_pricing", "panel_sl_type_4")
             , makeSelectBox(convertJSONToArrayInit(sol_panel), "panel_sl_type_5 solar_pricing", "panel_sl_type_5")
             , makeSelectBox(convertJSONToArrayInit(sol_panel), "panel_sl_type_6 solar_pricing", "panel_sl_type_6")],
-        ["Inverter Type"
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type_1 solar_pricing", "inverter_sl_type_1")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type_2 solar_pricing", "inverter_sl_type_2")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type_3 solar_pricing", "inverter_sl_type_3")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type_4 solar_pricing", "inverter_sl_type_4")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type_5 solar_pricing", "inverter_sl_type_5")
-            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type_6 solar_pricing", "inverter_sl_type_6")],
+        ["Inverter Type 1"
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type1_1 solar_pricing", "inverter_sl_type1_1")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type1_2 solar_pricing", "inverter_sl_type1_2")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type1_3 solar_pricing", "inverter_sl_type1_3")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type1_4 solar_pricing", "inverter_sl_type1_4")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type1_5 solar_pricing", "inverter_sl_type1_5")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type1_6 solar_pricing", "inverter_sl_type1_6")],
+        ["Inverter Type 2"
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type2_1 solar_pricing", "inverter_sl_type2_1")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type2_2 solar_pricing", "inverter_sl_type2_2")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type2_3 solar_pricing", "inverter_sl_type2_3")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type2_4 solar_pricing", "inverter_sl_type2_4")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type2_5 solar_pricing", "inverter_sl_type2_5")
+            , makeSelectBox(convertJSONToArrayInit(sol_inverter), "inverter_sl_type2_6 solar_pricing", "inverter_sl_type2_6")],
+        ["<button id='sl_inverter_add' class='button default'>+</button>"
+            , "<input type='hidden' class='solar_pricing' name='sl_inverter_line' id='sl_inverter_line' value='2' />"],
         ["Total Panels"
             , makeInputBox("total_sl_panels_1 solar_pricing", "total_sl_panels_1", false)
             , makeInputBox("total_sl_panels_2 solar_pricing", "total_sl_panels_2", false)
@@ -295,6 +304,8 @@ async function init_table_solar() {
             , makeSelectBox(convertJSONToArrayInit(sol_accessory), "sl_accessory2_4 solar_pricing", "sl_accessory2_4")
             , makeSelectBox(convertJSONToArrayInit(sol_accessory), "sl_accessory2_5 solar_pricing", "sl_accessory2_5")
             , makeSelectBox(convertJSONToArrayInit(sol_accessory), "sl_accessory2_6 solar_pricing", "sl_accessory2_6")],
+        ["<button id='sl_accessory_add' class='button default'>+</button>"
+            , "<input type='hidden' class='solar_pricing' name='sl_accessory_line' id='sl_accessory_line' value='2' />"],
         ["Grand total:"
             , makeInputBox("solar_pricing", "total_sl_1", true)
             , makeInputBox("solar_pricing", "total_sl_2", true)
@@ -375,12 +386,20 @@ function SL_getCurrentOptionState(index){
     result['total_kw'] = $('#total_sl_kW_' + index).val();
     result['total_inverter'] = $('#total_inverter_sl_kW_' + index).val();
     result['panel_type'] = $('#panel_sl_type_' + index).val();
-    result['inverter_type'] = $('#inverter_sl_type_' + index).val();
+    // Inverter line
+    let num_of_line = getCountLine('sl_inverter');
+    for (var i = 0; i < num_of_line; i++) {
+        result['inverter_type' + (i + 1)] = $('#inverter_sl_type' + (i + 1) + '_' + index).val();
+    }    
     result['total_panels'] = $('#total_sl_panels_' + index).val();
     result['number_stcs'] = $('#number_sl_stcs_' + index).val();
-    result['solar_inverter'] = $('#inverter_sl_type_' + index).val();
     result['accessory1'] = $('#sl_accessory1_' + index).val();
     result['accessory2'] = $('#sl_accessory2_' + index).val();
+    // Accessory line
+    num_of_line = getCountLine('sl_accessory');
+    for (var i = 0; i < num_of_line; i++) {
+        result['accessory' + (i + 1)] = $('#sl_accessory' + (i + 1) + '_' + index).val();
+    }
     result['pm'] = ($("#sl_pm"+index).val() != '') ? parseFloat($("#sl_pm"+index).val()) : 0;
     return result;
 }
@@ -413,11 +432,15 @@ function SL_calcEquipmentCost(currState){
     if(currState.panel_type != ''){
         cost += parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels);
     }
-    if(currState.inverter_type != ''){
-        cost += parseFloat(getAttributeFromName(currState.inverter_type, sol_inverter, "cost"));
+    // Inverter cost
+    let num_of_line = getCountLine('sl_inverter');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['inverter_type' + (i + 1)] != ''){
+            cost += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"));
+        }
     }
-
-    let num_of_line = 2;
+    // Accessory cost
+    num_of_line = getCountLine('sl_accessory');
     for (var i = 0; i < num_of_line; i++) {
         if(currState['accessory' + (i + 1)] != ''){
             cost += parseFloat(getAttributeFromName(currState['accessory' + (i + 1)], sol_accessory, "cost"));
@@ -431,7 +454,14 @@ function SL_calcEquipmentCost(currState){
 function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
     //const ratio = 1.333;
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
-    const inverter_kw = parseFloat(getAttributeFromName(currState.inverter_type, sol_inverter, "capacity"));
+    // Get inverter kw
+    let inverter_kw = 0;
+    let num_of_line = getCountLine('sl_inverter');
+    for (let i = 0; i < num_of_line; i++) {
+        if (currState['inverter_type' + (i + 1)] != "") {
+            inverter_kw += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "capacity"));
+        }
+    }
     const maxPanel = Math.floor((inverter_kw / 0.75) / panel_kw);
     const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
     let result = [];
@@ -486,6 +516,7 @@ function SL_saveCurrentState(){
 }
 
 function SL_autoFillAccessory(index){
+    return;
     if($("#inverter_sl_type_"+index).val().toLowerCase().indexOf('primo ') >= 0 ){
         if($("#phases").val() == 'Single Phase'){
             $("#sl_accessory1_"+index).val('Fro. Smart Meter (1P)'); 
@@ -577,14 +608,14 @@ function getOwnSolarPricing(data, string='') {
 }
 
 function SL_getCountLine(target){
-    return parseInt($('#sl_'+ target +'_line').val());
+    return parseInt($('#'+ target +'_line').val());
 }
 
-function SL_createNewLine(target = 'inverter'){
+function SL_createNewLine(target = 'sl_inverter'){
     var label = "Inverter Type ", id = "inverter_sl_type", list = sol_inverter;
-    if (target == 'sol_accessory') {
+    if (target == 'sl_accessory') {
         label = "Solar Accessory ";
-        id = "solar_accessory";
+        id = "sl_accessory";
         list = sol_accessory;
     }
 
@@ -606,8 +637,8 @@ function SL_createNewLine(target = 'inverter'){
         }
         new_tr.appendChild(td);
     }
-    $('#sl_'+ target +'_add').closest('tr').before(new_tr);
-    $('#sl_'+ target +'_line').val(next_index);
+    $('#'+ target +'_add').closest('tr').before(new_tr);
+    $('#'+ target +'_line').val(next_index);
 }
 
 //***************************************** END THIENPB FUNCTION *********************************************************** */
