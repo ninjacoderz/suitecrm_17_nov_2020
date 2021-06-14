@@ -1611,3 +1611,9 @@ $entry_point_registry['APIGenerateQuoteDaikin'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGenerateQuoteDaikin.php',
     'auth' => false
 );
+
+//VUT - User - Get signature user
+$entry_point_registry['APTGetSignatureUser'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APTGetSignatureUser.php',
+    'auth' => false
+);
