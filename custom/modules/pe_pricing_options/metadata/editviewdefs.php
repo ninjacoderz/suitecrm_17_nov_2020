@@ -45,6 +45,10 @@ array (
         array (
           'file' => 'custom/modules/pe_pricing_options/Pricing_Options.js',
         ),
+        1 => 
+        array (
+          'file' => 'custom/modules/pe_pricing_options/OffGridPricingOptions.js',
+        ),
       ),
     ),
     'panels' => 
@@ -55,6 +59,16 @@ array (
         array (
           0 => 'name',
           1 => 'assigned_user_name',
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            'name' => 'product_type_c',
+            'studio' => 'visible',
+            'label' => 'LBL_PRODUCT_TYPE',
+          ),
+          1 => '',
         ),
       ),
       'lbl_editview_panel1' => 
