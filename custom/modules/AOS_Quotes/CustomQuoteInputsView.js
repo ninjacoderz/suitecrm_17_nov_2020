@@ -758,7 +758,7 @@ function autoSaveData(){
                         $("#group"+groupidx+"id").val(product_items[0]['group_id']);
                         productVisible.each((index, el) => {
                             if($(el).find('input[id*=product_part_number]').val() == product_items[index]['part_number']){
-                                $(el).find('input[id*=product_id]').val(product_items[index]['id']);
+                                $(el).find('input[id^=product_id]').val(product_items[index]['id']);
                             }
                         })
                     }
