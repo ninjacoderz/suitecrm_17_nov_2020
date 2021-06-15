@@ -133,7 +133,7 @@ function createNewLine(target = 'inverter'){
             td.innerHTML = label + next_index;
         } else {
             // Other td
-            let select = makeSelectBox(convertJSONToArrayInit(list), "offgrid_pricing", id + next_index + "_" + i);
+            let select = makeSelectBox(convertJSONToArrayInit(list), "offgrid_pricing_input", id + next_index + "_" + i);
             select.css({"width":"100%"});
             $(td).html(select);
         }
@@ -441,12 +441,12 @@ function saveCurrentState(){
 
 // .:nhantv:. Load Offgrid option
 function loadOffgridOption(){
-    if($("#offgrid_option_c").val() != ""){
+    if($("#pricing_option_input_c").val() != ""){
         try{
-            var json_val = JSON.parse($("#offgrid_option_c").val());
+            var json_val = JSON.parse($("#pricing_option_input_c").val());
             // Check number of inverter line
             let curr_line_num = getCountLine('inverter');
-            let line_num = (json_val.inverter_line != undefined && json_val.inverter_line != '') ? json_val.inverter_line : 2;
+            let line_num = (json_val.inverter_line != undefined && json_val.inverter_line != '') ? json_val.inverter_line : 1;
             if (line_num > curr_line_num) {
                 // Create new Inverter line
                 for (let i = 0; i < (line_num - curr_line_num); i++) {
@@ -676,7 +676,7 @@ async function init_table_offgrid() {
 
     let offgrid_pricing_table = $('<div id="offgrid_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row" style="margin-bottom: 20px;"></div>');
     let data = [
-        ["Selected Option"
+        ["Option"
             ,"1"
             ,"2"
             ,"3"
@@ -733,7 +733,8 @@ async function init_table_offgrid() {
         //     , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_4")
         //     , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_5")
         //     , makeSelectBox(convertJSONToArrayInit(sol_inverter), "offgrid_pricing", "inverter_og_type2_6")],
-        ["<input type='hidden' class='offgrid_pricing' name='inverter_line' id='inverter_line' value='1' />"],//  "<button id='inverter_add' class='button default'>+</button>"
+        [ "<button id='inverter_add' class='button default'>+</button>",
+            "<input type='hidden' class='offgrid_pricing_input' name='inverter_line' id='inverter_line' value='1' />"],//  "<button id='inverter_add' class='button default'>+</button>"
         ["Total Panels"
             , makeInputBox("total_og_panels_1 offgrid_pricing_input", "total_og_panels_1", false)
             , makeInputBox("total_og_panels_2 offgrid_pricing_input", "total_og_panels_2", false)
