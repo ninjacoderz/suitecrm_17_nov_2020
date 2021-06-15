@@ -14,14 +14,14 @@ $(function () {
         // tuan code 
         $('#heating_cooling_category_c').closest('.edit-view-row-item').hide();
         // for solar
-        $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').hide();
+        $('#panel_type_c,#noct_c,#tempcoeff_c,#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').hide();
         //for daikin
         $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
         if($('#aos_product_category_name').val() == "Daikin" ){ // $('#aos_product_category_name').val().toLowerCase().includes('heating') == true
             $('#heating_cooling_category_c').closest('.edit-view-row-item').show();
         }
         if($('#aos_product_category_name').val() == "Solar" ){ 
-            $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').show();
+            $('#panel_type_c,#noct_c,#tempcoeff_c,#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').show();
         }
         if( $('#heating_cooling_category_c').val() == 'split_system' ){
             $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
