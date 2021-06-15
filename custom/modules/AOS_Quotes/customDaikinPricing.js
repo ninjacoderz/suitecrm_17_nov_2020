@@ -1,5 +1,5 @@
-var dk_main,dk_extra;
-// const extra_solar_products = ["Solar PV Standard Install", "Solar PV Balance Of System", "STCs","Solar PV Supply and Install"];
+var dk_main,dk_extra, dk_install;
+const daikin_install = ["Daikin Factory Delivery"];
 
 $(function () {
     'use strict';
@@ -8,10 +8,10 @@ $(function () {
     var quote_type = $("#quote_type_c").val();
     if(quote_type == 'quote_type_daikin'){
         init_table_daikin();
-        $(document).find('#generate_quote').hide();
+        // $("#quote_note_inputs_c").closest('.edit-view-row-item').show();
+        $(document).find('#generate_quote').show();
     }
 
-    //************************************************ THIENPB ************************************************ */
     /** Extra Add Button Click handle */ 
     $(document).on('click', '#extra_add, #main_add', function(e){
         e.preventDefault();
@@ -33,38 +33,21 @@ $(function () {
     // $(document).on('click', '#calculate_dk', function(e){
     //     e.preventDefault();
     //     for (var i = 1; i < 7; i++) {
-    //         var panel_type = $("#main_dk_type_"+i).val();
-    //         var inverter_type = $("#extra_dk_type_"+i).val();
+    //         var main_type = $("#main_dk_type_"+i).val();
+    //         var extra_type = $("#extra_dk_type_"+i).val();
     //         // Get suggested
-    //         if(panel_type != '' && inverter_type != ""){
+    //         if(main_type != '' && extra_type != ""){
     //             // Calculate option
-    //             DK_autoFillAccessory(i);
     //             DK_calcOption(i);
     //         }
     //     }
     // });
 
-    $(document).on("change", "select[id*=extra_dk_type]", function(e){
-        var index  = $(this).attr("id").split('_');
-        index = index[index.length -1];
-        DK_autoFillAccessory(index);
-        DK_calcOption(index);
-    });
 
-    $(document).on("change", "select[id*=extra_dk_type] ,select[id*=main_dk_type_]", function(e){
+    $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_']", function(e){
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
-        if($("#main_dk_type_"+index).val() != "" && $("#extra_dk_type_"+index).val() != ""){
-            DK_autoFillAccessory(index);
             DK_calcOption(index);
-        }
-    });
-
-    $(document).on("change", "input[id*=total_dk_type_]", function(e){
-        var index  = $(this).attr("id").split('_');
-        index = index[index.length -1];
-        DK_autoFillAccessory(index);
-        DK_calcOption(index,true);
     });
 
     //************************************************ END THIENPB ************************************************ */
@@ -91,12 +74,11 @@ $(function () {
             });
         }
         generateJSONForInput();});
-    });
-//***************************************** THIENPB FUNCTION *********************************************************** */
+});
+//***************************************** FUNCTION *********************************************************** */
 async function init_table_daikin() {
     // Call API get Offgrid Product
     try{
-        // DK_getExtraProduct();
 
         await $.ajax({
             url: '/index.php?entryPoint=APIGetDaikinProduct'
@@ -105,6 +87,7 @@ async function init_table_daikin() {
             // Set global var
             dk_main = dataJSON.dk_main;
             dk_extra = dataJSON.dk_extra;
+            dk_install = dataJSON.dk_install;
         });
     } catch (ex) {
         console.log(ex);
@@ -127,12 +110,12 @@ async function init_table_daikin() {
             , "<button data-option ='5' id='clear_dk_option_5' class='button default'>Clear Option 5</button>"
             , "<button data-option ='6' id='clear_dk_option_6' class='button default'>Clear Option 6</button>"],
         ["PM:"
-            , makeInputBox("dk_pm1 daikin_pricing", "dk_pm1", false)
-            , makeInputBox("dk_pm2 daikin_pricing", "dk_pm2", false)
-            , makeInputBox("dk_pm3 daikin_pricing", "dk_pm3", false)
-            , makeInputBox("dk_pm4 daikin_pricing", "dk_pm4", false)
-            , makeInputBox("dk_pm5 daikin_pricing", "dk_pm5", false)
-            , makeInputBox("dk_pm6 daikin_pricing", "dk_pm6", false)],
+            , makeInputBox("pmdk_1 daikin_pricing", "pmdk_1", false)
+            , makeInputBox("pmdk_2 daikin_pricing", "pmdk_2", false)
+            , makeInputBox("pmdk_3 daikin_pricing", "pmdk_3", false)
+            , makeInputBox("pmdk_4 daikin_pricing", "pmdk_4", false)
+            , makeInputBox("pmdk_5 daikin_pricing", "pmdk_5", false)
+            , makeInputBox("pmdk_6 daikin_pricing", "pmdk_6", false)],
         ["Daikin Type 1"
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_1 daikin_pricing", "main_dk_type1_1") 
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_2 daikin_pricing", "main_dk_type1_2")
@@ -156,6 +139,13 @@ async function init_table_daikin() {
             , makeInputBox("total_dk_wifi_4 daikin_pricing", "total_dk_wifi_4", false)
             , makeInputBox("total_dk_wifi_5 daikin_pricing", "total_dk_wifi_5", false)
             , makeInputBox("total_dk_wifi_6 daikin_pricing", "total_dk_wifi_6", false)],
+        // ["Daikin Wifi 1"
+        //     , makeDropdownNumber(20, "total_dk_wifi_1 daikin_pricing", "total_dk_wifi_1")
+        //     , makeDropdownNumber(20, "total_dk_wifi_2 daikin_pricing", "total_dk_wifi_2")
+        //     , makeDropdownNumber(20, "total_dk_wifi_3 daikin_pricing", "total_dk_wifi_3")
+        //     , makeDropdownNumber(20, "total_dk_wifi_4 daikin_pricing", "total_dk_wifi_4")
+        //     , makeDropdownNumber(20, "total_dk_wifi_5 daikin_pricing", "total_dk_wifi_5")
+        //     , makeDropdownNumber(20, "total_dk_wifi_6 daikin_pricing", "total_dk_wifi_6")],
         ["Daikin Install"
             , makeSelectBox(['Yes', 'No'], "install_dk_1 daikin_pricing", "install_dk_1")
             , makeSelectBox(['Yes', 'No'], "install_dk_2 daikin_pricing", "install_dk_2")
@@ -190,7 +180,7 @@ async function init_table_daikin() {
             , makeInputBox("daikin_pricing", "total_dk_4", true)
             , makeInputBox("daikin_pricing", "total_dk_5", true)
             , makeInputBox("daikin_pricing", "total_dk_6", true)],
-        ["PE Admin (%)", "<input type='number' class='daikin_pricing' name='dk_pe_admin_percent' id='dk_pe_admin_percent' value='20' />"],
+        ["PE Admin (%)", "<input type='number' class='daikin_pricing' name='dk_pe_admin_percent' id='dk_pe_admin_percent' value='19' />"],
     ];
     
     //  Update to set order before "Save and Generate Quote" field
@@ -204,7 +194,7 @@ async function init_table_daikin() {
     $(".daikin_pricing select, .daikin_pricing input[class*='daikin_pricing']:not([type='checkbox'])").css({"width":"100%"});
     $(".expand_ext").css({"width":"48%"});
 
-    // Load Solar Option
+    // Load Daikin Option
     DK_loadOption();
 }
 
@@ -219,6 +209,7 @@ function DK_convertJSONToArrayInit(jsonData){
     return result;
 }
 
+//Make 2 input 1 line
 function makeTwoInputBox(iclass,iid, iid1, disabled = false){
     var read = disabled == false ? '' : 'disabled'
     var input = `   <input class="${iclass}" id="${iid}" ${read} style="width: 48%;" />
@@ -227,6 +218,16 @@ function makeTwoInputBox(iclass,iid, iid1, disabled = false){
     // var input = $("<input/>").addClass(iclass).attr("id",iid).prop('disabled', disabled).css('width', '50%');
     // var input1 = $("<input/>").addClass(iclass).attr("id",iid1).prop('disabled', disabled).css('width', '50%');
     return input;
+}
+//make dropdown number
+function makeDropdownNumber(number, sclass, sid) {
+    let i;
+    var select = $("<select/>").addClass(sclass).attr("id",sid);
+    select.append($('<option></option>'));
+    for (i=1 ; i <= number; i++) {
+        select.append( $('<option></option>').val(i).html(i) );
+    }
+    return select;
 }
 
 //Create new line
@@ -249,7 +250,7 @@ function DK_createNewLine(target = 'extra'){
         // list1 = dk_main;
     }
     
-    let next_index = getCountLine(target) + 1;
+    let next_index = DK_getCountLine(target) + 1;
     let new_tr = document.createElement('tr');
     let new_tr1 = document.createElement('tr');
     for (var i = 0; i < 7; i++) {
@@ -273,7 +274,7 @@ function DK_createNewLine(target = 'extra'){
                 input = makeInputBox(`${id1}_${next_index} daikin_pricing`, `${id1}${next_index}_${i}`, false);
                 input.css({"width":"100%"});
             } else {
-                input = makeTwoInputBox(`${id}_${next_index} daikin_pricing`, `${id1}${next_index}_${i}`, `${id2}${next_index}_1`, false);
+                input = makeTwoInputBox(`${id}_${next_index} daikin_pricing`, `${id1}${next_index}_${i}`, `${id2}${next_index}_${i}`, false);
                 // input.css({"width":"100%"});
             }
             $(td).html(select);
@@ -286,81 +287,107 @@ function DK_createNewLine(target = 'extra'){
     $('#'+ target +'_line').val(next_index);
 }
 
-
-
-async function DK_calcOption(index, isTotalPanel = false) {
-    var postcode = $("#install_address_postalcode_c").val();
-    if(index != '' && index != undefined){
-        let currState = DK_getCurrentOptionState(index);
-        if(currState.panel_type != '' && currState.inverter_type != ''){
-            // Get max panels and total kw
-            let maxPnAndTotalKw = DK_getMaxPanelAndTotalKw(currState, isTotalPanel);
-            // Set value
-            $("#total_dk_type_"+index).val(maxPnAndTotalKw['max']);
-            currState.total_panels = maxPnAndTotalKw['max'];
-            $('#total_dk_kW_'+index).val(maxPnAndTotalKw['kw']);
-            currState.total_kw = maxPnAndTotalKw['kw'];
-            $('#total_inverter_dk_kW_'+index).val(maxPnAndTotalKw['inverter_kw']);
-            currState.inverter_kw = maxPnAndTotalKw['inverter_kw'];
-
-            // Get STCs value
-            try {
-                // Show loading
-                SUGAR.ajaxUI.showLoadingPanel();
-                await $.ajax({
-                    url: 'index.php?entryPoint=getSTCsNumberForQuotePricing&total_kw='+maxPnAndTotalKw['kw']+'&postcode='+postcode,
-                    type : 'GET',
-                    dataType: 'text',
-                }).then(function (data) {
-                    var result = JSON.parse(data);
-                    if(result['NumberOfSTCs'] != ''){
-                        $("#number_dk_stcs_"+index).val(result['NumberOfSTCs']);
-                        currState.number_stcs = result['NumberOfSTCs'];
-                    }
-                });
-            } catch (err) {
-                console.log(err);
-            } finally {
-                // Hide loading
-                setTimeout(function (){
-                    SUGAR.ajaxUI.hideLoadingPanel();
-                }, 300);
-            }
-            // Save current option
-            // Grand Total
-            let grandTotal = DK_calcGrandTotal(currState);
-            $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
-            DK_saveCurrentState();
-
-        }
-    }
-}
-
-//Get current option state
-function DK_getCurrentOptionState(index){
+function DK_saveCurrentState(){
     let result = {};
-    result['total_kw'] = $('#total_dk_kW_' + index).val();
-    result['total_inverter'] = $('#total_inverter_dk_kW_' + index).val();
-    result['panel_type'] = $('#main_dk_type_' + index).val();
-    result['inverter_type'] = $('#extra_dk_type_' + index).val();
-    result['total_panels'] = $('#total_dk_type_' + index).val();
-    result['number_stcs'] = $('#number_dk_stcs_' + index).val();
-    result['solar_inverter'] = $('#extra_dk_type_' + index).val();
-    result['accessory1'] = $('#dk_accessory1_' + index).val();
-    result['accessory2'] = $('#dk_accessory2_' + index).val();
-    result['pm'] = ($("#dk_pm"+index).val() != '') ? parseFloat($("#dk_pm"+index).val()) : 0;
-    return result;
+    $("#daikin_pricing_table .daikin_pricing").each(function (){
+        let opt = {};
+        let id_product = '', partNumber_product = '', name_product = '';
+        var id_name = $(this).attr("id");
+        let item_no = id_name.charAt(id_name.length-3);
+        let option = id_name.split('_').pop();
+        if (isNaN(option)) {
+            result[id_name] = $(this).val();
+            return true;
+        }
+        if($("#"+id_name).attr('type')== 'checkbox'){
+            opt[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
+        } else {
+            opt[id_name] = $(this).val();
+        }
+
+        if (id_name.indexOf('main_dk_type') != -1 || id_name.indexOf('total_dk_type') != -1) {
+            if (!result[option].hasOwnProperty('products')) {
+                result[option].products = {};
+            }
+            if(id_name.indexOf('main_dk_type') != -1) {
+                id_product = getAttributeFromName(opt[id_name], dk_main, 'id') != '' ?  getAttributeFromName(opt[id_name], dk_main, 'id') : '';
+                partNumber_product = getAttributeFromName(opt[id_name], dk_main, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_main, 'part_number') : '';
+                name_product = getAttributeFromName(opt[id_name], dk_main, 'name') != '' ? getAttributeFromName(opt[id_name], dk_main, 'name') : '';
+                result[option].products[item_no] = {...result[option].products[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+
+            result[option].products[item_no] = {...result[option].products[item_no], ...opt};
+            return true;
+        }
+        if (id_name.indexOf('extra_dk_type') != -1 || id_name.indexOf('ext_no') != -1 || id_name.indexOf('ext_val') != -1) {
+            if (!result[option].hasOwnProperty('extras')) {
+                result[option].extras = {};
+            }
+            if(id_name.indexOf('extra_dk_type') != -1) {
+                id_product = getAttributeFromName(opt[id_name], dk_extra, 'id') != '' ?  getAttributeFromName(opt[id_name], dk_extra, 'id') : '';
+                partNumber_product = getAttributeFromName(opt[id_name], dk_extra, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'part_number') : '';
+                name_product = getAttributeFromName(opt[id_name], dk_extra, 'name') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'name') : '';
+                result[option].extras[item_no] = {...result[option].extras[parseInt(item_no) - 1], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+            result[option].extras[item_no] = {...result[option].extras[item_no], ...opt};
+            return true;
+        }
+
+        result[option] = {...result[option], ...opt};
+    });
+
+    $("#quote_note_inputs_c").val(JSON.stringify(result));
 }
-//Load solar option
+
+//Load option
 function DK_loadOption(){
-    if($("#own_solar_pv_pricing_c").val() != ""){
+    if($("#quote_note_inputs_c").val() != ""){
         try{
-            var json_val = JSON.parse($("#own_solar_pv_pricing_c").val());
-            for (let key in json_val) {
-                if($("#"+key).attr('type') == 'checkbox'){
-                    $("#"+key).prop( "checked", json_val[key] );
+            var json_val = JSON.parse($("#quote_note_inputs_c").val());
+            // Create main line
+            let current_line = DK_getCountLine('main');
+            let item_line = (json_val.main_line != undefined && json_val.main_line != '') ? json_val.main_line : 1;
+            if (item_line > current_line) {
+                for (let i = 0; i < (item_line - current_line); i++) {
+                    DK_createNewLine('main');
+                }
+            }
+
+            current_line = DK_getCountLine('extra');
+            item_line = (json_val.extra_line != undefined && json_val.extra_line != '') ? json_val.extra_line : 1;
+            if (item_line > current_line) {
+                for (let i = 0; i < (item_line - current_line); i++) {
+                    DK_createNewLine('extra');
+                }
+            }
+            
+            for (const [key, v] of Object.entries(json_val)) {
+                if (isNaN(key)) {
+                        if($("#"+key).attr('type') == 'checkbox'){
+                            $("#"+key).prop( "checked", json_val[key] );
+                        } else {
+                            $("#"+key).val(json_val[key]);
+                        }
                 } else {
-                    $("#"+key).val(json_val[key]);
+                    for (const [vkey, vvalue] of Object.entries(v)) {
+                        if (typeof vvalue == "object") {
+                            for (const [vvkey, vvvalue] of Object.entries(vvalue)) {
+                                for (const [vvvkey, vvvvalue] of Object.entries(vvvalue)) {
+                                    if($("#"+vvvkey).attr('type') == 'checkbox'){
+                                        $("#"+vvvkey).prop( "checked", vvvvalue);
+                                    } else {
+                                        $("#"+vvvkey).val(vvvvalue);
+                                    }
+                                }
+                            }
+                        } else {
+                            if($("#"+vkey).attr('type') == 'checkbox'){
+                                $("#"+vkey).prop( "checked", vvalue);
+                            } else {
+                                $("#"+vkey).val(vvalue);
+                            }
+                        }
+                    }
                 }
             }
         } catch (err) {
@@ -368,6 +395,46 @@ function DK_loadOption(){
         }
     }
 }
+
+//Get current option state
+function DK_getCurrentOptionState(index){
+    let result = {};
+    result['pm'] = ($("#pmdk_"+index).val() != '') ? parseFloat($("#pmdk_"+index).val()) : 0;
+    // Main line
+    let num_of_line = DK_getCountLine('main');
+    for (var i = 0; i < num_of_line; i++) {
+        result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val();
+        result['total_dk_type' + (i + 1)] = $('#total_dk_type' + (i + 1) + '_' + index).val();
+    }
+
+    result['total_wifi'] = $('#total_dk_wifi_' + index).val();
+    result['install_dk'] = $('#install_dk_' + index).val();
+
+    // Extra line
+    num_of_line = DK_getCountLine('extra');
+    for (var i = 0; i < num_of_line; i++) {
+        result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val();
+        result['ext_no' + (i + 1)] = $('#ext_no' + (i + 1) + '_' + index).val();
+        result['ext_val' + (i + 1)] = $('#ext_val' + (i + 1) + '_' + index).val();
+    }
+    return result;
+}
+
+
+function DK_calcOption(index, isTotalPanel = false) {
+    if(index != '' && index != undefined){
+        let currState = DK_getCurrentOptionState(index);
+        if(currState.main_type != ''){
+            // Grand Total
+            let grandTotal = DK_calcGrandTotal(currState);
+            $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
+            // Save current option
+            DK_saveCurrentState();
+
+        }
+    }
+}
+
 //
 function DK_clearOption(option){
     $("#daikin_option_"+(option)).prop('checked', false);
@@ -375,153 +442,62 @@ function DK_clearOption(option){
     $('#daikin_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
 
-function DK_calcEquipmentCost(currState){
-    let cost = 0;
-    if(currState.panel_type != ''){
-        cost += parseFloat(getAttributeFromName(currState.panel_type, dk_main, "cost")) * parseFloat(currState.total_panels);
-    }
-    if(currState.inverter_type != ''){
-        cost += parseFloat(getAttributeFromName(currState.inverter_type, dk_extra, "cost"));
-    }
-    // Microgrid Balance Of System
-    //cost += parseFloat(getAttributeFromName(extra_products[3], og_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
-    return cost;
+function DK_getCountLine(target){
+    return parseInt($('#'+ target +'_line').val());
 }
 
-function DK_getMaxPanelAndTotalKw(currState, isTotalPanel){
-    //const ratio = 1.333;
-    const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, dk_main, "capacity")) / 1000;
-    const inverter_kw = parseFloat(getAttributeFromName(currState.inverter_type, dk_extra, "capacity"));
-    const maxPanel = Math.floor((inverter_kw / 0.75) / panel_kw);
-    const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
-    let result = [];
-    result['max'] = maxPanel;
-    result['kw'] = maxKw;
-    result['inverter_kw'] = inverter_kw;
-    // check total panel manually input
-    if (isTotalPanel) {
-        // Check inut panel is greater than max value
-        if(maxPanel < currState.total_panels){
-            alert("You have exceeded the maximum number of panels for that panel type. Max = " + maxPanel);
-            return result;
+
+function DK_calcEquipmentCost(currState){
+    let main_cost = 0, install_cost = 0, extra_cost = 0, wifi_cost = 0;
+    // Daikin main cost
+    let num_of_line = DK_getCountLine('main');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['main_type' + (i + 1)] != ''){
+            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]);
         }
-        result['max'] = currState.total_panels;
-        result['kw'] = parseFloat((panel_kw * currState.total_panels).toFixed(3));
     }
-    return result;
+    // Daikin install
+    if (currState['install_dk'] == 'Yes') {
+        install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_install, 'cost'));
+    }
+
+    // Daikin Wifi
+    if (currState['total_wifi'] != '') {
+        wifi_cost = parseFloat(currState['total_wifi'])*100;
+    }
+
+    // Daikin extra cost
+    num_of_line = DK_getCountLine('extra');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['extra_type' + (i + 1)] != ''){
+            extra_cost += parseFloat(currState['ext_no' + (i + 1)])*parseFloat(currState['ext_val' + (i + 1)]);
+        }
+    }
+
+    return main_cost + install_cost + wifi_cost + extra_cost;
 }
 
 function DK_calcGrandTotal(currState){
     let grandTotal = 0;
     // Equipment cost
-    grandTotal += DK_calcEquipmentCost(currState);35156.999999
-    // Solar Standard Install
-    grandTotal += parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState.total_kw);
-    // PV Balance of System
-    grandTotal += parseFloat(getAttributeFromName(extra_solar_products[1], solar_extra, "cost")) * parseFloat(currState.total_kw) * 1000;
-    // Extra 1
-    grandTotal += (currState.accessory1 != '') ? parseFloat(getAttributeFromName(currState.accessory1, sol_accessory , "cost")) : 0;
-    // Extra 2
-    grandTotal += (currState.accessory2 != '') ? parseFloat(getAttributeFromName(currState.accessory2, sol_accessory , "cost")) : 0;
+    grandTotal += DK_calcEquipmentCost(currState);
     // PE Admin %
     grandTotal += grandTotal * (parseFloat($('#dk_pe_admin_percent').val()) / 100);
     // GST 10%
     let gst = grandTotal * 0.1;
-    // STCs
-    grandTotal += parseFloat(getAttributeFromName(extra_solar_products[2], solar_extra, "cost")) * parseFloat(currState.number_stcs);
     // Include GST above
     grandTotal += gst;
-
      // PM
      grandTotal += currState.pm;
 
     return grandTotal;
 }
 
-function DK_saveCurrentState(){
-    var values = {};
-    $("#daikin_pricing_table .daikin_pricing").each(function (){
-        var id_name = $(this).attr("id");
-        if($("#"+id_name).attr('type')== 'checkbox'){
-            values[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
-        } else {
-            values[id_name] = $(this).val();
-        }
-    });
 
-    $("#own_solar_pv_pricing_c").val(JSON.stringify(values));
-}
-
-function DK_autoFillAccessory(index){
-    if($("#extra_dk_type_"+index).val().toLowerCase().indexOf('primo ') >= 0 ){
-        if($("#phases").val() == 'Single Phase'){
-            $("#dk_accessory1_"+index).val('Fro. Smart Meter (1P)'); 
-        }else if($("#phases").val() == 'Three Phases'){
-            $("#dk_accessory1_"+index).val('Fro. Smart Meter (3P)');
-        }else{
-            
-        }
-        $("#dk_accessory2_"+index).val('');
-    }else if( $("#extra_dk_type_"+index).val().toLowerCase().indexOf('symo ') >= 0){
-        $("#dk_accessory1_"+index).val('Fro. Smart Meter (3P)');
-        $("#dk_accessory2_"+index).val('');
-    }else if($("#extra_dk_type_"+index).val().toLowerCase().indexOf('s edge ') >= 0){
-        $("#dk_accessory1_"+index).val('SE Wifi');
-        $("#dk_accessory2_"+index).val('SE Smart Meter');
-    }else if($("#extra_dk_type_"+index).val().toLowerCase().indexOf('sungrow ') >= 0){
-        if($("#phases").val() == 'Three Phases'  ){
-            $("#dk_accessory1_"+index).val('Sungrow Smart Meter (3P)');//'Sungrow Smart Meter (3P)');
-            $("#dk_accessory2_"+index).val('');
-        }else if($("#phases").val() == 'Two Phases'){
-
-        }else {
-            if( $("#extra_dk_type_"+index).val().indexOf('3P') >= 0){
-                $("#dk_accessory1_"+index).val('Sungrow Smart Meter (3P)');//'Sungrow Smart Meter (3P)');
-                $("#dk_accessory2_"+index).val('');
-            }else {
-                $("#dk_accessory1_"+index).val('Sungrow Smart Meter (1P)');
-                $("#dk_accessory2_"+index).val('');
-            }   
-        }
-    }else{
-        $("#dk_accessory1_"+index).val('');
-        $("#dk_accessory2_"+index).val(''); 
-    }
-}
-
-function DK_getExtraProduct(){
-    extra_solar_products.forEach((element, index) => {
-        $.ajax({
-            url: "/index.php?entryPoint=APIGetProductInfoByShortName&short_name=" + element,
-            type: 'GET'})
-        .then(function(data) {
-            if(data !== undefined || data !== ""){
-                solar_extra.push(JSON.parse(data));
-            }
-        });
-    });
-}
 
 // Solar Checkbox handle 
 $(document).on('change', 'input[id*="daikin_option"]', function(){
     checkBoxOptionHandle($(this), "daikin_option");
 });
 
-
-function setInputFilter(textbox, inputFilter) {
-    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
-      textbox.addEventListener(event, function() {
-        if (inputFilter(this.value)) {
-          this.oldValue = this.value;
-          this.oldSelectionStart = this.selectionStart;
-          this.oldSelectionEnd = this.selectionEnd;
-        } else if (this.hasOwnProperty("oldValue")) {
-          this.value = this.oldValue;
-          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-        } else {
-          this.value = "";
-        }
-      });
-    });
-  }
-//***************************************** END THIENPB FUNCTION *********************************************************** */
+//***************************************** ??? *********************************************************** */

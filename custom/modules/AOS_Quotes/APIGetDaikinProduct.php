@@ -7,8 +7,8 @@ $db = DBManagerFactory::getInstance();
 $data_return['dk_main'] = getDataByCategoryName($db, "Daikin", "main");
 //extra
 $data_return['dk_extra'] = getDataByCategoryName($db, "Daikin", "extra");
-
-// $data_return['accessory_data'] = getDataByCategoryName($db, "Solar", "accessories");
+//install
+$data_return['dk_install'] = getDataByCategoryName($db, "Daikin", "install");
 
 
 // Return
@@ -28,6 +28,15 @@ function getDataByCategoryName($db, $category_name, $condition = ''){
       , pc.product_status_c
       , pc.capacity_c
       , p.daikin_category
+      , pc.heating_cooling_category_c
+      , pc.rated_capacity_heating_c
+      , pc.range_lower_heating_c
+      , pc.range_upper_heating_c
+      , pc.cop_heating_c
+      , pc.rated_capacity_cooling_c
+      , pc.range_lower_cooling_c
+      , pc.range_upper_cooling_c
+      , pc.cop_cooling_c
     FROM aos_products p	
     LEFT JOIN aos_product_categories c 
     ON p.aos_product_category_id = c.id
@@ -35,7 +44,7 @@ function getDataByCategoryName($db, $category_name, $condition = ''){
     ON p.id = pc.id_c
     WHERE c.name = '{$category_name}' {$condition}
     AND pc.product_status_c = 'available'
-    ";
+    ORDER BY pc.short_name_c ASC";
     
   $result = $db->query($sql);
   $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -54,6 +63,15 @@ function getDataByCategoryName($db, $category_name, $condition = ''){
     'category_name' => $record['category_name'],
     'capacity' => $record['capacity_c'],
     'daikin_category' => $record['daikin_category'],
+    'heat_cool_category' => $record['heating_cooling_category_c'],
+    'heat_capacity' => $record['rated_capacity_heating_c'],
+    'heat_lower' => $record['range_lower_heating_c'],
+    'heat_upper' => $record['range_upper_heating_c'],
+    'heat_cop' => $record['cop_heating_c'],
+    'cool_capacity' => $record['rated_capacity_cooling_c'],
+    'cool_lower' => $record['range_lower_cooling_c'],
+    'cool_upper' => $record['range_upper_cooling_c'],
+    'cool_cop' => $record['cop_cooling_c'],
     ));
   }
   return $data;

@@ -68,6 +68,12 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
                 case "quote_type_off_grid_system":
                     generateOffgridItem();
                     break;
+                case 'quote_type_daikin':
+                    DK_saveCurrentState();
+                    setTimeout(function (){
+                        autoSaveData();
+                    }, 300);
+                    break;
                 default: break;
             }
         });
