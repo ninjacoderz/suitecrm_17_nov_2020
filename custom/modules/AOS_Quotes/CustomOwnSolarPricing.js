@@ -32,20 +32,9 @@ $(function () {
         }
     });
 
-    $(document).on("change", "select[id*=inverter_sl_type]", function(e){
+    $(document).on("change", "select[id*=inverter_sl_type] ,select[id*=panel_sl_type_], select[id*=sl_accessory]", function(e){
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
-        SL_autoFillAccessory(index);
-        SL_calcOption(index);
-    });
-
-    $(document).on("change", "select[id*=inverter_sl_type] ,select[id*=panel_sl_type_]", function(e){
-        var index  = $(this).attr("id").split('_');
-        if($(this).attr("id").indexOf("inverter_sl_type") >= 0){
-            index = index[index.length -2][index.length-1];
-        }else{
-            index = index[index.length -1];
-        }
         if($("#panel_sl_type_"+index).val() != "" && SL_isInverterHasValue(index)){
             SL_autoFillAccessory(index);
             SL_calcOption(index);
@@ -409,7 +398,6 @@ function SL_getCurrentOptionState(index){
 //Load solar option
 function SL_loadOption(){
     if($("#own_solar_pv_pricing_c").val() != ""){
-        debugger
         try{
             var json_val = JSON.parse($("#own_solar_pv_pricing_c").val());
             // Check number of inverter line
@@ -539,42 +527,54 @@ function SL_saveCurrentState(){
     $("#own_solar_pv_pricing_c").val(JSON.stringify(values));
 }
 
-function SL_autoFillAccessory(index){
-    return;
-    if($("#inverter_sl_type_"+index).val().toLowerCase().indexOf('primo ') >= 0 ){
-        if($("#phases").val() == 'Single Phase'){
-            $("#sl_accessory1_"+index).val('Fro. Smart Meter (1P)'); 
-        }else if($("#phases").val() == 'Three Phases'){
-            $("#sl_accessory1_"+index).val('Fro. Smart Meter (3P)');
-        }else{
-            
-        }
-        $("#sl_accessory2_"+index).val('');
-    }else if( $("#inverter_sl_type_"+index).val().toLowerCase().indexOf('symo ') >= 0){
-        $("#sl_accessory1_"+index).val('Fro. Smart Meter (3P)');
-        $("#sl_accessory2_"+index).val('');
-    }else if($("#inverter_sl_type_"+index).val().toLowerCase().indexOf('s edge ') >= 0){
-        $("#sl_accessory1_"+index).val('SE Wifi');
-        $("#sl_accessory2_"+index).val('SE Smart Meter');
-    }else if($("#inverter_sl_type_"+index).val().toLowerCase().indexOf('sungrow ') >= 0){
-        if($("#phases").val() == 'Three Phases'  ){
-            $("#sl_accessory1_"+index).val('Sungrow Smart Meter (3P)');//'Sungrow Smart Meter (3P)');
-            $("#sl_accessory2_"+index).val('');
-        }else if($("#phases").val() == 'Two Phases'){
-
-        }else {
-            if( $("#inverter_sl_type_"+index).val().indexOf('3P') >= 0){
-                $("#sl_accessory1_"+index).val('Sungrow Smart Meter (3P)');//'Sungrow Smart Meter (3P)');
-                $("#sl_accessory2_"+index).val('');
+async function SL_autoFillAccessory(index){
+    let inverterNo = SL_getCountLine('sl_inverter');
+    let accessoryArr = [];
+    for(var i = 1; i <= inverterNo ; i++){
+        let inverterID = $("#inverter_sl_type"+i+'_'+index);
+        if(inverterID.val().toLowerCase().indexOf('primo ') >= 0 ){
+            if($("#phases").val() == 'Single Phase'){
+                accessoryArr.push('Fro. Smart Meter (1P)'); 
+            }else if($("#phases").val() == 'Three Phases'){
+                accessoryArr.push('Fro. Smart Meter (3P)');
+            }
+        }else if( inverterID.val().toLowerCase().indexOf('symo ') >= 0){
+            accessoryArr.push('Fro. Smart Meter (3P)');
+        }else if(inverterID.val().toLowerCase().indexOf('s edge ') >= 0){
+            accessoryArr.push('SE Wifi');
+            accessoryArr.push('SE Smart Meter');
+        }else if(inverterID.val().toLowerCase().indexOf('sungrow ') >= 0){
+            if($("#phases").val() == 'Three Phases'  ){
+                accsessoryArr.push('Sungrow Smart Meter (3P)');//'Sungrow Smart Meter (3P)');
+            }else if($("#phases").val() == 'Two Phases'){
+    
             }else {
-                $("#sl_accessory1_"+index).val('Sungrow Smart Meter (1P)');
-                $("#sl_accessory2_"+index).val('');
-            }   
+                if( inverterID.val().indexOf('3P') >= 0){
+                    accessoryArr.push('Sungrow Smart Meter (3P)');//'Sungrow Smart Meter (3P)');
+                }else {
+                    accessoryArr.push('Sungrow Smart Meter (1P)');
+                }   
+            }
         }
-    }else{
-        $("#sl_accessory1_"+index).val('');
-        $("#sl_accessory2_"+index).val(''); 
     }
+
+    let accessoryNo = SL_getCountLine('sl_accessory');
+
+    for(var i = 1; i <= accessoryArr.length ; i++ ){
+        if(i <= accessoryNo){
+            $("#sl_accessory"+i+'_'+index).val(accessoryArr[i-1]);
+        }else{
+            SL_createNewLine("sl_accessory");
+            await wait(100);
+            $("#sl_accessory"+i+'_'+index).val(accessoryArr[i-1]);
+        }
+    }
+    if(accessoryNo > accessoryArr.length){
+        for(var i = accessoryArr.length+1 ; i <= accessoryNo; i++ ){
+            $("#sl_accessory"+i+'_'+index).val("");
+        }
+    }
+    
 }
 
 function SL_getExtraProduct(){
