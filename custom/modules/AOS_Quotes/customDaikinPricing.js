@@ -44,7 +44,7 @@ $(function () {
     // });
 
 
-    $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_']", function(e){
+    $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_no'], input[id*='ext_val']", function(e){
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
             DK_calcOption(index);
@@ -52,28 +52,29 @@ $(function () {
 
     //************************************************ END THIENPB ************************************************ */
 
-    // .:nhantv:. Add a checkbox to Itemise in LINE ITEMS
-    $('input[name="dk_quote_option"]').on('change', function() {
-        // Set change
-        let dataAttr = $(this).attr('data-attr');
-        let propVal = $(this).prop('checked');
-        if(propVal){
-            $('input[name="dk_quote_option"]').each(function(){
-                $(this).attr('data-attr') && $(this).attr('data-attr') === dataAttr
-                ? $(this).prop('checked', propVal) 
-                : $(this).prop('checked', !propVal);
-            })
-        } else {
-            // Mark line deleted
-            for (var i = 0; i < prodln; i++){
-                markLineDeleted(i,"product_");
-            };
-            // Delete group
-            $("#lineItems").find(".group_body").each((index) => {
-                markGroupDeleted(index);
-            });
-        }
-        generateJSONForInput();});
+    // // .:nhantv:. Add a checkbox to Itemise in LINE ITEMS
+    // $('input[name="dk_quote_option"]').on('change', function() {
+    //     // Set change
+    //     let dataAttr = $(this).attr('data-attr');
+    //     let propVal = $(this).prop('checked');
+    //     if(propVal){
+    //         $('input[name="dk_quote_option"]').each(function(){
+    //             $(this).attr('data-attr') && $(this).attr('data-attr') === dataAttr
+    //             ? $(this).prop('checked', propVal) 
+    //             : $(this).prop('checked', !propVal);
+    //         })
+    //     } else {
+    //         // Mark line deleted
+    //         for (var i = 0; i < prodln; i++){
+    //             markLineDeleted(i,"product_");
+    //         };
+    //         // Delete group
+    //         $("#lineItems").find(".group_body").each((index) => {
+    //             markGroupDeleted(index);
+    //         });
+    //     }
+    //     generateJSONForInput();
+    // });
 });
 //***************************************** FUNCTION *********************************************************** */
 async function init_table_daikin() {
