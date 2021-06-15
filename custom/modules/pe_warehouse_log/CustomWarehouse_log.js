@@ -365,7 +365,7 @@ $(function () {
             $.ajax({
                 url: 'index.php?entryPoint=API_Auspost&aupost_shipping_id='+$('#aupost_shipping_id').val(),
                 success: function(data){
-                    if(data != 'Error') {
+                    if(data != 'error') {
                         $('#connote').val(data);
                     }else {
                         alert('AuPost Shipping ID is wrong !');
@@ -374,7 +374,7 @@ $(function () {
             });
         }
 
-        if( $('#connote').val()== ''){
+        if( $('#connote').val()== '' && $('#aupost_shipping_id').val() != ''){
             SUGAR.Get_Connote();
         }
         // show Invoice Link

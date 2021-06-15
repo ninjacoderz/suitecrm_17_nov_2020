@@ -11,29 +11,6 @@ $(function () {
         <span class="glyphicon glyphicon-modal-window"></span> Async Product PE Site</button>';
 
         $("#id_product_drupal").parent().parent().append(html_CRUD_Product_SuiteCRM_PESite);
-        // tuan code 
-        $('#heating_cooling_category_c').closest('.edit-view-row-item').hide();
-        // for solar
-        $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').hide();
-        //for daikin
-        $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
-        if($('#aos_product_category_name').val() == "Daikin" ){ // $('#aos_product_category_name').val().toLowerCase().includes('heating') == true
-            $('#heating_cooling_category_c').closest('.edit-view-row-item').show();
-        }
-        if($('#aos_product_category_name').val() == "Solar" ){ 
-            $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').show();
-        }
-        if( $('#heating_cooling_category_c').val() == 'split_system' ){
-            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
-        }
-
-        $('#heating_cooling_category_c').change(function (){
-            if($(this).val() == 'split_system' ){
-                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
-            }else{
-                $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
-            }
-        })
 
         SUGAR.CRUDProductPESite = function(source){
             
@@ -200,7 +177,7 @@ $(function () {
         $("#number").prop("disabled", true);; // disable product input field
         dynamicSolarCategory();
         dynamicCapacityLabel();
-        YAHOO.util.Event.addListener(["aos_product_category_id", "solar_category_c"], "change", function(){
+        YAHOO.util.Event.addListener(["aos_product_category_id", "solar_category_c","heating_cooling_category_c"], "change", function(){
             setTimeout(function(){
                 dynamicSolarCategory();
                 dynamicCapacityLabel();
@@ -215,20 +192,35 @@ function dynamicSolarCategory(){
     // if (productCategoryValue != "Solar Panels" && productCategoryValue != "Solar") {
     if ($.inArray(productCategoryValue, ["Solar Panels", "Solar", "Microgrid"]) == -1) {
         $("#solar_category_c").parent().parent().css("display", "none");
+        // tuan
+        $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').show();
+        $('#panel_type_c,#noct_c,#tempcoeff_c,#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').hide();
     } else {
         $("#solar_category_c").parent().parent().attr('style','');
     }
     if ($.inArray(productCategoryValue, ["Solar"]) != -1 && $('#solar_category_c').val() == 'solar_panels') {
         $("#module_efficiency").parent().parent().attr('style','');
         $("#warranty").parent().parent().attr('style','');
+        $('#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').show();
     } else {
         $("#module_efficiency").parent().parent().css("display", "none");
         $("#warranty").parent().parent().css("display", "none");
+        $('#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').hide();
     }
     if ($.inArray(productCategoryValue, ["Daikin"]) != -1) {
         $('#daikin_category').closest('.edit-view-row-item').show();
+        // tuan code 
+        $('#heating_cooling_category_c').closest('.edit-view-row-item').show();
+        if ( $('#heating_cooling_category_c').val() == 'split_system'){
+            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
+        }else {
+            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
+        }
     } else {
         $('#daikin_category').closest('.edit-view-row-item').hide();
+        // tuan code 
+        $('#heating_cooling_category_c').closest('.edit-view-row-item').hide();
+        $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
     }
 }
 
