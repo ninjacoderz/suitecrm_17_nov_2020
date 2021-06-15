@@ -4550,26 +4550,35 @@ class EmailsController extends SugarController
 
                 if($pricing_options != ''){
                     $pricings = json_decode(html_entity_decode($pricing_options));
+                    // Inverter line
+                    $inverter_line = (int)$pricings->sl_inverter_line + 1;
+                    // Accesory line
+                    $accessory_line = (int)$pricings->sl_accessory_line + 1;
+
                     $productBean = BeanFactory::newBean('AOS_Products');
 
                     for ($i=1; $i < 7 ; $i++) {
+                        
                         // Inverter optimize
                         $inverter_sol = array();
-                        $tmpName = 'inverter_sl_type_'.$i;
-                        if($pricings->$tmpName != ''){
-                            // Get Product name from DB
-                            $inverter_name = $this->getProductNameByShortName($productBean, $pricings->$tmpName);
-                            // Check exist on array
-                            if($inverter_sol[$inverter_name] != null){
-                                $newQty = $inverter_sol[$inverter_name] + 1;
-                                $inverter_sol[$inverter_name] = $newQty;
-                            } else {
-                                $inverter_sol[$inverter_name] = 1;
+                        for ($line = 1; $line <  $inverter_line; $line++){
+                            $tmpName = 'inverter_sl_type'.$line.'_'.$i;
+                            if($pricings->$tmpName != ''){
+                                // Get Product name from DB
+                                $inverter_name = $this->getProductNameByShortName($productBean, $pricings->$tmpName);
+                                // Check exist on array
+                                if($inverter_sol[$inverter_name] != null){
+                                    $newQty = $inverter_sol[$inverter_name] + 1;
+                                    $inverter_sol[$inverter_name] = $newQty;
+                                } else {
+                                    $inverter_sol[$inverter_name] = 1;
+                                }
                             }
                         }
+                       
                         // Accessory optimize
                         $accessory_sol = array();
-                        for ($line = 1; $line < 3; $line++){
+                        for ($line = 1; $line < $accessory_line; $line++){
                             $tmpName = 'sl_accessory'.$line.'_'.$i;
                             if($pricings->$tmpName != ''){
                                 // Get Product name from DB
@@ -4607,11 +4616,11 @@ class EmailsController extends SugarController
                                                                         <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
                                                                         // Render Accessories
                                                                         foreach ($inverter_sol as $key => $value) {
-                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'. $key .'</div>';
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.' x '.$key.'</div>';
                                                                         }                                                                
                                                                         // Render Accessories
                                                                         foreach ($accessory_sol as $key => $value) {
-                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.($key) ? $key : '<br />'.'</div>';
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'. $value.'x '.$key .'</div>';
                                                                         }                                   
                                                                         
                                     $solar_pricing_options .=       '</div>
@@ -4650,11 +4659,11 @@ class EmailsController extends SugarController
                                                                         <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
                                                                         // Render Accessories
                                                                         foreach ($inverter_sol as $key => $value) {
-                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'. $key .'</div>';
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.' x '.$key.'</div>';
                                                                         }                                                                
                                                                         // Render Accessories
                                                                         foreach ($accessory_sol as $key => $value) {
-                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.($key) ? $key : '<br />'.'</div>';
+                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.'x '.$key.'</div>';
                                                                         }                                   
                                                                         
                                     $solar_pricing_options .=       '</div>
@@ -4687,14 +4696,14 @@ class EmailsController extends SugarController
                                                                 </div>
                                                                 <div class="select-inverter" style="clear: both;padding: 10px;;z-index: 7;position: relative;">
                                                                     <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
-                                                                // Render Accessories
-                                                                foreach ($inverter_sol as $key => $value) {
-                                                                    $solar_pricing_options .= '<div style="font-size: 13px;">'. $key .'</div>';
-                                                                }                                                                
-                                                                // Render Accessories
-                                                                foreach ($accessory_sol as $key => $value) {
-                                                                    $solar_pricing_options .= '<div style="font-size: 13px;">'.($key) ? $key : '<br />'.'</div>';
-                                                                }                                   
+                                                                    // Render Accessories
+                                                                    foreach ($inverter_sol as $key => $value) {
+                                                                        $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.' x '.$key.'</div>';
+                                                                    }                                                                
+                                                                    // Render Accessories
+                                                                    foreach ($accessory_sol as $key => $value) {
+                                                                        $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.'x '.$key .'</div>';
+                                                                    }                                    
                                                                     
                                 $solar_pricing_options .=       '</div>
                                                                 <div class="total-price-item" style="background-color: #fef9f2;padding: 10px;color: #333;font-size: 12px;font-weight: 600;">

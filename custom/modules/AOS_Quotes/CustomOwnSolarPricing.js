@@ -23,9 +23,8 @@ $(function () {
         e.preventDefault();
         for (var i = 1; i < 7; i++) {
             var panel_type = $("#panel_sl_type_"+i).val();
-            var inverter_type = $("#inverter_sl_type_"+i).val();
             // Get suggested
-            if(panel_type != '' && inverter_type != ""){
+            if(panel_type != '' && SL_isInverterHasValue(i)){
                 // Calculate option
                 SL_autoFillAccessory(i);
                 SL_calcOption(i);
@@ -42,8 +41,12 @@ $(function () {
 
     $(document).on("change", "select[id*=inverter_sl_type] ,select[id*=panel_sl_type_]", function(e){
         var index  = $(this).attr("id").split('_');
-        index = index[index.length -1];
-        if($("#panel_sl_type_"+index).val() != "" && $("#inverter_sl_type_"+index).val() != ""){
+        if($(this).attr("id").indexOf("inverter_sl_type") >= 0){
+            index = index[index.length -2][index.length-1];
+        }else{
+            index = index[index.length -1];
+        }
+        if($("#panel_sl_type_"+index).val() != "" && SL_isInverterHasValue(index)){
             SL_autoFillAccessory(index);
             SL_calcOption(index);
         }
@@ -334,7 +337,7 @@ async function SL_calcOption(index, isTotalPanel = false,isloading = true) {
     var postcode = $("#install_address_postalcode_c").val();
     if(index != '' && index != undefined){
         let currState = SL_getCurrentOptionState(index);
-        if(currState.panel_type != '' && currState.inverter_type != ''){
+        if(currState.panel_type != '' && SL_isInverterHasValue(index)){
             // Get max panels and total kw
             let maxPnAndTotalKw = SL_getMaxPanelAndTotalKw(currState, isTotalPanel);
             // Set value
@@ -387,7 +390,7 @@ function SL_getCurrentOptionState(index){
     result['total_inverter'] = $('#total_inverter_sl_kW_' + index).val();
     result['panel_type'] = $('#panel_sl_type_' + index).val();
     // Inverter line
-    let num_of_line = getCountLine('sl_inverter');
+    let num_of_line = SL_getCountLine('sl_inverter');
     for (var i = 0; i < num_of_line; i++) {
         result['inverter_type' + (i + 1)] = $('#inverter_sl_type' + (i + 1) + '_' + index).val();
     }    
@@ -396,7 +399,7 @@ function SL_getCurrentOptionState(index){
     result['accessory1'] = $('#sl_accessory1_' + index).val();
     result['accessory2'] = $('#sl_accessory2_' + index).val();
     // Accessory line
-    num_of_line = getCountLine('sl_accessory');
+    num_of_line = SL_getCountLine('sl_accessory');
     for (var i = 0; i < num_of_line; i++) {
         result['accessory' + (i + 1)] = $('#sl_accessory' + (i + 1) + '_' + index).val();
     }
@@ -406,8 +409,29 @@ function SL_getCurrentOptionState(index){
 //Load solar option
 function SL_loadOption(){
     if($("#own_solar_pv_pricing_c").val() != ""){
+        debugger
         try{
             var json_val = JSON.parse($("#own_solar_pv_pricing_c").val());
+            // Check number of inverter line
+            let curr_line_num = SL_getCountLine('sl_inverter');
+            let line_num = (json_val.sl_inverter_line != undefined && json_val.sl_inverter_line != '') ? json_val.sl_inverter_line : 2;
+            if (line_num > curr_line_num) {
+                // Create new Inverter line
+                for (let i = 0; i < (line_num - curr_line_num); i++) {
+                    SL_createNewLine('sl_inverter');
+                }
+            }
+
+            // Check number of accesssory line
+            curr_line_num = SL_getCountLine('sl_accessory');
+            line_num = (json_val.sl_accessory_line != undefined && json_val.sl_accessory_line != '') ? json_val.sl_accessory_line : 2;
+            if (line_num > curr_line_num) {
+                // Create new Accessory line
+                for (let i = 0; i < (line_num - curr_line_num); i++) {
+                    SL_createNewLine('sl_accessory');
+                }
+            }
+
             for (let key in json_val) {
                 if($("#"+key).attr('type') == 'checkbox'){
                     $("#"+key).prop( "checked", json_val[key] );
@@ -423,7 +447,7 @@ function SL_loadOption(){
 //
 function SL_clearOption(option){
     $("#solar_option_"+(option)).prop('checked', false);
-    $('#solar_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="sl_pe_admin_percent"])').val('');
+    $('#solar_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="sl_pe_admin_percent"],input[id="sl_inverter_line"],input[id="sl_accessory_line"])').val('');
     $('#solar_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
 
@@ -433,14 +457,14 @@ function SL_calcEquipmentCost(currState){
         cost += parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels);
     }
     // Inverter cost
-    let num_of_line = getCountLine('sl_inverter');
+    let num_of_line = SL_getCountLine('sl_inverter');
     for (var i = 0; i < num_of_line; i++) {
         if(currState['inverter_type' + (i + 1)] != ''){
             cost += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"));
         }
     }
     // Accessory cost
-    num_of_line = getCountLine('sl_accessory');
+    num_of_line = SL_getCountLine('sl_accessory');
     for (var i = 0; i < num_of_line; i++) {
         if(currState['accessory' + (i + 1)] != ''){
             cost += parseFloat(getAttributeFromName(currState['accessory' + (i + 1)], sol_accessory, "cost"));
@@ -456,7 +480,7 @@ function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
     // Get inverter kw
     let inverter_kw = 0;
-    let num_of_line = getCountLine('sl_inverter');
+    let num_of_line = SL_getCountLine('sl_inverter');
     for (let i = 0; i < num_of_line; i++) {
         if (currState['inverter_type' + (i + 1)] != "") {
             inverter_kw += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "capacity"));
@@ -639,6 +663,16 @@ function SL_createNewLine(target = 'sl_inverter'){
     }
     $('#'+ target +'_add').closest('tr').before(new_tr);
     $('#'+ target +'_line').val(next_index);
+}
+
+function SL_isInverterHasValue(index){
+    let num_of_line = SL_getCountLine('sl_inverter');
+    for (let i = 0; i < num_of_line; i++) {
+        if ($("#inverter_sl_type" + (i + 1) + "_" + index).val() != '') {
+            return true;
+        }
+    }
+    return false;
 }
 
 //***************************************** END THIENPB FUNCTION *********************************************************** */
