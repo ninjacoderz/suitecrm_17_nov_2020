@@ -1450,9 +1450,73 @@ $(function () {
     //end
 
     YAHOO.util.Event.addListener(["pe_pricing_options_id_c"], "change", function(){
-        loadPricingOptions();
+        if($('#quote_type_c').val() == 'quote_type_off_grid_system'){
+            load_Off_GridPricingOptions();
+        }else {
+            loadPricingOptions();
+        }
     });
-
+    function load_Off_GridPricingOptions(){
+        var json_val = '';
+        if($("#pe_pricing_options_id_c").val() != ''){
+            $("#link_pricing_option").remove();
+            $("#pricing_option_type_c").parent().append('<p id="link_pricing_option"><a href="/index.php?module=pe_pricing_options&action=EditView&record='+$("#pe_pricing_options_id_c").val()+'" target="_blank">Open Pricing Option</a></p>');
+        }else{
+            $("#link_pricing_option").remove();
+        }
+  
+        var url = '';
+        if(option_pricing_id != '' && option_pricing_id != undefined){
+            url = "index.php?entryPoint=loadPricingOption&id="+option_pricing_id;
+        }else{
+            url = 'index.php?entryPoint=loadPricingOption&id='+$("#pe_pricing_options_id_c").val();
+        }
+        $.ajax({
+            url: url,
+            type : 'POST',
+            async: false,
+            success: function (data) {
+                debugger
+                if(data != ''){
+                    json_val = JSON.parse($("<div />").html(data).text());
+                }else{
+                    json_val = JSON.parse(($("#pricing_option_input_c").val() != "")?$("#pricing_option_input_c").val():"{}");
+                }
+                try{
+                    // Check number of inverter line
+                    let curr_line_num = getCountLine('inverter');
+                    let line_num = (json_val.inverter_line != undefined && json_val.inverter_line != '') ? json_val.inverter_line : 2;
+                    if (line_num > curr_line_num) {
+                        // Create new Inverter line
+                        for (let i = 0; i < (line_num - curr_line_num); i++) {
+                            createNewLine('inverter');
+                        }
+                    }
+        
+                    // Check number of accesssory line
+                    curr_line_num = getCountLine('og_accessory');
+                    line_num = (json_val.og_accessory_line != undefined && json_val.og_accessory_line != '') ? json_val.og_accessory_line : 2;
+                    if (line_num > curr_line_num) {
+                        // Create new Accessory line
+                        for (let i = 0; i < (line_num - curr_line_num); i++) {
+                            createNewLine('og_accessory');
+                        }
+                    }
+        
+                    for (let key in json_val) {
+                        if($("#"+key).attr('type') == 'checkbox'){
+                            $("#"+key).prop( "checked", json_val[key] );
+                        } else {
+                            $("#"+key).val(json_val[key]);
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+                $("#calculatePrice").trigger("click");
+            }
+        }); 
+    }
     function loadPricingOptions(option_pricing_id){
         var json_val = '';
         if($("#pe_pricing_options_id_c").val() != ''){

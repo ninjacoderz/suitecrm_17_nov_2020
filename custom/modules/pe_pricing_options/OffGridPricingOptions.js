@@ -690,13 +690,13 @@ async function init_table_offgrid() {
             , "<button data-option ='4' id='clear_og_option_4' class='button default'>Clear Option 4</button>"
             , "<button data-option ='5' id='clear_og_option_5' class='button default'>Clear Option 5</button>"
             , "<button data-option ='6' id='clear_og_option_6' class='button default'>Clear Option 6</button>"],
-        // ["PM"
-        //     , "<input type='number' class='offgrid_pricing' name='pmp_og_1' id='pmp_og_1' value='100' />"
-        //     , "<input type='number' class='offgrid_pricing' name='pmp_og_2' id='pmp_og_2' value='100' />"
-        //     , "<input type='number' class='offgrid_pricing' name='pmp_og_3' id='pmp_og_3' value='100' />"
-        //     , "<input type='number' class='offgrid_pricing' name='pmp_og_4' id='pmp_og_4' value='100' />"
-        //     , "<input type='number' class='offgrid_pricing' name='pmp_og_5' id='pmp_og_5' value='100' />"
-        //     , "<input type='number' class='offgrid_pricing' name='pmp_og_6' id='pmp_og_6' value='100' />"],
+        ["PM"
+            , "<input type='number' class='offgrid_pricing_input' name='pmp_og_1' id='pmp_og_1' value='100' />"
+            , "<input type='number' class='offgrid_pricing_input' name='pmp_og_2' id='pmp_og_2' value='100' />"
+            , "<input type='number' class='offgrid_pricing_input' name='pmp_og_3' id='pmp_og_3' value='100' />"
+            , "<input type='number' class='offgrid_pricing_input' name='pmp_og_4' id='pmp_og_4' value='100' />"
+            , "<input type='number' class='offgrid_pricing_input' name='pmp_og_5' id='pmp_og_5' value='100' />"
+            , "<input type='number' class='offgrid_pricing_input' name='pmp_og_6' id='pmp_og_6' value='100' />"],
         // ["Module Capacity kW"
         //     , makeInputBox("total_og_kW_1 offgrid_pricing", "total_og_kW_1", true)
         //     , makeInputBox("total_og_kW_2 offgrid_pricing", "total_og_kW_2", true)
