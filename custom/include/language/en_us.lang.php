@@ -875,3 +875,13 @@ $GLOBALS['app_list_strings']['PO_type_list']=array (
   'sanden_electrician' => 'Sanden Electrician',
   'SPR_PV_Supply' => 'Sunpower PV Supply',
 );
+
+$GLOBALS['app_list_strings']['pe_promotions_status_dom']=array (
+  'disabled' => 'Disabled',
+  'enabled' => 'Enabled'
+);
+$GLOBALS['app_list_strings']['pe_promotions_type_dom']=array (
+  'order_fixed_grand_total_off' => 'Fixed amount off the order Grand Total',
+  'order_percentage_off_grand_total' => 'Percentage off the order Grand Total',
+);
+?>
