@@ -7,8 +7,10 @@ $db = DBManagerFactory::getInstance();
 $data_return['dk_main'] = getDataByCategoryName($db, "Daikin", "main");
 //extra
 $data_return['dk_extra'] = getDataByCategoryName($db, "Daikin", "extra");
+//wifi
+$data_return['dk_wifi'] = getDataByCategoryName($db, "Daikin", "wifi");
 //install
-$data_return['dk_install'] = getDataByCategoryName($db, "Daikin", "install");
+$data_return['dk_install'] = getDataByCategoryName($db, "Install Air Conditioner");
 
 
 // Return
@@ -25,6 +27,7 @@ function getDataByCategoryName($db, $category_name, $condition = ''){
       , p.description
       , p.part_number
       , p.currency_id
+      , p.item_code_xero
       , pc.product_status_c
       , pc.capacity_c
       , p.daikin_category
@@ -43,7 +46,7 @@ function getDataByCategoryName($db, $category_name, $condition = ''){
     LEFT JOIN aos_products_cstm pc
     ON p.id = pc.id_c
     WHERE c.name = '{$category_name}' {$condition}
-    AND pc.product_status_c = 'available'
+    AND (pc.product_status_c = 'available' OR pc.product_status_c IS NULL)
     ORDER BY pc.short_name_c ASC";
     
   $result = $db->query($sql);
@@ -72,6 +75,7 @@ function getDataByCategoryName($db, $category_name, $condition = ''){
     'cool_lower' => $record['range_lower_cooling_c'],
     'cool_upper' => $record['range_upper_cooling_c'],
     'cool_cop' => $record['cop_cooling_c'],
+    'item_code_xero' => $record['item_code_xero'],
     ));
   }
   return $data;
