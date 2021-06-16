@@ -124,7 +124,6 @@
     $width = 0;
     $height = 0;
     $picking_code = '';
-
     $sql = "SELECT * FROM aos_products 
             LEFT JOIN aos_products_cstm ON aos_products.id = aos_products_cstm.id_c
             WHERE `name` IN ('".$products_title."') 
@@ -133,7 +132,7 @@
 
     while($row = $db->fetchByAssoc($ret)){
         foreach ($products_clone as $key => $value) {
-            if($value['title'] == $row['name'] || $row['name'] == 'Valvecosy Insulator'){
+            if(strtolower($value['title']) == strtolower($row['name']) || strtolower($row['name']) == strtolower('Valvecosy Insulator')){
                 $check_qty = (int) $products_clone[$key]['quantity'] ;
             }
         }
@@ -142,8 +141,11 @@
             $length = floatval($row['length_c']);
             $width  = floatval($row['width_c']);
             $height = floatval($row['height_c']);
+            
+            $picking_code .= $check_qty .'x '.$row['picking_code_c'].', ';
+        }else{
+            $picking_code .= $row['picking_code_c'].', ';
         }
-        $picking_code .= $row['picking_code_c'].', ';
     }
 
     $shipments = array (
@@ -211,6 +213,7 @@
 
     $curl = curl_init();
     $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
+    //$source = "http://loc.suitecrm.com/index.php?entryPoint=APICreateLabelAuspost";
     curl_setopt($curl, CURLOPT_URL, $source);
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array("shipments"=>$shipments)));
