@@ -935,7 +935,8 @@ $sys_model = '';
 switch ( $_REQUEST['product_type']) {
     case "quote_type_sanden":
         $old_hws = urldecode($_REQUEST['old_hws'] ? 'Existing/Old HWS: '.$_REQUEST['old_hws'] : '' );
-        preg_match('/(\d{3,3}\D{3,3})/', $invoice->name, $sys_model);
+        preg_match('/\d{3}[\s+ ?]{0,}\D{3}/', $invoice->name, $sys_model);
+        preg_replace('/\s+/', ' ', $sys_model[0]);
         $subject = str_replace('$product_type',"Sanden {$sys_model[0]}",$subject);
         break;
     case "quote_type_daikin": case "quote_type_nexura":
