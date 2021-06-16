@@ -74,5 +74,17 @@ class pe_pricing_options extends Basic
 
         return false;
     }
-	
+    function save($check_notify = FALSE){
+		global  $sugar_config;
+		if (empty($this->id) || $this->new_with_id){
+			if($sugar_config['dbconfig']['db_type'] == 'mssql'){
+				$this->number = $this->db->getOne("SELECT MAX(CAST(COALESCE(number,0) as INT))+1 FROM pe_pricing_options");
+			} else {
+				$this->number = $this->db->getOne("SELECT MAX(CAST(COALESCE(number,0) as UNSIGNED))+1 FROM pe_pricing_options");
+			}
+        }
+        $value = parent::save($check_notify);
+        return $value;
+    }
+
 }

@@ -76,4 +76,5 @@ $mod_strings = array (
   'LBL_ACTIVITIES_SUBPANEL_TITLE' => 'Activities',
   'LBL_PE_SMSMANAGER_SUBPANEL_TITLE' => 'Pricing Options Manager',
   'LBL_NEW_FORM_TITLE' => 'New Pricing Options Manager',
+  'LBL_PRICING_OPTION_NUMBER' => 'Number',
 );

@@ -1,6 +1,9 @@
 $(function(){
 
     'use strict';
+    //Disable field number 
+    $("#number").prop("disabled", true);
+    
     var quote_type = $("#product_type_c").val();
     if( quote_type != ""){
         switch (quote_type) {

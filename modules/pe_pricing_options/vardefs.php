@@ -44,6 +44,21 @@ $dictionary['pe_pricing_options'] = array(
     'inline_edit' => true,
     'duplicate_merge' => true,
     'fields' => array (
+        /**Unique number for Service case */
+        'number' => array(
+            'name' => 'number',
+            'vname' => 'LBL_PRICING_OPTION_NUMBER',
+            'type' => 'int',
+            'len' => 11,
+            'isnull' => 'false',
+            'unified_search' => true,
+            'comments' => '',
+            'importable' => 'true',
+            'duplicate_merge' => 'disabled',
+            'reportable' => true,
+            'disable_num_format' => true,
+        ),
+
 ),
     'relationships' => array (
 ),
