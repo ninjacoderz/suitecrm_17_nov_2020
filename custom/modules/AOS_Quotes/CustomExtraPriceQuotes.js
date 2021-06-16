@@ -1466,17 +1466,16 @@ $(function () {
         }
   
         var url = '';
-        if(option_pricing_id != '' && option_pricing_id != undefined){
-            url = "index.php?entryPoint=loadPricingOption&id="+option_pricing_id;
-        }else{
+        // if(option_pricing_id != '' && option_pricing_id != undefined){
+        //     url = "index.php?entryPoint=loadPricingOption&id="+option_pricing_id;
+        // }else{
             url = 'index.php?entryPoint=loadPricingOption&id='+$("#pe_pricing_options_id_c").val();
-        }
+        // }
         $.ajax({
             url: url,
             type : 'POST',
             async: false,
             success: function (data) {
-                debugger
                 if(data != ''){
                     json_val = JSON.parse($("<div />").html(data).text());
                 }else{
