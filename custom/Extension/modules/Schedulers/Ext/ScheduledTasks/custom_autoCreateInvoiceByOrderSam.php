@@ -3,18 +3,20 @@ array_push($job_strings, 'custom_autoCreateInvoiceByOrderSam');
 
 function custom_autoCreateInvoiceByOrderSam(){
 
+        $data_json = [];
         $quoteJSON_MT = GetJson_CRMSolargainOrders('matthew.wright','MW@pure733');
-        $quoteJSON_PS = GetJson_CRMSolargainOrders('paul.szuster@solargain.com.au','S0larga1n$');
+        $quoteJSON_PS = GetJson_CRMSolargainOrders('paul.szuster@solargain.com.au','WalkingElephant#256');
         $quoteJSON_michael = GetJson_CRMSolargainOrders('michael.golden@solargain.com.au','michaelg@sg79');
         if(!empty($quoteJSON_MT->Results)){
-            $data_json = array_unique(array_merge($quoteJSON_MT->Results),SORT_REGULAR);
+            $data_json = array_unique(array_merge($data_json,$quoteJSON_MT->Results),SORT_REGULAR);
         }
         if(!empty($quoteJSON_PS->Results)){
-            $data_json = array_unique(array_merge($quoteJSON_PS->Results),SORT_REGULAR);
+            $data_json = array_unique(array_merge($data_json,$quoteJSON_PS->Results),SORT_REGULAR);
         }
         if(!empty($quoteJSON_michael->Results)){
-            $data_json = array_unique(array_merge($quoteJSON_michael->Results),SORT_REGULAR);
+            $data_json = array_unique(array_merge($data_json,$quoteJSON_michael->Results),SORT_REGULAR);
         }
+
         // $data_json = array_unique(array_merge($quoteJSON_MT->Results,$quoteJSON_PS->Results,$quoteJSON_michael->Results),SORT_REGULAR);
         $aray_order_number = [];
         foreach ($data_json as $key => $value) {
@@ -24,7 +26,7 @@ function custom_autoCreateInvoiceByOrderSam(){
         $array_invoice_created = [];
         $aray_order_done=[];
         $db = DBManagerFactory::getInstance();
-        $SAM_Quote_Number = $json_result->Quote->ID;
+        
         $query =  "SELECT aos_invoices.id as id, aos_invoices.number ,aos_invoices_cstm.solargain_invoices_number_c as order_number
         FROM aos_invoices
         INNER JOIN aos_invoices_cstm ON aos_invoices_cstm.id_c = aos_invoices.id
@@ -83,7 +85,7 @@ function custom_autoCreateInvoiceByOrderSam(){
         $data_information_invoice[] = $item_data_information_invoice;
     }
 
-    if(date('D', time()) == 'Mon'){
+    if(date('D', time()) == 'Mon' || date('D', time()) == 'Wed'){
         Email_Report_Invoice_Sam_Daily($data_information_invoice);
     }
 }
@@ -191,7 +193,7 @@ function Create_Invoice_By_Order_Number($sg_order_number){
   //change account paul
   if(!isset($json_result->ID)) {
       $username = 'paul.szuster@solargain.com.au';
-      $password = 'S0larga1n$';
+      $password = 'WalkingElephant#256';
 
       $assigned_user_id = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
       $assigned_user_name = 'Paul Szuster';
@@ -435,7 +437,7 @@ function Update_Invoice_By_InvoiceID($record_id){
     //change account paul
     if(!isset($json_result->ID)) {
         $username = 'paul.szuster@solargain.com.au';
-        $password = 'S0larga1n$';
+        $password = 'WalkingElephant#256';
   
         $assigned_user_id = '61e04d4b-86ef-00f2-c669-579eb1bb58fa';
         $assigned_user_name = 'Paul Szuster';
