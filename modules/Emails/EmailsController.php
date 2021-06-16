@@ -1510,6 +1510,84 @@ class EmailsController extends SugarController
                 // $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
                 //end - code render sms_template
             }
+            if($_REQUEST['email_type'] == 'calls_voice_email' || $_REQUEST['email_type'] == 'tks_for_voice_email'){ 
+
+                $macro_nv = array();
+                $focusName = "Calls";
+                $focus = BeanFactory::getBean($focusName, $_REQUEST['record_id']);
+                if(!$focus->id) return;
+
+                $quote_id = $focus->aos_quotes_id_c;
+
+                $quote = new AOS_Quotes();
+                $quote->retrieve($quote_id); 
+                
+                if ($quote->quote_type_c ==  "quote_type_sanden" ) {
+                    $product = "Sanden";
+                } else if ($quote->quote_type_c == "quote_type_daikin" || $invoice->quote_type_c == "quote_type_nexura") {
+                    $product = "Daikin";
+                }else if($quote->quote_type_c == "quote_type_solar"){
+                    $product = "Solar";
+                }
+                if($_REQUEST['email_type'] == 'calls_voice_email'){
+                    $emailTemplateID = '1a45b869-1279-5f67-840f-60c2c8df9567'; //46988bdc-d3b5-6f6f-6b5b-60c96666cfaa'; 
+                }elseif($_REQUEST['email_type'] == 'tks_for_voice_email') {
+                    $emailTemplateID = '2aec2ea2-ecfe-1964-1ba0-60c94ecf7775' ; //9425e4ae-4527-cd24-cdbc-60c96f01e322'; 
+                }
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+                $emailTemplate = BeanFactory::getBean(
+                        'EmailTemplates',
+                        $emailTemplateID
+                    );
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                $name = str_replace("\$aos_quotes_name", $quote->name , $name);
+                $description = str_replace("\$contact_first_name",$quote->account_firstname_c , $description);
+                $description = str_replace("\$aos_quotes_quote_type_c",$product, $description);
+
+                $description_html = str_replace("\$contact_first_name",$quote->account_firstname_c , $description_html);
+                $description_html = str_replace("\$aos_quotes_quote_type_c",$product , $description_html);
+
+                $templateData = $emailTemplate->parse_email_template(
+                    array(
+                        'subject' => $name,
+                        'body_html' => $description_html,
+                        'body' => $description,
+                    ),
+                    $focusName,
+                    $focus,
+                    $macro_nv
+                );
+                $this->bean->emails_email_templates_idb = $emailTemplateID ;
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true; 
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+
+                $this->bean->name = $templateData['subject'];
+                $this->bean->description_html = $templateData['body_html'];
+                $this->bean->description = $templateData['body_html'];
+            }
             if($_REQUEST['email_type'] == 'client_warranty_registration'){ 
                 $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
 
