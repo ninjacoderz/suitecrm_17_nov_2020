@@ -1547,6 +1547,8 @@ class EmailsController extends SugarController
                 $description = $emailTemplate->body;
 
                 $name = str_replace("\$aos_quotes_name", $quote->name , $name);
+                $name = str_replace("\$aos_quotes_number", $quote->number , $name);
+
                 $description = str_replace("\$contact_first_name",$quote->account_firstname_c , $description);
                 $description = str_replace("\$aos_quotes_quote_type_c",$product, $description);
 
