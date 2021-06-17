@@ -290,20 +290,31 @@ $(function () {
         var full_name = $("input[name='parent_name']").val();
         var to_email = $("input[name='to_email_addrs']").val();
 
+        //VUT - combine buttons info pack
+        $('#tab-actions').after('<li id="tab_email_info_packs_action" class="dropdown"><a style="background: #0c497d;" class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Email Info Pack<span class="suitepicon suitepicon-action-caret"></span></a><ul id="email_info_packs" class="dropdown-menu"></ul></li>');
+        setTimeout(function(){
+            // line-height: 2em;
+            // border-bottom: dotted 1px;
+            $('#email_info_packs li > a').css({'line-height' : '2em', 'border-bottom': 'dotted 1px', 'background': '#0c497d'});
+        }, 500);
+        //VUT - combine buttons info pack
         //thienpb fix get solargain_inverter_model_c
         var solargain_inverter_model = $("#solargain_inverter_model_c").val();
-        $("#tab-actions").after('<li><a id="InfoPackAlira" data-email-type="InfoPackAlira" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Alira</a></li>');
-        $('#tab-actions').after('<li><a id="off-grid-email" data-email-type="off-grid" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Off Grid</a></li>');
-        $('#tab-actions').after('<li><a id="methven-email" data-email-type="methven" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Methven</a></li>');
-        $('#tab-actions').after('<li><a id="nexura-design" data-email-type="nexura-design" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Nexura</a></li>');
-        $('#tab-actions').after('<li><a id="daikin-email" data-email-type="first-daikin" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">US7</a></li>');
+        //Daikin
+        $("#email_info_packs").append('<li><a id="InfoPackAlira" data-email-type="InfoPackAlira" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Alira</a></li>');
+        $('#email_info_packs').append('<li><a id="nexura-design" data-email-type="nexura-design" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Nexura</a></li>');
+        $('#email_info_packs').append('<li><a id="daikin-email" data-email-type="first-daikin" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">US7</a></li>');
+        //Methven
+        $('#email_info_packs').append('<li><a id="methven-email" data-email-type="methven" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Methven</a></li>');
         //Thienpb code 3 sanden button
-        $('#tab-actions').after('<li><a id="sanden-email-fqs" data-email-type="Sanden_FQS" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Sanden FQS</a></li>');
-        $('#tab-actions').after('<li><a id="sanden-email-fqv" data-email-type="Sanden_FQV" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Sanden FQV</a></li>');
+        $('#email_info_packs').append('<li><a id="sanden-email-fqs" data-email-type="Sanden_FQS" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Sanden FQS</a></li>');
+        $('#email_info_packs').append('<li><a id="sanden-email-fqv" data-email-type="Sanden_FQV" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Sanden FQV</a></li>');
         // $('#tab-actions').after('<li><a id="sanden-email" data-email-type="Sanden_EQTAQ" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Sanden EQTAQ</a></li>');
         //end
-        $('#tab-actions').after('<li><a id="solar-tesla" data-email-type="solar-tesla" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Tesla</a></li>');
-        $('#tab-actions').after('<li><a id="solar-design" data-email-type="solar-design" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Solar</a></li>');
+        //solar
+        $('#email_info_packs').append('<li><a id="off-grid-email" data-email-type="off-grid" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Off Grid</a></li>');
+        $('#email_info_packs').append('<li><a id="solar-tesla" data-email-type="solar-tesla" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Tesla</a></li>');
+        $('#email_info_packs').append('<li><a id="solar-design" data-email-type="solar-design" onclick="$(document).openComposeViewModal(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Solar</a></li>');
         //$('#tab-actions').after('<li><a id="solar_design_complete" data-email-type="solar_design_complete" onclick="$(document).solar_design_complete(this);" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'" data-sg-inverter-model="'+solargain_inverter_model+'">Send Solar Designs</a></li>');
         $('#tab-actions').after('<li><a id="street_address_request_email" data-email-type="street_address_request_email" data-module="Leads" data-record-id="'+ record_id +'" data-module-name="'+ full_name +'" data-email-address="'+ to_email +'">Request Address</a></li>');
         //$('#tab-actions').after('<button type="button" id="sendMailToAdmin_detail" class="button sendMailToAdmin_detail" title="Request Designs"> Request Designs <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> </button>');
