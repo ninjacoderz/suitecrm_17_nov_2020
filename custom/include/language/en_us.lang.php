@@ -560,21 +560,6 @@ $GLOBALS['app_list_strings']['servicecase_status_dom']=array (
   'monitor' => 'Monitor',
   'resolved' => 'Resolved',
 );
-$GLOBALS['app_list_strings']['invoice_status_dom']=array (
-  'Unpaid' => 'Unpaid',
-  'Partpaid' => 'Part paid',
-  'Deposit_Paid' => 'Deposit Paid',
-  'Progress_Paid' => 'Progress Paid',
-  'Variation_Unpaid' => 'Variation Unpaid',
-  'STC_VEEC_Unpaid' => 'STC&VEEC Unpaid',
-  'STC_Unpaid' => 'STC Unpaid',
-  'Solar_VIC_Unpaid' => 'Solar VIC Unpaid',
-  'VEEC_Unpaid' => 'VEEC Unpaid',
-  'Paid' => 'Paid',
-  'Test' => 'Test',
-  'Cancelled' => 'Cancelled',
-  '' => '',
-);
 $GLOBALS['app_list_strings']['calls_type_list']=array (
   '' => '',
   'sales' => 'Sales',
@@ -590,22 +575,6 @@ $GLOBALS['app_list_strings']['po_freight_company_list']=array (
   'Toll' => 'Toll Group',
   'Gilders' => 'Gilders Transport',
   'Collect' => 'Collect',
-);
-$GLOBALS['app_list_strings']['check_account_type_list']=array (
-  '' => '',
-  'Client' => 'Client',
-  'Plumber' => 'Sanden Plumber',
-  'Electrician' => 'Sanden Electrician',
-  'Air_Con_Electrician' => 'Air Con Electrician',
-  'Solar_Electrician' => 'Solar Electrician',
-  'Sanden_Plumber_TBC' => 'Sanden Plumber TBC',
-  'Sanden_Electrician_TBC' => 'Sanden Electrician TBC',
-  'Air_Con_Electrician_TBC' => 'Air Con Electrician TBC',
-  'Builder' => 'Builder',
-  'Professional' => 'Professional',
-  'PlumberBuyer' => 'Plumber',
-  'ElectricianBuyer' => 'Electrician',
-  'HomeOwner' => 'Home Owner',
 );
 $GLOBALS['app_list_strings']['po_status_dom']=array (
   'Draft' => 'Draft',
@@ -866,6 +835,70 @@ $GLOBALS['app_list_strings']['payment_options_list']=array (
   'Full_Payment' => 'Full Payment',
   'final_payment' => 'Final Payment',
 );
+$GLOBALS['app_list_strings']['invoice_status_dom']=array (
+  'Unpaid' => 'Unpaid',
+  'Partpaid' => 'Part paid',
+  'Deposit_Paid' => 'Deposit Paid',
+  'Progress_Paid' => 'Progress Paid',
+  'Variation_Unpaid' => 'Variation Unpaid',
+  'STC_VEEC_Unpaid' => 'STC&VEEC Unpaid',
+  'STC_Unpaid' => 'STC Unpaid',
+  'VEEC_Unpaid' => 'VEEC Unpaid',
+  'SA_REPS_Unpaid' => 'SA REPS Unpaid',
+  'Solar_VIC_SHW_Unpaid' => 'Solar VIC SHW Unpaid',
+  'Solar_VIC_SPV_Unpaid' => 'Solar VIC SPV Unpaid',
+  'Paid' => 'Paid',
+  'Test' => 'Test',
+  'Cancelled' => 'Cancelled',
+  '' => '',
+);
+$GLOBALS['app_list_strings']['feedback_from_client_list']=array (
+  '' => '',
+  'I_am_no_longer_interested' => 'I am no longer interested, thank you for the quote',
+  'Call_me_I_have_more_Questions' => 'Call me I have more Questions',
+  'ASK_ME_AGAIN_in_a_week' => 'ASK ME AGAIN in a week',
+);
+$GLOBALS['app_list_strings']['uploaded_photos_list']=array (
+  '' => '',
+  'yes' => 'Yes',
+  'no' => 'No',
+);
+$GLOBALS['app_list_strings']['product_brand_list']=array (
+  'byd' => 'BYD',
+  'clenergy' => 'Clenergy',
+  'fimer' => 'FIMER',
+  'huawei' => 'Huawei',
+  'hyundai' => 'Hyundai',
+  'ja_solar' => 'JA Solar',
+  'longi_solar' => 'Longi Solar',
+  'rec' => 'REC',
+  'selectronic' => 'Selectronic',
+  'sma' => 'SMA',
+  'solaredge' => 'SolarEdge',
+  'solis' => 'Solis',
+  'tesla' => 'Tesla',
+  'tigo' => 'Tigo',
+  'trina_solar' => 'Trina Solar',
+);
+$GLOBALS['app_list_strings']['pricing_source_list']=array (
+  '' => '',
+  'website' => 'Website',
+  'price_list' => 'Price List',
+  'phone' => 'Phone',
+  'Email' => 'Email',
+);
+
+$GLOBALS['app_list_strings']['solar_category_c_list']=array (
+  'solar_panels' => 'Solar Panels',
+  'inverters' => 'Inverters',
+  'battery_storage' => 'Battery Storage',
+  'accessories' => 'Accessories',
+  'bos_mounting' => 'BOS/Mounting',
+  'og_inverters' => 'Off-Grid Inverters',
+  'Optimisers' => 'Optimisers',
+  're_generator' => 'Generator',
+);
+
 $GLOBALS['app_list_strings']['PO_type_list']=array (
   '' => '',
   'sanden_supply' => 'Sanden Supply',
@@ -874,4 +907,70 @@ $GLOBALS['app_list_strings']['PO_type_list']=array (
   'sanden_plumber' => 'Sanden Plumber',
   'sanden_electrician' => 'Sanden Electrician',
   'SPR_PV_Supply' => 'Sunpower PV Supply',
+  'SolarBOS' => 'Solar PV BOS Supply',
+  'SolarPV_Module_Supply' => 'Solar PV Module Supply',
+  'SolarPVElecInstaller' => 'Solar PV Electrician Installer',
+  'OffGridEquipment' => 'Off Grid Equipment Supply',
+  'Freight' => 'Freight',
+  'Sales' => 'Sales',
+);
+$GLOBALS['app_list_strings']['check_account_type_list']=array (
+  '' => '',
+  'Client' => 'Client',
+  'Plumber' => 'Sanden Plumber',
+  'Electrician' => 'Sanden Electrician',
+  'Air_Con_Electrician' => 'Air Con Electrician',
+  'Solar_Electrician' => 'Solar Electrician',
+  'Sanden_Plumber_TBC' => 'Sanden Plumber TBC',
+  'Sanden_Electrician_TBC' => 'Sanden Electrician TBC',
+  'Air_Con_Electrician_TBC' => 'Air Con Electrician TBC',
+  'Builder' => 'Builder',
+  'Professional' => 'Professional',
+  'PlumberBuyer' => 'Plumber',
+  'ElectricianBuyer' => 'Electrician',
+  'HomeOwner' => 'Home Owner',
+  'Solar_Distributor' => 'Solar Distributor',
+  'Solar_PV_Module_Manufacturer' => 'Solar PV Module Manufacturer',
+  'Battery_Storage_Manufacturer' => 'Battery Storage Manufacturer',
+  'Solar_PV_Inverter_Manufacturer' => 'Solar PV Inverter Manufacturer',
+  'Generator_Manufacturer' => 'Generator Manufacturer',
+  'Electrical_Wholesaler' => 'Electrical Wholesaler',
+  'Solar_PV_BOS_Manufacturer' => 'Solar PV BOS Manufacturer',
+  'Freight' => 'Freight',
+);
+$GLOBALS['app_list_strings']['panel_type_list']=array (
+  'monocrystalline' => 'Monocrystalline',
+  'polycrystalline' => 'Polycrystalline',
+);
+$GLOBALS['app_list_strings']['heating_cooling_category_c_list']=array (
+  '' => '',
+  'split_system' => 'Split System',
+  'multi_split_system' => 'Multi-split System',
+);
+$GLOBALS['app_list_strings']['pricing_product_type_list']=array (
+  '' => '',
+  'solar' => 'Solar',
+  'daikin' => 'Daikin',
+  'sanden' => 'Sanden',
+  'off_grid' => 'Off-grid',
+);
+$GLOBALS['app_list_strings']['daikin_category_list']=array (
+  '' => '',
+  'main' => 'Main',
+  'extra' => 'Extra',
+  'install' => 'Install',
+);
+$GLOBALS['app_list_strings']['call_response_list']=array (
+  '' => '',
+  'answered' => 'Answered',
+  'voicemail' => 'Voicemail',
+);
+
+$GLOBALS['app_list_strings']['pe_promotions_status_dom'] = array (
+    'disabled' => 'Disabled',
+    'enabled' => 'Enabled'
+);
+$GLOBALS['app_list_strings']['pe_promotions_type_dom'] = array (
+    'order_fixed_grand_total_off' => 'Fixed amount off the order Grand Total',
+    'order_percentage_off_grand_total' => 'Percentage off the order Grand Total',
 );

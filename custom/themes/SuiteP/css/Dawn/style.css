@@ -166,6 +166,7 @@ input#datetimepicker{
 }
 
 .suitepicon-module-pe-bills:before {content:"\f182"}
+.suitepicon-module-pe-promotions:before {content:'\f19e';}
  /* fix popup dialog attach file email */
  #dialog_files p.name {
    font-size: 12.5px !important;
