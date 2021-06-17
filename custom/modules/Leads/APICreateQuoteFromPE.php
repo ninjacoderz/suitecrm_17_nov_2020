@@ -2122,6 +2122,17 @@ function send_email_schedule_info_pack($lead, $emailTemplateID,$schedule_time ='
     $email->schedule_timestamp_c = $schedule_time;
     $email->from_addr = $mail_From;
     $email->from_name = $mail_FromName;
+if ($emailTemplateID == '5ad80115-b756-ea3e-ca83-5abb005602bf') { // nexura >> no send mail Info Pack to Customer
+    $email->to_addrs_emails = "Pure Info <info@pure-electric.com.au>;";
+    $email->to_addrs = 'Pure Info <info@pure-electric.com.au>';
+    $email->to_addrs_names = "Pure Info <info@pure-electric.com.au>";
+    $email->to_addrs_arr = array(
+        array(
+            'email' => 'info@pure-electric.com.au',
+            'display' => 'Pure Info'
+        )
+    );
+} else {
     $email->to_addrs_emails = $lead->email1 . ";";
     $email->to_addrs = $lead->name . " <" . $lead->email1 . ">";
     $email->to_addrs_names = $lead->name . " <" . $lead->email1 . ">";
@@ -2141,6 +2152,7 @@ function send_email_schedule_info_pack($lead, $emailTemplateID,$schedule_time ='
             'display' => 'Pure Info'
         )
     );
+}
 
     $email_id = $email->id;
 
