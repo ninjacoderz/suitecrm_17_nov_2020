@@ -633,6 +633,7 @@ async function generateOffgridItem(){
         // Hide loading
         setTimeout(function (){
             autoSaveData();
+            // SUGAR.ajaxUI.hideLoadingPanel();
         }, 300);
     }
 }
@@ -672,12 +673,7 @@ async function calculatePriceOg(panelTotal, totalKw, currState = {}){
     }
 
     // PE Admin
-    totalAmount += totalAmount * (parseFloat($('#pe_admin_percent').val()) / 100);
-
-    // PM price
-    if(currState.pm != undefined && currState.pm != ''){
-        totalAmount += parseFloat(currState.pm);
-    }
+    totalAmount += (totalAmount * (parseFloat($('#pe_admin_percent').val()) / 100));
 
     // Set value to first line
     list = $(productVisible[0]).find('input[id*=product_product_list_price]');
@@ -687,6 +683,15 @@ async function calculatePriceOg(panelTotal, totalKw, currState = {}){
     // Set value to grand total
     $("#total_amount").trigger("focusin");
     let grandTotal = $("#total_amount").val();
+    if (grandTotal.indexOf(',') != -1) {
+        grandTotal = parseFloat(grandTotal.replaceAll(',', ''));
+    } else {
+        grandTotal = parseFloat(grandTotal);
+    }
+    // + PM price
+    if(currState.pm != undefined && currState.pm != ''){
+        grandTotal += parseFloat(currState.pm);
+    }
     $("#total_amount").val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
     $("#total_amount").trigger("change");
 
