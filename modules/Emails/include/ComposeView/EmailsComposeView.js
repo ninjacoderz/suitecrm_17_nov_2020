@@ -2775,7 +2775,7 @@ $(function(){
         content_emails = $('.html_preview').children();
         $.each(content_emails,function(k,v){
             if (v.className != 'email-signature') {
-              content_email += v.textContent.replace(/[\n\r]+|[\s]{2,}/,'') + '\n';
+              content_email += v.textContent.replace(/[\n\r]+|[\s]{2,}/,' ') + '\n';
             }
         });
     } 
