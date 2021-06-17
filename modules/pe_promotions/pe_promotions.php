@@ -63,6 +63,7 @@ class pe_promotions extends Basic
     public $assigned_user_name;
     public $assigned_user_link;
     public $SecurityGroups;
+    public $number;
 	
     public function bean_implements($interface)
     {
@@ -75,4 +76,27 @@ class pe_promotions extends Basic
         return false;
     }
 	
+    
+    public function save($check_notify = false)
+    {
+        global $sugar_config;
+
+        if (empty($this->id) || $this->new_with_id
+            || (isset($_POST['duplicateSave']) && $_POST['duplicateSave'] == 'true')) {
+
+            if ($sugar_config['dbconfig']['db_type'] == 'mssql') {
+                $this->number = $this->db->getOne("SELECT MAX(CAST(number as INT))+1 FROM pe_promotions");
+            } else {
+                $this->number = $this->db->getOne("SELECT MAX(CAST(number as UNSIGNED))+1 FROM pe_promotions");
+            }
+
+            if ($this->number < $sugar_config['aos']['quotes']['initialNumber']) {
+                $this->number = $sugar_config['aos']['quotes']['initialNumber'];
+            }
+        }
+
+        $return_id = parent::save($check_notify);
+        return $return_id;
+    }
+
 }

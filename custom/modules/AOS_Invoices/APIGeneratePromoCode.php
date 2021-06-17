@@ -76,13 +76,17 @@ function GenerateJsonPromoCodeCustom ($data_in,$fields){
             }else{
                  $json_promo_code_custom_c = json_decode(str_replace("&quot;",'"',$invoice->json_promo_code_custom_c),true);
             }
-            
+            $pe_promotions_ID = Create_CRM_Promotions($data_in,$fields);
+            $pe_promotions = new pe_promotions();
+            $pe_promotions->retrieve($pe_promotions_ID);
             $data_insert = [   
                 'offer_type_promotion'=> $fields['offer_type_promotion'],
                 'name_promotion'=> $fields['name_promotion'],
                 'amount_off_promotion'=> $fields['amount_off_promotion'],
                 'percentage_off_promotion'=> $fields['percentage_off_promotion'],
-                'promo_code'=> $data_in['code_customize']
+                'promo_code'=> $data_in['code_customize'],
+                'date_start'=> $pe_promotions->date_start,
+                'date_end'=> $pe_promotions->date_end,
              ] ;
              $json_promo_code_custom_c[] = $data_insert;
              $invoice->json_promo_code_custom_c = json_encode($json_promo_code_custom_c);
@@ -90,3 +94,34 @@ function GenerateJsonPromoCodeCustom ($data_in,$fields){
         }
     }
 };
+
+function Create_CRM_Promotions($data_in,$fields){
+    global $current_user;
+    $pe_promotions = new pe_promotions();
+    if($data_in['message'] == 'Generate Promo Code Success!') {
+        $invoice = new AOS_Invoices();
+        $invoice->retrieve($fields['invoiceID']);
+        if($invoice->id != ''){
+            $pe_promotions->name = $fields['name_promotion'];
+            $pe_promotions->type = $fields['offer_type_promotion'];
+            $pe_promotions->status = 'enabled';
+            switch ($fields['offer_type_promotion']) {
+                case 'order_fixed_grand_total_off':
+                    $pe_promotions->value = $fields['amount_off_promotion'];
+                    break;
+                
+                default:
+                    $pe_promotions->value = $fields['percentage_off_promotion'];
+                    break;
+            }
+            $pe_promotions->assigned_user_id = $current_user->id;
+            $pe_promotions->aos_invoices_pe_promotions_1aos_invoices_ida = $invoice->id;
+            $pe_promotions->date_start = $data_in['promotion'][0]['promotionStartDate'];
+            $pe_promotions->date_end = $data_in['promotion'][0]['promotionEndDate'];
+            $pe_promotions->promo_code = $data_in['promotion'][0]['coupons'][0]['couponCode'];
+            $pe_promotions->description = json_encode($data_in);
+            $pe_promotions->save();
+        }
+    }
+    return $pe_promotions->id;
+}

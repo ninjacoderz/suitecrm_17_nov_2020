@@ -257,6 +257,8 @@ $(function () {
                                if(json.code_customize != ''){
                                    html_result += "Your Promo Code is <strong>" + json.code_customize + "</strong>";
                                    data_in.promo_code = json.code_customize;
+                                   data_in.date_start = json.promotion[0].promotionStartDate;
+                                   data_in.date_end = json.promotion[0].promotionEndDate;
                                     GenerateJsonPromoCodeCustom (data_in);
                                     RenderHTMLPromoCodeCustom();
                                }else{
@@ -8780,7 +8782,9 @@ function GenerateJsonPromoCodeCustom (data_in){
         'name_promotion': data_in.name_promotion,
         'amount_off_promotion': data_in.amount_off_promotion,
         'percentage_off_promotion': data_in.percentage_off_promotion,
-        'promo_code': data_in.promo_code
+        'promo_code': data_in.promo_code,
+        'date_start':data_in.date_start,
+        'date_end': data_in.date_end,
     };
     $.each(json_promo_code_custom_c,function(key,value){
         if(value.promo_code == data_insert.promo_code){
@@ -8820,6 +8824,11 @@ function RenderHTMLPromoCodeCustom(){
                     html +=  '<span class="label-discount"> Discount ( '+value.percentage_off_promotion + ' %)  </span>';  
                 }
                     html +=  '<strong>- '+value.promo_code + '</strong>'; 
+                if(value.date_start) {
+                    html +=  '<strong>- Start Date: '+value.date_start + '</strong>'; 
+                    html +=  '<strong>- End Date: '+value.date_end + '</strong>'; 
+                }
+
                 html += '</li>';
             }
         });
@@ -8842,7 +8851,9 @@ SUGAR.EventChange_checkbox_promo_code_customize = function(element){
         'name_promotion': '',
         'amount_off_promotion': '',
         'percentage_off_promotion': '',
-        'promo_code': promo_code
+        'promo_code': promo_code,
+        'date_start':'',
+        'date_end': '',
     };
     GenerateJsonPromoCodeCustom (data_insert);
 
