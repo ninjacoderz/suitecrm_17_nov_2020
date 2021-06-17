@@ -25,7 +25,7 @@ $(document).ready(function(){
 
     //VUT-S-Add button Quote Follow Up sqsEnabled
     $('#tab-actions').parent().append('<li><button type="button" id="quote_follow_up" title="Quote Follow Up" class="button button primary quote_follow_up">Quote Follow Up</button></li>');
-    $('#tab-actions').parent().append('<li><button type="button" data-contact-name="'+$('#parent_name').val()+'" data-email-address="'+$(".email-link").attr('data-email-address')+'" data-email-type="calls_voice_email" data-module="AOS_Quotes" data-module-name="'+$('#name').html()+'" data-record-id="'+ $('input[name="record"]').val() +'" id="voice_email" onclick="$(document).openComposeViewModal_VoiceEmail_Thanks(this);" title="VOICE EMAIL" class="button button primary voice_email">VOICE EMAIL</button></li>');
+    $('#tab-actions').parent().append('<li><button type="button" data-contact-name="'+$('#parent_name').val()+'" data-email-address="'+$(".email-link").attr('data-email-address')+'" data-email-type="calls_voice_email" data-module="AOS_Quotes" data-module-name="'+$('#name').html()+'" data-record-id="'+ $('input[name="record"]').val() +'" id="voice_email" onclick="$(document).openComposeViewModal_VoiceEmail_Thanks(this);" title="VOICE EMAIL" class="button button primary voice_email">VOICEMAIL EMAIL</button></li>');
     $('#tab-actions').parent().append('<li><button type="button" data-contact-name="'+$('#parent_name').val()+'" data-email-address="'+$(".email-link").attr('data-email-address')+'" data-email-type="tks_for_voice_email" data-module="AOS_Quotes" data-module-name="'+$('#name').html()+'" data-record-id="'+ $('input[name="record"]').val() +'" id="voice_email" onclick="$(document).openComposeViewModal_VoiceEmail_Thanks(this);" title="THANKS FOR CALL EMAIL" class="button button primary voice_email">THANKS FOR CALL EMAIL</button></li>');
 
     $(document).on('click','#quote_follow_up',function(){
@@ -142,7 +142,7 @@ $(document).ready(function(){
     $('#tab-actions').parent().append($('#tab-actions li:nth-child(3)').clone().css('margin','0px 1px')); 
     //VUT - E - Clone button Delete
     $.fn.openComposeViewModal_VoiceEmail_Thanks = function (source) {
-        "use strict";
+        
         var record_id= $(source).attr('data-record-id') ;
         var email_type = $(source).attr('data-email-type');
         var email_module  =  $(source).attr('data-module');

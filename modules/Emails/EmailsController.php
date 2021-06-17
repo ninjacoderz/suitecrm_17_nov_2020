@@ -1080,7 +1080,7 @@ class EmailsController extends SugarController
             /**VUT-E-Quote-Button 'Send Inspection Request' */
 
            //Nhat code https://trello.com/c/XTSzMI2F/
-           if($_REQUEST['email_type'] == 'sanden_freight_estimate'){
+            if($_REQUEST['email_type'] == 'sanden_freight_estimate'){
                 $record_id = trim($_REQUEST['record_id']);
                 $macro_nv = array();
                 $focusName = "AOS_Quotes";
@@ -1587,6 +1587,30 @@ class EmailsController extends SugarController
                 $this->bean->name = $templateData['subject'];
                 $this->bean->description_html = $templateData['body_html'];
                 $this->bean->description = $templateData['body_html'];
+                //start - code render sms_template  
+                $account = new Account();
+                $account->retrieve($quote->billing_account_id); 
+                $this->bean->to_addrs_names = $account->name .' <'.$account->email1.'>';
+
+
+                global $current_user;
+                $smsTemplateID = 'c7560fbf-417b-e397-360f-5e9e5066d209';
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    $smsTemplateID 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$first_name",$quote->account_firstname_c, $body);
+
+                $smsTemplate->body_c = $body;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->number_receive_sms = "matthew_paul_client";
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $account->mobile_phone_c));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client =  $phone_number; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));   
+                // end - code render sms_template
             }
             if($_REQUEST['email_type'] == 'client_warranty_registration'){ 
                 $emailTemplateID = 'a60e5ca5-6919-87ac-916c-6034cbff7477';//test 'c51e810f-f6b5-bf50-5ab6-6034cbce9ce3';
