@@ -49,6 +49,10 @@ array (
         array (
           'file' => 'custom/modules/pe_pricing_options/OffGridPricingOptions.js',
         ),
+        2 => 
+        array (
+          'file' => 'custom/modules/pe_pricing_options/DaikinPricingOptions.js',
+        ),
       ),
     ),
     'panels' => 

@@ -18,15 +18,7 @@ $(function () {
                 init_table_solar();
                 break;
             case 'daikin':
-                var seletor_panel_pricing_pv = '';
-                $('.panel-content .panel-default').each(function(){
-                    var title_panel_default = $(this).find('.panel-heading a div').text().toLowerCase().trim();
-                    if(title_panel_default == 'pricing options'){
-                        seletor_panel_pricing_pv = '#' + $(this).find('.panel-body').attr('id');
-                    }
-                })
-                $(seletor_panel_pricing_pv).find(".tab-content").html('');
-                // init_table_solar();
+                init_table_daikin();
                 break;
             case 'sanden':
                 var seletor_panel_pricing_pv = '';
