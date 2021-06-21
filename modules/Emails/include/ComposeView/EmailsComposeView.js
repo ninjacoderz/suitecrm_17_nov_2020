@@ -1492,8 +1492,9 @@
             }
             // custom logic popup email in pe_warehouse_log && VUT button Installation Calendar Plumber/Electrician at Invoices' EditView
             // debugger;
-            if ($(self).find("[name=return_module]").val() == "pe_warehouse_log" || module_sugar_grp1 == 'pe_warehouse_log' || $(self).find("[name=return_module]").val() == "AOS_Invoices") {
+            if ($(self).find("[name=return_module]").val() == "pe_warehouse_log" || module_sugar_grp1 == 'pe_warehouse_log' || $(self).find("[name=return_module]").val() == "AOS_Invoices" || module_sugar_grp1 == "AOS_Quotes") {
               if($(self).find('[id=emails_email_templates_idb]').val() == '86230685-a99f-e7ba-b6ef-5fa0ad6a2bc3' /**Authority To Leave - WHL */
+                || $(self).find('[id=emails_email_templates_idb]').val() == '4f9d33bc-347c-d77d-04c5-609ca866758e'
                 || $(self).find('[id=emails_email_templates_idb]').val() == '3722ae7c-d8b7-e03f-559c-5df843678e41' /**Ins Calendar Plumber - Inv*/ 
                 || $(self).find('[id=emails_email_templates_idb]').val() == 'dc0416cd-6867-5508-3d20-5df843ba69dc' /**Ins Calendar Electrician -Inv*/
                 || $(self).find('[id=emails_email_templates_idb]').val() == '3d130783-62df-4eaa-c1c5-5dee208d3e02' /**Calendar Client -Inv*/){
