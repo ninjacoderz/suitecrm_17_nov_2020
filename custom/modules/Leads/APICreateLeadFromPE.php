@@ -311,7 +311,7 @@
             }else{
                 foreach ($products_clone as $key => $value) {
                     if($value['title'] == $row['name'] || $value['title'] == 'ValveCosy'){
-                        $product_line->product_qty = (int) $products[$key]['quantity'] ; 
+                        $product_line->product_qty = (int) $products_clone[$key]['quantity'] ; 
                         $check_qty = (int) $products_clone[$key]['quantity'] ;
                     }
                 }
@@ -321,6 +321,10 @@
                 $length = floatval($row['length_c']);
                 $width  = floatval($row['width_c']);
                 $height = floatval($row['height_c']);
+
+                $picking_code .= $check_qty .'x '.$row['picking_code_c'].', ';
+            }else{
+                $picking_code .= $row['picking_code_c'].', ';
             }
             // if( $row['part_number'] == "13-8265 (FLX252)_H" ){ //Handheld with only
             //     $weight = 0.66;
@@ -356,7 +360,6 @@
 
             $total_amt += $product_line->product_total_price;
             $tax_amount += $product_line->vat_amt;
-            $picking_code .= $row['picking_code_c'].', ';
             $index++;
         }
 
