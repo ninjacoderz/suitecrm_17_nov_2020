@@ -57,7 +57,6 @@ if($data['installation_by_pure'] == 'No') {
         }
     }
 } else {
-    $partNumber['STANDARD_AC_INSTALL'] = 1;
     $partNumber['DSI'] = 1;
     foreach($dataProducts as $product) {
         if (array_key_exists($product['productId'], $partNumber)) {
