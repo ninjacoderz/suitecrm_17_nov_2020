@@ -1106,8 +1106,8 @@ class EmailsController extends SugarController
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
                 //parse value
-                $name = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city, $name);
-                $description_html = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . ", " . $focus->billing_address_state .", " . $focus->billing_address_postalcode , $description_html);
+                // $name = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city, $name);
+                // $description_html = str_replace("\$aos_quotes_site_detail_addr__city_c",$focus->billing_address_city . ", " . $focus->billing_address_state .", " . $focus->billing_address_postalcode , $description_html);
 
                 $templateData = $emailTemplate->parse_email_template(
                     array(
