@@ -1,7 +1,7 @@
 <?php
+ini_set("display_errors",1);
     $fields = ["orderNumber" => $_REQUEST['order_number']];
     $quote_number = isset($_REQUEST['quote_number']) ? $_REQUEST['quote_number'] : '';
-
     if ($quote_number == '') {
         $url = "https://pure-electric.com.au/pe_commerce/getOrder";
         $ch = curl_init();
@@ -104,6 +104,7 @@
         array_push($products_clone,$product);
     }
     
+
     if( $ship_method_id == "1"){
         array_push($products_title,"Methven Shipping and Handling Standard");
         $type_shipping = "B30";
@@ -129,8 +130,10 @@
             WHERE `name` IN ('".$products_title."') 
             ORDER BY price ASC";
     $ret = $db->query($sql);
-
+    echo $sql;
+    var_dump($ret);
     while($row = $db->fetchByAssoc($ret)){
+        echo $row['name'];
         foreach ($products_clone as $key => $value) {
             if(strtolower($value['title']) == strtolower($row['name']) || strtolower($row['name']) == strtolower('Valvecosy Insulator')){
                 $check_qty = (int) $products_clone[$key]['quantity'] ;
@@ -212,7 +215,7 @@
     }
 
     $curl = curl_init();
-    $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
+    $source = "http://suitecrm.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
     //$source = "http://loc.suitecrm.com/index.php?entryPoint=APICreateLabelAuspost";
     curl_setopt($curl, CURLOPT_URL, $source);
     curl_setopt($curl, CURLOPT_POST, 1);
