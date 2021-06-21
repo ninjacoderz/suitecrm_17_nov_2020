@@ -391,6 +391,10 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             $("#pricing_option_type_c").closest('.edit-view-row-item').find('.label').text('Off-grid Pricing Options');
             $("#pricing_option_type_c").closest('.edit-view-row-item').show();
         }
+        if (product_type == 'quote_type_daikin' ){
+            $("#pricing_option_type_c").closest('.edit-view-row-item').find('.label').text('Daikin Pricing Options');
+            $("#pricing_option_type_c").closest('.edit-view-row-item').show();
+        }
     }
 
     function renderQuoteInputHTML(type){
