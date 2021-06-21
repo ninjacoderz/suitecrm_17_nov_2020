@@ -1,8 +1,9 @@
-var dk_main,dk_extra, dk_install, dk_wifi;
+var dk_main,dk_extra, dk_install, dk_wifi, dk_air_install;
 const daikin_delivery = {
     'VIC' : '90',
     'default' : '40',
 }; //["Daikin Factory Delivery"]; //default = 40
+const daikin_ds = ['Daikin Supply', 'Daikin Supply and Installation'];
 const daikin_install = ["Daikin Standard Install"];
 
 $(function () {
@@ -29,6 +30,21 @@ $(function () {
         }
     });
 
+    // Calculate Price Button Click handle 
+    $(document).on('click', '#calculate_dk_price', function(e){
+        e.preventDefault();
+        for (var i = 1; i < 7; i++) {
+                DK_calcOption(i);
+        }
+        DK_calcHint();
+    });
+
+    $(document).on('click', '#show_dk_hint', function(e){
+        e.preventDefault();
+        $('#dk_hint').toggle();
+    });
+    
+
     /** Clear sl button */
     $(document).on('click', '*[id*="clear_dk_option"]', function(e){
         e.preventDefault();
@@ -49,6 +65,10 @@ $(function () {
     //     }
     // });
 
+    // Solar Checkbox handle 
+    $(document).on('change', 'input[id*="daikin_option"]', function(){
+        checkBoxOptionHandle($(this), "daikin_option");
+    });
 
     $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='number_wifi_dk_type']", function(e){
         var index  = $(this).attr("id").split('_');
@@ -56,31 +76,6 @@ $(function () {
             DK_calcOption(index);
     });
 
-    //************************************************ END THIENPB ************************************************ */
-
-    // // .:nhantv:. Add a checkbox to Itemise in LINE ITEMS
-    // $('input[name="dk_quote_option"]').on('change', function() {
-    //     // Set change
-    //     let dataAttr = $(this).attr('data-attr');
-    //     let propVal = $(this).prop('checked');
-    //     if(propVal){
-    //         $('input[name="dk_quote_option"]').each(function(){
-    //             $(this).attr('data-attr') && $(this).attr('data-attr') === dataAttr
-    //             ? $(this).prop('checked', propVal) 
-    //             : $(this).prop('checked', !propVal);
-    //         })
-    //     } else {
-    //         // Mark line deleted
-    //         for (var i = 0; i < prodln; i++){
-    //             markLineDeleted(i,"product_");
-    //         };
-    //         // Delete group
-    //         $("#lineItems").find(".group_body").each((index) => {
-    //             markGroupDeleted(index);
-    //         });
-    //     }
-    //     generateJSONForInput();
-    // });
 });
 //***************************************** FUNCTION *********************************************************** */
 async function init_table_daikin() {
@@ -96,6 +91,7 @@ async function init_table_daikin() {
             dk_extra = dataJSON.dk_extra;
             dk_install = dataJSON.dk_install;
             dk_wifi = dataJSON.dk_wifi;
+            dk_air_install = dataJSON.dk_air_install;
         });
     } catch (ex) {
         console.log(ex);
@@ -202,6 +198,7 @@ async function init_table_daikin() {
     
     //  Update to set order before "Save and Generate Quote" field
     $('body').find("#generate_quote").before(daikin_pricing_table);
+    $('body').find("#generate_quote").before("<button type='button' id='calculate_dk_price' class='button default' style='display: block'>Calculate Price </button>");
 
     makeTable(daikin_pricing_table, data, "daikin_pricing", "daikin_pricing");
     //css Table
@@ -213,6 +210,194 @@ async function init_table_daikin() {
 
     // Load Daikin Option
     DK_loadOption();
+    // Add Hint
+    DK_initHint();
+}
+
+function DK_initHint(){
+    // Show button
+    $('body').find("#generate_quote").before("<button type='button' id='show_dk_hint' class='button default' style='display: block'>Hide Calc Hint</button>");
+    // Append texarea
+    $('body').find("#generate_quote").before("<div id='dk_hint'>"
+        +"<div id='dk_hint1' style='display: inline-block;width: 500px;'></div>"
+        +"<div id='dk_hint2' style='display: inline-block;width: 500px;'></div>"
+        +"</div>");
+}
+
+function DK_writeHint(key, value, isBreakLine = false, isHeader = false){
+    return (isBreakLine ? '<p style="width: 400px; text-align: center;display: block;">-----------------------------------------------------------------------</p>' : '') 
+        + '<'+ (isHeader ? 'h3' : 'p') +' style="width: 250px; display: inline-block;margin:0;">'+ key 
+        + '</'+ (isHeader ? 'h3' : 'p') +'><p style="width: 150px; text-align: right;display: inline-block;">' + (value != '' ? parseFloat(value).toFixed(2) : '') + '</p></br>' 
+        + (isBreakLine ? '</br>' : '');
+}
+
+function DK_calcHint(){
+    $('#dk_hint1').html('');
+    $('#dk_hint2').html('');
+    // Check index
+    let index = $('input[name="daikin_option"]:checked').attr('data-attr');
+    if (!index){
+        $('#dk_hint1').html("You must choose the Option to see calc hint");
+        alert("You must choose the Option to see calc hint");
+        return;
+    }
+    let currState = DK_getCurrentOptionState(index);
+    let str = "";
+    /** ==S== HINT 1 ==== */
+         /** S - Equipment Cost */ 
+        let main_cost = 0, delivery_cost = 0,install_cost = 0, extra_cost = 0, wifi_cost = 0;
+        let num_of_line = DK_getCountLine('main');
+        for (var i = 0; i < num_of_line; i++) {
+            if(currState['main_type' + (i + 1)] != '' && currState['total_dk_type'+(i+1)] != ''){
+                main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]);
+                str += DK_writeHint(currState['main_type' + (i + 1)], parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]) );
+            }
+        }
+
+        // Daikin Wifi
+        num_of_line = DK_getCountLine('wifi');
+        for (var i = 0; i < num_of_line; i++) {
+            if(currState['wifi_type' + (i + 1)] != '' && currState['number_wifi_type'+(i+1)] != ''){
+                wifi_cost += parseFloat(getAttributeFromName(currState['wifi_type' + (i + 1)], dk_wifi, "cost")) * parseFloat(currState['number_wifi_type'+(i+1)]);
+                str+= DK_writeHint(currState['wifi_type' + (i + 1)], parseFloat(getAttributeFromName(currState['wifi_type' + (i + 1)], dk_wifi, "cost")) * parseFloat(currState['number_wifi_type'+(i+1)]));
+            }
+        }
+        // Daikin extra cost
+        num_of_line = DK_getCountLine('extra');
+        for (var i = 0; i < num_of_line; i++) {
+            if(currState['extra_type' + (i + 1)] != '' && currState['ext_dk_no' + (i + 1)] != '' && currState['ext_dk_val' + (i + 1)] != ''){
+                extra_cost += parseFloat(currState['ext_dk_no' + (i + 1)]) * parseFloat(currState['ext_dk_val' + (i + 1)]);
+                str+= DK_writeHint(currState['extra_type' + (i + 1)], parseFloat(currState['ext_dk_no' + (i + 1)]) * parseFloat(currState['ext_dk_val' + (i + 1)]));
+            }
+        }
+    // total equipment cost
+    let equipment = main_cost + wifi_cost + extra_cost;
+    str += DK_writeHint(
+        "TOTAL EQUIPMENT COST"
+        , equipment
+        , true
+        , true
+    );
+    /** E - Equipment Cost */ 
+
+    /** S - Install and Delivery */
+        //Daikin delivery 
+        if (currState['state'] == 'VIC') {
+            delivery_cost = parseFloat(daikin_delivery.default) + parseFloat(daikin_delivery.VIC);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
+        } else {
+            delivery_cost = parseFloat(daikin_delivery.default);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
+        }
+        str+= DK_writeHint('Delivery',delivery_cost);
+        // Daikin install
+        if (currState['install_dk'] == 'Yes') {
+            install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost'));
+            str+= DK_writeHint('Daikin Install',install_cost);
+        }
+        let ins_delivery = delivery_cost + install_cost;
+        str += DK_writeHint(
+            "TOTAL INSTALL AND DELIVERY COST"
+            , ins_delivery
+            , true
+            , true
+        );
+    /** E - Install and Delivery */
+
+    /** S - Subtotal = Equipment + install + delivery */
+        str += DK_writeHint(
+            "SUBTOTAL (Equipment + Install + Delivery)"
+            , (equipment + ins_delivery)
+            , true
+            , true
+        );
+    /** E - Subtotal = Equipment + install + delivery */
+    // PE Admin %
+    str += DK_writeHint(
+        'PE Admin %'
+        , parseFloat($('#dk_pe_admin_percent').val()) / 100
+    );
+    // Subtotal + PE Admin
+    let grandTotal = equipment + ins_delivery;
+    grandTotal += grandTotal*(parseFloat($('#dk_pe_admin_percent').val()) / 100);
+    str += DK_writeHint(
+        'Sub total + PE Admin %'
+        , grandTotal
+    );
+    // GST 10%
+    let gst = grandTotal * 0.1;
+    str += DK_writeHint(
+        'GST 10%'
+        , gst
+    );
+    // Include GST
+    grandTotal += gst;
+    str += DK_writeHint(
+        'Grand Total inclue GST'
+        , grandTotal
+    );
+    
+    // PM price
+    if(currState.pm != undefined && currState.pm != ''){
+        grandTotal += parseFloat(currState.pm);
+        str += DK_writeHint(
+            'GrandTotal + PM'
+            , grandTotal
+        );
+    }
+    /** ==E== HINT 1 ==== */
+
+    // /** ==================== GP calc =======================*/ 
+    // let str2 = '';
+    // // Sub Price Total
+    // str2 += DK_writeHint(
+    //     'SUB PRICE TOTAL = Sub total + PE Admin %'
+    //     , sub_price_toal
+    //     , true
+    //     , true
+    // );
+    // // Customer Revenue
+    // let customer_revenue = parseFloat(sub_price_toal) + parseFloat(stc_client);
+    // str2 += DK_writeHint(
+    //     'Customer Revenue = Sub Price Total + STCs (Client show)'
+    //     , customer_revenue
+    // );
+    // // STCs Revenue
+    // let stc_revenue = 37.25 * parseFloat(currState.number_stcs);
+    // str2 += DK_writeHint(
+    //     'STCs Revenue'
+    //     , stc_revenue
+    // );
+    // // Sub Total for GP
+    // let sub_total_gp = customer_revenue + stc_revenue;
+    // str2 += DK_writeHint(
+    //     'SUB TOTAL (Revenue) = STCs + Customer'
+    //     , sub_total_gp
+    //     , true
+    //     , true
+    // );
+    // // Gross Profit
+    // let gross_profit = parseFloat(sub_total_gp) - parseFloat(sub_total);
+    // str2 += DK_writeHint(
+    //     'Gross Profit = Sub Total (Revenue) - Sub total'
+    //     , gross_profit
+    // );
+    // // % Gross Profit
+    // let gross_profit_percent = (parseFloat(gross_profit) / parseFloat(sub_total));
+    // str2 += DK_writeHint(
+    //     '% Gross Profit = Gross Profit / Sub total'
+    //     , gross_profit_percent
+    // );
+    // if (parseFloat(gross_profit_percent) < parseFloat($('#pe_admin_percent').val()) / 100) {
+    //     str2 += DK_writeHint(
+    //         '-> Need to Go Seek: SUB PRICE TOTAL'
+    //         , ''
+    //         , true
+    //         , true
+    //     );
+    // }
+
+    // Return
+    $('#dk_hint1').append(str);
+    // $('#dk_hint2').append(str2);
 }
 
 //Convert JSON to Array data
@@ -317,6 +502,9 @@ function DK_saveCurrentState(){
         var id_name = $(this).attr("id");
         let item_no = id_name.charAt(id_name.length-3);
         let option = id_name.split('_').pop();
+        if (!isNaN(option) && option > 1) {
+            return true;
+        }
         if (isNaN(option)) {
             result[id_name] = $(this).val();
             return true;
@@ -449,19 +637,19 @@ function DK_getCurrentOptionState(index){
     let result = {};
     let state = $('#install_address_state_c').val();
     result['state'] = state;
-    result['pm'] = ($("#pmdk_"+index).val() != '') ? parseFloat($("#pmdk_"+index).val()) : 0;
+    result['pm'] = ($("#pmdk_"+index).val() != '') ? parseFloat($("#pmdk_"+index).val()) : '0';
     // Main line
     let num_of_line = DK_getCountLine('main');
     for (var i = 0; i < num_of_line; i++) {
         result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val();
-        result['total_dk_type' + (i + 1)] = $('#total_dk_type' + (i + 1) + '_' + index).val();
+        result['total_dk_type' + (i + 1)] = $('#total_dk_type' + (i + 1) + '_' + index).val() != '' ? $('#total_dk_type' + (i + 1) + '_' + index).val() : '0' ;
     }
 
     // Wifi line
     num_of_line = DK_getCountLine('wifi');
     for (var i = 0; i < num_of_line; i++) {
         result['wifi_type' + (i + 1)] = $('#wifi_dk_type' + (i + 1) + '_' + index).val();
-        result['number_wifi_type' + (i + 1)] = $('#number_wifi_dk_type' + (i + 1) + '_' + index).val();
+        result['number_wifi_type' + (i + 1)] = $('#number_wifi_dk_type' + (i + 1) + '_' + index).val() != '' ? $('#number_wifi_dk_type' + (i + 1) + '_' + index).val() : '0' ;
     }
 
     // result['total_wifi'] = $('#total_dk_wifi_' + index).val();
@@ -470,31 +658,28 @@ function DK_getCurrentOptionState(index){
     num_of_line = DK_getCountLine('extra');
     for (var i = 0; i < num_of_line; i++) {
         result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val();
-        result['ext_dk_no' + (i + 1)] = $('#ext_dk_no' + (i + 1) + '_' + index).val();
-        result['ext_dk_val' + (i + 1)] = $('#ext_dk_val' + (i + 1) + '_' + index).val();
+        result['ext_dk_no' + (i + 1)] = $('#ext_dk_no' + (i + 1) + '_' + index).val() != '' ? $('#ext_dk_no' + (i + 1) + '_' + index).val() : '0';
+        result['ext_dk_val' + (i + 1)] = $('#ext_dk_val' + (i + 1) + '_' + index).val() != '' ? $('#ext_dk_val' + (i + 1) + '_' + index).val() : '0';
     }
     return result;
 }
 
 
-function DK_calcOption(index, isTotalPanel = false) {
+function DK_calcOption(index) {
     if(index != '' && index != undefined){
         let currState = DK_getCurrentOptionState(index);
-        if(currState.main_type != ''){
-            // Grand Total
-            let grandTotal = DK_calcGrandTotal(currState);
-            $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
-            // Save current option
-            DK_saveCurrentState();
-
-        }
+        // Grand Total
+        let grandTotal = DK_calcGrandTotal(currState);
+        $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
+        // Save current option
+        DK_saveCurrentState();
     }
 }
 
 //
 function DK_clearOption(option){
     $("#daikin_option_"+(option)).prop('checked', false);
-    $('#daikin_pricing_table td:nth-child('+ (option + 1) +')').find('input').val('');
+    $('#daikin_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="dk_pe_admin_percent"], input[id="main_line"],input[id="wifi_line"], input[id="extra_line"])').val('');
     $('#daikin_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
 
@@ -508,8 +693,8 @@ function DK_calcEquipmentCost(currState){
     // Daikin main cost
     let num_of_line = DK_getCountLine('main');
     for (var i = 0; i < num_of_line; i++) {
-        if(currState['main_type' + (i + 1)] != ''){
-            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * ( currState['total_dk_type'+(i+1)] != '' ? parseFloat(currState['total_dk_type'+(i+1)]) : 0);
+        if(currState['main_type' + (i + 1)] != '' && currState['total_dk_type'+(i+1)] != ''){
+            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]);
         }
     }
     //Daikin delivery 
@@ -520,21 +705,21 @@ function DK_calcEquipmentCost(currState){
     }
     // Daikin install
     if (currState['install_dk'] == 'Yes') {
-        install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_install, 'cost'));
+        install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost'));
     }
 
     // Daikin Wifi
     num_of_line = DK_getCountLine('wifi');
     for (var i = 0; i < num_of_line; i++) {
-        if(currState['wifi_type' + (i + 1)] != ''){
-            wifi_cost += parseFloat(getAttributeFromName(currState['wifi_type' + (i + 1)], dk_wifi, "cost")) * (currState['number_wifi_type'+(i+1)] != '' ? parseFloat(currState['number_wifi_type'+(i+1)]) : 0);
+        if(currState['wifi_type' + (i + 1)] != '' && currState['number_wifi_type'+(i+1)] != ''){
+            wifi_cost += parseFloat(getAttributeFromName(currState['wifi_type' + (i + 1)], dk_wifi, "cost")) * parseFloat(currState['number_wifi_type'+(i+1)]);
         }
     }
     // Daikin extra cost
     num_of_line = DK_getCountLine('extra');
     for (var i = 0; i < num_of_line; i++) {
-        if(currState['extra_type' + (i + 1)] != ''){
-            extra_cost += (currState['ext_dk_no' + (i + 1)] != '' ? parseFloat(currState['ext_dk_no' + (i + 1)]): 0) * (currState['ext_dk_val' + (i + 1)] != '' ? parseFloat(currState['ext_dk_val' + (i + 1)]) : 0);
+        if(currState['extra_type' + (i + 1)] != '' && currState['ext_dk_no' + (i + 1)] != '' && currState['ext_dk_val' + (i + 1)] != ''){
+            extra_cost += parseFloat(currState['ext_dk_no' + (i + 1)]) * parseFloat(currState['ext_dk_val' + (i + 1)]);
         }
     }
 
@@ -552,16 +737,183 @@ function DK_calcGrandTotal(currState){
     // Include GST above
     grandTotal += gst;
      // PM
-     grandTotal += currState.pm;
+     if (currState.pm != undefined && currState.pm != '') {
+        grandTotal += parseFloat(currState.pm);
+     }
 
     return grandTotal;
 }
 
+async function DK_autoCreateLineItem(shortName, target, total_item, price_item = ''){
+    var info_pro = getItemFromName(shortName, target);
+    if(info_pro['id'] !== undefined){
+        insertProductLine('product_group0', '0');
+        lineno  = prodln-1;
+        var popupReplyData = {};
+        popupReplyData.form_name = "EditView";
+        var name_to_value_array = {};
+        name_to_value_array["product_currency"+lineno] = info_pro['currency'];
+        name_to_value_array["product_item_description"+lineno] = (info_pro['description'] == null) ? '' : info_pro['description'];
+        name_to_value_array["product_name"+lineno] = info_pro['name'];
+        name_to_value_array["product_part_number"+lineno] =  info_pro['part_number'];
+        name_to_value_array["product_product_id"+lineno] = info_pro['id'];
+        if (price_item != '') { //User enter price extra
+            name_to_value_array["product_product_cost_price"+lineno] = price_item;
+            name_to_value_array["product_product_list_price"+lineno] = "" + price_item;
+        } else {
+            name_to_value_array["product_product_cost_price"+lineno] = info_pro['cost'];
+            name_to_value_array["product_product_list_price"+lineno] = "" + info_pro['cost'];
+        }
+        name_to_value_array["product_product_qty"+lineno] = "" + parseFloat(total_item);
+        popupReplyData["name_to_value_array"] = name_to_value_array;            
+        $('#product_product_list_price'+lineno).focus();
+        $('#product_product_id'+lineno).after('<div style="position: absolute;"><a class="product_link" target="_blank" href="/index.php?module=AOS_Products&action=EditView&record='+ info_pro['id'] +'">Link</a></div>');
+        setProductReturn(popupReplyData);
+    }
+}
 
+async function DK_generateLineItem(){
+    // Save current state
+    DK_saveCurrentState();
 
-// Solar Checkbox handle 
-$(document).on('change', 'input[id*="daikin_option"]', function(){
-    checkBoxOptionHandle($(this), "daikin_option");
-});
+    // Get Option Quote
+    let index = $('input[name="daikin_option"]:checked').attr('data-attr');
+    if (!index){
+        alert("You must choose the Option to generate line item");
+        return;
+    }
+
+    // Mark line deleted
+    for (var i = 0; i < prodln; i++){
+        markLineDeleted(i,"product_");
+    }
+
+    // Check exist any line item
+    if ($("#lineItems").find(".group_body").length == 0){
+        insertGroup(0);
+    } else {
+        $("#group_body"+($("#lineItems").find(".group_body").length -1)).show();
+    }
+    // $("#group0name").val("Off-Grid Option " + index);
+
+    // Get option
+
+    await wait(300);
+    // let json_val = JSON.parse($("#quote_note_inputs_c").val());
+    // let currState = json_val[index];
+    let currState = DK_getCurrentOptionState(index);
+
+    // // Validate current State
+    // if (currState.offgrid_howmany == '') {
+    //     alert("You must enter the number of Battery!");
+    //     return;
+    // }
+    // Create line item
+    try{
+        // Show loading
+        debugger
+        if (currState['install_dk'] == 'Yes') {
+            await DK_autoCreateLineItem(daikin_ds[1], dk_install, 1);
+            await DK_autoCreateLineItem(daikin_install[0], dk_air_install, 1);
+        } else {
+            await DK_autoCreateLineItem(daikin_ds[0], dk_install, 1);
+        }
+        // Main line
+        let num_of_line = getCountLine('main');
+        for (let i = 0; i < num_of_line; i++) {
+            if (currState['main_type' + (i + 1)] != "" && parseInt(currState['total_dk_type' + (i + 1)]) != 0) {
+                await DK_autoCreateLineItem(currState['main_type' + (i + 1)], dk_main, currState['total_dk_type' + (i + 1)]);
+            }
+        }
+        // wifi line
+        num_of_line = getCountLine('wifi');
+        for (let i = 0; i < num_of_line; i++) {
+            if (currState['wifi_type' + (i + 1)] != "" &&  parseInt(currState['number_wifi_type' + (i + 1)]) != 0) {
+                await DK_autoCreateLineItem(currState['wifi_type' + (i + 1)], dk_wifi, currState['number_wifi_type' + (i + 1)]);
+            }
+        }
+        // wifi line
+        num_of_line = getCountLine('extra');
+        for (let i = 0; i < num_of_line; i++) {
+            if (currState['extra_type' + (i + 1)] != "" &&  parseInt(currState['ext_dk_no' + (i + 1)]) != 0) {
+                if (parseInt(currState['ext_dk_val' + (i + 1)]) != 0) {
+                    await DK_autoCreateLineItem(currState['extra_type' + (i + 1)], dk_extra, currState['ext_dk_no' + (i + 1)], currState['ext_dk_val' + (i + 1)]);
+                } else {
+                    await DK_autoCreateLineItem(currState['extra_type' + (i + 1)], dk_extra, currState['ext_dk_no' + (i + 1)]);
+                }
+            }
+        }
+        // Calculate
+        await DK_calculatePrice(currState);
+
+        
+        return;
+        // // Calc Equipment Cost
+        // let equipmentCost = calcEquipmentCost(currState);
+        // $('#sanden_supply_bill').val(parseFloat(equipmentCost).formatMoney(2, ',', '.'));
+        // $('#sanden_supply_bill').trigger('change');
+        // // Calc Installation Cost
+        // let installationCost = calcInstallationCost(currState);
+        // $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
+        // $('#electrician_bill').trigger('change');
+    } catch(err) {
+        console.log(err);
+    } finally {
+        // Hide loading
+        setTimeout(function (){
+            autoSaveData();
+        }, 300);
+    }
+}
+
+async function DK_calculatePrice(currState = {}){
+    // await wait(200);
+    let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
+    var totalList = 0, totalDiscount = 0, totalAmount = 0;
+    var list, dis, amount, tax;
+    let grandTotal = parseFloat(roundTo90(DK_calcGrandTotal(currState))).formatMoney(2, ',', '.')
+    // For each
+    productVisible.each((index, el) => {
+        // // get target
+        list = $(el).find('input[id*=product_product_list_price]');
+        // dis = $(el).find('input[id*=product_product_discount]');
+        // amount = $(el).find('input[id*=product_product_total_price]');
+        tax = $(el).find('select[id*=product_vat]');
+
+        if(index !== 0 && index < productVisible.length){
+            // // calculate line item exclude first line and last line
+            // totalList += get_value(list.attr('id'));
+            // totalDiscount += get_value(dis.attr('id'));
+            // totalAmount += get_value(amount.attr('id'));
+            set_value(list.attr('id'), "");
+            $(tax).val('0.0');
+        }
+        // blur
+        list.trigger("blur");
+    });
+    $("#total_amount").trigger("focusin");
+    
+    // // PE Admin
+    // totalAmount += totalAmount * (parseFloat($('#dk_pe_admin_percent').val()) / 100);
+
+    // // PM price
+    // if(currState.pm != undefined && currState.pm != ''){
+    //     totalAmount += parseFloat(currState.pm);
+    // }
+
+    // Set value to first line
+    list = $(productVisible[0]).find('input[id*=product_product_list_price]');
+    set_value(list.attr('id'), parseFloat(grandTotal));
+    list.trigger("blur");
+
+    // Set value to grand total
+    $("#total_amount").trigger("focusin");
+    $("#total_amount").val(grandTotal);
+    $("#total_amount").trigger("change");
+
+    // Scroll top offset
+    jQuery('html,body').animate({scrollTop: jQuery('.panel-heading a div:contains(Line Items)').offset().top - 200}, 500);
+}
+
 
 //***************************************** ??? *********************************************************** */

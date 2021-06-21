@@ -69,10 +69,11 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
                     generateOffgridItem();
                     break;
                 case 'quote_type_daikin':
-                    DK_saveCurrentState();
-                    setTimeout(function (){
-                        autoSaveData();
-                    }, 300);
+                    DK_generateLineItem();
+                    // setTimeout(function (){
+                    //     SUGAR.ajaxUI.showLoadingPanel();
+                    //     autoSaveData();
+                    // }, 300);
                     break;
                 default: break;
             }
@@ -761,6 +762,7 @@ function autoSaveData(){
                     type : "POST",
                     data : {moduleID:$("input[name='record']").val()},
                     success: function (data) {
+                        SUGAR.ajaxUI.hideLoadingPanel();
                         if(data == '' || typeof data === 'undefined') return;
                         var product_items = JSON.parse(data);
                         var groupidx = $("#lineItems").find(".group_body").length -1;
