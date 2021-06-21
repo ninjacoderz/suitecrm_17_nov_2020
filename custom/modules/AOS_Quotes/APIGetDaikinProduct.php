@@ -10,7 +10,9 @@ $data_return['dk_extra'] = getDataByCategoryName($db, "Daikin", "extra");
 //wifi
 $data_return['dk_wifi'] = getDataByCategoryName($db, "Daikin", "wifi");
 //install
-$data_return['dk_install'] = getDataByCategoryName($db, "Install Air Conditioner");
+$data_return['dk_install'] = getDataByCategoryName($db, "Daikin", "install");
+//air install
+$data_return['dk_air_install'] = getDataByCategoryName($db, "Install Air Conditioner");
 
 
 // Return
