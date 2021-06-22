@@ -13,7 +13,7 @@ $(function () {
     var quote_type = $("#quote_type_c").val();
     if(quote_type == 'quote_type_daikin'){
         init_table_daikin();
-        $("#quote_note_inputs_c").closest('.edit-view-row-item').show();
+        // $("#quote_note_inputs_c").closest('.edit-view-row-item').show();
         $(document).find('#generate_quote').show();
     }
 
