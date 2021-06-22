@@ -71,7 +71,7 @@ switch ($action) {
         $products_return = get_product_by_quote($quote);
         $quote_return = get_data_quote_product($quote,$products_return);
         $body = generate_email_acceptance_notification($quote_return);
-        $subject = 'Quote option approved notification! '.$quote->name;  
+        $subject = 'Quote option approved notification '.preg_replace('/\(|\)/', '', $quote->name);
         $data_return = send_email_APIMethven($body, $subject);
         create_internal_notes($quote,$subject);
         echo json_encode($data_return);die();

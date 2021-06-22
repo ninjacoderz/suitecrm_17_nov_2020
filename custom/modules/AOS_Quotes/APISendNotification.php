@@ -228,7 +228,7 @@
     $mail->IsHTML(true);
     $mail->ClearAllRecipients();
     $mail->ClearReplyTos();
-    $mail->Subject =  'Quote option approved notification! '.$quote->name;
+    $mail->Subject =  'Quote option approved notification '.preg_replace('/\(|\)/', '', $quote->name);
     $solar_content = '';
 
     $bodytext .= '<div><p>Hi team, The customer has just accepted the Quote option.Cheers!</p></div>'.$solar_pricing_options.'<div><p>Please check the  quote: <a href="'.$url.'">Quote #'.$quote->number.'</a></p></div>';
