@@ -36,36 +36,47 @@ $dataProducts = $data['products'];
 if($data['installation_by_pure'] == 'No') {
     $partNumber['DS'] = 1;
     foreach($dataProducts as $product) {
-        $partNumber[$product['productId']] = (int)$product['qty'];
-        if($product['isWifi'] ==  true && array_key_exists('BRP072C42', $partNumber)) {
-            $partNumber['BRP072C42'] = $partNumber['BRP072C42'] + (int)$product['qty'];
+        if (array_key_exists($product['productId'], $partNumber)) {
+            $partNumber[$product['productId']] = $partNumber[$product['productId']] + (int)$product['qty'];
         } else {
-            $partNumber['BRP072C42'] = (int)$product['qty'];
+            $partNumber[$product['productId']] = (int)$product['qty'];
+        };
+        if($product['isWifi'] ==  true) {
+            if (array_key_exists('BRP072C42', $partNumber)) {
+                $partNumber['BRP072C42'] = $partNumber['BRP072C42'] + (int)$product['qty'];
+            } else {
+                $partNumber['BRP072C42'] = (int)$product['qty'];
+            };
         }
         if (strpos($product['productName'], 'US7') !== false) {
-            $numberUS7 = (int)$product['qty'];
+            $numberUS7 =  $numberUS7 + (int)$product['qty'];
         } else if(strpos($product['productName'], 'Nexura') !== false) {
-            $numberNexura = (int)$product['qty'];
+            $numberNexura = $numberNexura + (int)$product['qty'];
         } else if(strpos($product['productName'], 'Nexura') !== false) {
-            $numberAlira = (int)$product['qty'];
+            $numberAlira = $numberAlira + (int)$product['qty'];
         }
     }
 } else {
-    $partNumber['STANDARD_AC_INSTALL'] = 1;
     $partNumber['DSI'] = 1;
     foreach($dataProducts as $product) {
-        $partNumber[$product['productId']] = (int)$product['qty'];
-        if($product['isWifi'] ==  true && array_key_exists('BRP072C42', $partNumber)) {
-            $partNumber['BRP072C42'] = $partNumber['BRP072C42'] + (int)$product['qty'];
+        if (array_key_exists($product['productId'], $partNumber)) {
+            $partNumber[$product['productId']] = $partNumber[$product['productId']] + (int)$product['qty'];
         } else {
-            $partNumber['BRP072C42'] = (int)$product['qty'];
+            $partNumber[$product['productId']] = (int)$product['qty'];
+        };
+        if($product['isWifi'] ==  true) {
+            if (array_key_exists('BRP072C42', $partNumber)) {
+                $partNumber['BRP072C42'] = $partNumber['BRP072C42'] + (int)$product['qty'];
+            } else {
+                $partNumber['BRP072C42'] = (int)$product['qty'];
+            };
         }
         if (strpos($product['productName'], 'US7') !== false) {
-            $numberUS7 = (int)$product['qty'];
+            $numberUS7 =  $numberUS7 + (int)$product['qty'];
         } else if(strpos($product['productName'], 'Nexura') !== false) {
-            $numberNexura = (int)$product['qty'];
+            $numberNexura = $numberNexura + (int)$product['qty'];
         } else if(strpos($product['productName'], 'Nexura') !== false) {
-            $numberAlira = (int)$product['qty'];
+            $numberAlira = $numberAlira + (int)$product['qty'];
         }
         // $partNumber += [ $product['productId'] => $product['qty'] ];
         foreach($product['optionExtra'] as $extraItem) {
@@ -80,6 +91,7 @@ if($data['installation_by_pure'] == 'No') {
             }
         }
     }
+    $partNumber['STANDARD_AC_INSTALL'] = $numberUS7 + $numberNexura + $numberAlira;
 }
 
 // var_dump($partNumber); die;
