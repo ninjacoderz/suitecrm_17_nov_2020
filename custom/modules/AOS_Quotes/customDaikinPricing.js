@@ -13,7 +13,7 @@ $(function () {
     var quote_type = $("#quote_type_c").val();
     if(quote_type == 'quote_type_daikin'){
         init_table_daikin();
-        // $("#quote_note_inputs_c").closest('.edit-view-row-item').show();
+        $("#quote_note_inputs_c").closest('.edit-view-row-item').show();
         $(document).find('#generate_quote').show();
     }
 
@@ -152,6 +152,20 @@ async function init_table_daikin() {
             , makeInputBox("pmdk_4 daikin_pricing", "pmdk_4", false)
             , makeInputBox("pmdk_5 daikin_pricing", "pmdk_5", false)
             , makeInputBox("pmdk_6 daikin_pricing", "pmdk_6", false)],
+        ["Total Cooling Capacity (kW):"
+            , makeInputBox("daikin_pricing total_cooling_capacity_1", "total_cooling_capacity_1", true)
+            , makeInputBox("daikin_pricing total_cooling_capacity_2", "total_cooling_capacity_2", true)
+            , makeInputBox("daikin_pricing total_cooling_capacity_3", "total_cooling_capacity_3", true)
+            , makeInputBox("daikin_pricing total_cooling_capacity_4", "total_cooling_capacity_4", true)
+            , makeInputBox("daikin_pricing total_cooling_capacity_5", "total_cooling_capacity_5", true)
+            , makeInputBox("daikin_pricing total_cooling_capacity_6", "total_cooling_capacity_6", true)],
+        ["Total Heating Capacity (kW):"
+            , makeInputBox("daikin_pricing total_heating_capacity_1", "total_heating_capacity_1", true)
+            , makeInputBox("daikin_pricing total_heating_capacity_2", "total_heating_capacity_2", true)
+            , makeInputBox("daikin_pricing total_heating_capacity_3", "total_heating_capacity_3", true)
+            , makeInputBox("daikin_pricing total_heating_capacity_4", "total_heating_capacity_4", true)
+            , makeInputBox("daikin_pricing total_heating_capacity_5", "total_heating_capacity_5", true)
+            , makeInputBox("daikin_pricing total_heating_capacity_6", "total_heating_capacity_6", true)],
         ["Daikin Type 1"
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_1 daikin_pricing", "main_dk_type1_1") 
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_2 daikin_pricing", "main_dk_type1_2")
@@ -688,6 +702,7 @@ function DK_getCurrentOptionState(index){
     let result = {};
     let state = $('#install_address_state_c').val();
     result['state'] = state;
+    result['index'] = index;
     result['pm'] = ($("#pmdk_"+index).val() != '') ? parseFloat($("#pmdk_"+index).val()) : '0';
     // Main line
     let num_of_line = DK_getCountLine('main');
@@ -740,13 +755,15 @@ function DK_getCountLine(target){
 
 
 function DK_calcEquipmentCost(currState){
-    let numbers_daikin = 0, main_cost = 0, delivery_cost = 0,install_cost = 0, extra_cost = 0, wifi_cost = 0;
+    let numbers_daikin = 0, main_cost = 0, delivery_cost = 0,install_cost = 0, extra_cost = 0, wifi_cost = 0, total_cool_capacity = 0, total_heat_capacity = 0;
     // Daikin main cost
     let num_of_line = DK_getCountLine('main');
     for (var i = 0; i < num_of_line; i++) {
         if(currState['main_type' + (i + 1)] != '' && currState['total_dk_type'+(i+1)] != ''){
             main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]);
             numbers_daikin += parseFloat(currState['total_dk_type'+(i+1)]);
+            total_cool_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cool_capacity")) * parseFloat(currState['total_dk_type'+(i+1)]);
+            total_heat_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "heat_capacity")) * parseFloat(currState['total_dk_type'+(i+1)]);
         }
     }
     //Daikin delivery 
@@ -774,6 +791,9 @@ function DK_calcEquipmentCost(currState){
             extra_cost += parseFloat(currState['ext_dk_no' + (i + 1)]) * parseFloat(currState['ext_dk_val' + (i + 1)]);
         }
     }
+    //fill cool/heat capacity
+    $(`#total_cooling_capacity_${currState['index']}`).val(total_cool_capacity.formatMoney(2, ',', '.'));
+    $(`#total_heating_capacity_${currState['index']}`).val(total_heat_capacity.formatMoney(2, ',', '.'));
 
     return main_cost + delivery_cost + install_cost + wifi_cost + extra_cost;
 }
@@ -863,6 +883,7 @@ async function DK_generateLineItem(){
     // Create line item
     try{
         // Show loading
+        SUGAR.ajaxUI.showLoadingPanel();
         //debugger
         if (currState['install_dk'] == 'Yes') {
             await DK_autoCreateLineItem(daikin_ds[1], dk_install, 1);
