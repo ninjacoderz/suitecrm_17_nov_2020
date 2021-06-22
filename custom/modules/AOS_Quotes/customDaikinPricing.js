@@ -70,7 +70,7 @@ $(function () {
         checkBoxOptionHandle($(this), "daikin_option");
     });
 
-    $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='number_wifi_dk_type']", function(e){
+    $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='qty_main_dk'], input[id*='pmdk_'], select[id*='install_dk_'], input[id*='qty_ext_dk'], input[id*='price_ext_dk'], select[id*='wifi_dk_type'], input[id*='qty_wifi_dk']", function(e){
         var index  = $(this).attr("id").split('_');
         let item_no = $(this).attr('id').charAt($(this).attr('id').length-3);
         let selector = '', type = '', qty_id ='';
@@ -82,21 +82,21 @@ $(function () {
             selector = 'main_dk_type';
             num_of_line = DK_getCountLine('main');
             type = 'main';
-            qty_id = 'total_dk_type';
+            qty_id = 'qty_main_dk';
         }
         if ($(this).attr('id').indexOf('wifi_dk_type') != -1) {
             selector = 'wifi_dk_type';
             num_of_line = DK_getCountLine('wifi');
             type = 'wifi';
-            qty_id = 'number_wifi_dk_type';
+            qty_id = 'qty_wifi_dk';
         }
         if ($(this).attr('id').indexOf('extra_dk_type') != -1) {
             selector = 'extra_dk_type';
             num_of_line = DK_getCountLine('extra');
             type = 'extra';
-            qty_id = 'ext_dk_no';
+            qty_id = 'qty_ext_dk';
             //get cost extra fill to price extra
-            $(`#ext_dk_val${item_no}_${index}`).val(getAttributeFromName($(this).val(), dk_extra, 'cost') == null ? '' : parseFloat(getAttributeFromName($(this).val(), dk_extra, 'cost')) );
+            $(`#price_ext_dk${item_no}_${index}`).val(getAttributeFromName($(this).val(), dk_extra, 'cost') == null ? '' : parseFloat(getAttributeFromName($(this).val(), dk_extra, 'cost')) );
         }
         if (selector != '') {
             if (value_selected == '') {
@@ -174,21 +174,14 @@ async function init_table_daikin() {
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_5 daikin_pricing", "main_dk_type1_5")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_6 daikin_pricing", "main_dk_type1_6")],
         ["Number Daikin 1"
-            , makeInputBox("total_dk_type_1 daikin_pricing", "total_dk_type1_1", false)
-            , makeInputBox("total_dk_type_2 daikin_pricing", "total_dk_type1_2", false)
-            , makeInputBox("total_dk_type_3 daikin_pricing", "total_dk_type1_3", false)
-            , makeInputBox("total_dk_type_4 daikin_pricing", "total_dk_type1_4", false)
-            , makeInputBox("total_dk_type_5 daikin_pricing", "total_dk_type1_5", false)
-            , makeInputBox("total_dk_type_6 daikin_pricing", "total_dk_type1_6", false)],
+            , makeInputBox("qty_main_dk_1 daikin_pricing", "qty_main_dk1_1", false)
+            , makeInputBox("qty_main_dk_2 daikin_pricing", "qty_main_dk1_2", false)
+            , makeInputBox("qty_main_dk_3 daikin_pricing", "qty_main_dk1_3", false)
+            , makeInputBox("qty_main_dk_4 daikin_pricing", "qty_main_dk1_4", false)
+            , makeInputBox("qty_main_dk_5 daikin_pricing", "qty_main_dk1_5", false)
+            , makeInputBox("qty_main_dk_6 daikin_pricing", "qty_main_dk1_6", false)],
         ["<button id='main_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing' name='main_line' id='main_line' value='1' />"],
-        // ["Daikin Wifi"
-        //     , makeInputBox("total_dk_wifi_1 daikin_pricing", "total_dk_wifi_1", false)
-        //     , makeInputBox("total_dk_wifi_2 daikin_pricing", "total_dk_wifi_2", false)
-        //     , makeInputBox("total_dk_wifi_3 daikin_pricing", "total_dk_wifi_3", false)
-        //     , makeInputBox("total_dk_wifi_4 daikin_pricing", "total_dk_wifi_4", false)
-        //     , makeInputBox("total_dk_wifi_5 daikin_pricing", "total_dk_wifi_5", false)
-        //     , makeInputBox("total_dk_wifi_6 daikin_pricing", "total_dk_wifi_6", false)],
         ["Wifi Type 1"
             , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_1 daikin_pricing", "wifi_dk_type1_1")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_2 daikin_pricing", "wifi_dk_type1_2")
@@ -197,12 +190,12 @@ async function init_table_daikin() {
             , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_5 daikin_pricing", "wifi_dk_type1_5")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_6 daikin_pricing", "wifi_dk_type1_6")],
         ["Number Wifi 1"
-            , makeInputBox("number_wifi_dk_type_1 daikin_pricing", "number_wifi_dk_type1_1", false)
-            , makeInputBox("number_wifi_dk_type_2 daikin_pricing", "number_wifi_dk_type1_2", false)
-            , makeInputBox("number_wifi_dk_type_3 daikin_pricing", "number_wifi_dk_type1_3", false)
-            , makeInputBox("number_wifi_dk_type_4 daikin_pricing", "number_wifi_dk_type1_4", false)
-            , makeInputBox("number_wifi_dk_type_5 daikin_pricing", "number_wifi_dk_type1_5", false)
-            , makeInputBox("number_wifi_dk_type_6 daikin_pricing", "number_wifi_dk_type1_6", false)],
+            , makeInputBox("qty_wifi_dk_1 daikin_pricing", "qty_wifi_dk1_1", false)
+            , makeInputBox("qty_wifi_dk_2 daikin_pricing", "qty_wifi_dk1_2", false)
+            , makeInputBox("qty_wifi_dk_3 daikin_pricing", "qty_wifi_dk1_3", false)
+            , makeInputBox("qty_wifi_dk_4 daikin_pricing", "qty_wifi_dk1_4", false)
+            , makeInputBox("qty_wifi_dk_5 daikin_pricing", "qty_wifi_dk1_5", false)
+            , makeInputBox("qty_wifi_dk_6 daikin_pricing", "qty_wifi_dk1_6", false)],
         ["<button id='wifi_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing' name='wifi_line' id='wifi_line' value='1' />"],
         ["Daikin Install"
@@ -224,21 +217,21 @@ async function init_table_daikin() {
             , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_5 daikin_pricing", "extra_dk_type1_5")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_6 daikin_pricing", "extra_dk_type1_6")],
         ["Extra (number/price) 1"
-            , makeTwoInputBox("expand_ext extra_dk_type_1 daikin_pricing", "ext_dk_no1_1", "ext_dk_val1_1" ,false)
-            , makeTwoInputBox("expand_ext extra_dk_type_2 daikin_pricing", "ext_dk_no1_2", "ext_dk_val1_2", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_3 daikin_pricing", "ext_dk_no1_3", "ext_dk_val1_3", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_4 daikin_pricing", "ext_dk_no1_4", "ext_dk_val1_4", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_5 daikin_pricing", "ext_dk_no1_5", "ext_dk_val1_5", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_6 daikin_pricing", "ext_dk_no1_6", "ext_dk_val1_6", false)],
+            , makeTwoInputBox("expand_ext extra_dk_type_1 daikin_pricing", "qty_ext_dk1_1", "price_ext_dk1_1" ,false)
+            , makeTwoInputBox("expand_ext extra_dk_type_2 daikin_pricing", "qty_ext_dk1_2", "price_ext_dk1_2", false)
+            , makeTwoInputBox("expand_ext extra_dk_type_3 daikin_pricing", "qty_ext_dk1_3", "price_ext_dk1_3", false)
+            , makeTwoInputBox("expand_ext extra_dk_type_4 daikin_pricing", "qty_ext_dk1_4", "price_ext_dk1_4", false)
+            , makeTwoInputBox("expand_ext extra_dk_type_5 daikin_pricing", "qty_ext_dk1_5", "price_ext_dk1_5", false)
+            , makeTwoInputBox("expand_ext extra_dk_type_6 daikin_pricing", "qty_ext_dk1_6", "price_ext_dk1_6", false)],
         ["<button id='extra_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing' name='extra_line' id='extra_line' value='1' />"],
         ["Grand total:"
-            , makeInputBox("daikin_pricing", "total_dk_1", true)
-            , makeInputBox("daikin_pricing", "total_dk_2", true)
-            , makeInputBox("daikin_pricing", "total_dk_3", true)
-            , makeInputBox("daikin_pricing", "total_dk_4", true)
-            , makeInputBox("daikin_pricing", "total_dk_5", true)
-            , makeInputBox("daikin_pricing", "total_dk_6", true)],
+            , makeInputBox("daikin_pricing", "grandtotal_dk_1", true)
+            , makeInputBox("daikin_pricing", "grandtotal_dk_2", true)
+            , makeInputBox("daikin_pricing", "grandtotal_dk_3", true)
+            , makeInputBox("daikin_pricing", "grandtotal_dk_4", true)
+            , makeInputBox("daikin_pricing", "grandtotal_dk_5", true)
+            , makeInputBox("daikin_pricing", "grandtotal_dk_6", true)],
         ["PE Admin (%)", "<input type='number' class='daikin_pricing' name='dk_pe_admin_percent' id='dk_pe_admin_percent' value='19' />"],
     ];
     
@@ -309,10 +302,10 @@ function DK_calcHint(){
         let numbers_daikin =0 ,main_cost = 0, delivery_cost = 0,install_cost = 0, extra_cost = 0, wifi_cost = 0;
         let num_of_line = DK_getCountLine('main');
         for (var i = 0; i < num_of_line; i++) {
-            if(currState['main_type' + (i + 1)] != '' && currState['total_dk_type'+(i+1)] != ''){
-                main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]);
-                str += DK_writeHint(currState['main_type' + (i + 1)], parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]), parseFloat(currState['total_dk_type'+(i+1)]));
-                numbers_daikin += parseFloat(currState['total_dk_type'+(i+1)]);
+            if(currState['main_type' + (i + 1)] != '' && currState['qty_main_dk'+(i+1)] != ''){
+                main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['qty_main_dk'+(i+1)]);
+                str += DK_writeHint(currState['main_type' + (i + 1)], parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['qty_main_dk'+(i+1)]), parseFloat(currState['qty_main_dk'+(i+1)]));
+                numbers_daikin += parseFloat(currState['qty_main_dk'+(i+1)]);
             }
         }
 
@@ -327,9 +320,9 @@ function DK_calcHint(){
         // Daikin extra cost
         num_of_line = DK_getCountLine('extra');
         for (var i = 0; i < num_of_line; i++) {
-            if(currState['extra_type' + (i + 1)] != '' && currState['ext_dk_no' + (i + 1)] != '' && currState['ext_dk_val' + (i + 1)] != ''){
-                extra_cost += parseFloat(currState['ext_dk_no' + (i + 1)]) * parseFloat(currState['ext_dk_val' + (i + 1)]);
-                str+= DK_writeHint(currState['extra_type' + (i + 1)], parseFloat(currState['ext_dk_no' + (i + 1)]) * parseFloat(currState['ext_dk_val' + (i + 1)]), parseFloat(currState['ext_dk_no' + (i + 1)]));
+            if(currState['extra_type' + (i + 1)] != '' && currState['qty_ext_dk' + (i + 1)] != '' && currState['price_ext_dk' + (i + 1)] != ''){
+                extra_cost += parseFloat(currState['qty_ext_dk' + (i + 1)]) * parseFloat(currState['price_ext_dk' + (i + 1)]);
+                str+= DK_writeHint(currState['extra_type' + (i + 1)], parseFloat(currState['qty_ext_dk' + (i + 1)]) * parseFloat(currState['price_ext_dk' + (i + 1)]), parseFloat(currState['qty_ext_dk' + (i + 1)]));
             }
         }
     // total equipment cost
@@ -505,20 +498,20 @@ function DK_createNewLine(target = 'extra'){
         id = "main_dk_type";
         list = dk_main;
         label1 = "Number Daikin ";
-        id1 = "total_dk_type";
+        id1 = "qty_main_dk";
     } else if (target == 'wifi') {
         label = "Wifi Type ";
         id = "wifi_dk_type";
         list = dk_wifi;
         label1 = "Number Wifi ";
-        id1 = "number_wifi_dk_type";
+        id1 = "qty_wifi_dk";
     } else {
         label = "Extra ";
         id = "extra_dk_type";
         list = dk_extra;
         label1 = "Extra (number/price) ";
-        id1 = "ext_dk_no";
-        id2 = "ext_dk_val";
+        id1 = "qty_ext_dk";
+        id2 = "price_ext_dk";
     }
     
     let next_index = DK_getCountLine(target) + 1;
@@ -581,7 +574,7 @@ function DK_saveCurrentState(){
         }
 
         //Main
-        if (id_name.indexOf('main_dk_type') != -1 || id_name.indexOf('total_dk_type') != -1) {
+        if (id_name.indexOf('main_dk_type') != -1 || id_name.indexOf('qty_main_dk') != -1) {
             if (!result[option].hasOwnProperty('products')) {
                 result[option].products = {};
             }
@@ -596,7 +589,7 @@ function DK_saveCurrentState(){
             return true;
         }
         //Wifi
-        if (id_name.indexOf('wifi_dk_type') != -1 || id_name.indexOf('number_wifi_dk_type') != -1) {
+        if (id_name.indexOf('wifi_dk_type') != -1 || id_name.indexOf('qty_wifi_dk') != -1) {
             if (!result[option].hasOwnProperty('wifi')) {
                 result[option].wifi = {};
             }
@@ -611,7 +604,7 @@ function DK_saveCurrentState(){
             return true;
         }
         //Extra 
-        if (id_name.indexOf('extra_dk_type') != -1 || id_name.indexOf('ext_dk_no') != -1 || id_name.indexOf('ext_dk_val') != -1) {
+        if (id_name.indexOf('extra_dk_type') != -1 || id_name.indexOf('qty_ext_dk') != -1 || id_name.indexOf('price_ext_dk') != -1) {
             if (!result[option].hasOwnProperty('extras')) {
                 result[option].extras = {};
             }
@@ -708,24 +701,23 @@ function DK_getCurrentOptionState(index){
     let num_of_line = DK_getCountLine('main');
     for (var i = 0; i < num_of_line; i++) {
         result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val();
-        result['total_dk_type' + (i + 1)] = $('#total_dk_type' + (i + 1) + '_' + index).val() != '' ? $('#total_dk_type' + (i + 1) + '_' + index).val() : '0' ;
+        result['qty_main_dk' + (i + 1)] = $('#qty_main_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_main_dk' + (i + 1) + '_' + index).val() : '0' ;
     }
 
     // Wifi line
     num_of_line = DK_getCountLine('wifi');
     for (var i = 0; i < num_of_line; i++) {
         result['wifi_type' + (i + 1)] = $('#wifi_dk_type' + (i + 1) + '_' + index).val();
-        result['number_wifi_type' + (i + 1)] = $('#number_wifi_dk_type' + (i + 1) + '_' + index).val() != '' ? $('#number_wifi_dk_type' + (i + 1) + '_' + index).val() : '0' ;
+        result['number_wifi_type' + (i + 1)] = $('#qty_wifi_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_wifi_dk' + (i + 1) + '_' + index).val() : '0' ;
     }
 
-    // result['total_wifi'] = $('#total_dk_wifi_' + index).val();
     result['install_dk'] = $('#install_dk_' + index).val();
     // Extra line
     num_of_line = DK_getCountLine('extra');
     for (var i = 0; i < num_of_line; i++) {
         result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val();
-        result['ext_dk_no' + (i + 1)] = $('#ext_dk_no' + (i + 1) + '_' + index).val() != '' ? $('#ext_dk_no' + (i + 1) + '_' + index).val() : '0';
-        result['ext_dk_val' + (i + 1)] = $('#ext_dk_val' + (i + 1) + '_' + index).val() != '' ? $('#ext_dk_val' + (i + 1) + '_' + index).val() : '0';
+        result['qty_ext_dk' + (i + 1)] = $('#qty_ext_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_ext_dk' + (i + 1) + '_' + index).val() : '0';
+        result['price_ext_dk' + (i + 1)] = $('#price_ext_dk' + (i + 1) + '_' + index).val() != '' ? $('#price_ext_dk' + (i + 1) + '_' + index).val() : '0';
     }
     return result;
 }
@@ -736,7 +728,7 @@ function DK_calcOption(index) {
         let currState = DK_getCurrentOptionState(index);
         // Grand Total
         let grandTotal = DK_calcGrandTotal(currState);
-        $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
+        $("#grandtotal_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
         // Save current option
         DK_saveCurrentState();
     }
@@ -759,11 +751,11 @@ function DK_calcEquipmentCost(currState){
     // Daikin main cost
     let num_of_line = DK_getCountLine('main');
     for (var i = 0; i < num_of_line; i++) {
-        if(currState['main_type' + (i + 1)] != '' && currState['total_dk_type'+(i+1)] != ''){
-            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['total_dk_type'+(i+1)]);
-            numbers_daikin += parseFloat(currState['total_dk_type'+(i+1)]);
-            total_cool_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cool_capacity")) * parseFloat(currState['total_dk_type'+(i+1)]);
-            total_heat_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "heat_capacity")) * parseFloat(currState['total_dk_type'+(i+1)]);
+        if(currState['main_type' + (i + 1)] != '' && currState['qty_main_dk'+(i+1)] != ''){
+            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['qty_main_dk'+(i+1)]);
+            numbers_daikin += parseFloat(currState['qty_main_dk'+(i+1)]);
+            total_cool_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cool_capacity")) * parseFloat(currState['qty_main_dk'+(i+1)]);
+            total_heat_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "heat_capacity")) * parseFloat(currState['qty_main_dk'+(i+1)]);
         }
     }
     //Daikin delivery 
@@ -787,8 +779,8 @@ function DK_calcEquipmentCost(currState){
     // Daikin extra cost
     num_of_line = DK_getCountLine('extra');
     for (var i = 0; i < num_of_line; i++) {
-        if(currState['extra_type' + (i + 1)] != '' && currState['ext_dk_no' + (i + 1)] != '' && currState['ext_dk_val' + (i + 1)] != ''){
-            extra_cost += parseFloat(currState['ext_dk_no' + (i + 1)]) * parseFloat(currState['ext_dk_val' + (i + 1)]);
+        if(currState['extra_type' + (i + 1)] != '' && currState['qty_ext_dk' + (i + 1)] != '' && currState['price_ext_dk' + (i + 1)] != ''){
+            extra_cost += parseFloat(currState['qty_ext_dk' + (i + 1)]) * parseFloat(currState['price_ext_dk' + (i + 1)]);
         }
     }
     //fill cool/heat capacity
@@ -894,8 +886,8 @@ async function DK_generateLineItem(){
         // Main line
         let num_of_line = getCountLine('main');
         for (let i = 0; i < num_of_line; i++) {
-            if (currState['main_type' + (i + 1)] != "" && parseInt(currState['total_dk_type' + (i + 1)]) != 0) {
-                await DK_autoCreateLineItem(currState['main_type' + (i + 1)], dk_main, currState['total_dk_type' + (i + 1)]);
+            if (currState['main_type' + (i + 1)] != "" && parseInt(currState['qty_main_dk' + (i + 1)]) != 0) {
+                await DK_autoCreateLineItem(currState['main_type' + (i + 1)], dk_main, currState['qty_main_dk' + (i + 1)]);
             }
         }
         // wifi line
@@ -908,11 +900,11 @@ async function DK_generateLineItem(){
         // wifi line
         num_of_line = getCountLine('extra');
         for (let i = 0; i < num_of_line; i++) {
-            if (currState['extra_type' + (i + 1)] != "" &&  parseInt(currState['ext_dk_no' + (i + 1)]) != 0) {
-                if (parseInt(currState['ext_dk_val' + (i + 1)]) != 0) {
-                    await DK_autoCreateLineItem(currState['extra_type' + (i + 1)], dk_extra, currState['ext_dk_no' + (i + 1)], currState['ext_dk_val' + (i + 1)]);
+            if (currState['extra_type' + (i + 1)] != "" &&  parseInt(currState['qty_ext_dk' + (i + 1)]) != 0) {
+                if (parseInt(currState['price_ext_dk' + (i + 1)]) != 0) {
+                    await DK_autoCreateLineItem(currState['extra_type' + (i + 1)], dk_extra, currState['qty_ext_dk' + (i + 1)], currState['price_ext_dk' + (i + 1)]);
                 } else {
-                    await DK_autoCreateLineItem(currState['extra_type' + (i + 1)], dk_extra, currState['ext_dk_no' + (i + 1)]);
+                    await DK_autoCreateLineItem(currState['extra_type' + (i + 1)], dk_extra, currState['qty_ext_dk' + (i + 1)]);
                 }
             }
         }
