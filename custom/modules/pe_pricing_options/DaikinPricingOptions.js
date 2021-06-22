@@ -34,27 +34,12 @@ $(function () {
         e.preventDefault();
         DK_clearOption($(this).data('option'));
     });
-   
-    // /** Clear sl button */
-    // $(document).on('click', '#calculate_dk', function(e){
-    //     e.preventDefault();
-    //     for (var i = 1; i < 7; i++) {
-    //         var main_type = $("#main_dk_type_"+i).val();
-    //         var extra_type = $("#extra_dk_type_"+i).val();
-    //         // Get suggested
-    //         if(main_type != '' && extra_type != ""){
-    //             // Calculate option
-    //             DK_calcOption(i);
-    //         }
-    //     }
+
+    // $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='number_wifi_dk_type']", function(e){
+    //     var index  = $(this).attr("id").split('_');
+    //     index = index[index.length -1];
+    //         DK_calcOption(index);
     // });
-
-
-    $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='number_wifi_dk_type']", function(e){
-        var index  = $(this).attr("id").split('_');
-        index = index[index.length -1];
-            DK_calcOption(index);
-    });
 
     //************************************************ END THIENPB ************************************************ */
 
@@ -139,7 +124,7 @@ async function init_table_daikin() {
             , makeInputBox("total_dk_type_5 daikin_pricing_input", "total_dk_type1_5", false)
             , makeInputBox("total_dk_type_6 daikin_pricing_input", "total_dk_type1_6", false)],
         ["<button id='main_add' class='button default'>+</button>"
-            , "<input type='hidden' class='daikin_pricing' name='main_line' id='main_line' value='1' />"],
+            , "<input type='hidden' class='daikin_pricing_input' name='main_line' id='main_line' value='1' />"],
         // ["Daikin Wifi"
         //     , makeInputBox("total_dk_wifi_1 daikin_pricing", "total_dk_wifi_1", false)
         //     , makeInputBox("total_dk_wifi_2 daikin_pricing", "total_dk_wifi_2", false)
@@ -162,7 +147,7 @@ async function init_table_daikin() {
             , makeInputBox("number_wifi_dk_type_5 daikin_pricing_input", "number_wifi_dk_type1_5", false)
             , makeInputBox("number_wifi_dk_type_6 daikin_pricing_input", "number_wifi_dk_type1_6", false)],
         ["<button id='wifi_add' class='button default'>+</button>"
-            , "<input type='hidden' class='daikin_pricing' name='wifi_line' id='wifi_line' value='1' />"],
+            , "<input type='hidden' class='daikin_pricing_input' name='wifi_line' id='wifi_line' value='1' />"],
         ["Daikin Install"
             , makeSelectBox(['Yes', 'No'], "install_dk_1 daikin_pricing_input", "install_dk_1")
             , makeSelectBox(['Yes', 'No'], "install_dk_2 daikin_pricing_input", "install_dk_2")
@@ -300,13 +285,13 @@ function DK_createNewLine(target = 'extra'){
         } else {
             // Other td
             let input;
-            let select = makeSelectBox(DK_convertJSONToArrayInit(list), `${id}_${next_index} daikin_pricing`, id + next_index + "_" + i);
+            let select = makeSelectBox(DK_convertJSONToArrayInit(list), `${id}_${next_index} daikin_pricing_input`, id + next_index + "_" + i);
             select.css({"width":"100%"});
             if (target == 'main' || target == 'wifi') {
-                input = makeInputBox(`${id1}_${next_index} daikin_pricing`, `${id1}${next_index}_${i}`, false);
+                input = makeInputBox(`${id1}_${next_index} daikin_pricing_input`, `${id1}${next_index}_${i}`, false);
                 input.css({"width":"100%"});
             } else {
-                input = makeTwoInputBox(`${id}_${next_index} daikin_pricing`, `${id1}${next_index}_${i}`, `${id2}${next_index}_${i}`, false);
+                input = makeTwoInputBox(`${id}_${next_index} daikin_pricing_input`, `${id1}${next_index}_${i}`, `${id2}${next_index}_${i}`, false);
                 // input.css({"width":"100%"});
             }
             $(td).html(select);
@@ -456,51 +441,51 @@ function DK_loadOption(){
 }
 
 //Get current option state
-function DK_getCurrentOptionState(index){
-    let result = {};
-    let state = $('#install_address_state_c').val();
-    result['state'] = state;
-    result['pm'] = ($("#pmdk_"+index).val() != '') ? parseFloat($("#pmdk_"+index).val()) : 0;
-    // Main line
-    let num_of_line = DK_getCountLine('main');
-    for (var i = 0; i < num_of_line; i++) {
-        result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val();
-        result['total_dk_type' + (i + 1)] = $('#total_dk_type' + (i + 1) + '_' + index).val();
-    }
+// function DK_getCurrentOptionState(index){
+//     let result = {};
+//     let state = $('#install_address_state_c').val();
+//     result['state'] = state;
+//     result['pm'] = ($("#pmdk_"+index).val() != '') ? parseFloat($("#pmdk_"+index).val()) : 0;
+//     // Main line
+//     let num_of_line = DK_getCountLine('main');
+//     for (var i = 0; i < num_of_line; i++) {
+//         result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val();
+//         result['total_dk_type' + (i + 1)] = $('#total_dk_type' + (i + 1) + '_' + index).val();
+//     }
 
-    // Wifi line
-    num_of_line = DK_getCountLine('wifi');
-    for (var i = 0; i < num_of_line; i++) {
-        result['wifi_type' + (i + 1)] = $('#wifi_dk_type' + (i + 1) + '_' + index).val();
-        result['number_wifi_type' + (i + 1)] = $('#number_wifi_dk_type' + (i + 1) + '_' + index).val();
-    }
+//     // Wifi line
+//     num_of_line = DK_getCountLine('wifi');
+//     for (var i = 0; i < num_of_line; i++) {
+//         result['wifi_type' + (i + 1)] = $('#wifi_dk_type' + (i + 1) + '_' + index).val();
+//         result['number_wifi_type' + (i + 1)] = $('#number_wifi_dk_type' + (i + 1) + '_' + index).val();
+//     }
 
-    // result['total_wifi'] = $('#total_dk_wifi_' + index).val();
-    result['install_dk'] = $('#install_dk_' + index).val();
-    // Extra line
-    num_of_line = DK_getCountLine('extra');
-    for (var i = 0; i < num_of_line; i++) {
-        result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val();
-        result['ext_dk_no' + (i + 1)] = $('#ext_dk_no' + (i + 1) + '_' + index).val();
-        result['ext_dk_val' + (i + 1)] = $('#ext_dk_val' + (i + 1) + '_' + index).val();
-    }
-    return result;
-}
+//     // result['total_wifi'] = $('#total_dk_wifi_' + index).val();
+//     result['install_dk'] = $('#install_dk_' + index).val();
+//     // Extra line
+//     num_of_line = DK_getCountLine('extra');
+//     for (var i = 0; i < num_of_line; i++) {
+//         result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val();
+//         result['ext_dk_no' + (i + 1)] = $('#ext_dk_no' + (i + 1) + '_' + index).val();
+//         result['ext_dk_val' + (i + 1)] = $('#ext_dk_val' + (i + 1) + '_' + index).val();
+//     }
+//     return result;
+// }
 
 
-function DK_calcOption(index, isTotalPanel = false) {
-    if(index != '' && index != undefined){
-        let currState = DK_getCurrentOptionState(index);
-        if(currState.main_type != ''){
-            // Grand Total
-            let grandTotal = DK_calcGrandTotal(currState);
-            $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
-            // Save current option
-            DK_saveCurrentState();
+// function DK_calcOption(index, isTotalPanel = false) {
+//     if(index != '' && index != undefined){
+//         let currState = DK_getCurrentOptionState(index);
+//         if(currState.main_type != ''){
+//             // Grand Total
+//             let grandTotal = DK_calcGrandTotal(currState);
+//             $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
+//             // Save current option
+//             DK_saveCurrentState();
 
-        }
-    }
-}
+//         }
+//     }
+// }
 
 //
 function DK_clearOption(option){
@@ -512,62 +497,6 @@ function DK_clearOption(option){
 function DK_getCountLine(target){
     return parseInt($('#'+ target +'_line').val());
 }
-
-
-function DK_calcEquipmentCost(currState){
-    let main_cost = 0, delivery_cost = 0,install_cost = 0, extra_cost = 0, wifi_cost = 0;
-    // Daikin main cost
-    let num_of_line = DK_getCountLine('main');
-    for (var i = 0; i < num_of_line; i++) {
-        if(currState['main_type' + (i + 1)] != ''){
-            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * ( currState['total_dk_type'+(i+1)] != '' ? parseFloat(currState['total_dk_type'+(i+1)]) : 0);
-        }
-    }
-    //Daikin delivery 
-    if (currState['state'] == 'VIC') {
-        delivery_cost = parseFloat(daikin_delivery.default) + parseFloat(daikin_delivery.VIC);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-    } else {
-        delivery_cost = parseFloat(daikin_delivery.default);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-    }
-    // Daikin install
-    if (currState['install_dk'] == 'Yes') {
-        install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_install, 'cost'));
-    }
-
-    // Daikin Wifi
-    num_of_line = DK_getCountLine('wifi');
-    for (var i = 0; i < num_of_line; i++) {
-        if(currState['wifi_type' + (i + 1)] != ''){
-            wifi_cost += parseFloat(getAttributeFromName(currState['wifi_type' + (i + 1)], dk_wifi, "cost")) * (currState['number_wifi_type'+(i+1)] != '' ? parseFloat(currState['number_wifi_type'+(i+1)]) : 0);
-        }
-    }
-    // Daikin extra cost
-    num_of_line = DK_getCountLine('extra');
-    for (var i = 0; i < num_of_line; i++) {
-        if(currState['extra_type' + (i + 1)] != ''){
-            extra_cost += (currState['ext_dk_no' + (i + 1)] != '' ? parseFloat(currState['ext_dk_no' + (i + 1)]): 0) * (currState['ext_dk_val' + (i + 1)] != '' ? parseFloat(currState['ext_dk_val' + (i + 1)]) : 0);
-        }
-    }
-
-    return main_cost + delivery_cost + install_cost + wifi_cost + extra_cost;
-}
-
-function DK_calcGrandTotal(currState){
-    let grandTotal = 0;
-    // Equipment cost
-    grandTotal += DK_calcEquipmentCost(currState);
-    // PE Admin %
-    grandTotal += grandTotal * (parseFloat($('#dk_pe_admin_percent').val()) / 100);
-    // GST 10%
-    let gst = grandTotal * 0.1;
-    // Include GST above
-    grandTotal += gst;
-     // PM
-     grandTotal += currState.pm;
-
-    return grandTotal;
-}
-
 
 
 // Solar Checkbox handle 
