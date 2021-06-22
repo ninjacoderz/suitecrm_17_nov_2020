@@ -14,6 +14,13 @@ if (isset($quote_id) && $quote_id != '') {
         $state = $_REQUEST['state'];
         $postcode = $_REQUEST['postcode'];
         $country = $_REQUEST['country'];
+        //update install address quote
+        $quote->install_address_c = $street;
+        $quote->install_address_city_c = $city;
+        $quote->install_address_state_c = $state;
+        $quote->install_address_postalcode_c = $postcode;
+        $quote->save();
+        //update quote
 
         $distributor = $_REQUEST['distributor'];
         $retailer = $_REQUEST['retailer'];

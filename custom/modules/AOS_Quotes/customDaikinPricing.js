@@ -73,7 +73,7 @@ $(function () {
     $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='number_wifi_dk_type']", function(e){
         var index  = $(this).attr("id").split('_');
         let item_no = $(this).attr('id').charAt($(this).attr('id').length-3);
-        let selector = '', type = '';
+        let selector = '', type = '', qty_id ='';
         let num_of_line = 1;
         let value_selected = $(this).val();
         index = index[index.length -1];
@@ -82,19 +82,28 @@ $(function () {
             selector = 'main_dk_type';
             num_of_line = DK_getCountLine('main');
             type = 'main';
+            qty_id = 'total_dk_type';
         }
         if ($(this).attr('id').indexOf('wifi_dk_type') != -1) {
             selector = 'wifi_dk_type';
             num_of_line = DK_getCountLine('wifi');
             type = 'wifi';
+            qty_id = 'number_wifi_dk_type';
         }
         if ($(this).attr('id').indexOf('extra_dk_type') != -1) {
             selector = 'extra_dk_type';
             num_of_line = DK_getCountLine('extra');
             type = 'extra';
+            qty_id = 'ext_dk_no';
+            //get cost extra fill to price extra
+            $(`#ext_dk_val${item_no}_${index}`).val(getAttributeFromName($(this).val(), dk_extra, 'cost') == null ? '' : parseFloat(getAttributeFromName($(this).val(), dk_extra, 'cost')) );
         }
-        if (selector != '' && num_of_line > 1) {
-            alertExist(selector, num_of_line, index, value_selected, type, item_no);
+        if (selector != '') {
+            if (value_selected == '') {
+                    $(`#${qty_id}${item_no}_${index}`).val('');
+            } else {
+                alertExist(selector, num_of_line, index, value_selected, type, item_no);
+            }
         }
         DK_calcOption(index);
     });
