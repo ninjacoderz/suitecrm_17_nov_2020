@@ -205,7 +205,7 @@ async function init_table_daikin() {
 
     $('table[id="daikin_pricing"]').after('<br><button type="button" class="button primary" id="save_options"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Save Options </button><div class="clearfix"></div>');
     $("#save_options").on("click",function(){
-        save_values('daikin_pricing_table','daikin_pricing_input');
+        save_values_daikin('daikin_pricing_table','daikin_pricing_input');
     })
     // Load Daikin Option
     DK_loadOption();
@@ -304,77 +304,6 @@ function DK_createNewLine(target = 'extra'){
     $('#'+ target +'_line').val(next_index);
 }
 
-function DK_saveCurrentState(){
-    let result = {};
-    let state = $("#install_address_state_c").val();
-    $("#daikin_pricing_table .daikin_pricing").each(function (){
-        let opt = {};
-        let id_product = '', partNumber_product = '', name_product = '';
-        var id_name = $(this).attr("id");
-        let item_no = id_name.charAt(id_name.length-3);
-        let option = id_name.split('_').pop();
-        if (isNaN(option)) {
-            result[id_name] = $(this).val();
-            return true;
-        }
-        if($("#"+id_name).attr('type')== 'checkbox'){
-            opt[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
-        } else {
-            opt[id_name] = $(this).val();
-        }
-
-        //Main
-        if (id_name.indexOf('main_dk_type') != -1 || id_name.indexOf('total_dk_type') != -1) {
-            if (!result[option].hasOwnProperty('products')) {
-                result[option].products = {};
-            }
-            if(id_name.indexOf('main_dk_type') != -1) {
-                id_product = getAttributeFromName(opt[id_name], dk_main, 'id') != '' ?  getAttributeFromName(opt[id_name], dk_main, 'id') : '';
-                partNumber_product = getAttributeFromName(opt[id_name], dk_main, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_main, 'part_number') : '';
-                name_product = getAttributeFromName(opt[id_name], dk_main, 'name') != '' ? getAttributeFromName(opt[id_name], dk_main, 'name') : '';
-                result[option].products[item_no] = {...result[option].products[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
-            }
-
-            result[option].products[item_no] = {...result[option].products[item_no], ...opt};
-            return true;
-        }
-        //Wifi
-        if (id_name.indexOf('wifi_dk_type') != -1 || id_name.indexOf('number_wifi_dk_type') != -1) {
-            if (!result[option].hasOwnProperty('wifi')) {
-                result[option].wifi = {};
-            }
-            if(id_name.indexOf('wifi_dk_type') != -1) {
-                id_product = getAttributeFromName(opt[id_name], dk_wifi, 'id') != '' ?  getAttributeFromName(opt[id_name], dk_wifi, 'id') : '';
-                partNumber_product = getAttributeFromName(opt[id_name], dk_wifi, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_wifi, 'part_number') : '';
-                name_product = getAttributeFromName(opt[id_name], dk_wifi, 'name') != '' ? getAttributeFromName(opt[id_name], dk_wifi, 'name') : '';
-                result[option].wifi[item_no] = {...result[option].wifi[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
-            }
-
-            result[option].wifi[item_no] = {...result[option].wifi[item_no], ...opt};
-            return true;
-        }
-        //Extra 
-        if (id_name.indexOf('extra_dk_type') != -1 || id_name.indexOf('ext_dk_no') != -1 || id_name.indexOf('ext_dk_val') != -1) {
-            if (!result[option].hasOwnProperty('extras')) {
-                result[option].extras = {};
-            }
-            if(id_name.indexOf('extra_dk_type') != -1) {
-                id_product = getAttributeFromName(opt[id_name], dk_extra, 'id') != '' ?  getAttributeFromName(opt[id_name], dk_extra, 'id') : '';
-                partNumber_product = getAttributeFromName(opt[id_name], dk_extra, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'part_number') : '';
-                name_product = getAttributeFromName(opt[id_name], dk_extra, 'name') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'name') : '';
-                result[option].extras[item_no] = {...result[option].extras[parseInt(item_no) - 1], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
-            }
-            result[option].extras[item_no] = {...result[option].extras[item_no], ...opt};
-            return true;
-        }
-
-        result[option] = {...result[option], ...opt};
-    });
-    //add state
-    result = {...result, ...{'state': state}};
-    $("#quote_note_inputs_c").val(JSON.stringify(result));
-}
-
 //Load option
 function DK_loadOption(){
     if($("#pricing_option_input_c").val() != ""){
@@ -440,54 +369,6 @@ function DK_loadOption(){
     }
 }
 
-//Get current option state
-// function DK_getCurrentOptionState(index){
-//     let result = {};
-//     let state = $('#install_address_state_c').val();
-//     result['state'] = state;
-//     result['pm'] = ($("#pmdk_"+index).val() != '') ? parseFloat($("#pmdk_"+index).val()) : 0;
-//     // Main line
-//     let num_of_line = DK_getCountLine('main');
-//     for (var i = 0; i < num_of_line; i++) {
-//         result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val();
-//         result['total_dk_type' + (i + 1)] = $('#total_dk_type' + (i + 1) + '_' + index).val();
-//     }
-
-//     // Wifi line
-//     num_of_line = DK_getCountLine('wifi');
-//     for (var i = 0; i < num_of_line; i++) {
-//         result['wifi_type' + (i + 1)] = $('#wifi_dk_type' + (i + 1) + '_' + index).val();
-//         result['number_wifi_type' + (i + 1)] = $('#number_wifi_dk_type' + (i + 1) + '_' + index).val();
-//     }
-
-//     // result['total_wifi'] = $('#total_dk_wifi_' + index).val();
-//     result['install_dk'] = $('#install_dk_' + index).val();
-//     // Extra line
-//     num_of_line = DK_getCountLine('extra');
-//     for (var i = 0; i < num_of_line; i++) {
-//         result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val();
-//         result['ext_dk_no' + (i + 1)] = $('#ext_dk_no' + (i + 1) + '_' + index).val();
-//         result['ext_dk_val' + (i + 1)] = $('#ext_dk_val' + (i + 1) + '_' + index).val();
-//     }
-//     return result;
-// }
-
-
-// function DK_calcOption(index, isTotalPanel = false) {
-//     if(index != '' && index != undefined){
-//         let currState = DK_getCurrentOptionState(index);
-//         if(currState.main_type != ''){
-//             // Grand Total
-//             let grandTotal = DK_calcGrandTotal(currState);
-//             $("#total_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
-//             // Save current option
-//             DK_saveCurrentState();
-
-//         }
-//     }
-// }
-
-//
 function DK_clearOption(option){
     $("#daikin_option_"+(option)).prop('checked', false);
     $('#daikin_pricing_table td:nth-child('+ (option + 1) +')').find('input').val('');
@@ -497,7 +378,19 @@ function DK_clearOption(option){
 function DK_getCountLine(target){
     return parseInt($('#'+ target +'_line').val());
 }
-
+function save_values_daikin(type,input){
+    var values = {};
+    $("#"+type+" ."+input).each(function (){
+        var id_name = $(this).attr("id");
+        if($("#"+id_name).attr('type')== 'checkbox'){
+            values[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
+        } else {
+            values[id_name] = $(this).val();
+        }
+        
+    });
+    $("#pricing_option_input_c").val(JSON.stringify(values));
+}
 
 // Solar Checkbox handle 
 $(document).on('change', 'input[id*="daikin_option"]', function(){

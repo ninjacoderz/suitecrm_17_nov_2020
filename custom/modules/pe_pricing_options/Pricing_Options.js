@@ -24,14 +24,7 @@ $(function(){
                 init_table_daikin();
                 break;
             case 'sanden':
-                var seletor_panel_pricing_pv = '';
-                $('.panel-content .panel-default').each(function(){
-                    var title_panel_default = $(this).find('.panel-heading a div').text().toLowerCase().trim();
-                    if(title_panel_default == 'pricing options'){
-                        seletor_panel_pricing_pv = '#' + $(this).find('.panel-body').attr('id');
-                    }
-                })
-                $(seletor_panel_pricing_pv).find(".tab-content").html('');
+                renderSandenHTML('quote_type_sanden');
                 // init_table_solar();
                 break;
             default: break;

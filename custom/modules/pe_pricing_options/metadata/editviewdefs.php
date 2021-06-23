@@ -53,6 +53,10 @@ array (
         array (
           'file' => 'custom/modules/pe_pricing_options/DaikinPricingOptions.js',
         ),
+        3 => 
+        array (
+          'file' => 'custom/modules/pe_pricing_options/SandenPricingOptions.js',
+        ),
       ),
     ),
     'panels' => 
