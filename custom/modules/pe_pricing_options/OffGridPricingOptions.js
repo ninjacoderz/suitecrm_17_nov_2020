@@ -21,14 +21,7 @@ $(function () {
                 init_table_daikin();
                 break;
             case 'sanden':
-                var seletor_panel_pricing_pv = '';
-                $('.panel-content .panel-default').each(function(){
-                    var title_panel_default = $(this).find('.panel-heading a div').text().toLowerCase().trim();
-                    if(title_panel_default == 'pricing options'){
-                        seletor_panel_pricing_pv = '#' + $(this).find('.panel-body').attr('id');
-                    }
-                })
-                $(seletor_panel_pricing_pv).find(".tab-content").html('');
+                renderSandenHTML('quote_type_sanden');
                 // init_table_solar();
                 break;
             default: break;
@@ -420,7 +413,7 @@ async function calcOption(index, isTotalPanel = false, isMax = false) {
 // .:nhantv:. Save curent state
 function saveCurrentState(){
     var values = {};
-    $("#offgrid_pricing_table .offgrid_pricing").each(function (){
+    $("#offgrid_pricing_table .offgrid_pricing_input").each(function (){
         var id_name = $(this).attr("id");
         if($("#"+id_name).attr('type')== 'checkbox'){
             values[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
@@ -428,7 +421,7 @@ function saveCurrentState(){
             values[id_name] = $(this).val();
         }
     });
-    $("#offgrid_option_c").val(JSON.stringify(values));
+    $("#pricing_option_input_c").val(JSON.stringify(values));
 }
 
 // .:nhantv:. Load Offgrid option
@@ -828,7 +821,7 @@ async function init_table_offgrid() {
     initHint();
     $('table[id="offgrid_pricing"]').after('<br><button type="button" class="button primary" id="save_options"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Save Options </button><div class="clearfix"></div>');
     $("#save_options").on("click",function(){
-        save_values('offgrid_pricing_table','offgrid_pricing_input');
+        saveCurrentState();
     })
     parseandsetvalue();
 }
@@ -1073,4 +1066,16 @@ function calcHint(){
     // Return
     $('#hint1').append(str);
     $('#hint2').append(str2);
+}
+
+function roundTo90(val){
+    let strNum = typeof val == "String" ? val.replaceAll(',','').split('.')[0] : val.toString().replaceAll(',','').split('.')[0];
+    let firstDigit = strNum.substr(0, strNum.length - 2);
+    let last2Digit = strNum.substr(strNum.length - 2, strNum.length);
+    // alway UP if last 2 digit > 90
+    if(parseInt(last2Digit) > 90){
+        return parseFloat((parseFloat(firstDigit) + 1) + "90.00").toFixed(2);
+    }
+    // round to **90.00
+    return parseFloat(firstDigit + "90.00").toFixed(2);
 }
