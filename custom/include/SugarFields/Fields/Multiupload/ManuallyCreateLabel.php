@@ -210,8 +210,8 @@
     }
 
     $curl = curl_init();
-    $source = "http://suitecrm.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
-    //$source = "http://loc.suitecrm.com/index.php?entryPoint=APICreateLabelAuspost";
+    $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
+    // $source = "http://loc.suitecrm.com/index.php?entryPoint=APICreateLabelAuspost";
     curl_setopt($curl, CURLOPT_URL, $source);
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array("shipments"=>$shipments)));
@@ -230,6 +230,7 @@
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $result = curl_exec($curl);
     curl_close($curl);
+    print_r($result);
 
     $json_result = json_decode($result);
     $aupost_shipping_id = $json_result->shipments[0]->shipment_id;
