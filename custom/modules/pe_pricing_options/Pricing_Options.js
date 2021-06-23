@@ -192,6 +192,11 @@ async function init_table_solar() {
     // Load Solar Option
     SL_loadOption();
     parseandsetvalue();
+
+    $('table[id="solar_pricing"]').after('<br><button type="button" class="button primary" id="save_options"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Save Options </button><div class="clearfix"></div>');
+    $("#save_options").on("click",function(){
+        save_values('solar_pricing','solar_pricing');
+    })
 }
 
 function makeTable(container, data, tclass, tid) {
@@ -218,6 +223,7 @@ function makeInputBox(iclass,iid, disabled = false){
     var input = $("<input/>").addClass(iclass).attr("id",iid).prop('disabled', disabled);;
     return input;
 }
+
 function SL_loadOption(){
     if($("#own_solar_pv_pricing_c").val() != ""){
         try{
@@ -255,12 +261,13 @@ function SL_loadOption(){
         }
     }
 }
-//
+
 function SL_clearOption(option){
     $("#solar_option_"+(option)).prop('checked', false);
     $('#solar_pv_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="sl_pe_admin_percent"],input[id="sl_inverter_line"],input[id="sl_accessory_line"])').val('');
     $('#solar_pv_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
+
 function SL_getCurrentOptionState(index){
     let result = {};
     result['total_kw'] = $('#total_sl_kW_' + index).val();
@@ -283,6 +290,7 @@ function SL_getCurrentOptionState(index){
     result['pm'] = ($("#sl_pm"+index).val() != '') ? parseFloat($("#sl_pm"+index).val()) : 0;
     return result;
 }
+
 function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
     //const ratio = 1.333;
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
@@ -509,5 +517,19 @@ function SL_saveCurrentState(){
         }
     });
 
+    $("#pricing_option_input_c").val(JSON.stringify(values));
+}
+
+function save_values(type,input){
+    var values = {};
+    $("#"+type+" ."+input).each(function (){
+        var id_name = $(this).attr("id");
+        if($("#"+id_name).attr('type')== 'checkbox'){
+            values[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
+        } else {
+            values[id_name] = $(this).val();
+        }
+        
+    });
     $("#pricing_option_input_c").val(JSON.stringify(values));
 }
