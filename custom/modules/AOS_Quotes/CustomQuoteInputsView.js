@@ -767,7 +767,7 @@ function autoSaveData(){
                     data : {moduleID:$("input[name='record']").val()},
                     success: function (data) {
                         SUGAR.ajaxUI.hideLoadingPanel();
-                        if(data = '[]' || data == '' || typeof data === 'undefined') return;
+                        if(data == '' || typeof data === 'undefined') return;
                         var product_items = JSON.parse(data);
                         var groupidx = $("#lineItems").find(".group_body").length -1;
                         let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');

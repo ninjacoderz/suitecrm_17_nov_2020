@@ -6561,6 +6561,9 @@ $(function () {
                     //get po plumb/elec total_amt
                     if($("#quote_type_c").val() == 'quote_type_solar'){
                         // Calc Installation Cost
+                        if(typeof extra_solar_products == "undefined"){
+                            var extra_solar_products = ["Solar PV Standard Install", "Solar PV Balance Of System", "STCs","Solar PV Supply and Install"];
+                        }
                         let optSelected_ = $('input[name="solar_option"]:checked').attr('data-attr');
                         let currState_ = SL_getCurrentOptionState(optSelected_);
                         let installationCost =  parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState_.total_kw);
