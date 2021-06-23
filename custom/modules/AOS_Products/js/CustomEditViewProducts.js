@@ -194,18 +194,18 @@ function dynamicSolarCategory(){
         $("#solar_category_c").parent().parent().css("display", "none");
         // tuan
         $('#panel_type_c,#noct_c,#tempcoeff_c').closest('.edit-view-row-item').show();
-        $('#panel_type_c,#noct_c,#tempcoeff_c,#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').hide();
+        $('#panel_type_c,#noct_c,#tempcoeff_c,#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c,#short_side_clamp_zone_min_c,#short_side_clamp_zone_max_c,#long_side_clamp_zone_min_c,#long_side_clamp_zone_max_c').closest('.edit-view-row-item').hide();
     } else {
         $("#solar_category_c").parent().parent().attr('style','');
     }
     if ($.inArray(productCategoryValue, ["Solar"]) != -1 && $('#solar_category_c').val() == 'solar_panels') {
         $("#module_efficiency").parent().parent().attr('style','');
         $("#warranty").parent().parent().attr('style','');
-        $('#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').show();
+        $('#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c,#short_side_clamp_zone_min_c,#short_side_clamp_zone_max_c,#long_side_clamp_zone_min_c,#long_side_clamp_zone_max_c').closest('.edit-view-row-item').show();
     } else {
         $("#module_efficiency").parent().parent().css("display", "none");
         $("#warranty").parent().parent().css("display", "none");
-        $('#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c').closest('.edit-view-row-item').hide();
+        $('#begin_clamp_zone_landscape_c,#begin_clamp_zone_portrait_c,#end_clamp_zone_portrait_c,#end_clamp_zone_landscape_c,#short_side_clamp_zone_min_c,#short_side_clamp_zone_max_c,#long_side_clamp_zone_min_c,#long_side_clamp_zone_max_c').closest('.edit-view-row-item').hide();
     }
     if ($.inArray(productCategoryValue, ["Daikin"]) != -1) {
         $('#daikin_category').closest('.edit-view-row-item').show();
