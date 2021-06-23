@@ -211,11 +211,11 @@ function dynamicSolarCategory(){
         $('#daikin_category').closest('.edit-view-row-item').show();
         // tuan code 
         $('#heating_cooling_category_c').closest('.edit-view-row-item').show();
-        if ( $('#heating_cooling_category_c').val() == 'split_system'){
-            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
-        }else {
-            $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
-        }
+        // if ( $('#heating_cooling_category_c').val() == 'split_system'){
+        //     $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').show();
+        // }else {
+        //     $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
+        // }
     } else {
         $('#daikin_category').closest('.edit-view-row-item').hide();
         // tuan code 
