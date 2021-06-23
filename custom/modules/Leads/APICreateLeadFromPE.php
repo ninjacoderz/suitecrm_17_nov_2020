@@ -441,7 +441,7 @@
         );
        
         $curl = curl_init();
-        $source = "http://suitecrm.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
+        $source = "http://suitecrm.devel.pure-electric.com.au/index.php?entryPoint=APICreateLabelAuspost";
         curl_setopt($curl, CURLOPT_URL, $source);
         curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfsuitename);
         curl_setopt($curl, CURLOPT_POST, 1);//count($fields)
