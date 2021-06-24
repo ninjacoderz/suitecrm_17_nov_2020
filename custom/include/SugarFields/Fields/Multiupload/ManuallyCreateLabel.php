@@ -230,7 +230,6 @@
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $result = curl_exec($curl);
     curl_close($curl);
-    print_r($result);
 
     $json_result = json_decode($result);
     $aupost_shipping_id = $json_result->shipments[0]->shipment_id;
