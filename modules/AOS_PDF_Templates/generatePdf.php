@@ -364,6 +364,10 @@ if($short_description_c != ""){
         } else if ($bean->quote_type_c == 'quote_type_daikin' || $bean->quote_type_c == 'quote_type_nexura') {
             $url_acceptance = '<a target="_blank" href="https://pure-electric.com.au/pedaikinform-new/acceptance?quote-id='.$bean->id.'">here is our URL link.</a>';
             $url_upload_photo = '<a target="_blank" href="https://pure-electric.com.au/pedaikinform-new/confirm?quote-id='.$bean->id.'">here is the link to upload photos</a>';
+        }if ($bean->quote_type_c == 'quote_type_off_grid_system' ) {
+            $url_acceptance = '<a target="_blank" href="https://pure-electric.com.au/offgrid_acceptance?quote-id='.$bean->id.'">here is our URL link.</a>';
+            $url_upload_photo = '';
+            $short_description_c = str_replace("And \$link_upload_photo.", $url_upload_photo, $short_description_c);
         }
         $short_description_c = str_replace("\$link_acceptance", $url_acceptance, $short_description_c);
         $short_description_c = str_replace("\$link_upload_photo", $url_upload_photo, $short_description_c);

@@ -163,6 +163,8 @@
         }else if($quote->quote_type_c == 'quote_type_sanden'){
             $product_type = "Sanden";
             $color = ['#945596','#fcfafc'];
+        }else{
+            $color = ['#F48C20','#fffaf6'];
         }
 
         $solar_pricing_options ='<div style="display: block;align-items: stretch;justify-content: left;">
