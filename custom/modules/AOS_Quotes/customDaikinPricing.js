@@ -745,29 +745,54 @@ function DK_getCountLine(target){
     return parseInt($('#'+ target +'_line').val());
 }
 
-
-function DK_calcEquipmentCost(currState){
-    let numbers_daikin = 0, main_cost = 0, delivery_cost = 0,install_cost = 0, extra_cost = 0, wifi_cost = 0, total_cool_capacity = 0, total_heat_capacity = 0;
-    // Daikin main cost
+function DK_calcInstallCost(currState) {
     let num_of_line = DK_getCountLine('main');
+    let numbers_daikin = 0, install_cost = 0;
     for (var i = 0; i < num_of_line; i++) {
         if(currState['main_type' + (i + 1)] != '' && currState['qty_main_dk'+(i+1)] != ''){
-            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['qty_main_dk'+(i+1)]);
             numbers_daikin += parseFloat(currState['qty_main_dk'+(i+1)]);
-            total_cool_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cool_capacity")) * parseFloat(currState['qty_main_dk'+(i+1)]);
-            total_heat_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "heat_capacity")) * parseFloat(currState['qty_main_dk'+(i+1)]);
         }
     }
+    // Daikin install
+    if (currState['install_dk'] == 'Yes') {
+        install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost')) * parseFloat(numbers_daikin);
+    }
+    return install_cost;
+}
+
+function DK_calcDeliveryCost(currState) {
+    let delivery_cost = 0;
     //Daikin delivery 
     if (currState['state'] == 'VIC') {
         delivery_cost = parseFloat(daikin_delivery.default) + parseFloat(daikin_delivery.VIC);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
     } else {
         delivery_cost = parseFloat(daikin_delivery.default);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
     }
-    // Daikin install
-    if (currState['install_dk'] == 'Yes') {
-        install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost')) * parseFloat(numbers_daikin);
+    return delivery_cost;
+}
+
+function DK_calcEquipmentCost(currState){
+    let main_cost = 0, extra_cost = 0, wifi_cost = 0, total_cool_capacity = 0, total_heat_capacity = 0;
+    // Daikin main cost
+    let num_of_line = DK_getCountLine('main');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['main_type' + (i + 1)] != '' && currState['qty_main_dk'+(i+1)] != ''){
+            main_cost += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cost")) * parseFloat(currState['qty_main_dk'+(i+1)]);
+            // numbers_daikin += parseFloat(currState['qty_main_dk'+(i+1)]);
+            total_cool_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "cool_capacity")) * parseFloat(currState['qty_main_dk'+(i+1)]);
+            total_heat_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "heat_capacity")) * parseFloat(currState['qty_main_dk'+(i+1)]);
+        }
     }
+    // //Daikin delivery 
+    // if (currState['state'] == 'VIC') {
+    //     delivery_cost = parseFloat(daikin_delivery.default) + parseFloat(daikin_delivery.VIC);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
+    // } else {
+    //     delivery_cost = parseFloat(daikin_delivery.default);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
+    // }
+    // // Daikin install
+    // if (currState['install_dk'] == 'Yes') {
+    //     install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost')) * parseFloat(numbers_daikin);
+    // }
 
     // Daikin Wifi
     num_of_line = DK_getCountLine('wifi');
@@ -787,13 +812,15 @@ function DK_calcEquipmentCost(currState){
     $(`#total_cooling_capacity_${currState['index']}`).val(total_cool_capacity.formatMoney(2, ',', '.'));
     $(`#total_heating_capacity_${currState['index']}`).val(total_heat_capacity.formatMoney(2, ',', '.'));
 
-    return main_cost + delivery_cost + install_cost + wifi_cost + extra_cost;
+    return main_cost + wifi_cost + extra_cost;
 }
 
 function DK_calcGrandTotal(currState){
     let grandTotal = 0;
     // Equipment cost
     grandTotal += DK_calcEquipmentCost(currState);
+    // Install + Delivery cost
+    grandTotal += DK_calcInstallCost(currState) + DK_calcDeliveryCost(currState);
     // PE Admin %
     grandTotal += grandTotal * (parseFloat($('#dk_pe_admin_percent').val()) / 100);
     // GST 10%
@@ -911,16 +938,19 @@ async function DK_generateLineItem(){
         // Calculate
         await DK_calculatePrice(currState);
 
+        // Calc Equipment Cost
+        let equipmentCost = DK_calcEquipmentCost(currState);
+        $('#sanden_supply_bill').val(parseFloat(equipmentCost).formatMoney(2, ',', '.'));
+        $('#sanden_supply_bill').trigger('change');
+        // Calc Installation Cost
+        let installationCost = DK_calcInstallCost(currState);
+        $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
+        $('#electrician_bill').trigger('change');
+        // Calc Delivery Cost
+        let deliveryCost = DK_calcDeliveryCost(currState);
+        $('#sanden_shipping_bill').val(parseFloat(deliveryCost).formatMoney(2, ',', '.'));
+        $('#sanden_shipping_bill').trigger('change');
         
-        return;
-        // // Calc Equipment Cost
-        // let equipmentCost = calcEquipmentCost(currState);
-        // $('#sanden_supply_bill').val(parseFloat(equipmentCost).formatMoney(2, ',', '.'));
-        // $('#sanden_supply_bill').trigger('change');
-        // // Calc Installation Cost
-        // let installationCost = calcInstallationCost(currState);
-        // $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
-        // $('#electrician_bill').trigger('change');
     } catch(err) {
         console.log(err);
     } finally {

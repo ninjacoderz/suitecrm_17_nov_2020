@@ -6569,7 +6569,9 @@ $(function () {
                         let installationCost =  parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState_.total_kw);
                         $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
                         $('#electrician_bill').trigger('change');
-                    }else{
+                    }else if ($("#quote_type_c").val() == 'quote_type_daikin') {
+                        
+                    }else {
                         var po_total_amt = getPOforQuote($("input[name='record']").val());
                         $('#plumbing_bill').val(po_total_amt['plumb_po']);
                         $('#electrician_bill').val(po_total_amt['elec_po']);
