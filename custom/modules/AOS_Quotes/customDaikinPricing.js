@@ -580,6 +580,7 @@ function DK_createNewLine(target = 'extra'){
 function DK_saveCurrentState(){
     let result = {};
     let state = $("#install_address_state_c").val();
+    let check_main = {};
     $("#daikin_pricing_table .daikin_pricing").each(function (){
         let opt = {};
         let id_product = '', partNumber_product = '', name_product = '';
@@ -609,6 +610,12 @@ function DK_saveCurrentState(){
                 partNumber_product = getAttributeFromName(opt[id_name], dk_main, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_main, 'part_number') : '';
                 name_product = getAttributeFromName(opt[id_name], dk_main, 'name') != '' ? getAttributeFromName(opt[id_name], dk_main, 'name') : '';
                 result[option].products[item_no] = {...result[option].products[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+            if (id_name.indexOf('qty_main_dk') != -1) {
+                if (!check_main.hasOwnProperty(option)) {
+                    check_main[option] = 0;
+                }
+                check_main[option] += parseInt(opt[id_name] != '' ? opt[id_name] : 0);
             }
 
             result[option].products[item_no] = {...result[option].products[item_no], ...opt};
@@ -646,6 +653,15 @@ function DK_saveCurrentState(){
 
         result[option] = {...result[option], ...opt};
     });
+    //check send email daikin pricing option
+    for (const [k, qty] of Object.entries(check_main)) {
+        if (qty > 0) {
+            result[k] = {...result[k],...{'isSend': 1}};
+        } else {
+            result[k] = {...result[k],...{'isSend': 0}};
+        }
+    }
+    
     //add state
     result = {...result, ...{'state': state}};
     $("#quote_note_inputs_c").val(JSON.stringify(result));

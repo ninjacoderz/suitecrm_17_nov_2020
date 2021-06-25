@@ -35,7 +35,7 @@ $(function () {
         DK_clearOption($(this).data('option'));
     });
 
-    // $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='qty_main_dk'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='qty_wifi_dk']", function(e){
+    // $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='qty_main_dk'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='qty_ext_dk'], input[id*='price_ext_dk'], select[id*='wifi_dk_type'], input[id*='qty_wifi_dk']", function(e){
     //     var index  = $(this).attr("id").split('_');
     //     index = index[index.length -1];
     //         DK_calcOption(index);
@@ -167,12 +167,12 @@ async function init_table_daikin() {
         //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_5 daikin_pricing_input", "extra_dk_type1_5")
         //     , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_6 daikin_pricing_input", "extra_dk_type1_6")],
         // ["Extra (number/value) 1"
-        //     , makeTwoInputBox("expand_ext extra_dk_type_1 daikin_pricing_input", "ext_dk_no1_1", "ext_dk_val1_1" ,false)
-        //     , makeTwoInputBox("expand_ext extra_dk_type_2 daikin_pricing_input", "ext_dk_no1_2", "ext_dk_val1_2", false)
-        //     , makeTwoInputBox("expand_ext extra_dk_type_3 daikin_pricing_input", "ext_dk_no1_3", "ext_dk_val1_3", false)
-        //     , makeTwoInputBox("expand_ext extra_dk_type_4 daikin_pricing_input", "ext_dk_no1_4", "ext_dk_val1_4", false)
-        //     , makeTwoInputBox("expand_ext extra_dk_type_5 daikin_pricing_input", "ext_dk_no1_5", "ext_dk_val1_5", false)
-        //     , makeTwoInputBox("expand_ext extra_dk_type_6 daikin_pricing_input", "ext_dk_no1_6", "ext_dk_val1_6", false)],
+        //     , makeTwoInputBox("expand_ext extra_dk_type_1 daikin_pricing_input", "qty_ext_dk1_1", "price_ext_dk1_1" ,false)
+        //     , makeTwoInputBox("expand_ext extra_dk_type_2 daikin_pricing_input", "qty_ext_dk1_2", "price_ext_dk1_2", false)
+        //     , makeTwoInputBox("expand_ext extra_dk_type_3 daikin_pricing_input", "qty_ext_dk1_3", "price_ext_dk1_3", false)
+        //     , makeTwoInputBox("expand_ext extra_dk_type_4 daikin_pricing_input", "qty_ext_dk1_4", "price_ext_dk1_4", false)
+        //     , makeTwoInputBox("expand_ext extra_dk_type_5 daikin_pricing_input", "qty_ext_dk1_5", "price_ext_dk1_5", false)
+        //     , makeTwoInputBox("expand_ext extra_dk_type_6 daikin_pricing_input", "qty_ext_dk1_6", "price_ext_dk1_6", false)],
         // ["<button id='extra_add' class='button default'>+</button>"
         //     , "<input type='hidden' class='daikin_pricing' name='extra_line' id='extra_line' value='1' />"],
         // ["Grand total:"
@@ -263,8 +263,8 @@ function DK_createNewLine(target = 'extra'){
         id = "extra_dk_type";
         list = dk_extra;
         label1 = "Extra (number/value) ";
-        id1 = "ext_dk_no";
-        id2 = "ext_dk_val";
+        id1 = "qty_ext_dk";
+        id2 = "price_ext_dk";
     }
     
     let next_index = DK_getCountLine(target) + 1;
