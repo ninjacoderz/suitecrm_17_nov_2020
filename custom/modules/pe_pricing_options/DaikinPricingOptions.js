@@ -35,7 +35,7 @@ $(function () {
         DK_clearOption($(this).data('option'));
     });
 
-    // $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='total_dk_type'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='number_wifi_dk_type']", function(e){
+    // $(document).on("change", "select[id*='extra_dk_type'], select[id*='main_dk_type'], input[id*='qty_main_dk'], input[id*='pmdk_'], input[id*='total_dk_wifi_'], select[id*='install_dk_'], input[id*='ext_dk_no'], input[id*='ext_dk_val'], select[id*='wifi_dk_type'], input[id*='qty_wifi_dk']", function(e){
     //     var index  = $(this).attr("id").split('_');
     //     index = index[index.length -1];
     //         DK_calcOption(index);
@@ -117,12 +117,12 @@ async function init_table_daikin() {
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_5 daikin_pricing_input", "main_dk_type1_5")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_6 daikin_pricing_input", "main_dk_type1_6")],
         ["Number Daikin 1"
-            , makeInputBox("total_dk_type_1 daikin_pricing_input", "total_dk_type1_1", false)
-            , makeInputBox("total_dk_type_2 daikin_pricing_input", "total_dk_type1_2", false)
-            , makeInputBox("total_dk_type_3 daikin_pricing_input", "total_dk_type1_3", false)
-            , makeInputBox("total_dk_type_4 daikin_pricing_input", "total_dk_type1_4", false)
-            , makeInputBox("total_dk_type_5 daikin_pricing_input", "total_dk_type1_5", false)
-            , makeInputBox("total_dk_type_6 daikin_pricing_input", "total_dk_type1_6", false)],
+            , makeInputBox("qty_main_dk_1 daikin_pricing_input", "qty_main_dk1_1", false)
+            , makeInputBox("qty_main_dk_2 daikin_pricing_input", "qty_main_dk1_2", false)
+            , makeInputBox("qty_main_dk_3 daikin_pricing_input", "qty_main_dk1_3", false)
+            , makeInputBox("qty_main_dk_4 daikin_pricing_input", "qty_main_dk1_4", false)
+            , makeInputBox("qty_main_dk_5 daikin_pricing_input", "qty_main_dk1_5", false)
+            , makeInputBox("qty_main_dk_6 daikin_pricing_input", "qty_main_dk1_6", false)],
         ["<button id='main_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing_input' name='main_line' id='main_line' value='1' />"],
         // ["Daikin Wifi"
@@ -140,12 +140,12 @@ async function init_table_daikin() {
             , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_5 daikin_pricing_input", "wifi_dk_type1_5")
             , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_6 daikin_pricing_input", "wifi_dk_type1_6")],
         ["Number Wifi 1"
-            , makeInputBox("number_wifi_dk_type_1 daikin_pricing_input", "number_wifi_dk_type1_1", false)
-            , makeInputBox("number_wifi_dk_type_2 daikin_pricing_input", "number_wifi_dk_type1_2", false)
-            , makeInputBox("number_wifi_dk_type_3 daikin_pricing_input", "number_wifi_dk_type1_3", false)
-            , makeInputBox("number_wifi_dk_type_4 daikin_pricing_input", "number_wifi_dk_type1_4", false)
-            , makeInputBox("number_wifi_dk_type_5 daikin_pricing_input", "number_wifi_dk_type1_5", false)
-            , makeInputBox("number_wifi_dk_type_6 daikin_pricing_input", "number_wifi_dk_type1_6", false)],
+            , makeInputBox("qty_wifi_dk_1 daikin_pricing_input", "qty_wifi_dk1_1", false)
+            , makeInputBox("qty_wifi_dk_2 daikin_pricing_input", "qty_wifi_dk1_2", false)
+            , makeInputBox("qty_wifi_dk_3 daikin_pricing_input", "qty_wifi_dk1_3", false)
+            , makeInputBox("qty_wifi_dk_4 daikin_pricing_input", "qty_wifi_dk1_4", false)
+            , makeInputBox("qty_wifi_dk_5 daikin_pricing_input", "qty_wifi_dk1_5", false)
+            , makeInputBox("qty_wifi_dk_6 daikin_pricing_input", "qty_wifi_dk1_6", false)],
         ["<button id='wifi_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing_input' name='wifi_line' id='wifi_line' value='1' />"],
         ["Daikin Install"
@@ -251,13 +251,13 @@ function DK_createNewLine(target = 'extra'){
         id = "main_dk_type";
         list = dk_main;
         label1 = "Number Daikin ";
-        id1 = "total_dk_type";
+        id1 = "qty_main_dk";
     } else if (target == 'wifi') {
         label = "Wifi Type ";
         id = "wifi_dk_type";
         list = dk_wifi;
         label1 = "Number Wifi ";
-        id1 = "number_wifi_dk_type";
+        id1 = "qty_wifi_dk";
     } else {
         label = "Extra ";
         id = "extra_dk_type";
