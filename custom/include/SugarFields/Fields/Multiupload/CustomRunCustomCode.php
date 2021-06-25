@@ -1,4 +1,21 @@
 <?php
+$db = DBManagerFactory::getInstance();
+$sql = "SELECT id FROM notes WHERE parent_type = 'emails' AND parent_id IN (SELECT id FROM `email_templates` WHERE `deleted` = 0 ORDER BY `email_templates`.`date_modified` DESC ) AND deleted = 0";
+$ret = $db->query($sql);
+if($result->num_rows > 1){
+    while($row =  $db->fetchByAssoc($result)){
+        print_r($row['id']);
+    }
+}
+
+
+
+
+
+
+
+die;
+die;
    $record_lead_id = trim('a32f96d4-2a80-dc71-10cc-5e142cca51bd');
     $products = 'Sanden,solar,methven,';
 $lead = new Lead();
