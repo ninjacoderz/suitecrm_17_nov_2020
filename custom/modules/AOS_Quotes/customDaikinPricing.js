@@ -50,6 +50,15 @@ $(function () {
         e.preventDefault();
         DK_clearOption($(this).data('option'));
     });
+
+    //PE Admin % handle 
+    $(document).on('change', '#dk_pe_admin_percent', function(e){
+        e.preventDefault();
+        for (var i = 1; i < 7; i++) {
+            DK_calcOption(i);
+        }
+    });
+    
    
     // /** Clear sl button */
     // $(document).on('click', '#calculate_dk', function(e){
@@ -225,6 +234,20 @@ async function init_table_daikin() {
             , makeTwoInputBox("expand_ext extra_dk_type_6 daikin_pricing", "qty_ext_dk1_6", "price_ext_dk1_6", false)],
         ["<button id='extra_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing' name='extra_line' id='extra_line' value='1' />"],
+        ["SubTotal:"
+            , makeInputBox("subtotal_dk daikin_pricing", "subtotal_dk_1", true)
+            , makeInputBox("subtotal_dk daikin_pricing", "subtotal_dk_2", true)
+            , makeInputBox("subtotal_dk daikin_pricing", "subtotal_dk_3", true)
+            , makeInputBox("subtotal_dk daikin_pricing", "subtotal_dk_4", true)
+            , makeInputBox("subtotal_dk daikin_pricing", "subtotal_dk_5", true)
+            , makeInputBox("subtotal_dk daikin_pricing", "subtotal_dk_6", true)],
+        ["GST:"
+            , makeInputBox("gst_dk daikin_pricing", "gst_dk_1", true)
+            , makeInputBox("gst_dk daikin_pricing", "gst_dk_2", true)
+            , makeInputBox("gst_dk daikin_pricing", "gst_dk_3", true)
+            , makeInputBox("gst_dk daikin_pricing", "gst_dk_4", true)
+            , makeInputBox("gst_dk daikin_pricing", "gst_dk_5", true)
+            , makeInputBox("gst_dk daikin_pricing", "gst_dk_6", true)],
         ["Grand total:"
             , makeInputBox("daikin_pricing", "grandtotal_dk_1", true)
             , makeInputBox("daikin_pricing", "grandtotal_dk_2", true)
@@ -246,6 +269,9 @@ async function init_table_daikin() {
     $(".daikin_pricing th:first-child").css({"width":"160px"});
     $(".daikin_pricing select, .daikin_pricing input[class*='daikin_pricing']:not([type='checkbox'])").css({"width":"100%"});
     $(".expand_ext").css({"width":"48%"});
+    //hide line Subtotal + GST 
+    $('#daikin_pricing').find('.subtotal_dk').closest('tr').hide();
+    $('#daikin_pricing').find('.gst_dk').closest('tr').hide();
 
     // Load Daikin Option
     DK_loadOption();
@@ -728,7 +754,14 @@ function DK_calcOption(index) {
         let currState = DK_getCurrentOptionState(index);
         // Grand Total
         let grandTotal = DK_calcGrandTotal(currState);
-        $("#grandtotal_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
+        let grandTotalR90 = Number(roundTo90(grandTotal));
+        let subtotal = Number(parseFloat(grandTotalR90/1.1).toFixed(2));
+        let gst = Number(parseFloat(grandTotalR90 - subtotal).toFixed(2));
+        //fill 
+        $("#subtotal_dk_"+index).val(parseFloat(subtotal).formatMoney(2, ',', '.'));
+        $("#gst_dk_"+index).val(parseFloat(gst).formatMoney(2, ',', '.'));
+        $("#grandtotal_dk_"+index).val(parseFloat(grandTotalR90).formatMoney(2, ',', '.'));
+        // $("#grandtotal_dk_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
         // Save current option
         DK_saveCurrentState();
     }
