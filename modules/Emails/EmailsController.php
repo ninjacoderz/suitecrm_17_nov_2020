@@ -4074,6 +4074,96 @@ class EmailsController extends SugarController
             }
             //end
 
+            // TriTruong Daikin Pricing
+            if($_REQUEST['email_type'] == "daikin_pricing"){
+                $macro_nv = array();
+                $focusName = "AOS_Quotes";
+                $quote = new AOS_Quotes();
+                $focus = $quote->retrieve($_REQUEST['record_id']);
+                $this->bean->return_module = 'AOS_Quotes';
+                $this->bean->return_id = $focus->id;
+                $lead =  new Lead();
+                $lead->retrieve($focus->leads_aos_quotes_1leads_ida);
+
+                $contact =  new Contact();
+                $contact->retrieve($focus->billing_contact_id);
+
+                if(!$focus->id) return;
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+                // Live: c11048a6-4055-49f1-0b3f-60b7500751a2
+                // Local: 3677ce10-b644-b632-0ce5-60b7531891e0
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',
+                    '663bcda3-938a-319a-43e7-60d543a5da8b'
+                );
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                $this->bean->to_addrs_names = $lead->first_name.' '.$lead->last_name." <$lead->email1>";
+                $this->bean->name = $name;
+                $this->bean->description_html = $description_html;
+                $this->bean->description = $description;
+
+                if ($quote->quote_note_inputs_c !='') {
+                    $daikin_quote_input = json_decode(html_entity_decode($quote->quote_note_inputs_c), true);
+                    if (count(array_filter($daikin_quote_input)) == 0) {
+                        $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                        
+                    } else {
+                        $this->bean->description_html = $this->renderTableQuoteInputSolarPricing($daikin_quote_input, $this->bean->description_html);
+                    }
+                } else {
+                    $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                    
+                } 
+
+                $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                
+                //replace data for body
+                $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
+                
+                $this->bean->description_html = str_replace("\$aos_quotes_installation address_c", $_REQUEST['address'] , $this->bean->description_html);
+                
+                $remove = ['daikin_pricing', 'main_line', 'wifi_line', 'extra_line', 'dk_pe_admin_percent', 'state'];
+                $daikin_pricing_options = '';
+                $daikin_quote_input = array_diff_key($daikin_quote_input, array_flip($remove));
+                foreach($daikin_quote_input as $key=>$value) {
+                    // if(intval($value['grandtotal_dk_'.$key]) > 1000) {
+                    if($value['isSend'] > 0) {
+                        $daikin_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px" data-mce-style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px">
+                        <div class="op_header" style="width: 100%; position: inherit;" data-mce-style="width: 100%; position: inherit;">
+                           <div class="number-options" style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;background: #177eb3;color: white;font-size: 18px;" data-mce-style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;background: #177eb3;color: white;font-size: 18px;">'.$key.'</div>
+                           <div class="p" style="background-color: #009acf;float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;" data-mce-style="background-color: #009acf;float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;">
+                              <p style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;padding-left: 12px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;" data-mce-style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;padding-left: 12px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;">'.((intval($value["total_cooling_capacity_".$key]) > 0 ) ? $value["total_cooling_capacity_".$key].'kW (C)' : '3.5 kW').' '.((intval($value["total_heating_capacity_".$key]) > 0 ) ? $value["total_heating_capacity_".$key].'kWh (H)' : '').'</p>
+                           </div>
+                        </div>
+                        <div class="select-inverter" style="clear: both;padding: 15px 10px;z-index: 7;position: relative;background: #e6f9ff;" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;background: #e6f9ff;">
+                           '.$this->parseProduct($value['products'], $key, 'products').'
+                           '.$this->parseProduct($value['wifi'], $key, 'wifi').'
+                        </div>
+                        <div class="total-price-item" style="background-color: #daf3ff;padding: 10px;color: #0a557b;font-size: 14px;font-weight: 600;" data-mce-style="background-color: #daf3ff;padding: 10px;color: #0a557b;font-size: 14px;font-weight: 600;">
+                           <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">Sub Total<span style="float: right;" data-mce-style="float: right;">$'.$value['subtotal_dk_'.$key].'</span></div>
+                           <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">GST<span style="float: right;" data-mce-style="float: right;">$'.$value['gst_dk_'.$key].'</span></div>
+                           <div style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;" data-mce-style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;">&nbsp;</div>
+                           <div class="total-price" style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;" data-mce-style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;">
+                           <span class="symbol" style="font-size: 20px;color: #339acf;font-weight: 600;" data-mce-style="font-size: 20px;color: #339acf;font-weight: 600;">$ </span>
+                           <span class="amount" style="letter-spacing: 1px;font-size: 35px;color: #339acf;" data-mce-style="letter-spacing: 1px;font-size: 35px;color: #339acf;">'.$value['grandtotal_dk_'.$key].'</span>
+                           </div>
+                        </div>
+                        <div class="op_footer" style="text-align: center;padding: 5px;background-color: #009acf;height: 3px;" data-mce-style="text-align: center;padding: 5px;background-color: #009acf;height: 3px;">&nbsp;</div>
+                     </div>';     
+                    }
+                    
+                }
+                $this->bean->description_html = str_replace("\$daikin_pricing_options",  $daikin_pricing_options , $this->bean->description_html);
+                //end - code render sms_template
+            }
             //Thienpb code -- solar pricing options
             if($_REQUEST['email_type'] == "send_solar_pricing"){
                 $macro_nv = array();
@@ -8085,6 +8175,20 @@ class EmailsController extends SugarController
         $dataEncoded = json_encode(array('data' => $data), JSON_UNESCAPED_UNICODE);
         echo utf8_decode($dataEncoded);
         $this->view = 'ajax';
+    }
+    public function parseProduct($arr, $key, $type) {
+        $list = '';
+        if($type == 'products') {
+            foreach($arr as $item) {
+                $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_main_dk1_".$key].'X '.$item["productName"].'</div>';
+            }
+        } else if($type == 'wifi') {
+            foreach($arr as $item) {
+                $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_wifi_dk1_".$key].'X '.$item["wifi_dk_type1_".$key].'</div>';
+            }
+        }
+        
+        return $list;
     }
 
     public function action_CheckEmail()
