@@ -18,4 +18,13 @@ $hook_array['after_save'][] = Array(
   'CreateInternalNotesPO',
   'after_save_createdInternalNotesChangeStatus',
 );
+//VUT-Create Internal Note when PO's status is changed
+
+$hook_array['after_save'][] = Array(
+  3, 
+  'update_related_Invoice',
+  'custom/modules/PO_purchase_order/logic_hooks_class.php',
+  'UpdateRelatedInvoice',
+  'after_save_update_related_invoice',
+);
 ?>

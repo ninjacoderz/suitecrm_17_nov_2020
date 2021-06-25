@@ -159,4 +159,38 @@
         }
     }
 
+    class UpdateRelatedInvoice {
+        function after_save_update_related_invoice($bean, $event, $arguments) {
+            $old_fields = $bean->fetched_row;
+            $db = DBManagerFactory::getInstance();
+
+            if ($old_fields['billing_account_id'] !=  $bean->billing_account_id) {
+                $invoice = new AOS_Invoices();
+                $invoice->retrieve($bean->aos_invoices_po_purchase_order_1aos_invoices_ida);
+                if ($invoice->id) {
+                    $supplier =  new Account();
+                    $supplier->retrieve($bean->billing_account_id);
+                    if ($supplier->load_relationship('contacts')) {  
+                        $relatedContacts = $supplier->contacts->getBeans();  
+                        if (!empty($relatedContacts)) {  
+                            $contact = $relatedContacts[$supplier->primary_contact_c];
+                        }  
+                    }
+                    switch ($bean->po_type_c) {
+                        case 'installer': case "sanden_plumber":
+                            $invoice->account_id1_c = $bean->billing_account_id;
+                            $invoice->contact_id4_c = $contact->id ? $contact->id : '';
+                            break;
+                        case 'sanden_electrician':
+                            $invoice->account_id_c =  $bean->billing_account_id;
+                            $invoice->contact_id_c = $contact->id ? $contact->id : '';
+                            break;
+                        default:
+                            break;
+                    }
+                    $invoice->save();
+                }
+            }
+        }
+    }
 ?>
