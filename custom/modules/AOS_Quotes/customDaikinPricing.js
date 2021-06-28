@@ -283,35 +283,35 @@ async function init_table_daikin() {
             , makeInputBox("daikin_pricing total_heating_capacity_5", "total_heating_capacity_5", true)
             , makeInputBox("daikin_pricing total_heating_capacity_6", "total_heating_capacity_6", true)],
         ["Daikin Type 1"
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_1 daikin_pricing", "main_dk_type1_1") 
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_2 daikin_pricing", "main_dk_type1_2")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_3 daikin_pricing", "main_dk_type1_3")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_4 daikin_pricing", "main_dk_type1_4")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_5 daikin_pricing", "main_dk_type1_5")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type_6 daikin_pricing", "main_dk_type1_6")],
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type1_1 daikin_pricing", "main_dk_type1_1") 
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type1_2 daikin_pricing", "main_dk_type1_2")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type1_3 daikin_pricing", "main_dk_type1_3")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type1_4 daikin_pricing", "main_dk_type1_4")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type1_5 daikin_pricing", "main_dk_type1_5")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_main), "main_dk_type1_6 daikin_pricing", "main_dk_type1_6")],
         ["Number Daikin 1"
-            , makeInputBox("qty_main_dk_1 daikin_pricing", "qty_main_dk1_1", false)
-            , makeInputBox("qty_main_dk_2 daikin_pricing", "qty_main_dk1_2", false)
-            , makeInputBox("qty_main_dk_3 daikin_pricing", "qty_main_dk1_3", false)
-            , makeInputBox("qty_main_dk_4 daikin_pricing", "qty_main_dk1_4", false)
-            , makeInputBox("qty_main_dk_5 daikin_pricing", "qty_main_dk1_5", false)
-            , makeInputBox("qty_main_dk_6 daikin_pricing", "qty_main_dk1_6", false)],
+            , makeInputBox("qty_main_dk1_1 daikin_pricing", "qty_main_dk1_1", false)
+            , makeInputBox("qty_main_dk1_2 daikin_pricing", "qty_main_dk1_2", false)
+            , makeInputBox("qty_main_dk1_3 daikin_pricing", "qty_main_dk1_3", false)
+            , makeInputBox("qty_main_dk1_4 daikin_pricing", "qty_main_dk1_4", false)
+            , makeInputBox("qty_main_dk1_5 daikin_pricing", "qty_main_dk1_5", false)
+            , makeInputBox("qty_main_dk1_6 daikin_pricing", "qty_main_dk1_6", false)],
         ["<button id='main_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing' name='main_line' id='main_line' value='1' />"],
         ["Wifi Type 1"
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_1 daikin_pricing", "wifi_dk_type1_1")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_2 daikin_pricing", "wifi_dk_type1_2")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_3 daikin_pricing", "wifi_dk_type1_3")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_4 daikin_pricing", "wifi_dk_type1_4")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_5 daikin_pricing", "wifi_dk_type1_5")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type_6 daikin_pricing", "wifi_dk_type1_6")],
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type1_1 daikin_pricing", "wifi_dk_type1_1")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type1_2 daikin_pricing", "wifi_dk_type1_2")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type1_3 daikin_pricing", "wifi_dk_type1_3")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type1_4 daikin_pricing", "wifi_dk_type1_4")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type1_5 daikin_pricing", "wifi_dk_type1_5")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_wifi), "wifi_dk_type1_6 daikin_pricing", "wifi_dk_type1_6")],
         ["Number Wifi 1"
-            , makeInputBox("qty_wifi_dk_1 daikin_pricing", "qty_wifi_dk1_1", false)
-            , makeInputBox("qty_wifi_dk_2 daikin_pricing", "qty_wifi_dk1_2", false)
-            , makeInputBox("qty_wifi_dk_3 daikin_pricing", "qty_wifi_dk1_3", false)
-            , makeInputBox("qty_wifi_dk_4 daikin_pricing", "qty_wifi_dk1_4", false)
-            , makeInputBox("qty_wifi_dk_5 daikin_pricing", "qty_wifi_dk1_5", false)
-            , makeInputBox("qty_wifi_dk_6 daikin_pricing", "qty_wifi_dk1_6", false)],
+            , makeInputBox("qty_wifi_dk1_1 daikin_pricing", "qty_wifi_dk1_1", false)
+            , makeInputBox("qty_wifi_dk1_2 daikin_pricing", "qty_wifi_dk1_2", false)
+            , makeInputBox("qty_wifi_dk1_3 daikin_pricing", "qty_wifi_dk1_3", false)
+            , makeInputBox("qty_wifi_dk1_4 daikin_pricing", "qty_wifi_dk1_4", false)
+            , makeInputBox("qty_wifi_dk1_5 daikin_pricing", "qty_wifi_dk1_5", false)
+            , makeInputBox("qty_wifi_dk1_6 daikin_pricing", "qty_wifi_dk1_6", false)],
         ["<button id='wifi_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing' name='wifi_line' id='wifi_line' value='1' />"],
         ["Daikin Install"
@@ -326,19 +326,19 @@ async function init_table_daikin() {
         // ["<button id='calculate_dk' class='button default'>Max</button>", "&nbsp;"],
         ["", "&nbsp;"],
         ["Extra 1"
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_1 daikin_pricing", "extra_dk_type1_1")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_2 daikin_pricing", "extra_dk_type1_2")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_3 daikin_pricing", "extra_dk_type1_3")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_4 daikin_pricing", "extra_dk_type1_4")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_5 daikin_pricing", "extra_dk_type1_5")
-            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type_6 daikin_pricing", "extra_dk_type1_6")],
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type1_1 daikin_pricing", "extra_dk_type1_1")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type1_2 daikin_pricing", "extra_dk_type1_2")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type1_3 daikin_pricing", "extra_dk_type1_3")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type1_4 daikin_pricing", "extra_dk_type1_4")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type1_5 daikin_pricing", "extra_dk_type1_5")
+            , makeSelectBox(DK_convertJSONToArrayInit(dk_extra), "extra_dk_type1_6 daikin_pricing", "extra_dk_type1_6")],
         ["Extra (number/price) 1"
-            , makeTwoInputBox("expand_ext extra_dk_type_1 daikin_pricing", "qty_ext_dk1_1", "price_ext_dk1_1" ,false)
-            , makeTwoInputBox("expand_ext extra_dk_type_2 daikin_pricing", "qty_ext_dk1_2", "price_ext_dk1_2", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_3 daikin_pricing", "qty_ext_dk1_3", "price_ext_dk1_3", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_4 daikin_pricing", "qty_ext_dk1_4", "price_ext_dk1_4", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_5 daikin_pricing", "qty_ext_dk1_5", "price_ext_dk1_5", false)
-            , makeTwoInputBox("expand_ext extra_dk_type_6 daikin_pricing", "qty_ext_dk1_6", "price_ext_dk1_6", false)],
+            , makeTwoInputBox("expand_ext extra_dk_type1_1 daikin_pricing", "qty_ext_dk1_1", "price_ext_dk1_1" ,false)
+            , makeTwoInputBox("expand_ext extra_dk_type1_2 daikin_pricing", "qty_ext_dk1_2", "price_ext_dk1_2", false)
+            , makeTwoInputBox("expand_ext extra_dk_type1_3 daikin_pricing", "qty_ext_dk1_3", "price_ext_dk1_3", false)
+            , makeTwoInputBox("expand_ext extra_dk_type1_4 daikin_pricing", "qty_ext_dk1_4", "price_ext_dk1_4", false)
+            , makeTwoInputBox("expand_ext extra_dk_type1_5 daikin_pricing", "qty_ext_dk1_5", "price_ext_dk1_5", false)
+            , makeTwoInputBox("expand_ext extra_dk_type1_6 daikin_pricing", "qty_ext_dk1_6", "price_ext_dk1_6", false)],
         ["<button id='extra_add' class='button default'>+</button>"
             , "<input type='hidden' class='daikin_pricing' name='extra_line' id='extra_line' value='1' />"],
         ["SubTotal:"
@@ -665,13 +665,13 @@ function DK_createNewLine(target = 'extra'){
         } else {
             // Other td
             let input;
-            let select = makeSelectBox(DK_convertJSONToArrayInit(list), `${id}_${next_index} daikin_pricing`, id + next_index + "_" + i);
+            let select = makeSelectBox(DK_convertJSONToArrayInit(list), `${id}${next_index}_${i} daikin_pricing`, id + next_index + "_" + i);
             select.css({"width":"100%"});
             if (target == 'main' || target == 'wifi') {
-                input = makeInputBox(`${id1}_${next_index} daikin_pricing`, `${id1}${next_index}_${i}`, false);
+                input = makeInputBox(`${id1}${next_index}_${i} daikin_pricing`, `${id1}${next_index}_${i}`, false);
                 input.css({"width":"100%"});
             } else {
-                input = makeTwoInputBox(`${id}_${next_index} daikin_pricing`, `${id1}${next_index}_${i}`, `${id2}${next_index}_${i}`, false);
+                input = makeTwoInputBox(`${id}${next_index}_${i} daikin_pricing`, `${id1}${next_index}_${i}`, `${id2}${next_index}_${i}`, false);
                 // input.css({"width":"100%"});
             }
             $(td).html(select);
