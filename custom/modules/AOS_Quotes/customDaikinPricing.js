@@ -118,6 +118,11 @@ $(function () {
         }
         DK_calcOption(index);
     });
+
+    $(document).on('change', '.recom_dk_option', function(e){
+        DK_saveCurrentState();
+    });
+
     $.fn.openComposeViewModal_SendDaikinPricing = function (source) {
         debugger;
         "use strict";
@@ -242,6 +247,13 @@ async function init_table_daikin() {
             ,"<input data-attr='4' type='checkbox' class='daikin_option daikin_pricing' name='daikin_option' id='daikin_option_4' style='margin-bottom:5px'> Option 4"
             ,"<input data-attr='5' type='checkbox' class='daikin_option daikin_pricing' name='daikin_option' id='daikin_option_5' style='margin-bottom:5px'> Option 5"
             ,"<input data-attr='6' type='checkbox' class='daikin_option daikin_pricing' name='daikin_option' id='daikin_option_6' style='margin-bottom:5px'> Option 6"],
+        ["Recommended Option"
+            ,"<input data-attr='1' type='checkbox' class='recom_dk_option daikin_pricing' name='recom_dk_option' id='recom_dk_option_1' style='margin-bottom:5px'>"
+            ,"<input data-attr='2' type='checkbox' class='recom_dk_option daikin_pricing' name='recom_dk_option' id='recom_dk_option_2' style='margin-bottom:5px'>"
+            ,"<input data-attr='3' type='checkbox' class='recom_dk_option daikin_pricing' name='recom_dk_option' id='recom_dk_option_3' style='margin-bottom:5px'>"
+            ,"<input data-attr='4' type='checkbox' class='recom_dk_option daikin_pricing' name='recom_dk_option' id='recom_dk_option_4' style='margin-bottom:5px'>"
+            ,"<input data-attr='5' type='checkbox' class='recom_dk_option daikin_pricing' name='recom_dk_option' id='recom_dk_option_5' style='margin-bottom:5px'>"
+            ,"<input data-attr='6' type='checkbox' class='recom_dk_option daikin_pricing' name='recom_dk_option' id='recom_dk_option_6' style='margin-bottom:5px'>"],
         [""
             , "<button data-option ='1' id='clear_dk_option_1' class='button default'>Clear Option 1</button>"
             , "<button data-option ='2' id='clear_dk_option_2' class='button default'>Clear Option 2</button>"
@@ -881,6 +893,7 @@ function DK_calcOption(index) {
 //
 function DK_clearOption(option){
     $("#daikin_option_"+(option)).prop('checked', false);
+    $("#recom_dk_option_"+(option)).prop('checked', false);
     $('#daikin_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="dk_pe_admin_percent"], input[id="main_line"],input[id="wifi_line"], input[id="extra_line"])').val('');
     $('#daikin_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
