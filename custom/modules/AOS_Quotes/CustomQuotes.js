@@ -5946,7 +5946,7 @@ function renderShortest(info, field_distance_id, field_account_name, field_accou
     info.sort(function (a, b) {
         return a.distance - b.distance;
     });
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 5; i++) {
         var addr = info[0][0];
         var name_lum = info[0][1];
         var id_nearest = info[0][2];
@@ -5991,7 +5991,7 @@ function getDistances(from_address) {
         var shortest = 0;
         var option_office_shortest = '';
         var promises = [];
-        if ($("#quote_type_c").val() == 'quote_type_solar') {
+        if ($("#quote_type_c").val() == 'quote_type_solar' || $("#quote_type_c").val() == 'quote_type_off_grid_system') {
             $("#distance_to_sg_c").after("<b class='suggest'> Suggest: </b><br/>");
             $("#distance_to_sg_c").after("<br/><b class='shortest'> Shortest: </b><br/><b class='shortest-suggest'></b>");
             for (var i = 0; i < suggest_address.length; i++) {
