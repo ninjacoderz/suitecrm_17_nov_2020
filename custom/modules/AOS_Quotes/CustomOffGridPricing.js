@@ -71,13 +71,15 @@ $(function () {
     });
 
     // .:nhantv:. Inverter Add Button Click handle 
-    $(document).on('click', '#inverter_add, #og_accessory_add', function(e){
+    $(document).on('click', '#inverter_add, #og_accessory_add, #offgrid_inv_add', function(e){
         e.preventDefault();
         let attr_id = $(e.target).attr('id');
         if (attr_id.indexOf('inverter') != -1) {
             createNewLine('inverter');
-        } else {
+        } else if (attr_id.indexOf('og_accessory') != -1) {
             createNewLine('og_accessory');
+        } else {
+            createNewLine('offgrid_inv');
         }
     });
 
@@ -201,6 +203,10 @@ function createNewLine(target = 'inverter'){
         label = "OG Accessory ";
         id = "offgrid_accessory";
         list = og_accessory;
+    } else if (target == 'offgrid_inv') {
+        label = "Off-Grid Inverter ";
+        id = "offgrid_inverter";
+        list = og_inverter;
     }
 
     let next_index = getCountLine(target) + 1;
@@ -305,7 +311,12 @@ function getCurrentOptionState(index){
     }
     result['total_panels'] = $('#total_og_panels_' + index).val();
     result['number_stcs'] = $('#number_og_stcs_' + index).val();
-    result['offgrid_inverter'] = $('#offgrid_inverter_' + index).val();
+    // Off-grid Inverter line
+    num_of_line = getCountLine('offgrid_inv');
+    for(var i = 0; i <num_of_line; i++) {
+        result['offgrid_inverter'+(i+1)] = $('#offgrid_inverter'+(i == 0 ? '' : (i+1))+ '_' + index).val();
+    }
+    // result['offgrid_inverter'] = $('#offgrid_inverter_' + index).val();
     result['offgrid_batery'] = $('#offgrid_batery_' + index).val();
     result['offgrid_howmany'] = $('#offgrid_howmany_' + index).val();
     // Accessory line
@@ -379,8 +390,13 @@ function calcEquipmentCost(currState){
             cost += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"));
         }
     }
-    if(currState.offgrid_inverter != ''){
-        cost += parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"));
+    // Off-grid inverter cost
+    num_of_line = getCountLine('offgrid_inv');
+    for(var i = 0; i <num_of_line; i++) {
+        if(currState[`offgrid_inverter${i+1}`] != ''){
+            cost += parseFloat(getAttributeFromName(currState[`offgrid_inverter${i+1}`], og_inverter, "cost"));
+        }
+    
     }
     if(currState.offgrid_batery != ''){
         cost += parseFloat(getAttributeFromName(currState.offgrid_batery, og_battery, "cost")) * parseFloat(currState.offgrid_howmany);
@@ -535,7 +551,15 @@ function loadOffgridOption(){
                     createNewLine('inverter');
                 }
             }
-
+            // Check number of og_inverter line
+            curr_line_num = getCountLine('offgrid_inv');
+            line_num = (json_val.offgrid_inv_line != undefined && json_val.offgrid_inv_line != '') ? json_val.offgrid_inv_line : 1;
+            if (line_num > curr_line_num) {
+                // Create new Inverter line
+                for (let i = 0; i < (line_num - curr_line_num); i++) {
+                    createNewLine('offgrid_inv');
+                }
+            }
             // Check number of accesssory line
             curr_line_num = getCountLine('og_accessory');
             line_num = (json_val.og_accessory_line != undefined && json_val.og_accessory_line != '') ? json_val.og_accessory_line : 2;
@@ -604,7 +628,15 @@ async function generateOffgridItem(){
                 await autoCreateLineItemOg(currState['inverter_type' + (i + 1)], sol_inverter, 1);
             }
         }
-        currState.offgrid_inverter && await autoCreateLineItemOg(currState.offgrid_inverter, og_inverter, 1);
+        // Off-grid Inverter line
+        num_of_line = getCountLine('offgrid_inv');
+        for (let i = 0; i < num_of_line; i++) {
+            if (currState['offgrid_inverter' + (i + 1)] != "") {
+                await autoCreateLineItemOg(currState['offgrid_inverter' + (i + 1)], og_inverter, 1);
+            }
+        }
+        
+        // currState.offgrid_inverter && await autoCreateLineItemOg(currState.offgrid_inverter, og_inverter, 1);
         currState.offgrid_batery && await autoCreateLineItemOg(currState.offgrid_batery, og_battery, currState.offgrid_howmany);
         // Accessory line
         num_of_line = getCountLine('og_accessory');
@@ -839,13 +871,22 @@ async function init_table_offgrid() {
         ["", "&nbsp;"],
         ["<button id='calculate_og' class='button default'>Max</button>", "&nbsp;"],
         ["", "&nbsp;"],
-        ["Off-Grid Inverter"
+        ["Off-Grid Inverter 1"
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_1")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_2")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_3")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_4")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_5")
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_6")],
+        // ["Off-Grid Inverter 1"
+        //     , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter1_1")
+        //     , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_2 offgrid_pricing", "offgrid_inverter1_2")
+        //     , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_3 offgrid_pricing", "offgrid_inverter1_3")
+        //     , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_4 offgrid_pricing", "offgrid_inverter1_4")
+        //     , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_5 offgrid_pricing", "offgrid_inverter1_5")
+        //     , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_6 offgrid_pricing", "offgrid_inverter1_6")],
+        ["<button id='offgrid_inv_add' class='button default'>+</button>"
+            , "<input type='hidden' class='offgrid_pricing' name='offgrid_inv_line' id='offgrid_inv_line' value='1' />"],
         [""
             , "<input type='hidden' class='offgrid_pricing' name='total_battery_1' id='total_battery_1' value='0' />"
             , "<input type='hidden' class='offgrid_pricing' name='total_battery_2' id='total_battery_2' value='0' />"
@@ -971,13 +1012,24 @@ function calcHint(){
             );
         }
     }
-    if(currState.offgrid_inverter != ''){
-        cost += parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"));
-        str += writeHint(
-            currState.offgrid_inverter
-            , parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"))
-        );
+    // Off-grid inverter line 
+    num_of_line = getCountLine('offgrid_inv');
+    for (var i = 0; i < num_of_line; i++) {
+        if (currState['offgrid_inverter' + (i + 1)] != '') {
+            cost += parseFloat(getAttributeFromName(currState['offgrid_inverter' + (i + 1)], og_inverter, "cost"));
+            str += writeHint(
+                currState['offgrid_inverter' + (i + 1)]
+                , parseFloat(getAttributeFromName(currState['offgrid_inverter' + (i + 1)], og_inverter, "cost"))
+            );
+        }
     }
+    // if(currState.offgrid_inverter != ''){
+    //     cost += parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"));
+    //     str += writeHint(
+    //         currState.offgrid_inverter
+    //         , parseFloat(getAttributeFromName(currState.offgrid_inverter, og_inverter, "cost"))
+    //     );
+    // }
     if(currState.offgrid_batery != ''){
         cost += parseFloat(getAttributeFromName(currState.offgrid_batery, og_battery, "cost")) * parseFloat(currState.offgrid_howmany);
         str += writeHint(
