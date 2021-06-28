@@ -3832,6 +3832,8 @@ class EmailsController extends SugarController
                     $pricings = json_decode(html_entity_decode($pricing_options));
                     // Inverter line
                     $inverter_line = (int)$pricings->inverter_line + 1;
+                    // Offgrid inverter line
+                    $offgrid_inverter_line = (int) $pricings->offgrid_inv_line + 1;
                     // Accesory line
                     $accessory_line = (int)$pricings->og_accessory_line + 1;
                     // Init Option price area
@@ -3854,6 +3856,22 @@ class EmailsController extends SugarController
                                     $inverter_og[$inverter_name] = $newQty;
                                 } else {
                                     $inverter_og[$inverter_name] = 1;
+                                }
+                            }
+                        }
+                        // Offgrid Inverter 
+                        $offgrid_inverters = [];
+                        for ($line = 1; $line < $offgrid_inverter_line; $line++) {
+                            $tmpName = 'offgrid_inverter'.($line == 1 ? '' : $line).'_'.$i;
+                            if($pricings->$tmpName != ''){
+                                // Get Product name from DB
+                                $offgrid_inverter_name = $this->getProductNameByShortName($productBean, $pricings->$tmpName);
+                                // Check exist on array
+                                if($offgrid_inverters[$offgrid_inverter_name] != null){
+                                    $newQty = $offgrid_inverters[$offgrid_inverter_name] + 1;
+                                    $offgrid_inverters[$offgrid_inverter_name] = $newQty;
+                                } else {
+                                    $offgrid_inverters[$offgrid_inverter_name] = 1;
                                 }
                             }
                         }
@@ -3920,12 +3938,15 @@ class EmailsController extends SugarController
                                             </td>
                                         </tr>';
                                     }
+                                    // Render Offgrid inverter
+                                    foreach ($offgrid_inverters as $key => $value) {
+                                        $solar_pricing_options .= '<tr>
+                                            <td>
+                                                <div style="margin:0;padding:0;font-size:0.8rem">'.$value.'x '.$key.'</div>
+                                            </td>
+                                        </tr>';
+                                    }
                             $solar_pricing_options .= '<tr>
-                                        <td>
-                                          <div style="margin:0;padding:0;font-size:0.8rem">1x '.$curr_product['offgrid_inverter'].'</div>
-                                        </td>
-                                      </tr>
-                                      <tr>
                                         <td>
                                           <div style="margin:0;padding:0;font-size:0.8rem">'.$pricings->{'offgrid_howmany_'.$i}.'x '.$curr_product['offgrid_batery'].'</div>
                                         </td>
