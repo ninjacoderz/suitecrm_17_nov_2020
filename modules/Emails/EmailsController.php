@@ -4096,7 +4096,8 @@ class EmailsController extends SugarController
                 // Local: 3677ce10-b644-b632-0ce5-60b7531891e0
                 $emailTemplate = BeanFactory::getBean(
                     'EmailTemplates',
-                    '663bcda3-938a-319a-43e7-60d543a5da8b'
+                    // '663bcda3-938a-319a-43e7-60d543a5da8b'
+                    'c193892e-03a6-dcf2-cf23-60d44b214156'
                 );
 
                 $name = $emailTemplate->subject;
@@ -4132,31 +4133,34 @@ class EmailsController extends SugarController
                 
                 $remove = ['daikin_pricing', 'main_line', 'wifi_line', 'extra_line', 'dk_pe_admin_percent', 'state'];
                 $daikin_pricing_options = '';
+                $style = '"margin: 0;text-transform: uppercase;color: white;"';
                 $daikin_quote_input = array_diff_key($daikin_quote_input, array_flip($remove));
                 foreach($daikin_quote_input as $key=>$value) {
                     // if(intval($value['grandtotal_dk_'.$key]) > 1000) {
                     if($value['isSend'] > 0 && intval($value["total_cooling_capacity_".$key]) > 0 && intval($value["total_heating_capacity_".$key]) > 0 ) {
                         $daikin_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px" data-mce-style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px">
                         <div class="op_header" style="width: 100%; position: inherit;" data-mce-style="width: 100%; position: inherit;">
-                           <div class="number-options" style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;background: #177eb3;color: white;font-size: 18px;" data-mce-style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;background: #177eb3;color: white;font-size: 18px;">'.$key.'</div>
-                           <div class="p" style="background-color: #009acf;float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;" data-mce-style="background-color: #009acf;float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;">
+                           <div class="number-options" style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold; '.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background: #177eb3").';color: white;font-size: 18px;" data-mce-style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background: #177eb3").';color: white;font-size: 18px;">'.$key.'</div>
+                           <div class="p" style="'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5b0" : "background-color: #009acf").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;" data-mce-style="'.($value["recom_dk_option_".$key] == 1 ? "background: #7484d0" : "background-color: #009acf").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;">
                               <p style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;padding-left: 12px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;" data-mce-style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;padding-left: 12px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;">'.((intval($value["total_cooling_capacity_".$key]) > 0 ) ? round($value["total_cooling_capacity_".$key], 1).'kW (C)' : '3.5 kW').' '.((intval($value["total_heating_capacity_".$key]) > 0 ) ? round($value["total_heating_capacity_".$key], 1).'kW (H)' : '').'</p>
                            </div>
                         </div>
-                        <div class="select-inverter" style="clear: both;padding: 15px 10px;z-index: 7;position: relative;background: #e6f9ff;" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;background: #e6f9ff;">
+                        <div class="select-inverter" style="clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
                            '.$this->parseProduct($value['products'], $key, 'products').'
                            '.$this->parseProduct($value['wifi'], $key, 'wifi').'
                         </div>
-                        <div class="total-price-item" style="background-color: #daf3ff;padding: 10px;color: #0a557b;font-size: 14px;font-weight: 600;" data-mce-style="background-color: #daf3ff;padding: 10px;color: #0a557b;font-size: 14px;font-weight: 600;">
+                        <div class="total-price-item" style="'.($value["recom_dk_option_".$key] == 1 ? "background: #d0d5f3" : "background-color: #daf3ff").';padding: 10px;color: #0a557b;font-size: 14px;font-weight: 600;" data-mce-style="'.($value["recom_dk_option_".$key] == 1 ? "background: #d0d5f3" : "background-color: #daf3ff").';padding: 10px;color: #0a557b;font-size: 14px;font-weight: 600;">
                            <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">Sub Total<span style="float: right;" data-mce-style="float: right;">$'.$value['subtotal_dk_'.$key].'</span></div>
                            <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">GST<span style="float: right;" data-mce-style="float: right;">$'.$value['gst_dk_'.$key].'</span></div>
                            <div style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;" data-mce-style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;">&nbsp;</div>
                            <div class="total-price" style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;" data-mce-style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;">
-                           <span class="symbol" style="font-size: 20px;color: #339acf;font-weight: 600;" data-mce-style="font-size: 20px;color: #339acf;font-weight: 600;">$ </span>
-                           <span class="amount" style="letter-spacing: 1px;font-size: 35px;color: #339acf;" data-mce-style="letter-spacing: 1px;font-size: 35px;color: #339acf;">'.$value['grandtotal_dk_'.$key].'</span>
+                           <span class="symbol" style="font-size: 20px;'.($value["recom_dk_option_".$key] == 1 ? "color: #4f5ea5" : "color: #339acf").';font-weight: 600;" data-mce-style="font-size: 20px;'.($value["recom_dk_option_".$key] == 1 ? "color: #4f5ea5" : "color: #339acf").';font-weight: 600;">$ </span>
+                           <span class="amount" style="letter-spacing: 1px;font-size: 35px;'.($value["recom_dk_option_".$key] == 1 ? "color: #4f5ea5" : "color: #339acf").';" data-mce-style="letter-spacing: 1px;font-size: 35px;'.($value["recom_dk_option_".$key] == 1 ? "color: #4f5ea5" : "color: #339acf").';">'.$value['grandtotal_dk_'.$key].'</span>
                            </div>
                         </div>
-                        <div class="op_footer" style="text-align: center;padding: 5px;background-color: #009acf;height: 3px;" data-mce-style="text-align: center;padding: 5px;background-color: #009acf;height: 3px;">&nbsp;</div>
+                        <div class="op_footer" style="text-align: center;padding: 5px;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #009acf").';height: 25px;" data-mce-style="text-align: center;padding: 5px;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #009acf").';height: 25px;">
+                            '.($value["recom_dk_option_".$key] == 1 ? '<h3 style="margin: 0;text-transform: uppercase;color: white;padding: 2px 0;">Recommended</h3>' : "&nbsp;").'
+                        </div>
                      </div>';     
                     }
                     
@@ -8180,11 +8184,19 @@ class EmailsController extends SugarController
         $list = '';
         if($type == 'products') {
             foreach($arr as $item) {
-                $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_main_dk1_".$key].'X '.$item["productName"].'</div>';
+                if($item['productName'] !== null) {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_main_dk1_".$key].'X '.$item["productName"].'</div>';
+                } else {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">&nbsp;</div>';
+                }
             }
         } else if($type == 'wifi') {
             foreach($arr as $item) {
-                $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_wifi_dk1_".$key].'X '.$item["wifi_dk_type1_".$key].'</div>';
+                if($item['productName'] !== null) {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_wifi_dk1_".$key].'X '.$item["wifi_dk_type1_".$key].'</div>';
+                } else {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">&nbsp;</div>';
+                }
             }
         }
         
