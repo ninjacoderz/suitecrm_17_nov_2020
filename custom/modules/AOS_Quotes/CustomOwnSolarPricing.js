@@ -27,7 +27,7 @@ $(function () {
             if(panel_type != '' && SL_isInverterHasValue(i)){
                 // Calculate option
                 SL_autoFillAccessory(i);
-                SL_calcOption(i);
+                SL_calcOption(2.5,i);
             }
         }
     });
@@ -37,7 +37,7 @@ $(function () {
         index = index[index.length -1];
         if($("#panel_sl_type_"+index).val() != "" && SL_isInverterHasValue(index)){
             SL_autoFillAccessory(index);
-            SL_calcOption(index);
+            SL_calcOption(parseFloat($("#sl_max_ratio").val()),index);
         }
     });
 
@@ -45,7 +45,7 @@ $(function () {
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
         SL_autoFillAccessory(index);
-        SL_calcOption(index,true);
+        SL_calcOption(parseFloat($("#sl_max_ratio").val()),index,true);
     });
 
     $(document).on('click', '#sl_inverter_add, #sl_accessory_add', function(e){
@@ -280,7 +280,7 @@ async function init_table_solar() {
             , makeInputBox("number_sl_stcs_5 solar_pricing", "number_sl_stcs_5", true)
             , makeInputBox("number_sl_stcs_6 solar_pricing", "number_sl_stcs_6", true)],
         ["", "&nbsp;"],
-        ["<button id='calculate_sl' class='button default'>Max</button>", "&nbsp;"],
+        ["<button id='calculate_sl' class='button default'>Max 2.5</button>", "&nbsp;", "<input type='hidden' class='solar_pricing' name='sl_max_ratio' id='sl_max_ratio' value='2,5' />"],
         ["", "&nbsp;"],
         ["Solar Accessory 1"
             , makeSelectBox(convertJSONToArrayInit(sol_accessory), "sl_accessory1_1 solar_pricing", "sl_accessory1_1")
@@ -322,13 +322,13 @@ async function init_table_solar() {
     SL_loadOption();
 }
 
-async function SL_calcOption(index, isTotalPanel = false,isloading = true) {
+async function SL_calcOption(ratio,index, isTotalPanel = false,isloading = true) {
     var postcode = $("#install_address_postalcode_c").val();
     if(index != '' && index != undefined){
         let currState = SL_getCurrentOptionState(index);
         if(currState.panel_type != '' && SL_isInverterHasValue(index)){
             // Get max panels and total kw
-            let maxPnAndTotalKw = SL_getMaxPanelAndTotalKw(currState, isTotalPanel);
+            let maxPnAndTotalKw = SL_getMaxPanelAndTotalKw(currState, isTotalPanel,ratio);
             // Set value
             $("#total_sl_panels_"+index).val(maxPnAndTotalKw['max']);
             currState.total_panels = maxPnAndTotalKw['max'];
@@ -463,7 +463,7 @@ function SL_calcEquipmentCost(currState){
     return cost;
 }
 
-function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
+function SL_getMaxPanelAndTotalKw(currState, isTotalPanel , ratio){
     //const ratio = 1.333;
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
     // Get inverter kw
@@ -474,7 +474,11 @@ function SL_getMaxPanelAndTotalKw(currState, isTotalPanel){
             inverter_kw += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "capacity"));
         }
     }
-    const maxPanel = Math.floor((inverter_kw / 0.75) / panel_kw);
+    if(ratio == 0.75){
+        let maxPanel = Math.floor((inverter_kw / 0.75) / panel_kw);
+    }else{
+        let maxPanel = Math.floor((inverter_kw * ratio) / panel_kw);
+    }
     const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
     let result = [];
     result['max'] = maxPanel;
