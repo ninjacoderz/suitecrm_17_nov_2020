@@ -19,7 +19,8 @@ $(function () {
     }); 
    
     /** Clear sl button */
-    $(document).on('click', '#calculate_sl', function(e){
+    $(document).on('click', '.sl_button_calc', function(e){
+        $("#sl_max_ratio").val($(this).attr('data-ratio'));
         e.preventDefault();
         for (var i = 1; i < 7; i++) {
             var panel_type = $("#panel_sl_type_"+i).val();
@@ -27,7 +28,8 @@ $(function () {
             if(panel_type != '' && SL_isInverterHasValue(i)){
                 // Calculate option
                 //SL_autoFillAccessory(i);
-                SL_calcOption(2.5,i);
+                let curr_ratio = parseFloat($("#sl_max_ratio").val());
+                SL_calcOption(curr_ratio,i);
             }
         }
     });
@@ -37,7 +39,8 @@ $(function () {
         index = index[index.length -1];
         if($("#panel_sl_type_"+index).val() != "" && SL_isInverterHasValue(index)){
             //SL_autoFillAccessory(index);
-            SL_calcOption(2.5,index);
+            let curr_ratio = parseFloat($("#sl_max_ratio").val());
+            SL_calcOption(curr_ratio,index);
         }
     });
 
@@ -45,7 +48,8 @@ $(function () {
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
         //SL_autoFillAccessory(index);
-        SL_calcOption(2.5,index,true);
+        let curr_ratio = parseFloat($("#sl_max_ratio").val());
+        SL_calcOption(curr_ratio,index,true);
     });
 
     $(document).on('click', '#sl_inverter_add, #sl_accessory_add', function(e){
@@ -280,7 +284,7 @@ async function init_table_solar() {
             , makeInputBox("number_sl_stcs_5 solar_pricing", "number_sl_stcs_5", true)
             , makeInputBox("number_sl_stcs_6 solar_pricing", "number_sl_stcs_6", true)],
         ["", "&nbsp;"],
-        ["<button id='calculate_sl' class='button default'>Max 2.5</button>", "&nbsp;", "<input type='hidden' class='solar_pricing' name='sl_max_ratio' id='sl_max_ratio' value='2,5' />"],
+        ["<button id='calculate_sl' class='button default sl_button_calc' data-ratio='0.75'>Max</button> &nbsp; <button id='calculate_sl_15' class='button default sl_button_calc' data-ratio='1.5'>Max 1.5</button> &nbsp; <button id='calculate_sl_20' class='button default sl_button_calc' data-ratio='2'>Max 2</button> &nbsp; <button id='calculate_sl_25' class='button default sl_button_calc' data-ratio='2.5'>Max 2.5</button><input type='hidden' class='solar_pricing' name='sl_max_ratio' id='sl_max_ratio' value='2.5' />"],
         ["", "&nbsp;"],
         ["Solar Accessory 1"
             , makeSelectBox(convertJSONToArrayInit(sol_accessory), "sl_accessory1_1 solar_pricing", "sl_accessory1_1")

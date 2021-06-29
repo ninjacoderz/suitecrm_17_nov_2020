@@ -160,7 +160,7 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             return;
         }
         $("#generate_quote").css({"pointer-events":'none'});
-        SL_autoFillAccessory(optSelected);
+        // SL_autoFillAccessory(optSelected);
         SL_calcOption(optSelected,true,false);
 
         await wait(300);

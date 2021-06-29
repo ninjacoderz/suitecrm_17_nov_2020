@@ -409,7 +409,15 @@ $(function () {
         $.each(data, function(rowIndex, r) {
             var row = $("<tr/>");
             $.each(r, function(colIndex, c) { 
-                row.append($("<t"+(rowIndex == 0 ?  "h" : "d")+"/>").html(c));
+                if(typeof c === 'object'){
+                    row.append($("<t"+(rowIndex == 0 ?  "h" : "d")+"/>").html(c));
+                }else{
+                    if(c.indexOf('calculate_sl') >=0 && tid == 'solar_pricing'){
+                        row.append($("<t"+(rowIndex == 0 ?  "h" : "d") + " colspan='7'"+"/>").html(c));
+                    }else{
+                        row.append($("<t"+(rowIndex == 0 ?  "h" : "d")+"/>").html(c));
+                    }
+                }
             });
             table.append(row);
         });
@@ -1522,16 +1530,17 @@ $(function () {
         var json_val = '';
         if($("#pe_pricing_options_id_c").val() != ''){
             $("#link_pricing_option").remove();
-            $("#pricing_option_type_c").parent().append('<p id="link_pricing_option"><a href="/index.php?module=pe_pricing_options&action=EditView&record='+$("#pe_pricing_options_id_c").val()+'" target="_blank">Open Pricing Option</a></p>');
+            $("#pricing_option_type_c").parent().append('<p id="link_pricing_option"><a href="/index.php?module=pe_pricing_options&action=EditView&record='+$("#pe_pricing_options_id_c").val()+'" target="_blank">Open Off-grid Pricing Option</a></p>');
         }else{
             $("#link_pricing_option").remove();
         }
+  
         var url = '';
-        if(option_pricing_id != '' && option_pricing_id != undefined){
-            url = "index.php?entryPoint=loadPricingOption&id="+option_pricing_id;
-        }else{
+        // if(option_pricing_id != '' && option_pricing_id != undefined){
+        //     url = "index.php?entryPoint=loadPricingOption&id="+option_pricing_id;
+        // }else{
             url = 'index.php?entryPoint=loadPricingOption&id='+$("#pe_pricing_options_id_c").val();
-        }
+        // }
         $.ajax({
             url: url,
             type : 'POST',
@@ -1542,37 +1551,38 @@ $(function () {
                 }else{
                     json_val = JSON.parse(($("#pricing_option_input_c").val() != "")?$("#pricing_option_input_c").val():"{}");
                 }
-                //debugger
-                for(var i = 1 ; i <= 7 ; i++){
-                    clear_option(i);
-                }
-                for (let key in json_val) {
-                    if($("#"+key).attr('type') == 'checkbox'){
-                        $("#"+key).prop( "checked", json_val[key] );
-                    } else {
-                        let value_field = json_val[key];
-                        if(value_field !== undefined && value_field != ''){
-                            const regex = /S Edge [\d]{1,2}$/;
-                            let m;
-                            if(m = regex.exec(value_field) !== null){
-                                value_field = value_field+'G';
-                                $("#"+key).val(value_field);
-                            }else{
-                                $("#"+key).val(value_field);
-                            }
-                        }else{
-                            $("#"+key).val(value_field);
+                try{
+                    // Check number of inverter line
+                    let curr_line_num = SL_getCountLine('sl_inverter');
+                    let line_num = (json_val.sl_inverter_line != undefined && json_val.sl_inverter_line != '') ? json_val.sl_inverter_line : 2;
+                    if (line_num > curr_line_num) {
+                        // Create new Inverter line
+                        for (let i = 0; i < (line_num - curr_line_num); i++) {
+                            SL_createNewLine('sl_inverter');
                         }
                     }
-                }
-                $("input[id*='pm_").val(100);
-                for(i = 1 ;i < 7;i++){
-                    if($("#panel_type_"+i).val() !='' && $("#inverter_type_"+i).val() != '' && $("#total_panels_"+i).val() != ''){
-                        action_changed(i);
-                        action_changed_extra(i);
+        
+                    // Check number of accesssory line
+                    curr_line_num = SL_getCountLine('sl_accessory');
+                    line_num = (json_val.sl_accessory_line != undefined && json_val.sl_accessory_line != '') ? json_val.sl_accessory_line : 2;
+                    if (line_num > curr_line_num) {
+                        // Create new Accessory line
+                        for (let i = 0; i < (line_num - curr_line_num); i++) {
+                            SL_createNewLine('sl_accessory');
+                        }
                     }
+        
+                    for (let key in json_val) {
+                        if($("#"+key).attr('type') == 'checkbox'){
+                            $("#"+key).prop( "checked", json_val[key] );
+                        } else {
+                            $("#"+key).val(json_val[key]);
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
                 }
-                $("#calculatePrice").trigger("click");
+                $("#calculate_sl_default").trigger("click");
             }
         }); 
     }
