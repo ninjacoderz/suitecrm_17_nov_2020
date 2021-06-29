@@ -432,7 +432,7 @@ function calcInstallationCost(currState){
 
 // .:nhantv:. Get max panels
 function getMaxPanelAndTotalKw(currState, isTotalPanel){
-    const ratio = 1.5;
+    const ratio = 2.5;
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
     // Get inverter kw
     let inverter_kw = 0;
