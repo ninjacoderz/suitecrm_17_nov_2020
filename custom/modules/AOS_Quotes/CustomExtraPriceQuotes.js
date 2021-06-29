@@ -1462,10 +1462,97 @@ $(function () {
     YAHOO.util.Event.addListener(["pe_pricing_options_id_c"], "change", function(){
         if($('#quote_type_c').val() == 'quote_type_off_grid_system'){
             load_Off_GridPricingOptions();
+        }else if ($('#quote_type_c').val() == 'quote_type_daikin') {
+            DK_loadFromPricingOption();
         }else {
             loadPricingOptions();
         }
     });
+    //load option from module Pricing Optiong
+    function DK_loadFromPricingOption() {
+        var json_val = '';
+        if($("#pe_pricing_options_id_c").val() != ''){
+            $("#link_pricing_option").remove();
+            $("#pricing_option_type_c").parent().append('<p id="link_pricing_option"><a href="/index.php?module=pe_pricing_options&action=EditView&record='+$("#pe_pricing_options_id_c").val()+'" target="_blank">Open Pricing Option</a></p>');
+        }else{
+            $("#link_pricing_option").remove();
+        }
+        var url = 'index.php?entryPoint=loadPricingOption&id='+$("#pe_pricing_options_id_c").val();
+        $.ajax({
+            url: url,
+            type : 'POST',
+            async: false,
+            success: function (data) {
+                if(data != ''){
+                    json_val = JSON.parse($("<div />").html(data).text());
+                }else{
+                    return;
+                }
+                //debugger
+                for(var i = 1 ; i <= 7 ; i++){
+                    DK_clearOption(i);
+                }
+                try{
+                    // Create main line
+                    let current_line = DK_getCountLine('main');
+                    let item_line = (json_val.main_line != undefined && json_val.main_line != '') ? json_val.main_line : 1;
+                    if (item_line > current_line) {
+                        for (let i = 0; i < (item_line - current_line); i++) {
+                            DK_createNewLine('main');
+                        }
+                    }
+
+                    current_line = DK_getCountLine('wifi');
+                    item_line = (json_val.wifi_line != undefined && json_val.wifi_line != '') ? json_val.wifi_line : 1;
+                    if (item_line > current_line) {
+                        for (let i = 0; i < (item_line - current_line); i++) {
+                            DK_createNewLine('wifi');
+                        }
+                    }
+
+                    current_line = DK_getCountLine('extra');
+                    item_line = (json_val.extra_line != undefined && json_val.extra_line != '') ? json_val.extra_line : 1;
+                    if (item_line > current_line) {
+                        for (let i = 0; i < (item_line - current_line); i++) {
+                            DK_createNewLine('extra');
+                        }
+                    }
+                    
+                    for (const [key, v] of Object.entries(json_val)) {
+                        if (isNaN(key)) {
+                                if($("#"+key).attr('type') == 'checkbox'){
+                                    $("#"+key).prop( "checked", json_val[key] );
+                                } else {
+                                    $("#"+key).val(json_val[key]);
+                                }
+                        } else {
+                            for (const [vkey, vvalue] of Object.entries(v)) {
+                                if (typeof vvalue == "object") {
+                                    for (const [vvkey, vvvalue] of Object.entries(vvalue)) {
+                                        for (const [vvvkey, vvvvalue] of Object.entries(vvvalue)) {
+                                            if($("#"+vvvkey).attr('type') == 'checkbox'){
+                                                $("#"+vvvkey).prop( "checked", vvvvalue);
+                                            } else {
+                                                $("#"+vvvkey).val(vvvvalue);
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if($("#"+vkey).attr('type') == 'checkbox'){
+                                        $("#"+vkey).prop( "checked", vvalue);
+                                    } else {
+                                        $("#"+vkey).val(vvalue);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        }); 
+    }
     function load_Off_GridPricingOptions(){
         var json_val = '';
         if($("#pe_pricing_options_id_c").val() != ''){

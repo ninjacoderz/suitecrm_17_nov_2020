@@ -220,7 +220,7 @@ $(function () {
 });
 //***************************************** FUNCTION *********************************************************** */
 async function init_table_daikin() {
-    // Call API get Offgrid Product
+    // Call API get daikin Product
     try{
 
         await $.ajax({
@@ -849,14 +849,14 @@ function DK_getCurrentOptionState(index){
     // Main line
     let num_of_line = DK_getCountLine('main');
     for (var i = 0; i < num_of_line; i++) {
-        result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val();
+        result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val() == null ? '' : $('#main_dk_type' + (i + 1) + '_' + index).val();
         result['qty_main_dk' + (i + 1)] = $('#qty_main_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_main_dk' + (i + 1) + '_' + index).val() : '0' ;
     }
 
     // Wifi line
     num_of_line = DK_getCountLine('wifi');
     for (var i = 0; i < num_of_line; i++) {
-        result['wifi_type' + (i + 1)] = $('#wifi_dk_type' + (i + 1) + '_' + index).val();
+        result['wifi_type' + (i + 1)] = $('#wifi_dk_type' + (i + 1) + '_' + index).val() == null ? '' : $('#wifi_dk_type' + (i + 1) + '_' + index).val();
         result['number_wifi_type' + (i + 1)] = $('#qty_wifi_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_wifi_dk' + (i + 1) + '_' + index).val() : '0' ;
     }
 
@@ -864,7 +864,7 @@ function DK_getCurrentOptionState(index){
     // Extra line
     num_of_line = DK_getCountLine('extra');
     for (var i = 0; i < num_of_line; i++) {
-        result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val();
+        result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val() == null ? '' : $('#extra_dk_type' + (i + 1) + '_' + index).val() == null;
         result['qty_ext_dk' + (i + 1)] = $('#qty_ext_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_ext_dk' + (i + 1) + '_' + index).val() : '0';
         result['price_ext_dk' + (i + 1)] = $('#price_ext_dk' + (i + 1) + '_' + index).val() != '' ? $('#price_ext_dk' + (i + 1) + '_' + index).val() : '0';
     }
