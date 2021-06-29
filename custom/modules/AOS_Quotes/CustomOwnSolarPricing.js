@@ -37,7 +37,7 @@ $(function () {
         index = index[index.length -1];
         if($("#panel_sl_type_"+index).val() != "" && SL_isInverterHasValue(index)){
             SL_autoFillAccessory(index);
-            SL_calcOption(parseFloat($("#sl_max_ratio").val()),index);
+            SL_calcOption(2.5,index);
         }
     });
 
@@ -45,7 +45,7 @@ $(function () {
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
         SL_autoFillAccessory(index);
-        SL_calcOption(parseFloat($("#sl_max_ratio").val()),index,true);
+        SL_calcOption(2.5,index,true);
     });
 
     $(document).on('click', '#sl_inverter_add, #sl_accessory_add', function(e){
