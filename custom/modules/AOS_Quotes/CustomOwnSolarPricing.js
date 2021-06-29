@@ -474,10 +474,11 @@ function SL_getMaxPanelAndTotalKw(currState, isTotalPanel , ratio){
             inverter_kw += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "capacity"));
         }
     }
+    let maxPanel;
     if(ratio == 0.75){
-        let maxPanel = Math.floor((inverter_kw / 0.75) / panel_kw);
+         maxPanel = Math.floor((inverter_kw / 0.75) / panel_kw);
     }else{
-        let maxPanel = Math.floor((inverter_kw * ratio) / panel_kw);
+         maxPanel = Math.floor((inverter_kw * ratio) / panel_kw);
     }
     const maxKw = parseFloat((panel_kw * maxPanel).toFixed(3));
     let result = [];
