@@ -26,7 +26,7 @@ $(function () {
             // Get suggested
             if(panel_type != '' && SL_isInverterHasValue(i)){
                 // Calculate option
-                SL_autoFillAccessory(i);
+                //SL_autoFillAccessory(i);
                 SL_calcOption(2.5,i);
             }
         }
@@ -36,7 +36,7 @@ $(function () {
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
         if($("#panel_sl_type_"+index).val() != "" && SL_isInverterHasValue(index)){
-            SL_autoFillAccessory(index);
+            //SL_autoFillAccessory(index);
             SL_calcOption(2.5,index);
         }
     });
@@ -44,7 +44,7 @@ $(function () {
     $(document).on("change", "input[id*=total_sl_panels_]", function(e){
         var index  = $(this).attr("id").split('_');
         index = index[index.length -1];
-        SL_autoFillAccessory(index);
+        //SL_autoFillAccessory(index);
         SL_calcOption(2.5,index,true);
     });
 
