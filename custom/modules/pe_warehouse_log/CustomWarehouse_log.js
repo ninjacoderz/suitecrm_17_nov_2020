@@ -55,7 +55,7 @@
                     break;
                     case "vic":
                     case "victory":
-                        email_address_to = "<vic@cope.com.au>, <RAldridge@cope.com.au>";
+                        email_address_to = "<vic@cope.com.au>, <CVioli@cope.com.au>";
                     break;
                     case "wa":
                         email_address_to = '<waops@cope.com.au>, <KElliott@cope.com.au>';//"wa@cope.com.au";
