@@ -4857,7 +4857,7 @@ class EmailsController extends SugarController
                                                                         <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
                                                                         // Render Accessories
                                                                         foreach ($inverter_sol as $key => $value) {
-                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.' x '.$key.'</div>';
+                                                                            $solar_pricing_options .= '<div style="font-size: 15px;">'.$value.' x '.$key.'</div>';
                                                                         }                                                                
                                                                         // Render Accessories
                                                                         foreach ($accessory_sol as $key => $value) {
@@ -4900,7 +4900,7 @@ class EmailsController extends SugarController
                                                                         <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
                                                                         // Render Accessories
                                                                         foreach ($inverter_sol as $key => $value) {
-                                                                            $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.' x '.$key.'</div>';
+                                                                            $solar_pricing_options .= '<div style="font-size: 15px;">'.$value.' x '.$key.'</div>';
                                                                         }                                                                
                                                                         // Render Accessories
                                                                         foreach ($accessory_sol as $key => $value) {
@@ -4939,7 +4939,7 @@ class EmailsController extends SugarController
                                                                     <div style="font-size: 15px;">' .$pricings->{'total_sl_panels_'.$i}. ' x ' . $pricings->{'panel_sl_type_'.$i} . '</div>';
                                                                     // Render Accessories
                                                                     foreach ($inverter_sol as $key => $value) {
-                                                                        $solar_pricing_options .= '<div style="font-size: 13px;">'.$value.' x '.$key.'</div>';
+                                                                        $solar_pricing_options .= '<div style="font-size: 15px;">'.$value.' x '.$key.'</div>';
                                                                     }                                                                
                                                                     // Render Accessories
                                                                     foreach ($accessory_sol as $key => $value) {
