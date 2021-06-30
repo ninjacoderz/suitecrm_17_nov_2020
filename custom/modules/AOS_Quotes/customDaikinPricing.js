@@ -857,7 +857,7 @@ function DK_getCurrentOptionState(index){
     // Extra line
     num_of_line = DK_getCountLine('extra');
     for (var i = 0; i < num_of_line; i++) {
-        result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val() == null ? '' : $('#extra_dk_type' + (i + 1) + '_' + index).val() == null;
+        result['extra_type' + (i + 1)] = $('#extra_dk_type' + (i + 1) + '_' + index).val() == null ? '' : $('#extra_dk_type' + (i + 1) + '_' + index).val();
         result['qty_ext_dk' + (i + 1)] = $('#qty_ext_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_ext_dk' + (i + 1) + '_' + index).val() : '0';
         result['price_ext_dk' + (i + 1)] = $('#price_ext_dk' + (i + 1) + '_' + index).val() != '' ? $('#price_ext_dk' + (i + 1) + '_' + index).val() : '0';
     }
