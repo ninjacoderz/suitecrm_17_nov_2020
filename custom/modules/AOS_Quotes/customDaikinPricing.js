@@ -751,6 +751,11 @@ function DK_saveCurrentState(){
             return true;
         }
 
+        //Check install
+        if (id_name.indexOf('install_dk') != -1) {
+            $(this).val() == 'Yes' ? opt['install_standard'] = daikin_install[0] : opt['install_standard'] = '';
+        }
+
         result[option] = {...result[option], ...opt};
     });
     //check send email daikin pricing option
@@ -760,6 +765,7 @@ function DK_saveCurrentState(){
         } else {
             result[k] = {...result[k],...{'isSend': 0}};
         }
+        result[k] = {...result[k],...{'install_qty': qty, 'delivery' : daikin_delivery[0]}};
     }
     
     //add state
