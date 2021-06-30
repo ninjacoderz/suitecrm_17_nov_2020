@@ -8206,7 +8206,7 @@ class EmailsController extends SugarController
         if($type == 'products') {
             foreach($arr as $item) {
                 if($item['productName'] !== null) {
-                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_main_dk1_".$key].'X '.$item["productName"].'</div>';
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_main_dk1_".$key].'x '.$item["productName"].'</div>';
                 } else {
                     $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">&nbsp;</div>';
                 }
@@ -8214,7 +8214,7 @@ class EmailsController extends SugarController
         } else if($type == 'wifi') {
             foreach($arr as $item) {
                 if($item['productName'] !== null) {
-                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_wifi_dk1_".$key].'X '.$item["wifi_dk_type1_".$key].'</div>';
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_wifi_dk1_".$key].'x '.$item["wifi_dk_type1_".$key].'</div>';
                 } else {
                     $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">&nbsp;</div>';
                 }
