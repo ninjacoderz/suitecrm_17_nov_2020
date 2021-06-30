@@ -32,6 +32,7 @@ $(function () {
                 SL_calcOption(curr_ratio,i);
             }
         }
+        SL_calcHint();
     });
 
     $(document).on("change", "select[id*=inverter_sl_type] ,select[id*=panel_sl_type_], select[id*=sl_accessory]", function(e){
@@ -324,6 +325,8 @@ async function init_table_solar() {
 
     // Load Solar Option
     SL_loadOption();
+
+    initHint();
 }
 
 async function SL_calcOption(ratio,index, isTotalPanel = false,isloading = true) {
@@ -682,6 +685,216 @@ function SL_isInverterHasValue(index){
         }
     }
     return false;
+}
+
+function initHint(){
+    // Show button
+    $('body').find("#send_pe_solar_pricing").before("<button id='show_hint' class='button default' style='display: block'>Hide Calc Hint</button>");
+    // Append texarea
+    $('body').find("#send_pe_solar_pricing").before("<div id='hint'>"
+        +"<div id='hint1' style='display: inline-block;width: 500px;'></div>"
+        +"<div id='hint2' style='display: inline-block;width: 500px;'></div>"
+        +"</div>");
+}
+
+async function SL_calcHint(){
+    $('#hint1').html('');
+    $('#hint2').html('');
+    // Check index
+    let index = $('input[name="solar_option"]:checked').attr('data-attr');
+    if (!index){
+        $('#hint1').html("You must choose the Option to see calc hint");
+        alert("You must choose the Option to see calc hint");
+        return;
+    }
+    await wait(200);
+    let currState = SL_getCurrentOptionState(index);
+    let str = "";
+
+    /** ==================== Grand total calc =======================*/ 
+    let cost = 0;
+    if(currState.panel_type != ''){
+        cost += parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels);
+        str += writeHint(
+            currState.panel_type
+            , parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "cost")) * parseFloat(currState.total_panels)
+        );
+    }
+    let num_of_line = getCountLine('sl_inverter');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['inverter_type' + (i + 1)] != ''){
+            cost += parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"));
+            str += writeHint(
+                currState['inverter_type' + (i + 1)]
+                , parseFloat(getAttributeFromName(currState['inverter_type' + (i + 1)], sol_inverter, "cost"))
+            );
+        }
+    }
+    
+    num_of_line = getCountLine('sl_accessory');
+    for (var i = 0; i < num_of_line; i++) {
+        if(currState['accessory' + (i + 1)] != ''){
+            cost += parseFloat(getAttributeFromName(currState['accessory' + (i + 1)], sol_accessory, "cost"));
+            str += writeHint(
+                currState['accessory' + (i + 1)]
+                , parseFloat(getAttributeFromName(currState['accessory' + (i + 1)], sol_accessory, "cost"))
+            );
+        }
+    }
+    
+    // Solar Balance Of System
+    cost += (parseFloat(getAttributeFromName(extra_solar_products[1], solar_extra, "cost")) * parseFloat(currState.total_kw) * 1000);
+    str += writeHint(
+        extra_solar_products[1]
+        , (parseFloat(getAttributeFromName(extra_solar_products[1], solar_extra, "cost")) * parseFloat(currState.total_kw) * 1000)
+    );
+    // total equipment cost
+    str += writeHint(
+        "TOTAL EQUIPMENT COST"
+        , cost
+        , true
+        , true
+    );
+
+    /** ==================== Grand total calc =======================*/ 
+    let grandTotal = 0;
+    // const extra_solar_products = ["Solar PV Standard Install", "Solar PV Balance Of System", "STCs","Solar PV Supply and Install"];
+
+    // // Solar Solar PV Supply and Install
+    // grandTotal += parseFloat(getAttributeFromName(extra_solar_products[3], solar_extra, "cost"));
+    // str += writeHint(
+    //     extra_solar_products[3]
+    //     , parseFloat(getAttributeFromName(extra_solar_products[3], solar_extra, "cost"))
+    //     ,true
+    // );
+    // Solar Standard Install
+    grandTotal += parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState.total_kw);
+    str += writeHint(
+        extra_solar_products[0]
+        , parseFloat(getAttributeFromName(extra_solar_products[0], solar_extra, "cost")) * parseFloat(currState.total_kw)
+    );
+    
+    // Installation cost
+    str += writeHint(
+        'INSTALLATION COST'
+        , grandTotal
+        , true
+        , true
+    );
+    // Installation cost + Equipment cost
+    grandTotal += parseFloat(cost);
+    let sub_total = grandTotal;
+    // Sub total
+    str += writeHint(
+        'SUB TOTAL'
+        , grandTotal
+        , true
+        , true
+    );
+    // PE Admin %
+    str += writeHint(
+        'PE Admin %'
+        , parseFloat($('#sl_pe_admin_percent').val()) / 100
+    );
+    grandTotal += grandTotal * (parseFloat($('#sl_pe_admin_percent').val()) / 100);
+    str += writeHint(
+        'Sub total + PE Admin %'
+        , grandTotal
+    );
+    let sub_price_toal = grandTotal;
+    // GST 10%
+    let gst = grandTotal * 0.1;
+    str += writeHint(
+        'GST 10%'
+        , gst
+    );
+    // STCs
+    let stc_client = parseFloat(getAttributeFromName(extra_solar_products[2], solar_extra, "cost")) * parseFloat(currState.number_stcs);
+    grandTotal += parseFloat(stc_client);
+    str += writeHint(
+        'STCs (Client show)'
+        , stc_client
+    );
+    str += '</br>';
+    str += writeHint(
+        'Sub total + PE Admin + STCs (Client show)'
+        , grandTotal
+    );
+    // Include GST above
+    grandTotal += gst;
+    str += writeHint(
+        'Sub total + PE Admin + STCs (Client show) + GST'
+        , grandTotal
+    );
+    // PM price
+    if(currState.pm != undefined && currState.pm != ''){
+        grandTotal += parseFloat(currState.pm);
+        str += writeHint(
+            'Sub total + PE Admin + STCs (Client show) + GST + PM'
+            , grandTotal
+        );
+    }
+    // Grand total
+    str += writeHint(
+        'GRAND TOTAL'
+        , grandTotal
+        , true
+        , true
+    );
+
+    /** ==================== GP calc =======================*/ 
+    let str2 = '';
+    // Sub Price Total
+    str2 += writeHint(
+        'SUB PRICE TOTAL = Sub total + PE Admin %'
+        , sub_price_toal
+        , true
+        , true
+    );
+    // Customer Revenue
+    let customer_revenue = parseFloat(sub_price_toal) + parseFloat(stc_client);
+    str2 += writeHint(
+        'Customer Revenue = Sub Price Total + STCs (Client show)'
+        , customer_revenue
+    );
+    // STCs Revenue
+    let stc_revenue = 37.25 * parseFloat(currState.number_stcs);
+    str2 += writeHint(
+        'STCs Revenue'
+        , stc_revenue
+    );
+    // Sub Total for GP
+    let sub_total_gp = customer_revenue + stc_revenue;
+    str2 += writeHint(
+        'SUB TOTAL (Revenue) = STCs + Customer'
+        , sub_total_gp
+        , true
+        , true
+    );
+    // Gross Profit
+    let gross_profit = parseFloat(sub_total_gp) - parseFloat(sub_total);
+    str2 += writeHint(
+        'Gross Profit = Sub Total (Revenue) - Sub total'
+        , gross_profit
+    );
+    // % Gross Profit
+    let gross_profit_percent = (parseFloat(gross_profit) / parseFloat(sub_total));
+    str2 += writeHint(
+        '% Gross Profit = Gross Profit / Sub total'
+        , gross_profit_percent
+    );
+    if (parseFloat(gross_profit_percent) < parseFloat($('#pe_admin_percent').val()) / 100) {
+        str2 += writeHint(
+            '-> Need to Go Seek: SUB PRICE TOTAL'
+            , ''
+            , true
+            , true
+        );
+    }
+
+    // Return
+    $('#hint1').append(str);
+    $('#hint2').append(str2);
 }
 
 //***************************************** END THIENPB FUNCTION *********************************************************** */
