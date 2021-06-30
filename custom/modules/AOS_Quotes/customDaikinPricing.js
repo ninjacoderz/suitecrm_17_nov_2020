@@ -1,8 +1,5 @@
 var dk_main,dk_extra, dk_install, dk_wifi, dk_air_install;
-const daikin_delivery = {
-    'VIC' : '90',
-    'default' : '40',
-}; //["Daikin Factory Delivery"]; //default = 40
+const daikin_delivery = ["Daikin Factory Delivery"];
 const daikin_ds = ['Daikin Supply', 'Daikin Supply and Installation'];
 const daikin_install = ["Daikin Standard Install"];
 
@@ -471,11 +468,7 @@ function DK_calcHint(){
 
     /** S - Install and Delivery */
         //Daikin delivery 
-        if (currState['state'] == 'VIC') {
-            delivery_cost = parseFloat(daikin_delivery.default) + parseFloat(daikin_delivery.VIC);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-        } else {
-            delivery_cost = parseFloat(daikin_delivery.default);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-        }
+        delivery_cost = parseFloat(getAttributeFromName(daikin_delivery[0], dk_install, 'cost'));
         str+= DK_writeHint('Delivery',delivery_cost);
         // Daikin install
         if (currState['install_dk'] == 'Yes') {
@@ -920,11 +913,7 @@ function DK_calcInstallCost(currState) {
 function DK_calcDeliveryCost(currState) {
     let delivery_cost = 0;
     //Daikin delivery 
-    if (currState['state'] == 'VIC') {
-        delivery_cost = parseFloat(daikin_delivery.default) + parseFloat(daikin_delivery.VIC);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-    } else {
-        delivery_cost = parseFloat(daikin_delivery.default);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-    }
+    delivery_cost = parseFloat(getAttributeFromName(daikin_delivery[0], dk_install, 'cost'));
     return delivery_cost;
 }
 
@@ -940,16 +929,6 @@ function DK_calcEquipmentCost(currState){
             total_heat_capacity += parseFloat(getAttributeFromName(currState['main_type' + (i + 1)], dk_main, "heat_capacity")) * parseFloat(currState['qty_main_dk'+(i+1)]);
         }
     }
-    // //Daikin delivery 
-    // if (currState['state'] == 'VIC') {
-    //     delivery_cost = parseFloat(daikin_delivery.default) + parseFloat(daikin_delivery.VIC);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-    // } else {
-    //     delivery_cost = parseFloat(daikin_delivery.default);//parseFloat(getAttributeFromName(daikin_delivery[0], '', 'cost'));
-    // }
-    // // Daikin install
-    // if (currState['install_dk'] == 'Yes') {
-    //     install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost')) * parseFloat(numbers_daikin);
-    // }
 
     // Daikin Wifi
     num_of_line = DK_getCountLine('wifi');
