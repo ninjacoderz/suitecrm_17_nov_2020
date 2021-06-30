@@ -835,6 +835,7 @@ function DK_loadOption(){
 //Get current option state
 function DK_getCurrentOptionState(index){
     let result = {};
+    let total_qty_main = 0;
     let state = $('#install_address_state_c').val();
     result['state'] = state;
     result['index'] = index;
@@ -844,8 +845,10 @@ function DK_getCurrentOptionState(index){
     for (var i = 0; i < num_of_line; i++) {
         result['main_type' + (i + 1)] = $('#main_dk_type' + (i + 1) + '_' + index).val() == null ? '' : $('#main_dk_type' + (i + 1) + '_' + index).val();
         result['qty_main_dk' + (i + 1)] = $('#qty_main_dk' + (i + 1) + '_' + index).val() != '' ? $('#qty_main_dk' + (i + 1) + '_' + index).val() : '0' ;
+        total_qty_main += $('#qty_main_dk' + (i + 1) + '_' + index).val() != '' ? parseFloat($('#qty_main_dk' + (i + 1) + '_' + index).val()) : 0;
     }
-
+    // Total qty main 
+    result['total_qty_main'] = total_qty_main;
     // Wifi line
     num_of_line = DK_getCountLine('wifi');
     for (var i = 0; i < num_of_line; i++) {
@@ -1042,7 +1045,7 @@ async function DK_generateLineItem(){
         //debugger
         if (currState['install_dk'] == 'Yes') {
             await DK_autoCreateLineItem(daikin_ds[1], dk_install, 1);
-            await DK_autoCreateLineItem(daikin_install[0], dk_air_install, 1);
+            await DK_autoCreateLineItem(daikin_install[0], dk_air_install, currState['total_qty_main']);
         } else {
             await DK_autoCreateLineItem(daikin_ds[0], dk_install, 1);
         }
@@ -1060,7 +1063,7 @@ async function DK_generateLineItem(){
                 await DK_autoCreateLineItem(currState['wifi_type' + (i + 1)], dk_wifi, currState['number_wifi_type' + (i + 1)]);
             }
         }
-        // wifi line
+        // extra line
         num_of_line = getCountLine('extra');
         for (let i = 0; i < num_of_line; i++) {
             if (currState['extra_type' + (i + 1)] != "" &&  parseInt(currState['qty_ext_dk' + (i + 1)]) != 0) {
@@ -1071,6 +1074,8 @@ async function DK_generateLineItem(){
                 }
             }
         }
+        // delivery 
+        await DK_autoCreateLineItem(daikin_delivery[0], dk_install, 1);
         // Calculate
         await DK_calculatePrice(currState);
 
