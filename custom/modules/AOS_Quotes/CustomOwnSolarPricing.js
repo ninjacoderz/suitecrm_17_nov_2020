@@ -32,7 +32,6 @@ $(function () {
                 SL_calcOption(curr_ratio,i);
             }
         }
-        SL_calcHint();
     });
 
     $(document).on("change", "select[id*=inverter_sl_type] ,select[id*=panel_sl_type_], select[id*=sl_accessory]", function(e){
@@ -374,6 +373,7 @@ async function SL_calcOption(ratio,index, isTotalPanel = false,isloading = true)
             let grandTotal = SL_calcGrandTotal(currState);
             $("#total_sl_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
             SL_saveCurrentState();
+            SL_calcHint();
 
         }
     }
