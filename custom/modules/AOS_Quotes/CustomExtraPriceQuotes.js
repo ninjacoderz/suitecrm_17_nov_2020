@@ -412,7 +412,7 @@ $(function () {
                 if(typeof c === 'object'){
                     row.append($("<t"+(rowIndex == 0 ?  "h" : "d")+"/>").html(c));
                 }else{
-                    if(c.indexOf('calculate_sl') >=0 && tid == 'solar_pricing'){
+                    if((c.indexOf('calculate_sl') >=0 || c.indexOf('calculate_og') >=0) && (tid == 'solar_pricing' || tid== 'offgrid_pricing')){
                         row.append($("<t"+(rowIndex == 0 ?  "h" : "d") + " colspan='7'"+"/>").html(c));
                     }else{
                         row.append($("<t"+(rowIndex == 0 ?  "h" : "d")+"/>").html(c));

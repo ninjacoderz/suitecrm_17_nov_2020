@@ -43,14 +43,16 @@ $(function () {
     });
 
     // .:nhantv:. Max Button Click handle 
-    $(document).on('click', '#calculate_og', function(e){
+    $(document).on('click', '.og_button_calc', function(e){
+        $("#og_max_ratio").val($(this).attr('data-ratio'));
         e.preventDefault();
         for (var i = 1; i < 7; i++) {
             var panel_type = $("#panel_og_type_"+i).val();
             // Get suggested
             if(panel_type != '' && isInverterHasValue(i)){
                 // Calculate option
-                calcOption(i, false, true);
+                let curr_ratio = parseFloat($("#og_max_ratio").val());
+                calcOption(curr_ratio,i, false, true);
             }
         }
     });
@@ -63,11 +65,10 @@ $(function () {
             // Get suggested
             if(panel_type != '' && isInverterHasValue(i)){
                 // Calculate option
-                calcOption(i);
+                let curr_ratio = parseFloat($("#og_max_ratio").val());
+                calcOption(curr_ratio,i);
             }
         }
-        // .:nhantv:. call hint
-        calcHint();
     });
 
     // .:nhantv:. Inverter Add Button Click handle 
@@ -253,12 +254,13 @@ function optionChangeHandle(el){
         let currState = getCurrentOptionState(index);
         // Check condition to validate panel - inverter
         if(currState.panel_type != '' && isInverterHasValue(index)){
+            let curr_ratio = parseFloat($("#og_max_ratio").val());
             if (isTotalPanel) {
                 // Total panel
-                calcOption(index, isTotalPanel, true);
+                calcOption(curr_ratio,index, isTotalPanel, true);
             } else if (isPm) {
                 // PM
-                calcOption(index, false, false);
+                calcOption(curr_ratio,index, false, false);
             }
         }
     }
@@ -431,8 +433,8 @@ function calcInstallationCost(currState){
 }
 
 // .:nhantv:. Get max panels
-function getMaxPanelAndTotalKw(currState, isTotalPanel){
-    const ratio = 2.5;
+function getMaxPanelAndTotalKw(currState, isTotalPanel,ratio = 2.5){
+    // const ratio = 2.5;
     const panel_kw = parseFloat(getAttributeFromName(currState.panel_type, sol_panel, "capacity")) / 1000;
     // Get inverter kw
     let inverter_kw = 0;
@@ -473,14 +475,14 @@ function isInverterHasValue(index){
 }
 
 // .:nhantv:. Calculate Total Kwh and STCs of Option
-async function calcOption(index, isTotalPanel = false, isMax = false) {
+async function calcOption(ratio,index, isTotalPanel = false, isMax = false) {
     var postcode = $("#install_address_postalcode_c").val();
     if(index != '' && index != undefined){
         let currState = getCurrentOptionState(index);
         if(currState.panel_type != '' && isInverterHasValue(index)){
             if(isMax){
                 // Get max panels and total kw
-                let maxPnAndTotalKw = getMaxPanelAndTotalKw(currState, isTotalPanel);
+                let maxPnAndTotalKw = getMaxPanelAndTotalKw(currState, isTotalPanel,ratio);
                 // Set value
                 $("#total_og_panels_"+index).val(maxPnAndTotalKw['max']);
                 currState.total_panels = maxPnAndTotalKw['max'];
@@ -520,6 +522,9 @@ async function calcOption(index, isTotalPanel = false, isMax = false) {
             $("#og_total_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
             // Save current option
             saveCurrentState();
+
+             // .:nhantv:. call hint
+            calcHint();
         }
     }
 }
@@ -869,7 +874,7 @@ async function init_table_offgrid() {
             , makeInputBox("number_og_stcs_5 offgrid_pricing", "number_og_stcs_5", true)
             , makeInputBox("number_og_stcs_6 offgrid_pricing", "number_og_stcs_6", true)],
         ["", "&nbsp;"],
-        ["<button id='calculate_og' class='button default'>Max</button>", "&nbsp;"],
+        ["<button id='calculate_og' class='button default og_button_calc' data-ratio='1.5'>Max</button> &nbsp; <button id='calculate_og_20' class='button default og_button_calc' data-ratio='2.0'>Max 2.0</button> &nbsp; <button id='calculate_og_25' class='button default og_button_calc' data-ratio='2.5'>Max 2.5</button> &nbsp; <button id='calculate_og_27' class='button default og_button_calc' data-ratio='2.7'>Max 2.7</button><input type='hidden' class='solar_pricing' name='og_max_ratio' id='og_max_ratio' value='1.5' />"],
         ["", "&nbsp;"],
         ["Off-Grid Inverter 1"
             , makeSelectBox(convertJSONToArrayInit(og_inverter), "offgrid_inverter_1 offgrid_pricing", "offgrid_inverter_1")
