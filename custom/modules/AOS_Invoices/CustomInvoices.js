@@ -551,6 +551,10 @@ $(function () {
             YAHOO.util.Event.addListener(["account_id1_c","account_id_c"], "change", display_link_contact_plum_elec_invoice);
             $('#plumber_c').parent().siblings('.label').append('<br> <button class="button primary" id="distanceFlumbertoSuite"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>GET DISTANCE</button>');
             $('#plumber_c').parent().siblings('.label').append('<button style="font-size: smaller;margin: 0px 2px;" class="button primary" type="button" id="getDistance_selectedPlumber"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get Distance Selected</button>');
+        
+            //open link account/ contact Solar Installer 
+            display_link_account_contact_installer_solar();
+            YAHOO.util.Event.addListener(["account_id5_c","contact_id2_c"], "change", display_link_account_contact_installer_solar);
         }
 
         //VUT - trigger click get distance installer
@@ -5741,6 +5745,11 @@ $(document).ready(function(){
                     $('#contact_id3_c').val(result['billing_contact_id']);
                     $('#quote_type_c').val('quote_type_solar');
                     $("#invoice_type_c").val('Solar');
+                    $('#solar_installer_c').val(result['solar_installer_c']);
+                    $('#account_id5_c').val(result['account_id5_c']);
+                    $('#solar_installer_contact_c').val(result['solar_installer_contact_c']);
+                    $("#contact_id2_c").val(result['contact_id2_c']);
+                    display_link_account_contact_installer_solar();
                     //logic add number quote and link quote
                     $('#quote_number').val(result['number_quote']);
                     if(result['id_quote'] != '') {
@@ -8954,4 +8963,16 @@ function showLink(id_ele, module_name, record) {
             }
         });
     }
+}
+
+function display_link_account_contact_installer_solar(){
+    $("#link_account_solar_installer").remove();
+    if( $("#account_id5_c").val() != ''){
+        $("#account_id5_c").parent().append("<p id='link_account_solar_installer'><a  href='/index.php?module=Accounts&action=EditView&record=" + $("#account_id5_c").val()+ "' target='_blank'>Open Account</a></p>");
+    }
+    $("#link_contact_solar_installer").remove();
+    if( $("#contact_id2_c").val() != ''){
+        $("#contact_id2_c").parent().append("<p id='link_contact_solar_installer'><a  href='/index.php?module=Contacts&action=EditView&record=" + $("#contact_id2_c").val()+ "' target='_blank'>Open Contact</a></p>");
+    }
+
 }

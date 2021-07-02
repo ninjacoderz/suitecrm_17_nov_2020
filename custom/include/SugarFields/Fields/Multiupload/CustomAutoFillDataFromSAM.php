@@ -32,7 +32,24 @@
     }else{
         $title_inv = 'Solargain_' .$json_result->Customer->Name .'_' .$json_result->Install->Address->Locality .'_Order #' .$sg_order_number;
     }
+    //logic for installer
+    if(isset($json_result->Installer)){
+        $email_Installer = $json_result->Installer->EMail;
+        // create or update contact
+        if(isset($email_Installer) && $email_Installer !== '') {
+            $array_Installer_contacts = get_contacts_id_by_email($email_Installer);
+            $Installer_contact = create_contacts_installer( $json_result,$array_Installer_contacts[0],$email_Installer );
+            
+            $array_Installer_accounts = get_accounts_id_by_email($email_Installer);
+            $Installer_account = create_accounts_installer( $json_result,$array_Installer_accounts[0],$email_Installer );
+          
+            $Installer_account->load_relationship('contacts');
+            $Installer_account->contacts->add($Installer_contact);
+            $Installer_account->save();
 
+        }
+
+    }
     //logic get quote number in suitecrm by quote number SAM
     $db = DBManagerFactory::getInstance();
     $SAM_Quote_Number = $json_result->Quote->ID;
@@ -72,6 +89,13 @@
         //id,number quote in suitecrm
         'id_quote' =>($rows['id']) ? $rows['id'] : '',
         'number_quote' =>($rows['number']) ? $rows['number'] : '',
+        //  Account Installer
+        'solar_installer_c' =>($Installer_account) ? $Installer_account->name : '',
+        'account_id5_c' =>($Installer_account) ? $Installer_account->id : '',
+
+        //  Contact Installer
+        'solar_installer_contact_c' =>($Installer_contact) ? $Installer_contact->first_name .' '.$Installer_contact->last_name : '',
+        'contact_id2_c' =>($Installer_contact) ? $Installer_contact->id : '',
     );
 
     echo json_encode($info_inv_result);
@@ -100,4 +124,77 @@ function Get_Json_CRMSolargainByOrderNumber($username,$password,$sg_order_number
     curl_close ($ch);
     $json_result = json_decode($result);
     return $json_result;
+}
+
+function get_accounts_id_by_email($address_email) {
+    global $db;
+    $array_id = [];
+    $query = 
+    "SELECT accounts.id as id 
+    FROM accounts 
+    INNER JOIN email_addr_bean_rel ON email_addr_bean_rel.bean_id = accounts.id
+    INNER JOIN email_addresses ON email_addr_bean_rel.email_address_id = email_addresses.id
+    WHERE accounts.deleted = 0  AND email_addresses.email_address = '$address_email'";
+    $result = $db->query($query);
+    if($result->num_rows > 0) {
+        while ($row = $db->fetchByAssoc($result)) {
+            $array_id[] =$row['id'];
+        }
+    }
+    return $array_id;
+}
+
+function get_contacts_id_by_email($address_email) {
+    global $db;
+    $array_id = [];
+    $query = 
+    "SELECT contacts.id as id 
+    FROM contacts 
+    INNER JOIN email_addr_bean_rel ON email_addr_bean_rel.bean_id = contacts.id
+    INNER JOIN email_addresses ON email_addr_bean_rel.email_address_id = email_addresses.id
+    WHERE contacts.deleted = 0  AND email_addresses.email_address = '$address_email'";
+    $result = $db->query($query);
+    if($result->num_rows > 0) {
+        while ($row = $db->fetchByAssoc($result)) {
+            $array_id[] =$row['id'];
+        }
+    }
+    return $array_id;
+}
+
+function create_contacts_installer($data, $contactID ='',$address_email){
+    global $current_user;
+    $contact = new Contact();
+    $contact->retrieve($contactID);
+    if($contact->id == ''){
+        $FullName  = explode(",", htmlspecialchars_decode($data->Installer->Name));
+        $contact->first_name = $FullName[0];
+        $contact->last_name = $FullName[1];
+        $contact->primary_address_street = $data->Installer->Address->Street1;
+        $contact->primary_address_city = $data->Installer->Address->Locality;
+        $contact->primary_address_state =  ($data->Installer->Address->State)? $data->Installer->Address->State : $data->Installer->Region;
+        $contact->email1 = $address_email;
+        $contact->assigned_user_name = $current_user->full_name;
+        $contact->assigned_user_id = $current_user->id;
+        $contact->save();
+    }
+    return  $contact;
+}
+
+
+function create_accounts_installer($data, $accountID ='',$address_email){
+    global $current_user;
+    $account = new Account();
+    $account->retrieve($accountID);
+    if($account->id == ''){
+        $account->name = htmlspecialchars_decode($data->Installer->Name);
+        $account->billing_address_street = $data->Installer->Address->Street1;
+        $account->billing_address_city = $data->Installer->Address->Locality;
+        $account->billing_address_state =($data->Installer->Address->State)? $data->Installer->Address->State : $data->Installer->Region;
+        $account->assigned_user_name = $current_user->full_name;
+        $account->assigned_user_id = $current_user->id;
+        $account->email1 =  $address_email;
+        $account->save();  
+    }
+    return  $account;
 }
