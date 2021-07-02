@@ -4191,6 +4191,7 @@ class EmailsController extends SugarController
                     
                 }
                 $this->bean->description_html = str_replace("\$daikin_pricing_options",  $daikin_pricing_options , $this->bean->description_html);
+                $this->bean->description_html = str_replace("\$quote_notes",  $focus->quote_note_c , $this->bean->description_html);
                 //end - code render sms_template
                 $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
                 $phone_number = preg_replace("/^61/", "+61", $phone_number);
