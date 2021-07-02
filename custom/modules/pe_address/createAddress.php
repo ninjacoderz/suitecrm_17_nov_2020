@@ -47,8 +47,9 @@ if (isset($quote_id) && $quote_id != '') {
             $address->billing_address_state = $state;
             $address->billing_address_postalcode = $postcode;
             $address->billing_address_country = $country;
-            $address->name = "{$street}, {$city}, {$state}, {$postcode}";
-            $geo = get_lat_long($address->name);
+            $full_address = "{$street}, {$city}, {$state}, {$postcode}";
+            $address->name = "{$street} {$city} {$state} {$postcode}";
+            $geo = get_lat_long($full_address);
             $address->map_data = json_encode($geo);
             //other
             $address->electricity_distributor = $distributor;
@@ -69,8 +70,9 @@ if (isset($quote_id) && $quote_id != '') {
                 $address->billing_address_state = $state;
                 $address->billing_address_postalcode = $postcode;
                 $address->billing_address_country = $country;
-                $address->name = "{$street}, {$city}, {$state}, {$postcode}";
-                $geo = get_lat_long($address->name);
+                $full_address = "{$street}, {$city}, {$state}, {$postcode}";
+                $address->name = "{$street} {$city} {$state} {$postcode}";
+                $geo = get_lat_long($full_address);
                 $address->map_data = json_encode($geo);
                 deleteFileMapSatellite($address->installation_pictures_c);
                 $address->save();

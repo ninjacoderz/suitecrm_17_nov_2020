@@ -23,3 +23,16 @@ function get_call_for_contacts($params) {
     return $return_array;
 }
 
+/**Subpanel- ADDRESS  */
+function get_address_for_contacts($params) {
+    global $app;
+    $controller = $app->controller;
+    $bean = $controller->bean;
+
+    $return_array['select'] = " SELECT DISTINCT pe_address.id as address_id";
+    $return_array['from'] = "FROM pe_address";
+    $return_array['join'] = "";
+    $return_array['where'] = "WHERE pe_address.billing_contact_id = '{$bean->id}' AND pe_address.deleted = '0'";
+    $return_array['join_tables'] = '';
+    return $return_array;
+}
