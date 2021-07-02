@@ -187,7 +187,7 @@ function create_accounts_installer($data, $accountID ='',$address_email){
     $account = new Account();
     $account->retrieve($accountID);
     if($account->id == ''){
-        $account->name = htmlspecialchars_decode($data->Installer->Name);
+        $account->name = htmlspecialchars_decode($data->Installer->Company);
         $account->billing_address_street = $data->Installer->Address->Street1;
         $account->billing_address_city = $data->Installer->Address->Locality;
         $account->billing_address_state =($data->Installer->Address->State)? $data->Installer->Address->State : $data->Installer->Region;
