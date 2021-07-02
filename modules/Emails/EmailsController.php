@@ -4117,8 +4117,8 @@ class EmailsController extends SugarController
                 // Local: 3677ce10-b644-b632-0ce5-60b7531891e0
                 $emailTemplate = BeanFactory::getBean(
                     'EmailTemplates',
-                    '663bcda3-938a-319a-43e7-60d543a5da8b'
-                    // 'c193892e-03a6-dcf2-cf23-60d44b214156'
+                    // '663bcda3-938a-319a-43e7-60d543a5da8b'
+                    'c193892e-03a6-dcf2-cf23-60d44b214156'
                 );
 
                 $name = $emailTemplate->subject;
@@ -4191,7 +4191,12 @@ class EmailsController extends SugarController
                     
                 }
                 $this->bean->description_html = str_replace("\$daikin_pricing_options",  $daikin_pricing_options , $this->bean->description_html);
-                $this->bean->description_html = str_replace("\$quote_notes",  $focus->quote_note_c , $this->bean->description_html);
+                if($focus->quote_note_c !== '') {
+                    $this->bean->description_html = str_replace("\$quote_notes",  $focus->quote_note_c , $this->bean->description_html);
+                } else {
+                    $this->bean->description_html = str_replace("\$quote_notes",  '' , $this->bean->description_html);
+                }
+                
                 //end - code render sms_template
                 $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
                 $phone_number = preg_replace("/^61/", "+61", $phone_number);
