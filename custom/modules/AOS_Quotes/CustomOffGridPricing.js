@@ -240,7 +240,7 @@ function getCountLine(target){
 // .:nhantv:. Clear Offgrid Option
 function clearOgOption(option){
     $("#offgrid_option_"+(option)).prop('checked', false);
-    $('#offgrid_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="pe_admin_percent"]),input[id="inverter_line"],input[id="offgrid_inv_line"],input[id="og_accessory_line"])').val('');
+    $('#offgrid_pricing_table td:nth-child('+ (option + 1) +') input:not(input[id="pe_admin_percent"],input[id="inverter_line"],input[id="offgrid_inv_line"],input[id="og_accessory_line"])').val('');
     $('#offgrid_pricing_table td:nth-child('+ (option + 1) +')').find('select').prop("selectedIndex", 0);
 }
 
