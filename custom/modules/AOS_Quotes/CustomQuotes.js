@@ -269,7 +269,51 @@ $(function () {
             }
         });
     }
-
+    //TUAN -  add GENERATE QUOTE TITLE button
+    $("#name").after(
+        '<button type="button" id="generate_quote_title" class="button generate_quote_title" title="">GENERATE QUOTE TITLE</button>'
+    );
+    $('#generate_quote_title').on('click', function(){
+        if(  $('#billing_account').val() == "" ){
+            alert('Please filled Account!');
+            $('#billing_account').focus();
+            return false; 
+        }
+        if(  $('#billing_address_city').val() == "" || $('#billing_address_state').val() == "" ){
+            alert('Please filled Site Address!');
+            $('#billing_address_city').focus();
+            return false; 
+        }
+        if(  $('#quote_type_c').val() == "" ){
+            alert('Please selected Product Type!');
+            return false; 
+        }
+        let account_name = $('#billing_account').val();
+        let address = $('#billing_address_city').val().toUpperCase() + " " + $('#billing_address_state').val().toUpperCase() ;
+        let product_type;
+        switch ($('#quote_type_c').val()) {
+            case "quote_type_sanden":
+                product_type = "Sanden";
+            break;
+            case "quote_type_solar":
+                product_type = "Solar";
+            break;
+            case "quote_type_daikin":
+                product_type = "Daikin";
+            break;
+            case "quote_type_off_grid_system":
+                product_type = "Off Grid";
+            break;
+            case "quote_type_methven":
+                product_type = "Methven";
+            break;
+            case "quote_type_battery":
+                product_type = "Battery";
+            break;
+        }
+        let title = account_name + " " + address + " " + product_type;
+        $("#name").val(title);
+    })
     //VUT - Add link SA REPS link with SANDEN and SA
     if ($('#quote_type_c').val() == 'quote_type_sanden' && $('#install_address_state_c').val() == 'SA') {
         $(document).find('#install_address_state_c').parent().append('<p><a target="_blank" href="https://reps.escosa.sa.gov.au/Account/Login.aspx"><span>open SA REPS</span></a></p>');
