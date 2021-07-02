@@ -156,8 +156,12 @@ input#datetimepicker{
 }
 
 #billing_address_street,#shipping_address_street, #primary_address_street, #alt_address_street{
-   height: 45px;
+   height: fit-content;
  }
+ [field="billing_address_street"].detail-view-field {
+   padding: 10px 10px;
+}
+
  #EditView input[type="checkbox"] {
    border-style: solid ;
    border-width: 2px ;
