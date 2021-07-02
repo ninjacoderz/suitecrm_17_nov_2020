@@ -114,7 +114,7 @@ $(document).ready(function() {
 
 
 function generateName() {
-    let fulladdress = `${$('#billing_address_street').val()}, ${$('#billing_address_city').val()}, ${$('#billing_address_state').val()}, ${$('#billing_address_postalcode').val()}`;
+    let fulladdress = `${$('#billing_address_street').val()} ${$('#billing_address_city').val()} ${$('#billing_address_state').val()} ${$('#billing_address_postalcode').val()}`;
     return fulladdress;
 }
 
