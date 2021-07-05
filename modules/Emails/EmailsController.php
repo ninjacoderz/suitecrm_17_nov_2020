@@ -4108,7 +4108,6 @@ class EmailsController extends SugarController
 
                 $contact =  new Contact();
                 $contact->retrieve($focus->billing_contact_id);
-
                 if(!$focus->id) return;
                 /**
                  * @var EmailTemplate $emailTemplate
@@ -4124,6 +4123,64 @@ class EmailsController extends SugarController
                 $name = $emailTemplate->subject;
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
+
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true;
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+
+                $source = realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c;
+                $filesDesigns = $this->check_exist_file($source, 'Design');
+                $filesPDF = $this->check_exist_file($source, 'Quote_');
+                $filesDaikinPdf = [];
+                foreach ($filesPDF as $value) {
+                    if (strpos(strtolower($value), "pdf") !== false) {
+                        $filesDaikinPdf[] =   $value;
+                    }
+                }
+                $all_files_send  = array_merge($filesDesigns,$filesDaikinPdf);
+                foreach ($all_files_send as $file) {
+                    $this->bean->save();
+                    $noteTemplate = new Note();
+                    $noteTemplate->id = create_guid();
+                    $noteTemplate->new_with_id = true;
+                    $noteTemplate->parent_id = $this->bean->id; 
+                    $noteTemplate->parent_type = 'Emails';
+                    $noteTemplate->date_entered = '';
+                    $noteTemplate->filename = $file;
+                    $noteTemplate->name = $file;   
+                    $noteTemplate->save();
+                    global $sugar_config;
+                    $destination = $sugar_config['upload_dir'].$noteTemplate->id;
+                    $sourcefile = $source.'/'.$file;
+
+                    if(strpos(strtolower($file), "png") !== false) {
+                        $noteTemplate->file_mime_type = 'image/png';
+                    } elseif (strpos(strtolower($file), "pdf") !== false) {
+                        $noteTemplate->file_mime_type = 'image/jpg';
+                    } else {
+                        $noteTemplate->file_mime_type = 'image/jpg';
+                    }
+                    if (!symlink($sourcefile, $destination)) {
+                    $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                    }
+                    $this->bean->attachNote($noteTemplate);
+                }
 
                 $this->bean->to_addrs_names = $lead->first_name.' '.$lead->last_name." <$lead->email1>";
                 $this->bean->name = $name;
