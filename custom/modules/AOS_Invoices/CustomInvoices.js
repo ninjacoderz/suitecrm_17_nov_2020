@@ -34,7 +34,8 @@ $(function () {
         if($('#sanden_model_c').val() == ''){
             get_sanden_model();
         }
-        
+
+        display_fields_each_product_type();      
     }
 
     function change_type_of_water_with_old_tank_fuel(){
@@ -128,6 +129,7 @@ $(function () {
         sync_product_type_to_invoice();
         $("#quote_type_c").change(function(){
             sync_product_type_to_invoice();
+            display_fields_each_product_type();
         });
         //tu-code auto serial number in line items 
         $("#sanden_tank_serial_c").change(function(){
@@ -8975,4 +8977,23 @@ function display_link_account_contact_installer_solar(){
         $("#contact_id2_c").parent().append("<p id='link_contact_solar_installer'><a  href='/index.php?module=Contacts&action=EditView&record=" + $("#contact_id2_c").val()+ "' target='_blank'>Open Contact</a></p>");
     }
 
+}
+
+function display_fields_each_product_type(){
+    var let_array_hide_for_solar = '#plumber_c,#electrician_c,#distance_to_suite_c,#distance_to_suitecrm_c,#practitioner_verification_c,#plumber_install_date_c,#electrician_install_date_c,#meeting_plumber,#meeting_electrician,#plumber_po_c,#electrical_po_c,#plumbing_notes_c,#electrical_notes_c,#pcoc_cert_wording_c,#ces_cert_wording_c,#plumber_contact_c,#electrician_contact_c,#plumber_license_number_c,#electrician_license_number_c,#vba_pic_date_c,#ces_cert_date_c,#vba_pic_cert_c,#ces_cert_c';
+    
+    var let_array_show_for_solar = '#solar_installer_c,#solar_installer_contact_c';
+    
+    var invoice_type = $("#quote_type_c").val();
+    switch (invoice_type) {
+        case 'quote_type_solar':
+            $(let_array_hide_for_solar).closest('.edit-view-field').parent().hide();
+            $(let_array_show_for_solar).closest('.edit-view-field').parent().show();
+            break;
+    
+        default:
+            $(let_array_hide_for_solar).closest('.edit-view-field').parent().show();
+            $(let_array_show_for_solar).closest('.edit-view-field').parent().hide();
+            break;
+    }
 }
