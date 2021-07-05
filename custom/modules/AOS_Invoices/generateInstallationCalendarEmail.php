@@ -250,11 +250,11 @@
             // );
             $smsTemplate = new pe_smstemplate();
             $smsTemplate->retrieve('ca646f5f-399a-d408-7536-601102429ed6');
-
+            $str_calendar_installer_sms = "{$contact_customer->name} {$invoice->install_address_city_c} {$invoice->install_address_state_c}";
             $body_sms = '';
             $body_sms =  $smsTemplate->body_c;
             $body_sms = str_replace("\$first_name", $contact_installer->first_name, $body_sms);
-            $body_sms = str_replace("\$aos_invoices_billing_contact",  $contact_customer->name, $body_sms);
+            $body_sms = str_replace("\$aos_invoices_billing_contact",  $str_calendar_installer_sms, $body_sms);
             $smsTemplate->body_c = $body_sms;
             $email->emails_pe_smstemplate_idb  =  $smsTemplate->id;
             $email->emails_pe_smstemplate_name =  $smsTemplate->name; 
