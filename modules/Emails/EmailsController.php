@@ -1599,9 +1599,7 @@ class EmailsController extends SugarController
 
 
                 global $current_user;
-                if($_REQUEST['email_type'] == 'calls_voice_email'){
-                }elseif($_REQUEST['email_type'] == 'tks_for_voice_email') {
-                }
+                
                 $smsTemplate = BeanFactory::getBean(
                     'pe_smstemplate',
                     $smsTemplateID 
