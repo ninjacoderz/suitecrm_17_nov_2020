@@ -95,4 +95,5 @@ $mod_strings = array(
     'LBL_MODULE_EFFICIENCY' => 'Module Efficiency',
     'LBL_WARRANTY' => 'Product Warranty',
     'LBL_DAIKIN_CATEGORY' => 'Daikin Category',
+    'LBL_SANDEN_CATEGORY' => 'Sanden Category',
 );

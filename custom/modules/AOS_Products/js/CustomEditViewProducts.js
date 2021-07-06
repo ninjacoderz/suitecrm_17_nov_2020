@@ -222,6 +222,12 @@ function dynamicSolarCategory(){
         $('#heating_cooling_category_c').closest('.edit-view-row-item').hide();
         $('#rated_capacity_heating_c,#range_lower_heating_c,#range_upper_heating_c,#rated_capacity_cooling_c,#range_lower_cooling_c,#range_upper_cooling_c,#cop_heating_c,#cop_cooling_c').closest('.edit-view-row-item').hide();
     }
+
+    if ($.inArray(productCategoryValue, ["Sanden"]) != -1) {
+        $('#sanden_category').closest('.edit-view-row-item').show();
+    } else {
+        $('#sanden_category').closest('.edit-view-row-item').hide();
+    }
 }
 
 // .:nhantv:. Dynamic label Capacity

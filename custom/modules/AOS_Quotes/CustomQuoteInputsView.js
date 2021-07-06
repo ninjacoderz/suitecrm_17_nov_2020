@@ -30,6 +30,9 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             case "quote_type_sanden":
                 renderQuoteInputHTML('quote_type_sanden');
                 renderQuoteInputExtra('quote_type_sanden');
+                // init_table_sanden();
+                loadJsInputPricing('quote_type_sanden');
+
                 break;
             default: break;
         }

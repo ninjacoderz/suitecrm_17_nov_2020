@@ -1617,3 +1617,9 @@ $entry_point_registry['APTGetSignatureUser'] = array(
     'file' => 'custom/modules/AOS_Quotes/APTGetSignatureUser.php',
     'auth' => false
 );
+
+//VUT - Quote - Get Sanden Product for Pricing
+$entry_point_registry['APIGetSandenProduct'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetSandenProduct.php',
+    'auth' => false
+);

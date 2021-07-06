@@ -490,3 +490,35 @@ function hideTotalGroup() {
         });
     }
 }
+
+function loadJsInputPricing(quote_type) {
+    let array_js = [];
+    switch (quote_type) {
+        case 'quote_type_sanden':
+            array_js.push('custom/modules/AOS_Quotes/customSandenPricing.js');
+            break;
+        default:
+            break;
+    }
+
+    if (array_js.length > 0) {
+        $.getMultiScripts(array_js).done(function() {
+            console.log('ok');
+        }).fail(function (e) {
+            console.log(e);
+        });
+    }
+}
+
+$.getMultiScripts = function(arr, path) {
+    var _arr = $.map(arr, function(scr) {
+        return $.getScript( (path||"") + scr );
+    });
+        
+    _arr.push($.Deferred(function( deferred ){
+        $( deferred.resolve );
+    }));
+    return $.when.apply($, _arr);
+}
+
+
