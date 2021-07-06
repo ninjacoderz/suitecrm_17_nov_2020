@@ -4206,6 +4206,7 @@ class EmailsController extends SugarController
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_number",  $focus->number, $this->bean->name);
                 
                 //replace data for body
                 $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
@@ -4386,6 +4387,7 @@ class EmailsController extends SugarController
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_number",  $focus->number, $this->bean->name);
                 
                 //replace data for body
                 $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
