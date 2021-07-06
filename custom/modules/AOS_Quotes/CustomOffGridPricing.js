@@ -524,7 +524,7 @@ async function calcOption(ratio,index, isTotalPanel = false, isMax = false) {
             saveCurrentState();
 
              // .:nhantv:. call hint
-            calcHint();
+            //calcHint();
         }
     }
 }
@@ -964,7 +964,7 @@ async function init_table_offgrid() {
     loadOffgridOption();
 
     // Add Hint
-    initHint();
+    //initHint();
 }
 
 // .:nhantv:. Hint area ====================================

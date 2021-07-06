@@ -325,7 +325,7 @@ async function init_table_solar() {
     // Load Solar Option
     SL_loadOption();
 
-    initHint();
+    //initHint();
 }
 
 async function SL_calcOption(ratio,index, isTotalPanel = false,isloading = true) {
@@ -373,7 +373,7 @@ async function SL_calcOption(ratio,index, isTotalPanel = false,isloading = true)
             let grandTotal = SL_calcGrandTotal(currState);
             $("#total_sl_"+index).val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
             SL_saveCurrentState();
-            SL_calcHint();
+            //SL_calcHint();
 
         }
     }
