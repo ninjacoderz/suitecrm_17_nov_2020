@@ -1532,8 +1532,10 @@ class EmailsController extends SugarController
                 }
                 if($_REQUEST['email_type'] == 'calls_voice_email'){
                     $emailTemplateID = '1a45b869-1279-5f67-840f-60c2c8df9567'; //46988bdc-d3b5-6f6f-6b5b-60c96666cfaa'; 
+                    $smsTemplateID = 'c7560fbf-417b-e397-360f-5e9e5066d209'; 
                 }elseif($_REQUEST['email_type'] == 'tks_for_voice_email') {
                     $emailTemplateID = '2aec2ea2-ecfe-1964-1ba0-60c94ecf7775' ; //9425e4ae-4527-cd24-cdbc-60c96f01e322'; 
+                    $smsTemplateID = '3891dc11-437c-c893-18c5-60e3db849303' ; 
                 }
                 /**
                  * @var EmailTemplate $emailTemplate
@@ -1597,7 +1599,9 @@ class EmailsController extends SugarController
 
 
                 global $current_user;
-                $smsTemplateID = 'c7560fbf-417b-e397-360f-5e9e5066d209';
+                if($_REQUEST['email_type'] == 'calls_voice_email'){
+                }elseif($_REQUEST['email_type'] == 'tks_for_voice_email') {
+                }
                 $smsTemplate = BeanFactory::getBean(
                     'pe_smstemplate',
                     $smsTemplateID 
