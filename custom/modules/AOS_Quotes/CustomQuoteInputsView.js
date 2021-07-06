@@ -473,25 +473,10 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
                     url: '/index.php?entryPoint=APICreateQuoteNewFromSandenPE',
                     data: data,
                     success: function (result) {
-                        try {
-                            var data_quote = JSON.parse(result);
-                            $("#name").val(data_quote['quote_name'])
-                            $("#EditView input[name='action']").val('Save');
-                            $.ajax({
-                                type: $("#EditView").attr('method'),
-                                url: $("#EditView").attr('action'),
-                                data: $("#EditView").serialize(),
-                                success: function (data) {
-                                    SUGAR.ajaxUI.hideLoadingPanel();
-                                }
-                            });
-                        } catch (error) {
-                            console.log(error)
-                        }
+                        SUGAR.ajaxUI.hideLoadingPanel();
+                        location.reload();
                     }
-                }).done(function (){
-                    location.reload();
-                });
+                })
             }
         }else{
 
