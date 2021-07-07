@@ -951,6 +951,19 @@ $entry_point_registry['APIGetDataProduct'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetDataProduct.php',
     'auth' => false
 );
+
+// .:nhantv:. API get product for new Sanden form
+$entry_point_registry['APIGetProductForNewSanden'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetProductForNewSanden.php',
+    'auth' => false
+);
+
+// .:nhantv:. API check water quality
+$entry_point_registry['APICheckWaterQuality'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APICheckWaterQuality.php',
+    'auth' => false
+);
+
 //Thienpb Code -- API download image from aws
 $entry_point_registry['APIUploadImageToAWS'] = array( 
     'file' => 'custom/include/SugarFields/Fields/Multiupload/APIUploadImageToAWS.php',
