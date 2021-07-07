@@ -17,7 +17,11 @@ $(function () {
             // Init table grid
             init_table_offgrid();
             break;
-        default: break;
+        case 'quote_type_battery':
+            init_table_battery();
+            $(document).find('#generate_quote').show();
+            break;
+        default: break; 
     }
 
     // .:nhantv:. Clear Off Grid Option

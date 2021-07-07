@@ -161,6 +161,10 @@ array (
         array (
           'file' => 'custom/modules/AOS_Quotes/customDaikinPricing.js',
         ),
+        9 => 
+        array (
+          'file' => 'custom/modules/AOS_Quotes/customBatteryPricing.js',
+        ),
       ),
     ),
     'panels' => 
