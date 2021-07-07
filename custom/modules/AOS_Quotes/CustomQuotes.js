@@ -2589,7 +2589,8 @@ $(document).ready(function () {
 
     //VUT-S
     if ($("#quote_type_c").val() == 'quote_type_solar') {
-        $("#btn_view_change_log").after('<button type="button" style="margin:4px;" class="button" id="send_solar_pricing" class="button send_solar_pricing" onclick="$(document).openComposeViewModal_SendSolarPricing(this);" data-email-type="send_solar_pricing"  data-module="AOS_Quotes" data-module-name="' + $("#name").val() + '" data-record-id="' + $("input[name='record']").val() + '">Send Solar Pricing Options</button>')
+        $("#btn_view_change_log").after('<button type="button" style="margin:4px;" class="button" id="send_solar_pricing" class="button send_solar_pricing" onclick="$(document).openComposeViewModal_SendSolarPricing(this);" data-email-type="send_solar_pricing"  data-module="AOS_Quotes" data-module-name="' + $("#name").val() + '" data-record-id="' + $("input[name='record']").val() + '">Send SG Solar Pricing Options</button>')
+        $("#btn_view_change_log").after('<button type="button" style="margin:4px;" class="button" id="send_pe_solar_pricing" class="button send_solar_pricing" onclick="$(document).openComposeViewModal_SendPESolarPricing(this);" data-email-type="send_pe_solar_pricing"  data-module="AOS_Quotes" data-module-name="'+$("#name").val()+'" data-record-id="'+$("input[name='record']").val()+'">Send PE Solar Pricing Options</button>')
     }
     $(document).on('click', '#send_solar_pricing_option', function () {
         $('#send_solar_pricing').trigger('click');

@@ -1532,8 +1532,10 @@ class EmailsController extends SugarController
                 }
                 if($_REQUEST['email_type'] == 'calls_voice_email'){
                     $emailTemplateID = '1a45b869-1279-5f67-840f-60c2c8df9567'; //46988bdc-d3b5-6f6f-6b5b-60c96666cfaa'; 
+                    $smsTemplateID = 'c7560fbf-417b-e397-360f-5e9e5066d209'; 
                 }elseif($_REQUEST['email_type'] == 'tks_for_voice_email') {
                     $emailTemplateID = '2aec2ea2-ecfe-1964-1ba0-60c94ecf7775' ; //9425e4ae-4527-cd24-cdbc-60c96f01e322'; 
+                    $smsTemplateID = '3891dc11-437c-c893-18c5-60e3db849303' ; 
                 }
                 /**
                  * @var EmailTemplate $emailTemplate
@@ -1597,7 +1599,7 @@ class EmailsController extends SugarController
 
 
                 global $current_user;
-                $smsTemplateID = 'c7560fbf-417b-e397-360f-5e9e5066d209';
+                
                 $smsTemplate = BeanFactory::getBean(
                     'pe_smstemplate',
                     $smsTemplateID 
@@ -3799,6 +3801,7 @@ class EmailsController extends SugarController
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_number",  $focus->number, $this->bean->name);
                 
                 //replace data for body
                 $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
@@ -4204,6 +4207,7 @@ class EmailsController extends SugarController
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_number",  $focus->number, $this->bean->name);
                 
                 //replace data for body
                 $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
@@ -4384,6 +4388,7 @@ class EmailsController extends SugarController
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_number",  $focus->number, $this->bean->name);
                 
                 //replace data for body
                 $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
@@ -4823,6 +4828,7 @@ class EmailsController extends SugarController
                 $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
                 $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_number",  $focus->number, $this->bean->name);
                 
                 //replace data for body
                 $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);

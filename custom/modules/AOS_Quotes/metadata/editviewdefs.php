@@ -161,6 +161,10 @@ array (
         array (
           'file' => 'custom/modules/AOS_Quotes/customDaikinPricing.js',
         ),
+        9 => 
+        array (
+          'file' => 'custom/modules/AOS_Quotes/customBatteryPricing.js',
+        ),
       ),
     ),
     'panels' => 
@@ -404,6 +408,19 @@ array (
           array (
             'name' => 'proposed_install_date_c',
             'label' => 'LBL_PROPOSED_INSTALL_DATE',
+          ),
+        ),
+        18 => 
+        array (
+          0 => 
+          array (
+            'name' => 'proposed_dispatch_date_c',
+            'label' => 'LBL_PROPOSED_DISPATCH_DATE',
+          ),
+          1 => 
+          array (
+            'name' => 'proposed_delivery_date_c',
+            'label' => 'LBL_PROPOSED_DELIVERY_DATE',
           ),
         ),
       ),
