@@ -628,17 +628,9 @@ async function Bat_calculatePrice(currState = {}){
         // blur
         list.trigger("blur");
     });
-    // await wait(200);
+    await wait(200);
     $("#total_amount").trigger("focusin");
     
-    // // PE Admin
-    // totalAmount += totalAmount * (parseFloat($('#dk_pe_admin_percent').val()) / 100);
-
-    // // PM price
-    // if(currState.pm != undefined && currState.pm != ''){
-    //     totalAmount += parseFloat(currState.pm);
-    // }
-
     // Set value to first line
     list = $(productVisible[0]).find('input[id*=product_product_list_price]');
     set_value(list.attr('id'), parseFloat(grandTotal));

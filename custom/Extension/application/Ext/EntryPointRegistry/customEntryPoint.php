@@ -560,6 +560,10 @@ $entry_point_registry['APIRenderPOInputs'] = array(
     'file' => 'custom/modules/PO_purchase_order/APIRenderPOInputs.php',
     'auth' => true
 );
+//TUAN save id po suplly
+$entry_point_registry['SaveIdSupplyPO'] = array(
+    'file' => 'custom/modules/AOS_Invoices/SaveIdSupplyPO.php',
+);
 //dung code - button "Resize All" in file upload
 $entry_point_registry['ResizeAllFile'] = array(
     'file' => 'custom/include/SugarFields/Fields/Multiupload/ResizeAllFile.php',

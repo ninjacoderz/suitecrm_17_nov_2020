@@ -2768,65 +2768,141 @@ $(function () {
             $('#createDaikinPO').parent().append(href);
         }
 
-           //thien code here
-           $("#daikin_po_1_c").parent().parent().after('<button class="button primary" id="createSupplyPO1"  > <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
-           $("#daikin_po_2_c").parent().parent().after('<button class="button primary" id="createSupplyPO2"  > <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
-           $("#daikin_po_3_c").parent().parent().after('<button class="button primary" id="createSupplyPO3"  > <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
-           
-           $("body").on("click", "#createSupplyPO1", function(){
-               createSupplyPO("1");
-               return false;
-           });
-           $("body").on("click", "#createSupplyPO2", function(){
-               createSupplyPO("2");
-               return false;
-           });
-           $("body").on("click", "#createSupplyPO3", function(){
-               createSupplyPO("3");
-               return false;
-           });
-           // because reuse field from daikin supply PO => Sanden SupplyPO
-           function createSupplyPO(id){
-               $('#createSupplyPO'+id+' span.glyphicon-refresh').removeClass('hidden');
-               //VUT - create PO supply sunpower
-               var type = '';
-               if ($('#quote_type_c').val() == 'quote_type_solar') {
-                    type = 'solar_supply&button='+id;
+        //thien code here    
+        $("#daikin_po_1_c").parent().parent().after('<button data-input="1" class="button primary createSupplyPO" id="createSupplyPO1"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
+        $("#daikin_po_2_c").parent().parent().after('<button data-input="2" class="button primary createSupplyPO" id="createSupplyPO2"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
+        $("#daikin_po_3_c").parent().parent().after('<button data-input="3" class="button primary createSupplyPO" id="createSupplyPO3"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
+        
+        if($('#daikin_po_3_c').val() != ""){
+            Load_idSupplyPO($("input[name='record']").val(),'read');
+        }
+        // Tuan code add more supply PO
+        $("#daikin_po_1_c").closest('.edit-view-row').after('<button type="button" class="button primary" id="addSupplyPo"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Add Supply PO</button>');
+        $('#addSupplyPo').on('click', function(){
+            var lenght_input = $('#daikin_po_1_c').closest('.edit-view-row').find('input').length + 1;
+            var input_supply = '<div class="col-xs-12 col-sm-6 edit-view-row-item">\
+                                    <div class="col-xs-12 col-sm-4 label" data-label="LBL_DAIKIN_PO_"'+lenght_input +'>Supply PO '+lenght_input+':</div>\
+                                    <div class="col-xs-12 col-sm-8 edit-view-field " type="varchar" field="daikin_po_'+lenght_input+'_c">\
+                                        <input type="text" name="daikin_po_'+lenght_input+'_c" id="daikin_po_'+lenght_input+'_c" size="30" maxlength="255" value="" title="">\
+                                    </div>\
+                                </div>\
+                                <button data-input="'+lenght_input+'" class="button primary createSupplyPO" id="createSupplyPO'+lenght_input+'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button><div class="clear"></div><div class="clear"></div>';
 
-               } else {
-                    if($("#plumber_po_c").val == ""){
-                        alert("please click the link to edit PO");
-                        return false;
-                    }
-                    type = 'sanden_supply';
+            $('#daikin_po_1_c').closest('.edit-view-row').append(input_supply);
+        })
+        $("body").on("click", ".createSupplyPO", function(){    
+            createSupplyPO($(this).attr('data-input'));
+            return false;
+        });
+
+
+        function SaveId_SupplyPO(line_number,record_id,type,data){
+            $.ajax({
+                url: 'index.php?entryPoint=SaveIdSupplyPO',
+                type: 'POST',
+                data: 
+                {
+                    record_id: record_id,
+                    id_po: data,
+                    action: type,
+                    line_number: line_number,
+                },
+                success: function(result) {              
+                    console.log('Success!');
                 }
-               var record_id = $("input[name='record']").val();
-               $.ajax({
-                   url: "?entryPoint=createPurchaseOrder&type="+type+"&record_id=" + record_id ,
-                   context: document.body,
-                   async: true
-               }).done(function (data) {
-                   data = data.trim();
-                   $('#createSupplyPO'+id+' span.glyphicon-refresh').addClass('hidden');
-                   $("#daikin_po_"+id+"_c").val(data);
-                   if (data == "") return false;
-                   var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + data + "'>" + "Open Purchase Order" + "</a></div>";
-                   $("#daikin_po_"+id+"_c").nextAll('.open-purchase-oder').remove();
-                   $("#daikin_po_"+id+"_c").parent().append(href);
-               });
-           }
-           if ($("#daikin_po_1_c").val() != "") {
-               var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#daikin_po_1_c").val() + "'>" + "Open Purchase Order" + "</a></div>";
-               $('#daikin_po_1_c').parent().append(href);
-           } 
-           if ($("#daikin_po_2_c").val() != "") {
-               var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#daikin_po_2_c").val() + "'>" + "Open Purchase Order" + "</a></div>";
-               $('#daikin_po_2_c').parent().append(href);
-           }
-           if ($("#daikin_po_3_c").val() != "") {
-               var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#daikin_po_3_c").val() + "'>" + "Open Purchase Order" + "</a></div>";
-               $('#daikin_po_3_c').parent().append(href);
-           }
+            }); 
+        }
+        function Load_idSupplyPO(record_id,type){
+            $.ajax({
+                url: 'index.php?entryPoint=SaveIdSupplyPO',
+                type: 'POST',
+                data: 
+                {
+                    record_id: record_id,
+                    action: type,
+                },
+                success: function(result) { 
+                    var dataJson =  JSON.parse(result);
+                    dataJson[record_id].forEach(element => {
+                        var input_supply = '<div class="col-xs-12 col-sm-6 edit-view-row-item">\
+                                                <div class="col-xs-12 col-sm-4 label" data-label="LBL_DAIKIN_PO_"'+element.line_number +'>Supply PO '+element.line_number+':</div>\
+                                                <div class="col-xs-12 col-sm-8 edit-view-field " type="varchar" field="daikin_po_'+element.line_number+'_c">\
+                                                    <input type="text" name="daikin_po_'+element.line_number+'_c" id="daikin_po_'+element.line_number+'_c" size="30" maxlength="255" value="'+element.id_supply_po+'" title="">\
+                                                </div>\
+                                            </div>\
+                                            <button data-input="'+element.line_number+'" class="button primary createSupplyPO" id="createSupplyPO'+element.line_number+'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button><div class="clear"></div><div class="clear"></div>';
+        
+                        $('#daikin_po_1_c').closest('.edit-view-row').append(input_supply);
+                        // $("#daikin_po_"+id+"_c").val(data);
+                        var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + element.id_supply_po + "'>" + "Open Purchase Order" + "</a></div>";
+                        $("#daikin_po_"+element.line_number+"_c").nextAll('.open-purchase-oder').remove();
+                        $("#daikin_po_"+element.line_number+"_c").parent().append(href);
+                    });        
+                }
+            }); 
+        }
+
+        //    $("body").on("click", "#createSupplyPO2", function(){
+        //        createSupplyPO("2");
+        //        return false;
+        //    });
+        //    $("body").on("click", "#createSupplyPO3", function(){
+        //        createSupplyPO("3");
+        //        return false;
+        //    });
+           // because reuse field from daikin supply PO => Sanden SupplyPO
+        function createSupplyPO(id){
+            $('#createSupplyPO'+id+' span.glyphicon-refresh').removeClass('hidden');
+            //VUT - create PO supply sunpower
+            var type = '';
+            if ($('#quote_type_c').val() == 'quote_type_solar') {
+                 type = 'solar_supply&button='+id;
+    
+            } else {
+                 if($("#plumber_po_c").val == ""){
+                     alert("please click the link to edit PO");
+                     return false;
+                 }
+                 type = 'sanden_supply';
+             }
+            var record_id = $("input[name='record']").val();
+            $.ajax({
+                url: "?entryPoint=createPurchaseOrder&type="+type+"&record_id=" + record_id ,
+                context: document.body,
+                async: true
+            }).done(function (data) {
+                if( parseInt(id) > 3 ){
+                    SaveId_SupplyPO(id,record_id,'create',data);
+                    data = data.trim();
+                    $('#createSupplyPO'+id+' span.glyphicon-refresh').addClass('hidden');
+                    $("#daikin_po_"+id+"_c").val(data);
+                    if (data == "") return false;
+                    var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + data + "'>" + "Open Purchase Order" + "</a></div>";
+                    $("#daikin_po_"+id+"_c").nextAll('.open-purchase-oder').remove();
+                    $("#daikin_po_"+id+"_c").parent().append(href);
+                }else{
+                    data = data.trim();
+                    $('#createSupplyPO'+id+' span.glyphicon-refresh').addClass('hidden');
+                    $("#daikin_po_"+id+"_c").val(data);
+                    if (data == "") return false;
+                    var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + data + "'>" + "Open Purchase Order" + "</a></div>";
+                    $("#daikin_po_"+id+"_c").nextAll('.open-purchase-oder').remove();
+                    $("#daikin_po_"+id+"_c").parent().append(href);
+                }
+            });
+        }
+        if ($("#daikin_po_1_c").val() != "") {
+            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#daikin_po_1_c").val() + "'>" + "Open Purchase Order" + "</a></div>";
+            $('#daikin_po_1_c').parent().append(href);
+        } 
+        if ($("#daikin_po_2_c").val() != "") {
+            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#daikin_po_2_c").val() + "'>" + "Open Purchase Order" + "</a></div>";
+            $('#daikin_po_2_c').parent().append(href);
+        }
+        if ($("#daikin_po_3_c").val() != "") {
+            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + $("#daikin_po_3_c").val() + "'>" + "Open Purchase Order" + "</a></div>";
+            $('#daikin_po_3_c').parent().append(href);
+        }
            //end
 
         $('#sendMailToDaikinSupplier').on('click', function (event){
