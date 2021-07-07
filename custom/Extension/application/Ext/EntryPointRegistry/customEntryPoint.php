@@ -1601,6 +1601,11 @@ $entry_point_registry['APIGetDaikinProduct'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetDaikinProduct.php',
     'auth' => false
 );
+//TUAN - Quote - Get Battery Product for Pricing 
+$entry_point_registry['APIGetBatteryProduct'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetBatteryProduct.php',
+    'auth' => false
+);
 //Tri code --   
 $entry_point_registry['APIRenderDaikinItem'] = array( 
     'file' => 'custom/modules/AOS_Quotes/APIRenderDaikinItems.php',

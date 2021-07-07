@@ -78,6 +78,9 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
                     //     autoSaveData();
                     // }, 300);
                     break;
+                case "quote_type_battery":
+                    Battery_generateItem();
+                    break;
                 default: break;
             }
         });
