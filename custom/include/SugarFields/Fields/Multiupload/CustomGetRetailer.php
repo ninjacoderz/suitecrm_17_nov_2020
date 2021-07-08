@@ -163,9 +163,9 @@ function get_nmi_globirdenergy(){
             "flatOrUnitType" => ($a->payload[0]->flatUnitType == 'U') ? 'Unit' : '',
             "floorOrLevelNumber" => "",
             "houseNumber" => $a->payload[0]->streetNumber,
-            "streetName" => $a->payload[0]->street,
-            "streetType" => "",
-            "streetSuffix" => "",
+            "streetName" => $a->payload[0]->streetName,
+            "streetType" => $a->payload[0]->streetType,
+            "streetSuffix" => $a->payload[0]->streetSuffix,
             "postcode" => $a->payload[0]->postcode,
             "suburbOrPlaceOrLocality" => $a->payload[0]->locality,
             "lotNumber" => ""
@@ -209,13 +209,13 @@ function get_nmi_globirdenergy(){
         $html ='';
         foreach($return_json->addressForSelect as $key => $value){
             $full_address = '';
-            $full_address .= (($value->address->flatOrUnitType != null) ? $value->address->flatOrUnitType .' ' : '');
-            $full_address .= (($value->address->flatOrUnitNumber != null) ? $value->address->flatOrUnitNumber.' ' : '');
-            $full_address .= (($value->address->houseNumber != null) ? $value->address->houseNumber.' ' : '');
-            $full_address .= (($value->address->streetName != null) ? $value->address->streetName.' ' : '');
-            $full_address .= (($value->address->suburbOrPlaceOrLocality != null) ? $value->address->suburbOrPlaceOrLocality.' ' : '');
-            $full_address .= (($value->address->stateOrTerritory != null) ? $value->address->stateOrTerritory.' ' : '');
-            $full_address .= (($value->address->postcode != null) ? $value->address->postcode.' ' : '');
+            $full_address .= (($value->flatOrUnitType != null) ? $value->flatOrUnitType .' ' : '');
+            $full_address .= (($value->flatOrUnitNumber != null) ? $value->flatOrUnitNumber.' ' : '');
+            $full_address .= (($value->houseNumber != null) ? $value->houseNumber.' ' : '');
+            $full_address .= (($value->streetName != null) ? $value->streetName.' ' : '');
+            $full_address .= (($value->suburbOrPlaceOrLocality != null) ? $value->suburbOrPlaceOrLocality.' ' : '');
+            $full_address .= (($value->stateOrTerritory != null) ? $value->stateOrTerritory.' ' : '');
+            $full_address .= (($value->postcode != null) ? $value->postcode.' ' : '');
             
             $html .= 
             '<div class="radio">
