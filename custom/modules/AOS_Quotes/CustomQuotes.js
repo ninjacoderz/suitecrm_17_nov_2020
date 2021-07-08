@@ -3234,10 +3234,6 @@ $(document).ready(function () {
                     }
                 }
             })
-                        }, 1000);
-                    }
-                }
-            })
         } else {
             alert('Not have number quote solargain!');
             $('#sg_assigned_user span.glyphicon-refresh').addClass('hidden');
