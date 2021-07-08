@@ -3234,6 +3234,10 @@ $(document).ready(function () {
                     }
                 }
             })
+                        }, 1000);
+                    }
+                }
+            })
         } else {
             alert('Not have number quote solargain!');
             $('#sg_assigned_user span.glyphicon-refresh').addClass('hidden');
@@ -6785,14 +6789,7 @@ function display_link_address(address_id) {
         $("#open_map_install_quote").after("<p id='link_address'><a  href='/index.php?module=pe_address&action=EditView&record=" + address_id + "' target='_blank'>Open Address</a></p>");
     }
 }
-                // $('#plumber_total_amount').closest('.panel.panel-default').hide();
-                // $('#plumber_total_amt').val(0);
-                // $('#plumber_discount_amount').val(0);
-                // $('#plumber_subtotal_amount').val(0);
-                // $('#plumber_shipping_amount').val(0);
-                // $('#plumber_shipping_tax_amt').val(0);
-                // $('#plumber_tax_amount').val(0);
-                // $('#plumber_total_amount').val(0);
+
 function build_email_pdf(type = ""){
     var quote_id = '';
     var return_module = $("#EditView input[name='return_module']").val();
