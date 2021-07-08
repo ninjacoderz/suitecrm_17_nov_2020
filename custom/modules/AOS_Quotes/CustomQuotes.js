@@ -2747,7 +2747,7 @@ window.onload = function () {
     }
 
     //show link address
-    getAddressRelate();
+    // getAddressRelate();
 
 }
 $(document).on('click', '#return_edit', function () {
@@ -6803,6 +6803,7 @@ async function getAddressRelate() {
                 type : 'get_address',
             }
         }).success(function(data) {
+            console.log('address_id '+data);
             if (data.trim() == 'error' || typeof data == 'undefined') return; 
             display_link_address(data.trim());
         });
