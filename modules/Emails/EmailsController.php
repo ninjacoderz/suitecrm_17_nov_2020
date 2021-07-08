@@ -4254,7 +4254,7 @@ class EmailsController extends SugarController
                 }
                 $this->bean->description_html = str_replace("\$daikin_pricing_options",  $daikin_pricing_options , $this->bean->description_html);
                 if($focus->quote_note_c !== '') {
-                    $this->bean->description_html = str_replace("\$quote_notes",  $focus->quote_note_c , $this->bean->description_html);
+                    $this->bean->description_html = str_replace("\$quote_notes",   str_replace("\n", "<br />", $focus->quote_note_c), $this->bean->description_html);
                 } else {
                     $this->bean->description_html = str_replace("\$quote_notes",  '' , $this->bean->description_html);
                 }
