@@ -62,6 +62,10 @@ $(function () {
     $(document).on('click', '*[id*="sd_clear_option"]', function(e){
         e.preventDefault();
         SD_clearOption($(this).data('option'));
+        for (var i = 1; i < 7; i++) {
+            SD_calcOption(i);
+        }
+
     });
 
     //PE Admin % handle 
@@ -1024,7 +1028,7 @@ function SD_calcInstallCost(currState) {
 function SD_calcDeliveryCost(equipmentCost) {
     let delivery_cost = 0;
     //Sanden delivery 
-    if (equipmentCost != 0) {
+    if (equipmentCost > 0) {
         delivery_cost += parseFloat(getAttributeFromPartNumber(sd_delivery[0], sanden_install, 'cost'));
     }
     return delivery_cost;
@@ -1216,7 +1220,7 @@ async function SD_generateLineItem(){
         $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
         $('#electrician_bill').trigger('change');
         // Calc Delivery Cost
-        let deliveryCost = SD_calcDeliveryCost(currState);
+        let deliveryCost = SD_calcDeliveryCost(installationCost);
         $('#sanden_shipping_bill').val(parseFloat(deliveryCost).formatMoney(2, ',', '.'));
         $('#sanden_shipping_bill').trigger('change');
         
