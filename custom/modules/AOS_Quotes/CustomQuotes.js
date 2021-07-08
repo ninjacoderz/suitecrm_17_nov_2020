@@ -3234,6 +3234,10 @@ $(document).ready(function () {
                     }
                 }
             })
+                        }, 1000);
+                    }
+                }
+            })
         } else {
             alert('Not have number quote solargain!');
             $('#sg_assigned_user span.glyphicon-refresh').addClass('hidden');
@@ -6758,7 +6762,6 @@ function showSubpanel(key,status) {
             $(document).find(`#${key}_total_amount`).closest('.panel.panel-default').show();
             break;
     }
-<<<<<<< HEAD
 }
 
 async function getAddressRelate() {
@@ -6786,7 +6789,6 @@ function display_link_address(address_id) {
         $("#open_map_install_quote").after("<p id='link_address'><a  href='/index.php?module=pe_address&action=EditView&record=" + address_id + "' target='_blank'>Open Address</a></p>");
     }
 }
-=======
                 // $('#plumber_total_amount').closest('.panel.panel-default').hide();
                 // $('#plumber_total_amt').val(0);
                 // $('#plumber_discount_amount').val(0);
@@ -6859,4 +6861,29 @@ function build_email_pdf(type = ""){
         }
     }, 1000);
 }
->>>>>>> d4cc5b1101c807ec648940a73098494e5e882c79
+
+async function getAddressRelate() {
+    try{
+        await $.ajax({
+            url: '/index.php?entryPoint=createAddress',
+            type: 'POST',
+            data: {
+                quote_id : $('input[name="record"]').val(),
+                type : 'get_address',
+            }
+        }).success(function(data) {
+            console.log('address_id '+data);
+            if (data.trim() == 'notyet' || data.trim() == 'error' || typeof data == 'undefined') return; 
+            display_link_address(data.trim());
+        });
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
+function display_link_address(address_id) {
+    $("#link_address").remove();
+    if (address_id != '') {
+        $("#open_map_install_quote").after("<p id='link_address'><a  href='/index.php?module=pe_address&action=EditView&record=" + address_id + "' target='_blank'>Open Address</a></p>");
+    }
+}
