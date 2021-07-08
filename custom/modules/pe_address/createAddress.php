@@ -4,8 +4,29 @@ $user = $_REQUEST['user'];
 $acc_id = $_REQUEST['acc_id'];
 $contact_id = $_REQUEST['contact_id'];
 $quote_id = $_REQUEST['quote_id'];
+$type = $_REQUEST['type'];
 
-if (isset($quote_id) && $quote_id != '') {
+if (isset($type) && $type == 'get_address') {
+    $quote = new AOS_Quotes();
+    $quote->retrieve($quote_id);
+    if ($quote->id) {
+        $db = DBManagerFactory::getInstance();
+        $sql = "SELECT pe_address.id as add_id  FROM pe_address 
+                WHERE pe_address.related_quote_id  = '{$quote->id}' 
+                AND pe_address.deleted = 0 LIMIT 1";
+        $ret = $db->query($sql);
+        if ($ret->num_rows != 0) {
+            $row = $db->fetchByAssoc($ret);
+            echo $row['add_id'];
+        } else {
+            echo 'notyet';
+        }
+    } else {
+        echo 'error';
+    }
+}
+
+if (isset($quote_id) && $quote_id != '' && !isset($type)) {
     $quote = new AOS_Quotes();
     $quote->retrieve($quote_id);
     if ($quote->id) {
@@ -111,4 +132,4 @@ function deleteFileMapSatellite($id_folder) {
         unlink($file);
         unlink($thumbnail);
     }
-  }
+}
