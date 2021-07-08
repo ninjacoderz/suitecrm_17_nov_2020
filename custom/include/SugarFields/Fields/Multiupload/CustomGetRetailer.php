@@ -213,6 +213,7 @@ function get_nmi_globirdenergy(){
             $full_address .= (($value->flatOrUnitNumber != null) ? $value->flatOrUnitNumber.' ' : '');
             $full_address .= (($value->houseNumber != null) ? $value->houseNumber.' ' : '');
             $full_address .= (($value->streetName != null) ? $value->streetName.' ' : '');
+            $full_address .= (($value->streetType != null) ? $value->streetType.' ' : '');
             $full_address .= (($value->suburbOrPlaceOrLocality != null) ? $value->suburbOrPlaceOrLocality.' ' : '');
             $full_address .= (($value->stateOrTerritory != null) ? $value->stateOrTerritory.' ' : '');
             $full_address .= (($value->postcode != null) ? $value->postcode.' ' : '');
