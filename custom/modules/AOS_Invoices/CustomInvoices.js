@@ -2773,8 +2773,10 @@ $(function () {
         $("#daikin_po_2_c").parent().parent().after('<button data-input="2" class="button primary createSupplyPO" id="createSupplyPO2"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
         $("#daikin_po_3_c").parent().parent().after('<button data-input="3" class="button primary createSupplyPO" id="createSupplyPO3"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button>');
         
-        if($('#daikin_po_3_c').val() != ""){
-            Load_idSupplyPO($("input[name='record']").val(),'read');
+        if(module_sugar_grp1 == 'AOS_Invoices') {
+            if($('#daikin_po_3_c').val() != ""){
+                Load_idSupplyPO($("input[name='record']").val(),'read');
+            }
         }
         // Tuan code add more supply PO
         $("#daikin_po_1_c").closest('.edit-view-row').after('<button type="button" class="button primary" id="addSupplyPo"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Add Supply PO</button>');
@@ -2821,23 +2823,25 @@ $(function () {
                     record_id: record_id,
                     action: type,
                 },
-                success: function(result) { 
+                success: function(result) {
                     var dataJson =  JSON.parse(result);
-                    dataJson[record_id].forEach(element => {
-                        var input_supply = '<div class="col-xs-12 col-sm-6 edit-view-row-item">\
-                                                <div class="col-xs-12 col-sm-4 label" data-label="LBL_DAIKIN_PO_"'+element.line_number +'>Supply PO '+element.line_number+':</div>\
-                                                <div class="col-xs-12 col-sm-8 edit-view-field " type="varchar" field="daikin_po_'+element.line_number+'_c">\
-                                                    <input type="text" name="daikin_po_'+element.line_number+'_c" id="daikin_po_'+element.line_number+'_c" size="30" maxlength="255" value="'+element.id_supply_po+'" title="">\
+                    if( dataJson[record_id] != "" && typeof(dataJson[record_id]) != 'undefined' ){
+                        dataJson[record_id].forEach(element => {
+                            var input_supply = '<div class="col-xs-12 col-sm-6 edit-view-row-item">\
+                                                    <div class="col-xs-12 col-sm-4 label" data-label="LBL_DAIKIN_PO_"'+element.line_number +'>Supply PO '+element.line_number+':</div>\
+                                                    <div class="col-xs-12 col-sm-8 edit-view-field " type="varchar" field="daikin_po_'+element.line_number+'_c">\
+                                                        <input type="text" name="daikin_po_'+element.line_number+'_c" id="daikin_po_'+element.line_number+'_c" size="30" maxlength="255" value="'+element.id_supply_po+'" title="">\
+                                                    </div>\
                                                 </div>\
-                                            </div>\
-                                            <button data-input="'+element.line_number+'" class="button primary createSupplyPO" id="createSupplyPO'+element.line_number+'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button><div class="clear"></div><div class="clear"></div>';
-        
-                        $('#daikin_po_1_c').closest('.edit-view-row').append(input_supply);
-                        // $("#daikin_po_"+id+"_c").val(data);
-                        var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + element.id_supply_po + "'>" + "Open Purchase Order" + "</a></div>";
-                        $("#daikin_po_"+element.line_number+"_c").nextAll('.open-purchase-oder').remove();
-                        $("#daikin_po_"+element.line_number+"_c").parent().append(href);
-                    });        
+                                                <button data-input="'+element.line_number+'" class="button primary createSupplyPO" id="createSupplyPO'+element.line_number+'"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span>Create</button><div class="clear"></div><div class="clear"></div>';
+            
+                            $('#daikin_po_1_c').closest('.edit-view-row').append(input_supply);
+                            // $("#daikin_po_"+id+"_c").val(data);
+                            var href = "<div class='open-purchase-oder'>Open Purchase Order <a target='_blank' href='/index.php?module=PO_purchase_order&action=EditView&record=" + element.id_supply_po + "'>" + "Open Purchase Order" + "</a></div>";
+                            $("#daikin_po_"+element.line_number+"_c").nextAll('.open-purchase-oder').remove();
+                            $("#daikin_po_"+element.line_number+"_c").parent().append(href);
+                        });  
+                    }      
                 }
             }); 
         }
