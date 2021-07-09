@@ -147,6 +147,10 @@ $(document).ready(function() {
         return false;
     }
 
+    //show link related fields
+    showLinkRelatedFields();
+    YAHOO.util.Event.addListener(["billing_account_id", "billing_contact_id", "related_quote_id"], "change", showLinkRelatedFields);
+
 }); //end $(document).ready
 
 
@@ -486,4 +490,22 @@ function get_number_NMI() {
     // $('#getDistributor span.glyphicon-refresh').addClass('hidden');
 
     return false;
+}
+
+/**
+ * Show link related fields
+ */
+function showLinkRelatedFields() {
+    $("#link_account").remove();
+    if ($('#billing_account_id').val() != '') {
+        $("#billing_account").parent().append("<p id='link_account'><a  href='/index.php?module=Accounts&action=EditView&record=" + $("#billing_account_id").val()+ "' target='_blank'>Open Account</a></p>");
+    }
+    $("#link_contact").remove();
+    if ($('#billing_contact_id').val() != '') {
+        $("#billing_contact").parent().append("<p id='link_contact'><a  href='/index.php?module=Contacts&action=EditView&record=" + $("#billing_contact_id").val()+ "' target='_blank'>Open Contact</a></p>");
+    }
+    $("#link_quote").remove();
+    if ($('#related_quote_id').val() != '') {
+        $("#related_quote").parent().append("<p id='link_quote'><a  href='/index.php?module=AOS_Quotes&action=EditView&record=" + $("#related_quote_id").val()+ "' target='_blank'>Open Quote</a></p>");
+    }
 }
