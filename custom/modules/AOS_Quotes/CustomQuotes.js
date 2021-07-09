@@ -6849,29 +6849,3 @@ function build_email_pdf(type = ""){
         }
     }, 1000);
 }
-
-async function getAddressRelate() {
-    try{
-        await $.ajax({
-            url: '/index.php?entryPoint=createAddress',
-            type: 'POST',
-            data: {
-                quote_id : $('input[name="record"]').val(),
-                type : 'get_address',
-            }
-        }).success(function(data) {
-            console.log('address_id '+data);
-            if (data.trim() == 'notyet' || data.trim() == 'error' || typeof data == 'undefined') return; 
-            display_link_address(data.trim());
-        });
-    } catch (ex) {
-        console.log(ex);
-    }
-}
-
-function display_link_address(address_id) {
-    $("#link_address").remove();
-    if (address_id != '') {
-        $("#open_map_install_quote").after("<p id='link_address'><a  href='/index.php?module=pe_address&action=EditView&record=" + address_id + "' target='_blank'>Open Address</a></p>");
-    }
-}
