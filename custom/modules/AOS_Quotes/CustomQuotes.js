@@ -2714,7 +2714,9 @@ window.onload = function () {
     }
 
     //show link address
-    getAddressRelate();
+    if (module_sugar_grp1 == 'AOS_Quotes') {
+        getAddressRelate();
+    }
 
 }
 $(document).on('click', '#return_edit', function () {

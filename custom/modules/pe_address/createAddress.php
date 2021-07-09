@@ -102,7 +102,9 @@ if (isset($quote_id) && $quote_id != '' && !isset($type)) {
                 echo 'error';
             }
         }
-    } 
+    } else {
+        echo 'error';
+    }
 }
 
 //*****FUNTIONC DECLARE */
