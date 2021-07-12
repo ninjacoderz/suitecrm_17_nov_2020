@@ -694,7 +694,7 @@ while ($row = $db->fetchByAssoc($ret))
         $product_line->product_cost_price = $row['cost'];
         $product_line->product_id = $row['id'];
         $product_line->group_id = $product_quote_group->id;
-        $product_line->parent_id = $quote->id;;
+        $product_line->parent_id = $quote->id;
         $product_line->parent_type = 'AOS_Quotes';
         $product_line->discount = 'Percentage';
         //display number index 
