@@ -5,7 +5,7 @@ const sd_delivery = ['San_Delivery', 'SANDEN_DELIVERY'];
 
 $(function () {
     'use strict';
-    // $("#sanden_option_c").closest('.edit-view-row-item').hide();
+    $("#sanden_option_c").closest('.edit-view-row-item').hide();
 
     //INIT
     init_table_sanden();
