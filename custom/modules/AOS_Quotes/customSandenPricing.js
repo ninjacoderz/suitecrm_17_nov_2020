@@ -5,7 +5,7 @@ const sd_delivery = ['San_Delivery', 'SANDEN_DELIVERY'];
 
 $(function () {
     'use strict';
-    // $("#offgrid_option_c").closest('.edit-view-row-item').show();
+    $("#sanden_option_c").closest('.edit-view-row-item').hide();
 
     //INIT
     init_table_sanden();
@@ -41,10 +41,10 @@ $(function () {
         e.preventDefault();
         $('#sd_hint').toggle();
     });
-    $(document).on('click', '#sd_show_table', function(e){
-        e.preventDefault();
-        $('#sanden_pricing_table').toggle();
-    });
+    // $(document).on('click', '#sd_show_table', function(e){
+    //     e.preventDefault();
+    //     $('#sanden_pricing_table').toggle();
+    // });
 
     $(document).on('click', '#generate_table', function(e){
         e.preventDefault();
@@ -247,7 +247,7 @@ async function init_table_sanden() {
         console.log(ex);
     }
 
-    let sanden_pricing_table   = $('<div id="sanden_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row" style="margin-bottom: 20px; display: none;"></div>');
+    let sanden_pricing_table   = $('<div id="sanden_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row" style="margin-bottom: 20px;"></div>');
     let data = [
         ["Selected Option"
             ,"<input data-attr='1' type='checkbox' class='sanden_option sanden_pricing' name='sanden_option' id='sanden_option_1' style='margin-bottom:5px'> Option 1"
@@ -406,10 +406,10 @@ async function init_table_sanden() {
     ];
     
     //  Update to set order before "Save and Generate Quote" field    
-    $('body').find("#generate_quote").after(sanden_pricing_table);
+    $("#sanden_option_c").closest('.tab-content').append(sanden_pricing_table);
     makeTable(sanden_pricing_table, data, "sanden_pricing", "sanden_pricing");
     $('body').find("#sanden_pricing_table").append("<button type='button' id='sd_calculate_price' class='button default' style='display: block'>Calculate Price </button>");
-    $('body').find("#sanden_pricing_table").before("</br><button type='button' id='sd_show_table' class='button default' style='display: block'>Show/Hide Table Sanden </button>");
+    // $('body').find("#sanden_pricing_table").before("</br><button type='button' id='sd_show_table' class='button default' style='display: block'>Show/Hide Table Sanden </button>");
 
     //css Table
     $(".sanden_pricing td").css({"padding":"0px 5px"});
@@ -781,7 +781,7 @@ function SD_saveCurrentState(){
             values[id_name] = $(this).val();
         }
     });
-    $("#offgrid_option_c").val(JSON.stringify(values));
+    $("#sanden_option_c").val(JSON.stringify(values));
 }
 
 // function SD_saveCurrentState(){
@@ -871,14 +871,14 @@ function SD_saveCurrentState(){
     
 //     //add state
 //     result = {...result, ...{'state': state}};
-//     $("#offgrid_option_c").val(JSON.stringify(result));
+//     $("#sanden_option_c").val(JSON.stringify(result));
 // }
 
 //Load option
 function SD_loadOption(){
-    if($("#offgrid_option_c").val() != ""){
+    if($("#sanden_option_c").val() != ""){
         try{
-            var json_val = JSON.parse($("#offgrid_option_c").val());
+            var json_val = JSON.parse($("#sanden_option_c").val());
             
             // Create Complete line
             let current_line = SD_getCountLine('sd_complete');
@@ -1151,7 +1151,7 @@ async function SD_generateLineItem(){
     // Get option
 
     await wait(300);
-    // let json_val = JSON.parse($("#offgrid_option_c").val());
+    // let json_val = JSON.parse($("#sanden_option_c").val());
     // let currState = json_val[index];
     let currState = SD_getCurrentOptionState(index);
 

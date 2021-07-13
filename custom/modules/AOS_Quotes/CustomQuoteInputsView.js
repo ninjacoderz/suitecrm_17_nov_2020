@@ -19,7 +19,13 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         $("#quote_note_inputs_c").closest('.tab-content').prepend(html_group_custom_quote_inputs, html_group_custom_quote_extra);
         var btn_generate_quote = '<button type="button" id="generate_quote" class="button primary">Save and Generate Quote</button>';
         $("#quote_note_inputs_c").closest('.tab-content').append(btn_generate_quote);
-        
+        //Hide/show panel for sanden
+        if ($("#quote_type_c").val() != 'quote_type_sanden') {
+            $('#sanden_option_c').closest('.panel.panel-default').hide();
+        } else {
+            $('#sanden_category').closest('.panel.panel-default').show();
+        }
+    
         switch($("#quote_type_c").val()){
             case "quote_type_solar":
                 renderQuoteInputHTML('quote_type_solar');
