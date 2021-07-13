@@ -68,7 +68,7 @@ require_once('include/SugarPHPMailer.php');
 //     throw new Exception('Incorrect error reporting level');
 // }
 
-global $mod_strings, $sugar_config, $current_user;
+global $mod_strings, $sugar_config, $current_user, $app_list_strings;
 
 $bean = BeanFactory::getBean($_REQUEST['module'], $_REQUEST['uid']);
 
@@ -234,6 +234,12 @@ if($_REQUEST['task'] == 'emailpdf' && $_REQUEST['module'] == 'AOS_Invoices' && $
     if(isset($bean->next_payment_amount_c) && (float)($bean->next_payment_amount_c) != 0){
         $custom_due_amount = number_format($bean->next_payment_amount_c,2);
     }
+}
+
+// VUT - popup email invoice detail
+if($_REQUEST['task'] == 'emailpdf' && $_REQUEST['module'] == 'AOS_Invoices' && $_REQUEST['templateID'] == '585adb50-6580-d9a6-584a-60ed4ed7883c') {
+    $invoice_type = $app_list_strings['quote_type_list']; 
+    $short_description_c = str_replace("\$inv_type", $invoice_type[$bean->quote_type_c], $short_description_c);
 }
 
 //change logic for paul in print pdf Module Invoice
