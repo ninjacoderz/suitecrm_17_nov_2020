@@ -750,7 +750,7 @@ function DK_saveCurrentState(){
                 id_product = getAttributeFromName(opt[id_name], dk_extra, 'id') != '' ?  getAttributeFromName(opt[id_name], dk_extra, 'id') : '';
                 partNumber_product = getAttributeFromName(opt[id_name], dk_extra, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'part_number') : '';
                 name_product = getAttributeFromName(opt[id_name], dk_extra, 'name') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'name') : '';
-                result[option].extras[item_no] = {...result[option].extras[parseInt(item_no) - 1], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+                result[option].extras[item_no] = {...result[option].extras[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
             }
             result[option].extras[item_no] = {...result[option].extras[item_no], ...opt};
             return true;
