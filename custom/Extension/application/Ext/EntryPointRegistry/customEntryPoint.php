@@ -964,6 +964,12 @@ $entry_point_registry['APICheckWaterQuality'] = array(
     'auth' => false
 );
 
+// .:nhantv:. API get STC and VEEC for new Sanden
+$entry_point_registry['APIGetStcVeec'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APIGetStcVeec.php',
+    'auth' => false
+);
+
 //Thienpb Code -- API download image from aws
 $entry_point_registry['APIUploadImageToAWS'] = array( 
     'file' => 'custom/include/SugarFields/Fields/Multiupload/APIUploadImageToAWS.php',
