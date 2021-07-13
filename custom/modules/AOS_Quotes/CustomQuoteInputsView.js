@@ -19,7 +19,13 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         $("#quote_note_inputs_c").closest('.tab-content').prepend(html_group_custom_quote_inputs, html_group_custom_quote_extra);
         var btn_generate_quote = '<button type="button" id="generate_quote" class="button primary">Save and Generate Quote</button>';
         $("#quote_note_inputs_c").closest('.tab-content').append(btn_generate_quote);
-        
+        //Hide/show panel for sanden
+        if ($("#quote_type_c").val() != 'quote_type_sanden') {
+            $('#sanden_option_c').closest('.panel.panel-default').hide();
+        } else {
+            $('#sanden_category').closest('.panel.panel-default').show();
+        }
+    
         switch($("#quote_type_c").val()){
             case "quote_type_solar":
                 renderQuoteInputHTML('quote_type_solar');
@@ -271,11 +277,6 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         // PE Admin
         totalAmount += totalAmount * (parseFloat($('#sl_pe_admin_percent').val()) / 100);
     
-        // PM price
-        if(currState.pm != undefined && currState.pm != ''){
-            totalAmount += parseFloat(currState.pm);
-        }
-    
         // Set value to first line
         list = $(productVisible[0]).find('input[id*=product_product_list_price]');
         set_value(list.attr('id'), totalAmount);
@@ -284,6 +285,18 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         // Set value to grand total
         $("#total_amount").trigger("focusin");
         let grandTotal = $("#total_amount").val();
+
+        if (grandTotal.indexOf(',') != -1) {
+            grandTotal = parseFloat(grandTotal.replaceAll(',', ''));
+        } else {
+            grandTotal = parseFloat(grandTotal);
+        }
+
+        // PM price
+        if(currState.pm != undefined && currState.pm != ''){
+            grandTotal += parseFloat(currState.pm);
+        }
+
         $("#total_amount").val(parseFloat(roundTo90(grandTotal)).formatMoney(2, ',', '.'));
         $("#total_amount").trigger("change");
     

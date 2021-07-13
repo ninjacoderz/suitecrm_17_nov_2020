@@ -73,6 +73,46 @@ $(document).ready(function() {
         }
     });
 
+    //Button NMI 
+    $("#nmi").after('<br><button class="button primary" id="getnmi"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Get NMI </button>');
+    $("#getnmi").after('<button class="button primary" id="checkNMI"> <span class="glyphicon hidden glyphicon-refresh glyphicon-refresh-animate"></span> Check NMI </button>');
+    $('#checkNMI').after('<div id="text_check_nmi"></div>');
+    $('#getnmi').on('click', function (event) {
+        get_number_NMI();
+        return false;
+    });
+    $('#checkNMI').on('click', function () {
+        var nmi_number = $('#nmi').val();
+        if (nmi_number == '') {
+            alert('We have not NMI Number.');
+            return false;
+        } else {
+            $('#checkNMI span.glyphicon-refresh').removeClass('hidden');
+            $.ajax({
+                url: "/index.php?entryPoint=CustomCheckNumberNMI&nmi_c=" + nmi_number,
+                type: 'GET',
+                success: function (data) {
+                    if (data == '' || typeof data === 'undefined') return;
+                    var data_json = $.parseJSON(data);
+                    if (data_json['Quote For'] == null && data_json['Network Distributor'] == null && data_json['NMI'] == null) {
+                        var html_append = '<p>* Number Meter Wrong *</p>';
+                        $('#text_check_nmi').empty();
+                        $('#text_check_nmi').append(html_append);
+                    } else {
+                        var html_append = '';
+                        html_append += '<p>*Address : ' + data_json['Quote For'] + '</p>';
+                        html_append += '<p>*Network Distributor : ' + data_json['Network Distributor'] + '</p>';
+                        html_append += '<p>*NMI : ' + data_json['NMI'] + '</p>';
+                        $('#address_nmi').val(data_json['Quote For']);
+                        $('#text_check_nmi').empty();
+                        $('#text_check_nmi').append(html_append);
+                    }
+                    $('#checkNMI span.glyphicon-refresh').addClass('hidden');
+                },
+            })
+        }
+        return false;
+    })
     //SAVE AND EDIT
     SUGAR.saveAndEdit = function (elem) {
         SUGAR.ajaxUI.showLoadingPanel();
@@ -106,6 +146,10 @@ $(document).ready(function() {
         });
         return false;
     }
+
+    //show link related fields
+    showLinkRelatedFields();
+    YAHOO.util.Event.addListener(["billing_account_id", "billing_contact_id", "related_quote_id"], "change", showLinkRelatedFields);
 
 }); //end $(document).ready
 
@@ -211,4 +255,257 @@ function convertasbinaryimage() {
             }
          }
     });
+}
+/**
+ * Copy from Quote custom\modules\AOS_Quotes\CustomQuotes.js
+ */
+function get_number_NMI() {
+    $('#getnmi span.glyphicon-refresh').removeClass('hidden');
+    if ($("#billing_address_street").val() == '' && $("#billing_address_city").val() == ''
+        && $("#billing_address_state").val() == '' && $("#billing_address_postalcode").val() == '') {
+        alert('Could you enter "Address" please ?');
+        $("#billing_address_street").focus();
+        return false;
+    }
+    //thien fix for get nmi
+    var address = $("#billing_address_street").val() + ',' +
+        $("#billing_address_city").val() + ' ' +
+        $("#billing_address_state").val() + ' ' +
+        $("#billing_address_postalcode").val();
+
+    var value = address.split(",");
+    var valueLen = value.length;
+    var address1 = value[0];
+    for (var i = 1; i < valueLen - 1; i++) {
+        address1 = address1 + value[i];
+    }
+    var address2 = value[valueLen - 1].trim();
+
+    var address3 = address2.split(" ");
+
+    var address1Items = address1.split(",");
+    var address1Len = address1Items.length;
+    var addarr = address1Items[address1Len - 1].trim().split(" ");
+    var a_first_addres = "";
+    var unit = "";
+    var unit_num = "";
+    var address_number = "";
+    var address_name = "";
+    if (addarr.length == 2) {
+        //a_first_addres = addarr[0].replace("Unit","U")+ "/";
+        //a_first_addres += addarr[1].replace(/ /,"/");
+
+        // Unit param
+        var unit_numbers = addarr[0].split(" ");
+        unit = unit_numbers[0];
+        unit_num = unit_numbers[1];
+        var address_numbers = addarr[1].split(" ");
+        address_number = address_numbers[0];
+        address_name = address_numbers[1].replace(" ", "+");
+
+    }
+    else {
+        //a_first_addres  = "NA/"
+        //a_first_addres +=  address1.replace(/ /,"/");
+
+        var address_numbers = addarr;
+        address_number = address_numbers[0];
+        address_name = address_numbers[1].replace(" ", "+");
+    }
+    var requestString; //= a_first_addres + "/" + address3[0].trim() +"/"+ address3[1].trim() +"/"+ address3[2].trim();
+    //var street = explode()
+    requestString = encodeURIComponent("unit=" + unit + "/unit_num=" + unit_num + "/streetNumber=" + address_number + "/streetName=" + address_name + "/city=" + address3[0] + "/state=" + address3[1] + "/customerType=residential/searchByPostcode=false/postcode=" + address3[2] + "/fuelType=dual&hasSolarPanels=false/connectionScenario=PROS_SWT");
+
+    $.ajax({
+        url: "/index.php?entryPoint=customGetRetailer&address=" + address + "&momentumenergy=1&requestString=" + requestString,
+        type: 'GET',
+        async: false,
+        success: function (data) {
+            if (data.indexOf("ChooseExactMeter_Nmis_0__MeterNumber") >= 0) {
+                $(".modal_nmi").remove();
+                var html = '<div class="modal fade modal_nmi" tabindex="-1" role="dialog">' +
+                    '<div class="modal-dialog">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+                    '<h4 class="modal-title" id="title-generic">Select NMI</h4>' +
+                    '</div>' +
+                    '<div class="modal-body">' +
+                    '<div class="container-fluid" style="margin-left:30px;">' + data +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+                $("body").append(html);
+                $(".modal_nmi").modal('show');
+                $(".modal_nmi").find("input").click(function () {
+                    $("#nmi").val($(this).val());
+                    $("#address_nmi").val($("#ChooseExactMeter_Nmis_" + $(this).index() + "__Address").val());
+                    $(".modal_nmi").modal('hide');
+                })
+            } else {
+                $("#nmi").val(data);
+                if (data !== "") {
+                    getNMI();
+                }
+                if (data == '') {
+                    var ok = confirm('GB NMI lookup failed!\nPerform manual lookup instead?');
+                    if (ok)
+                        window.open('https://www.momentumenergy.com.au/', '_blank');
+                    $("#nmi").val('');
+                    $("#address_nmi").val('');
+                }
+            }
+            $('#getnmi span.glyphicon-refresh').addClass('hidden');
+        },
+
+        error: function (response) {
+            $('#getnmi span.glyphicon-refresh').addClass('hidden');
+
+            var ok = confirm('GB NMI lookup failed!\nPerform manual lookup instead?');
+            if (ok)
+                window.open('https://www.momentumenergy.com.au/', '_blank');
+            $("#nmi").val('');
+            $("#address_nmi").val('');
+        },
+    });
+
+}
+
+/**
+ * Copy from Quote custom\modules\AOS_Quotes\CustomQuotes.js
+ */ 
+ function getNMI() {
+    var nmi = $("#nmi").val();
+    if (parseInt(nmi) != nmi) {
+        $("#nmi").val('');
+        $("#address_nmi").val('');
+        alert("Invalid NMI!");
+        return false;
+    }
+
+    // $('#getDistributor span.glyphicon-refresh').removeClass('hidden');
+
+    nmi = parseInt(nmi);
+
+    var NSP = [
+        {
+            name: "Citipower",
+            value: 4,
+            range: [{ min: 6102000000, max: 6103999999 }]
+        },
+        {
+            name: "Jemena",
+            value: 5,
+            range: [{ min: 6001000000, max: 6001999999 }]
+        },
+        {
+            name: "Powercor",
+            value: 6,
+            range: [{ min: 6203000000, max: 6204999999 }]
+        },
+        {
+            name: "Ausnet",
+            value: 7,
+            range: [{ min: 6305000000, max: 6306999999 },
+            { min: 6509000000, max: 6509009999 }]
+        },
+        {
+            value: "United",
+            value: 8,
+            range: [{ min: 6407000000, max: 6408999999 }]
+        },
+        {
+            name: "Western Power",
+            value: 1,
+            range: [{ min: 8001000000, max: 8020999999 }]
+        },
+        {
+            name: "SA Power Networks - NSP",
+            value: 13,
+            range: [{ min: 2001000000, max: 2002999999 }]
+        },
+        {
+            name: "Energex",
+            value: 2,
+            range: [{ min: 3100000000, max: 3199999999 }]
+        },
+        {
+            name: "Ergon",
+            value: 3,
+            range: [{ min: 3000000000, max: 3099999999 }]
+        },
+        {
+            name: "Essential Energy",
+            value: 9,
+            range: [{ min: 4001000000, max: 4001999999 }, { min: 4508000000, max: 4508099999 },
+            { min: 4204000000, max: 4204999999 }, { min: 4407000000, max: 4407999999 }]
+        },
+        {
+            name: "Ausgrid",
+            value: 10,
+            range: [{ min: 4102000000, max: 4104999999 }]
+        },
+        {
+            name: "Endeavour Energy",
+            value: 12,
+            range: [{ min: 4310000000, max: 4319999999 }]
+        },
+        {
+            name: "ActewAGL",
+            value: 11,
+            range: [{ min: 7001000000, max: 7001999999 }]
+        },
+    ];
+
+    var NSPLen = NSP.length;
+    for (var i = 0; i < NSPLen; i++) {
+        var range = NSP[i].range
+        var rangeLen = range.length;
+        for (var j = 0; j < rangeLen; j++) {
+            if ((nmi >= range[j].min && nmi <= range[j].max) ||
+                (nmi >= range[j].min * 10 && nmi <= range[j].max * 10 + 9)) {
+                $("#electricity_distributor").val(NSP[i].value);
+                // //thien fix show Ausnet_Approval button
+                // if (NSP[i].value == 7) {
+                //     $('#Ausnet_Approval').show();
+                // } else {
+                //     $('#Ausnet_Approval').hide();
+                // }
+
+                // //thien fix show register jemena button
+                // if (NSP[i].value == 5) {
+                //     $('#register_jemena_account').show();
+                // } else {
+                //     $('#register_jemena_account').hide();
+                // }
+                // $('#getDistributor span.glyphicon-refresh').addClass('hidden');
+
+                return false;
+            }
+        }
+    }
+
+    // $('#getDistributor span.glyphicon-refresh').addClass('hidden');
+
+    return false;
+}
+
+/**
+ * Show link related fields
+ */
+function showLinkRelatedFields() {
+    $("#link_account").remove();
+    if ($('#billing_account_id').val() != '') {
+        $("#billing_account").parent().append("<p id='link_account'><a  href='/index.php?module=Accounts&action=EditView&record=" + $("#billing_account_id").val()+ "' target='_blank'>Open Account</a></p>");
+    }
+    $("#link_contact").remove();
+    if ($('#billing_contact_id').val() != '') {
+        $("#billing_contact").parent().append("<p id='link_contact'><a  href='/index.php?module=Contacts&action=EditView&record=" + $("#billing_contact_id").val()+ "' target='_blank'>Open Contact</a></p>");
+    }
+    $("#link_quote").remove();
+    if ($('#related_quote_id').val() != '') {
+        $("#related_quote").parent().append("<p id='link_quote'><a  href='/index.php?module=AOS_Quotes&action=EditView&record=" + $("#related_quote_id").val()+ "' target='_blank'>Open Quote</a></p>");
+    }
 }

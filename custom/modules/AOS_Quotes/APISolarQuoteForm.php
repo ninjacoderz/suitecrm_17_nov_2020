@@ -497,6 +497,7 @@
         $subject = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $subject);
         $subject = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $subject);
         $subject = str_replace("\$aos_quotes_site_detail_addr__state_c",  $focus->install_address_state_c.' ' , $subject);
+        $subject = str_replace("\$aos_quotes_number",  $focus->number, $subject);
         
         //replace data for body
         $body_html = str_replace("\$contact_first_name",  $contact->first_name , $body_html);

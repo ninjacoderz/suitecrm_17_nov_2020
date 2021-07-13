@@ -48,6 +48,9 @@ $(function () {
     $(document).on('click', '*[id*="clear_dk_option"]', function(e){
         e.preventDefault();
         DK_clearOption($(this).data('option'));
+        for (var i = 1; i < 7; i++) {
+            DK_calcOption(i);
+        }
     });
 
     //PE Admin % handle 
@@ -468,10 +471,12 @@ function DK_calcHint(){
 
     /** S - Install and Delivery */
         //Daikin delivery 
-        delivery_cost = parseFloat(getAttributeFromName(daikin_delivery[0], dk_install, 'cost'));
-        str+= DK_writeHint('Delivery',delivery_cost);
+        if (equipment > 0) {
+            delivery_cost = parseFloat(getAttributeFromName(daikin_delivery[0], dk_install, 'cost'));
+            str+= DK_writeHint('Delivery',delivery_cost);
+        }
         // Daikin install
-        if (currState['install_dk'] == 'Yes') {
+        if (currState['install_dk'] == 'Yes' && numbers_daikin > 0) {
             install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost')) * parseFloat(numbers_daikin);
             str+= DK_writeHint('Daikin Install',install_cost, numbers_daikin);
         }
@@ -745,7 +750,7 @@ function DK_saveCurrentState(){
                 id_product = getAttributeFromName(opt[id_name], dk_extra, 'id') != '' ?  getAttributeFromName(opt[id_name], dk_extra, 'id') : '';
                 partNumber_product = getAttributeFromName(opt[id_name], dk_extra, 'part_number') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'part_number') : '';
                 name_product = getAttributeFromName(opt[id_name], dk_extra, 'name') != '' ? getAttributeFromName(opt[id_name], dk_extra, 'name') : '';
-                result[option].extras[item_no] = {...result[option].extras[parseInt(item_no) - 1], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+                result[option].extras[item_no] = {...result[option].extras[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
             }
             result[option].extras[item_no] = {...result[option].extras[item_no], ...opt};
             return true;
@@ -877,9 +882,14 @@ function DK_getCurrentOptionState(index){
 function DK_calcOption(index) {
     if(index != '' && index != undefined){
         let currState = DK_getCurrentOptionState(index);
+        let grandTotalR90;
         // Grand Total
         let grandTotal = DK_calcGrandTotal(currState);
-        let grandTotalR90 = Number(roundTo90(grandTotal));
+        if (grandTotal != 0) {
+            grandTotalR90 = Number(roundTo90(grandTotal));
+        } else {
+            grandTotalR90 = grandTotal;
+        }
         let subtotal = Number(parseFloat(grandTotalR90/1.1).toFixed(2));
         let gst = Number(parseFloat(grandTotalR90 - subtotal).toFixed(2));
         //fill 
@@ -913,16 +923,18 @@ function DK_calcInstallCost(currState) {
         }
     }
     // Daikin install
-    if (currState['install_dk'] == 'Yes') {
-        install_cost = parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost')) * parseFloat(numbers_daikin);
+    if (currState['install_dk'] == 'Yes' && numbers_daikin > 0 ) {
+        install_cost += parseFloat(getAttributeFromName(daikin_install[0], dk_air_install, 'cost')) * parseFloat(numbers_daikin);
     }
     return install_cost;
 }
 
-function DK_calcDeliveryCost(currState) {
+function DK_calcDeliveryCost(equipment_cost) {
     let delivery_cost = 0;
     //Daikin delivery 
-    delivery_cost = parseFloat(getAttributeFromName(daikin_delivery[0], dk_install, 'cost'));
+    if (equipment_cost > 0) {
+        delivery_cost += parseFloat(getAttributeFromName(daikin_delivery[0], dk_install, 'cost'));
+    }
     return delivery_cost;
 }
 
@@ -965,7 +977,7 @@ function DK_calcGrandTotal(currState){
     // Equipment cost
     grandTotal += DK_calcEquipmentCost(currState);
     // Install + Delivery cost
-    grandTotal += DK_calcInstallCost(currState) + DK_calcDeliveryCost(currState);
+    grandTotal += DK_calcInstallCost(currState) + DK_calcDeliveryCost(DK_calcEquipmentCost(currState));
     // PE Admin %
     grandTotal += grandTotal * (parseFloat($('#dk_pe_admin_percent').val()) / 100);
     // GST 10%
@@ -1094,7 +1106,7 @@ async function DK_generateLineItem(){
         $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
         $('#electrician_bill').trigger('change');
         // Calc Delivery Cost
-        let deliveryCost = DK_calcDeliveryCost(currState);
+        let deliveryCost = DK_calcDeliveryCost(installationCost);
         $('#sanden_shipping_bill').val(parseFloat(deliveryCost).formatMoney(2, ',', '.'));
         $('#sanden_shipping_bill').trigger('change');
         

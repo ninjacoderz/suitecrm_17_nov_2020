@@ -2,7 +2,7 @@ $(function () {
     'use strict';
     // Generate uinique id
 
-    $('#tab-actions').after('<input type="button" name="Email Invoice" value="Email Invoice" class="button primary" onclick="SUGAR.email_invoice(this)" />');
+    $('#tab-actions').after('<input type="button" name="Email Invoice" value="Email Invoice" class="button primary" onclick="popupEmailInvoice(this)" />');
     // $('#tab-actions').after($('#tab-actions li:first').clone());
     $('#tab-actions').after('<li><input type="button" id="send_trustpilop" value="TrustPilot" class="button primary"/></li>');
     $('#tab-actions').after('<li><input type="button" id="product_review" value="Product Review" class="button primary" data-email-type="product_review" onclick="$(document).openComposeViewModal(this);" data-module="AOS_Invoices" data-module-name="'+ $("#name").text() +'" data-record-id="'+ $("input[name='record']").val() +'" /></li>');
@@ -28,12 +28,21 @@ $(function () {
             ( $("#handheld_1_c").text() != "" || $("#handheld_2_c").text() != "" || $("#handheld_3_c").text() != "") ){ 
             alert('Email Free Methven Promo Code to Customer')
         }
+        var email_invoice_type = $(e).attr('data-email-invoice-type');
         document.getElementById('popupDivBack_ara').style.display='none';
         document.getElementById('popupDiv_ara').style.display='none';
         var form=document.getElementById('popupForm');
         if(form!=null){$(form).attr('target', '_blank');
         form.task.value='emailpdf';
-        form.templateID.value='91964331-fd45-e2d8-3f1b-57bbe4371f9c';
+        switch (email_invoice_type) {
+            case 'overdue' :
+                form.templateID.value='585adb50-6580-d9a6-584a-60ed4ed7883c'; //live : 585adb50-6580-d9a6-584a-60ed4ed7883c ; local: 9968c6a4-c6c3-ceaa-caa3-60e805c8d8bf
+                break;
+            default:
+                form.templateID.value='91964331-fd45-e2d8-3f1b-57bbe4371f9c';
+                break;
+        }
+        // form.templateID.value='91964331-fd45-e2d8-3f1b-57bbe4371f9c';
         form.submit();}else{alert('Error!');}
     }
     SUGAR.CRUD_Xero_Invoice= function(elemt){
@@ -860,3 +869,26 @@ function CopyToClipboard(generateUUID){
         });
     },10000);
 }
+
+//VUT-S-Create popup when click Sandan Tip
+function popupEmailInvoice(e) {
+    var popupList = $('<div id="emailInvoice" title="Email Invoice">'
+                    + '<input name="emailInvoiceType" type="radio" value="normal"> Normal <br>'
+                    + '<input name="emailInvoiceType" type="radio" value="overdue"> Over due date <br>'
+                    + '</div>');
+    popupList.dialog({
+        modal:true,
+        buttons: {
+            Cancel : function(){
+                $(this).dialog("close");
+            },
+            OK : function() {
+                $(e).attr('data-email-invoice-type', $('input[name="emailInvoiceType"]:checked').val());
+                SUGAR.email_invoice(e);
+                $(this).dialog("close");
+
+            }
+        }
+    });
+}
+//VUT-S-Create popup when click Sandan Tip

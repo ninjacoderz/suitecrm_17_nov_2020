@@ -5,13 +5,14 @@ const sd_delivery = ['San_Delivery', 'SANDEN_DELIVERY'];
 
 $(function () {
     'use strict';
-    // $("#offgrid_option_c").closest('.edit-view-row-item').show();
+    $("#sanden_option_c").closest('.edit-view-row-item').hide();
 
     //INIT
     init_table_sanden();
     // $(document).find('#own_solar_pv_pricing_c').attr('readonly', 'readonly');
     var quote_type = $("#quote_type_c").val();
     var div_buttons = $('td.buttons div.buttons');
+    $(div_buttons).append('<button type="button" style="margin:4px;" class="button" id="send_sanden_pricing" class="button send_sanden_pricing" onclick="$(document).openComposeViewModal_SendSandenPricing(this);" data-email-type="sanden_pricing"  data-module="AOS_Quotes" data-module-name="' + $("#name").val() + '" data-record-id="' + $("input[name='record']").val() + '">SEND SANDEN PRICING OPTIONS</button>');
 
     /** Extra Add Button Click handle */ 
     $(document).on('click', '#sd_tank_add, #sd_complete_add, #sd_accessory_add, #sd_extra_add', function(e){
@@ -41,10 +42,10 @@ $(function () {
         e.preventDefault();
         $('#sd_hint').toggle();
     });
-    $(document).on('click', '#sd_show_table', function(e){
-        e.preventDefault();
-        $('#sanden_pricing_table').toggle();
-    });
+    // $(document).on('click', '#sd_show_table', function(e){
+    //     e.preventDefault();
+    //     $('#sanden_pricing_table').toggle();
+    // });
 
     $(document).on('click', '#generate_table', function(e){
         e.preventDefault();
@@ -62,6 +63,10 @@ $(function () {
     $(document).on('click', '*[id*="sd_clear_option"]', function(e){
         e.preventDefault();
         SD_clearOption($(this).data('option'));
+        for (var i = 1; i < 7; i++) {
+            SD_calcOption(i);
+        }
+
     });
 
     //PE Admin % handle 
@@ -126,97 +131,97 @@ $(function () {
         SD_saveCurrentState();
     });
 
-    // $.fn.openComposeViewModal_SendSandenPricing = function (source) {
-    //     ;
-    //     "use strict";
-    //     var record_id = $(source).attr('data-record-id');
-    //     if (record_id == '') {
-    //         alert('Please Save before !');
-    //         return;
-    //     }
+    $.fn.openComposeViewModal_SendSandenPricing = function (source) {
+        debugger;
+        "use strict";
+        var record_id = $(source).attr('data-record-id');
+        if (record_id == '') {
+            alert('Please Save before !');
+            return;
+        }
     
-    //     // /**Save before*/
-    //     // $('#save_and_edit').trigger('click');
+        // /**Save before*/
+        // $('#save_and_edit').trigger('click');
     
-    //     var self = this;
+        var self = this;
     
-    //     self.emailComposeView = null;
-    //     var opts = $.extend({}, $.fn.EmailsComposeViewModal.defaults);
-    //     var composeBox = $('<div></div>').appendTo(opts.contentSelector);
-    //     composeBox.messageBox({ "showHeader": false, "showFooter": false, "size": 'lg' });
-    //     composeBox.setBody('<div class="email-in-progress"><img src="themes/' + SUGAR.themes.theme_name + '/images/loading.gif"></div>');
-    //     composeBox.show();
-    //     var email_type = $(source).attr('data-email-type');
-    //     var email_module = $(source).attr('data-module');
-    //     var address = $('#install_address_c').val() + ' ' + $('#install_address_city_c').val() + ' ' + $('#install_address_state_c').val() + ' ' + $('#install_address_postalcode_c').val();
+        self.emailComposeView = null;
+        var opts = $.extend({}, $.fn.EmailsComposeViewModal.defaults);
+        var composeBox = $('<div></div>').appendTo(opts.contentSelector);
+        composeBox.messageBox({ "showHeader": false, "showFooter": false, "size": 'lg' });
+        composeBox.setBody('<div class="email-in-progress"><img src="themes/' + SUGAR.themes.theme_name + '/images/loading.gif"></div>');
+        composeBox.show();
+        var email_type = $(source).attr('data-email-type');
+        var email_module = $(source).attr('data-module');
+        var address = $('#install_address_c').val() + ' ' + $('#install_address_city_c').val() + ' ' + $('#install_address_state_c').val() + ' ' + $('#install_address_postalcode_c').val();
         
-    //     var url_email = 'index.php?module=Emails&action=ComposeView&address=' + address + '&in_popup=1' + ((record_id != "") ? ("&record_id=" + record_id) : "") + ((email_type != "") ? ("&email_type=" + email_type) : "") + ((email_module != "") ? ("&email_module=" + email_module) : "");
+        var url_email = 'index.php?module=Emails&action=ComposeView&address=' + address + '&in_popup=1' + ((record_id != "") ? ("&record_id=" + record_id) : "") + ((email_type != "") ? ("&email_type=" + email_type) : "") + ((email_module != "") ? ("&email_module=" + email_module) : "");
     
-    //     $.ajax({
-    //         type: "GET",
-    //         cache: false,
-    //         url: url_email,
-    //     }).done(function (data) {
-    //         if (data.length === 0) {
-    //             console.error("Unable to display ComposeView");
-    //             composeBox.setBody(SUGAR.language.translate('', 'ERR_AJAX_LOAD'));
-    //             return;
-    //         }
-    //         composeBox.setBody(data);
-    //         self.emailComposeView = composeBox.controls.modal.body.find('.compose-view').EmailsComposeView();
-    
-    
-    //         var populateModule = $(source).attr('data-module');
-    //         var populateModuleRecord = $(source).attr('data-record-id');
-    //         var populateModuleName = $(source).attr('data-module-name');
-    
-    //         //$(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
-    //         $(self.emailComposeView).find('#parent_type').val(populateModule);
-    //         $(self.emailComposeView).find('#parent_name').val(populateModuleName);
-    //         $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
-    //         $(self.emailComposeView).find('#parent_id').val(populateModuleRecord);
-    //         $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
-    //         $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url_email,
+        }).done(function (data) {
+            if (data.length === 0) {
+                console.error("Unable to display ComposeView");
+                composeBox.setBody(SUGAR.language.translate('', 'ERR_AJAX_LOAD'));
+                return;
+            }
+            composeBox.setBody(data);
+            self.emailComposeView = composeBox.controls.modal.body.find('.compose-view').EmailsComposeView();
     
     
-    //         $(self.emailComposeView).on('sentEmail', function (event, composeView) {
-    //             composeBox.hide();
-    //             composeBox.remove();
-    //         });
-    //         $(self.emailComposeView).on('disregardDraft', function (event, composeView) {
-    //             if (typeof messageBox !== "undefined") {
-    //                 var mb = messageBox({ size: 'lg' });
-    //                 mb.setTitle(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_TITLE'));
-    //                 mb.setBody(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_BODY'));
-    //                 mb.on('ok', function () {
-    //                     mb.remove();
-    //                     composeBox.hide();
-    //                     composeBox.remove();
-    //                 });
-    //                 mb.on('cancel', function () {
-    //                     mb.remove();
-    //                 });
-    //                 mb.show();
-    //             } else {
-    //                 if (confirm(self.translatedErrorMessage)) {
-    //                     composeBox.hide();
-    //                     composeBox.remove();
-    //                 }
-    //             }
-    //         });
+            var populateModule = $(source).attr('data-module');
+            var populateModuleRecord = $(source).attr('data-record-id');
+            var populateModuleName = $(source).attr('data-module-name');
+    
+            //$(self.emailComposeView).find('#to_addrs_names').val(populateEmailAddress);
+            $(self.emailComposeView).find('#parent_type').val(populateModule);
+            $(self.emailComposeView).find('#parent_name').val(populateModuleName);
+            $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
+            $(self.emailComposeView).find('#parent_id').val(populateModuleRecord);
+            $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
+            $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);
     
     
-    //         composeBox.on('cancel', function () {
-    //             composeBox.remove();
-    //         });
-    //         composeBox.on('hide.bs.modal', function () {
-    //             composeBox.remove();
-    //         });
-    //     }).fail(function (data) {
-    //         composeBox.controls.modal.content.html(SUGAR.language.translate('', 'LBL_EMAIL_ERROR_GENERAL_TITLE'));
-    //     });
-    //     return $(self);
-    // };
+            $(self.emailComposeView).on('sentEmail', function (event, composeView) {
+                composeBox.hide();
+                composeBox.remove();
+            });
+            $(self.emailComposeView).on('disregardDraft', function (event, composeView) {
+                if (typeof messageBox !== "undefined") {
+                    var mb = messageBox({ size: 'lg' });
+                    mb.setTitle(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_TITLE'));
+                    mb.setBody(SUGAR.language.translate('', 'LBL_CONFIRM_DISREGARD_DRAFT_BODY'));
+                    mb.on('ok', function () {
+                        mb.remove();
+                        composeBox.hide();
+                        composeBox.remove();
+                    });
+                    mb.on('cancel', function () {
+                        mb.remove();
+                    });
+                    mb.show();
+                } else {
+                    if (confirm(self.translatedErrorMessage)) {
+                        composeBox.hide();
+                        composeBox.remove();
+                    }
+                }
+            });
+    
+    
+            composeBox.on('cancel', function () {
+                composeBox.remove();
+            });
+            composeBox.on('hide.bs.modal', function () {
+                composeBox.remove();
+            });
+        }).fail(function (data) {
+            composeBox.controls.modal.content.html(SUGAR.language.translate('', 'LBL_EMAIL_ERROR_GENERAL_TITLE'));
+        });
+        return $(self);
+    };
 
     
 
@@ -243,7 +248,7 @@ async function init_table_sanden() {
         console.log(ex);
     }
 
-    let sanden_pricing_table   = $('<div id="sanden_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row" style="margin-bottom: 20px; display: none;"></div>');
+    let sanden_pricing_table   = $('<div id="sanden_pricing_table" class="col-md-12 col-xs-12 col-sm-12 edit-view-row" style="margin-bottom: 20px;"></div>');
     let data = [
         ["Selected Option"
             ,"<input data-attr='1' type='checkbox' class='sanden_option sanden_pricing' name='sanden_option' id='sanden_option_1' style='margin-bottom:5px'> Option 1"
@@ -402,10 +407,10 @@ async function init_table_sanden() {
     ];
     
     //  Update to set order before "Save and Generate Quote" field    
-    $('body').find("#generate_quote").after(sanden_pricing_table);
+    $("#sanden_option_c").closest('.tab-content').append(sanden_pricing_table);
     makeTable(sanden_pricing_table, data, "sanden_pricing", "sanden_pricing");
     $('body').find("#sanden_pricing_table").append("<button type='button' id='sd_calculate_price' class='button default' style='display: block'>Calculate Price </button>");
-    $('body').find("#sanden_pricing_table").before("</br><button type='button' id='sd_show_table' class='button default' style='display: block'>Show/Hide Table Sanden </button>");
+    // $('body').find("#sanden_pricing_table").before("</br><button type='button' id='sd_show_table' class='button default' style='display: block'>Show/Hide Table Sanden </button>");
 
     //css Table
     $(".sanden_pricing td").css({"padding":"0px 5px"});
@@ -768,113 +773,134 @@ function SD_createNewLine(target = 'sd_complete'){
 }
 
 function SD_saveCurrentState(){
-    var values = {};
+    let result = {};
+    let state = $("#install_address_state_c").val();
+    let check_main = {};
     $("#sanden_pricing_table .sanden_pricing").each(function (){
+        let opt = {};
+        let id_product = '', partNumber_product = '', name_product = '';
         var id_name = $(this).attr("id");
-        if($("#"+id_name).attr('type')== 'checkbox'){
-            values[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
-        } else {
-            values[id_name] = $(this).val();
+        let item_no = id_name.charAt(id_name.length-3);
+        let option = id_name.split('_').pop();
+        // if (!isNaN(option) && option > 1) {
+        //     return true;
+        // }
+        if (isNaN(option)) {
+            result[id_name] = $(this).val();
+            return true;
         }
+        if($("#"+id_name).attr('type')== 'checkbox'){
+            opt[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
+        } else {
+            opt[id_name] = $(this).val();
+        }
+
+        //Main
+        if (id_name.indexOf('sd_complete_type') != -1 || id_name.indexOf('qty_sd_complete') != -1) {
+            if (!result[option].hasOwnProperty('completes')) {
+                result[option].completes = {};
+            }
+            if(id_name.indexOf('sd_complete_type') != -1) {
+                id_product = getAttributeFromPartNumber(opt[id_name], sanden_complete, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_complete, 'id') : '';
+                partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_complete, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_complete, 'part_number') : '';
+                name_product = getAttributeFromPartNumber(opt[id_name], sanden_complete, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_complete, 'name') : '';
+                result[option].completes[item_no] = {...result[option].completes[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+            if (id_name.indexOf('qty_sd_complete') != -1) {
+                if (!check_main.hasOwnProperty(option)) {
+                    check_main[option] = 0;
+                }
+                check_main[option] += parseInt(opt[id_name] != '' ? opt[id_name] : 0);
+            }
+
+            result[option].completes[item_no] = {...result[option].completes[item_no], ...opt};
+            return true;
+        }
+        //Hpump
+        if (id_name.indexOf('sd_hpump_type') != -1 || id_name.indexOf('qty_sd_hpump') != -1) {
+            if (!result[option].hasOwnProperty('hpump')) {
+                result[option].hpump = {};
+            }
+            if(id_name.indexOf('sd_hpump_type') != -1) {
+                id_product = getAttributeFromPartNumber(opt[id_name], sanden_hpump, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_hpump, 'id') : '';
+                partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_hpump, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_hpump, 'part_number') : '';
+                name_product = getAttributeFromPartNumber(opt[id_name], sanden_hpump, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_hpump, 'name') : '';
+                result[option].hpump[item_no] = {...result[option].hpump[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+
+            result[option].hpump[item_no] = {...result[option].hpump[item_no], ...opt};
+            return true;
+        }
+
+        //Tank
+        if (id_name.indexOf('sd_tank_type') != -1 || id_name.indexOf('qty_sd_tank') != -1) {
+            if (!result[option].hasOwnProperty('tanks')) {
+                result[option].tanks = {};
+            }
+            if(id_name.indexOf('sd_tank_type') != -1) {
+
+                id_product = getAttributeFromPartNumber(opt[id_name], sanden_tank, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_tank, 'id') : '';
+                partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_tank, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_tank, 'part_number') : '';
+                name_product = getAttributeFromPartNumber(opt[id_name], sanden_tank, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_tank, 'name') : '';
+                result[option].tanks[item_no] = {...result[option].tanks[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+            result[option].tanks[item_no] = {...result[option].tanks[item_no], ...opt};
+            return true;
+        }
+
+        //Accessory 
+        if (id_name.indexOf('sd_accessory_type') != -1 || id_name.indexOf('qty_sd_accessory') != -1) {
+            if (!result[option].hasOwnProperty('accessories')) {
+                result[option].accessories = {};
+            }
+            if(id_name.indexOf('sd_accessory_type') != -1) {
+                id_product = getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'id') : '';
+                partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'part_number') : '';
+                name_product = getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'name') : '';
+                result[option].accessories[item_no] = {...result[option].accessories[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+            result[option].accessories[item_no] = {...result[option].accessories[item_no], ...opt};
+            return true;
+        }
+        
+        //Extra 
+        if (id_name.indexOf('sd_extra_type') != -1 || id_name.indexOf('qty_ext_sd_extra') != -1 || id_name.indexOf('price_ext_sd_extra') != -1) {
+            // debugger
+            if (!result[option].hasOwnProperty('extras')) {
+                result[option].extras = {};
+            }
+            if(id_name.indexOf('sd_extra_type') != -1) {
+                id_product = getAttributeFromPartNumber(opt[id_name], sanden_extra, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_extra, 'id') : '';
+                partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_extra, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_extra, 'part_number') : '';
+                name_product = getAttributeFromPartNumber(opt[id_name], sanden_extra, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_extra, 'name') : '';
+                result[option].extras[item_no] = {...result[option].extras[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
+            }
+            result[option].extras[item_no] = {...result[option].extras[item_no], ...opt};
+            return true;
+        }
+
+        result[option] = {...result[option], ...opt};
     });
-    $("#offgrid_option_c").val(JSON.stringify(values));
+    //check send email daikin pricing option
+    for (const [k, qty] of Object.entries(check_main)) {
+        if (qty > 0) {
+            result[k] = {...result[k],...{'isSend': 1}};
+        } else {
+            result[k] = {...result[k],...{'isSend': 0}};
+        }
+    }
+    
+    //add state
+    result = {...result, ...{'state': state}};
+    $("#sanden_option_c").val(JSON.stringify(result));
 }
 
-// function SD_saveCurrentState(){
-//     let result = {};
-//     let state = $("#install_address_state_c").val();
-//     let check_main = {};
-//     $("#sanden_pricing_table .sanden_pricing").each(function (){
-//         let opt = {};
-//         let id_product = '', partNumber_product = '', name_product = '';
-//         var id_name = $(this).attr("id");
-//         let item_no = id_name.charAt(id_name.length-3);
-//         let option = id_name.split('_').pop();
-//         // if (!isNaN(option) && option > 1) {
-//         //     return true;
-//         // }
-//         if (isNaN(option)) {
-//             result[id_name] = $(this).val();
-//             return true;
-//         }
-//         if($("#"+id_name).attr('type')== 'checkbox'){
-//             opt[id_name] = ($(this).is(":checked") == true) ? 1 : 0;
-//         } else {
-//             opt[id_name] = $(this).val();
-//         }
-
-//         //Main
-//         if (id_name.indexOf('sd_complete_type') != -1 || id_name.indexOf('qty_sd_complete') != -1) {
-//             if (!result[option].hasOwnProperty('products')) {
-//                 result[option].products = {};
-//             }
-//             if(id_name.indexOf('sd_complete_type') != -1) {
-//                 id_product = getAttributeFromPartNumber(opt[id_name], sanden_complete, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_complete, 'id') : '';
-//                 partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_complete, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_complete, 'part_number') : '';
-//                 name_product = getAttributeFromPartNumber(opt[id_name], sanden_complete, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_complete, 'name') : '';
-//                 result[option].products[item_no] = {...result[option].products[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
-//             }
-//             if (id_name.indexOf('qty_sd_complete') != -1) {
-//                 if (!check_main.hasOwnProperty(option)) {
-//                     check_main[option] = 0;
-//                 }
-//                 check_main[option] += parseInt(opt[id_name] != '' ? opt[id_name] : 0);
-//             }
-
-//             result[option].products[item_no] = {...result[option].products[item_no], ...opt};
-//             return true;
-//         }
-//         //Wifi
-//         if (id_name.indexOf('sd_hpump_type') != -1 || id_name.indexOf('qty_sd_hpump') != -1) {
-//             if (!result[option].hasOwnProperty('wifi')) {
-//                 result[option].wifi = {};
-//             }
-//             if(id_name.indexOf('sd_hpump_type') != -1) {
-//                 id_product = getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'id') : '';
-//                 partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'part_number') : '';
-//                 name_product = getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_accessory, 'name') : '';
-//                 result[option].wifi[item_no] = {...result[option].wifi[item_no], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
-//             }
-
-//             result[option].wifi[item_no] = {...result[option].wifi[item_no], ...opt};
-//             return true;
-//         }
-//         //Extra 
-//         if (id_name.indexOf('sd_extra_type') != -1 || id_name.indexOf('qty_ext_sd_extra') != -1 || id_name.indexOf('price_ext_sd_extra') != -1) {
-//             if (!result[option].hasOwnProperty('extras')) {
-//                 result[option].extras = {};
-//             }
-//             if(id_name.indexOf('sd_extra_type') != -1) {
-//                 id_product = getAttributeFromPartNumber(opt[id_name], sanden_extra, 'id') != '' ?  getAttributeFromPartNumber(opt[id_name], sanden_extra, 'id') : '';
-//                 partNumber_product = getAttributeFromPartNumber(opt[id_name], sanden_extra, 'part_number') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_extra, 'part_number') : '';
-//                 name_product = getAttributeFromPartNumber(opt[id_name], sanden_extra, 'name') != '' ? getAttributeFromPartNumber(opt[id_name], sanden_extra, 'name') : '';
-//                 result[option].extras[item_no] = {...result[option].extras[parseInt(item_no) - 1], ...{'id' : id_product, 'partNumber' : partNumber_product, 'productName' : name_product}};
-//             }
-//             result[option].extras[item_no] = {...result[option].extras[item_no], ...opt};
-//             return true;
-//         }
-
-//         result[option] = {...result[option], ...opt};
-//     });
-//     //check send email daikin pricing option
-//     for (const [k, qty] of Object.entries(check_main)) {
-//         if (qty > 0) {
-//             result[k] = {...result[k],...{'isSend': 1}};
-//         } else {
-//             result[k] = {...result[k],...{'isSend': 0}};
-//         }
-//     }
-    
-//     //add state
-//     result = {...result, ...{'state': state}};
-//     $("#offgrid_option_c").val(JSON.stringify(result));
-// }
 
 //Load option
 function SD_loadOption(){
-    if($("#offgrid_option_c").val() != ""){
+    if($("#sanden_option_c").val() != ""){
         try{
-            var json_val = JSON.parse($("#offgrid_option_c").val());
+            var json_val = JSON.parse($("#sanden_option_c").val());
             
             // Create Complete line
             let current_line = SD_getCountLine('sd_complete');
@@ -910,11 +936,33 @@ function SD_loadOption(){
                 }
             }
             
-            for (let key in json_val) {
-                if($("#"+key).attr('type') == 'checkbox'){
-                    $("#"+key).prop( "checked", json_val[key] );
+            for (const [key, v] of Object.entries(json_val)) {
+                if (isNaN(key)) {
+                        if($("#"+key).attr('type') == 'checkbox'){
+                            $("#"+key).prop( "checked", json_val[key] );
+                        } else {
+                            $("#"+key).val(json_val[key]);
+                        }
                 } else {
-                    $("#"+key).val(json_val[key]);
+                    for (const [vkey, vvalue] of Object.entries(v)) {
+                        if (typeof vvalue == "object") {
+                            for (const [vvkey, vvvalue] of Object.entries(vvalue)) {
+                                for (const [vvvkey, vvvvalue] of Object.entries(vvvalue)) {
+                                    if($("#"+vvvkey).attr('type') == 'checkbox'){
+                                        $("#"+vvvkey).prop( "checked", vvvvalue);
+                                    } else {
+                                        $("#"+vvvkey).val(vvvvalue);
+                                    }
+                                }
+                            }
+                        } else {
+                            if($("#"+vkey).attr('type') == 'checkbox'){
+                                $("#"+vkey).prop( "checked", vvalue);
+                            } else {
+                                $("#"+vkey).val(vvalue);
+                            }
+                        }
+                    }
                 }
             }
         } catch (err) {
@@ -1024,7 +1072,7 @@ function SD_calcInstallCost(currState) {
 function SD_calcDeliveryCost(equipmentCost) {
     let delivery_cost = 0;
     //Sanden delivery 
-    if (equipmentCost != 0) {
+    if (equipmentCost > 0) {
         delivery_cost += parseFloat(getAttributeFromPartNumber(sd_delivery[0], sanden_install, 'cost'));
     }
     return delivery_cost;
@@ -1147,7 +1195,7 @@ async function SD_generateLineItem(){
     // Get option
 
     await wait(300);
-    // let json_val = JSON.parse($("#offgrid_option_c").val());
+    // let json_val = JSON.parse($("#sanden_option_c").val());
     // let currState = json_val[index];
     let currState = SD_getCurrentOptionState(index);
 
@@ -1216,7 +1264,7 @@ async function SD_generateLineItem(){
         $('#electrician_bill').val(parseFloat(installationCost).formatMoney(2, ',', '.'));
         $('#electrician_bill').trigger('change');
         // Calc Delivery Cost
-        let deliveryCost = SD_calcDeliveryCost(currState);
+        let deliveryCost = SD_calcDeliveryCost(installationCost);
         $('#sanden_shipping_bill').val(parseFloat(deliveryCost).formatMoney(2, ',', '.'));
         $('#sanden_shipping_bill').trigger('change');
         

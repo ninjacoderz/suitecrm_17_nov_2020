@@ -993,61 +993,28 @@ $(document).ready(function () {
         //VUT-S-Compare quote_date vs today
         if (!compareToday()) return;
         //VUT-E-Compare quote_date vs today
-        var quote_id = '';
-        var return_module = $("#EditView input[name='return_module']").val();
-        $('.save_and_email_pdf span.glyphicon-refresh').removeClass('hidden');
-        $("#EditView input[name='action']").val('Save');
-        $("#EditView").append('<input type="hidden" value="save_and_sendpdf" name="save_and_sendpdf" />');
-        var return_id = $("#EditView input[name='return_id']").val();
-        $("#EditView input[name='return_module']").val('AOS_Quotes');
-        $("#EditView input[name='return_action']").val('DetailView');
-        $("#EditView input[name='return_id']").val('');
-
-        $.ajax({
-            type: $("#EditView").attr('method'),
-            url: $("#EditView").attr('action'),
-            data: $("#EditView").serialize(),
-            async: false,
-            success: function (data) {
-                window.onbeforeunload = null;
-                var form = $('<form></form>');
-                form.attr("method", "post");
-                form.attr("target", "_blank");
-                if ($("#quote_type_c").val() == 'quote_type_solar' || $("#quote_type_c").val() == 'quote_type_tesla') {
-                    form.attr("action", 'index.php?entryPoint=CustomQuoteSolarEmailPDF&quote_type_c=' + $("#quote_type_c").val());
-                } else {
-                    form.attr("action", 'index.php?entryPoint=generatePdf');
-                }
-
-                var quote_id_patt = /"record" value="(.*)"/g;
-                quote_id = quote_id_patt.exec(data);
-                if (quote_id !== null && typeof quote_id === 'object') {
-                    if (quote_id[1] != '') {
-                        quote_id = quote_id[1]
+        if($("#quote_type_c").val() == 'quote_type_solar'){
+            var popupList = $('<div id="popupSolarType" title="Send Solar Type">'
+                    + '<input name="popupSolarType" type="radio" value="SG">SG<br>'
+                    + '<input name="popupSolarType" type="radio" value="PE">PE<br>'
+                    + '</div>');
+            popupList.dialog({
+                modal:true,
+                buttons: {
+                    Cancel : function(){
+                        $(this).dialog("close");
+                    },
+                    OK : function() {
+                        var email_type =  $('input[name="popupSolarType"]:checked').val();
+                        build_email_pdf(email_type);
+                        $(this).dialog("close");
+        
                     }
                 }
-                //var quote_id  = $("input[name='record']").val();
-                var html_field = '';
-                if ($("#quote_type_c").val() == 'quote_type_solar') {
-                    html_field += '<input type="hidden" name="quote_id" value="' + quote_id + '">';
-                } else {
-                    html_field += '<input type="hidden" name="templateID" value="4fbfbfa6-0bc9-3dbb-0d5e-57ce330802c5">' +
-                        '<input type="hidden" name="task" value="emailpdf">' +
-                        '<input type="hidden" name="module" value="AOS_Quotes">' +
-                        '<input type="hidden" name="uid" value="' + quote_id + '">';
-                }
-                form.append(html_field);
-                $(document.body).append(form);
-                form.submit();
-            }
-        });
-        setTimeout(function () {
-            if (return_id != '' && return_module == 'Opportunities') {
-                window.location.href = 'index.php?action=DetailView&module=Opportunities&record=' + return_id;
-            } else {
-                window.location.href = 'index.php?action=DetailView&module=AOS_Quotes&record=' + quote_id;
-            }
-        }, 1000);
+            });
+        }else{
+            build_email_pdf();
+        }
 
     });
     //tuan code -
@@ -2745,6 +2712,12 @@ window.onload = function () {
             });
         }
     }
+
+    //show link address
+    if (module_sugar_grp1 == 'AOS_Quotes') {
+        getAddressRelate();
+    }
+
 }
 $(document).on('click', '#return_edit', function () {
     window.location.href = "/index.php?module=AOS_Quotes&action=DetailView&record=" + $("input[name='record']").val();
@@ -2962,9 +2935,10 @@ $(document).ready(function () {
             },
             async: false,
             success:function (address_id) {
-                console.log(`/index.php?module=pe_address&action=EditView&record=${address_id}`);
+                // console.log(`/index.php?module=pe_address&action=EditView&record=${address_id}`);
                 SUGAR.ajaxUI.hideLoadingPanel();
                 if (address_id.trim() == 'error' || typeof (address_id) == 'undefined') return;
+                display_link_address(address_id.trim());
                 // window.open('/index.php?module=pe_address&action=EditView&record='+address_id.trim(),'_blank');
             }
           });
@@ -6786,13 +6760,92 @@ function showSubpanel(key,status) {
             $(document).find(`#${key}_total_amount`).closest('.panel.panel-default').show();
             break;
     }
-                // $('#plumber_total_amount').closest('.panel.panel-default').hide();
-                // $('#plumber_total_amt').val(0);
-                // $('#plumber_discount_amount').val(0);
-                // $('#plumber_subtotal_amount').val(0);
-                // $('#plumber_shipping_amount').val(0);
-                // $('#plumber_shipping_tax_amt').val(0);
-                // $('#plumber_tax_amount').val(0);
-                // $('#plumber_total_amount').val(0);
-    
+}
+
+async function getAddressRelate() {
+    try{
+        await $.ajax({
+            url: '/index.php?entryPoint=createAddress',
+            type: 'POST',
+            data: {
+                quote_id : $('input[name="record"]').val(),
+                type : 'get_address',
+            }
+        }).success(function(data) {
+            console.log('address_id '+data);
+            if (data.trim() == 'notyet' || data.trim() == 'error' || typeof data == 'undefined') return; 
+            display_link_address(data.trim());
+        });
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
+function display_link_address(address_id) {
+    $("#link_address").remove();
+    if (address_id != '') {
+        $("#open_map_install_quote").after("<p id='link_address'><a  href='/index.php?module=pe_address&action=EditView&record=" + address_id + "' target='_blank'>Open Address</a></p>");
+    }
+}
+
+function build_email_pdf(type = ""){
+    var quote_id = '';
+    var return_module = $("#EditView input[name='return_module']").val();
+    $('.save_and_email_pdf span.glyphicon-refresh').removeClass('hidden');
+    $("#EditView input[name='action']").val('Save');
+    if(type == "SG"){
+        $("#EditView").append('<input type="hidden" value="save_and_sendpdf" name="save_and_sendpdf" />');
+    }else{
+        $("#EditView").append('<input type="hidden" value="save_and_sendpdf_PE" name="save_and_sendpdf_PE" />');
+    }
+    var return_id = $("#EditView input[name='return_id']").val();
+    $("#EditView input[name='return_module']").val('AOS_Quotes');
+    $("#EditView input[name='return_action']").val('DetailView');
+    $("#EditView input[name='return_id']").val('');
+
+    $.ajax({
+        type: $("#EditView").attr('method'),
+        url: $("#EditView").attr('action'),
+        data: $("#EditView").serialize(),
+        async: false,
+        success: function (data) {
+            window.onbeforeunload = null;
+            var form = $('<form></form>');
+            form.attr("method", "post");
+            form.attr("target", "_blank");
+            if (($("#quote_type_c").val() == 'quote_type_solar' || $("#quote_type_c").val() == 'quote_type_tesla') && type == "SG") {
+                form.attr("action", 'index.php?entryPoint=CustomQuoteSolarEmailPDF&quote_type_c=' + $("#quote_type_c").val());
+            } else {
+                form.attr("action", 'index.php?entryPoint=generatePdf');
+            }
+
+            var quote_id_patt = /"record" value="(.*)"/g;
+            quote_id = quote_id_patt.exec(data);
+            if (quote_id !== null && typeof quote_id === 'object') {
+                if (quote_id[1] != '') {
+                    quote_id = quote_id[1]
+                }
+            }
+            //var quote_id  = $("input[name='record']").val();
+            var html_field = '';
+            if ($("#quote_type_c").val() == 'quote_type_solar' && type == "SG") {
+                html_field += '<input type="hidden" name="quote_id" value="' + quote_id + '">';
+            } else {
+                html_field += '<input type="hidden" name="templateID" value="4fbfbfa6-0bc9-3dbb-0d5e-57ce330802c5">' +
+                    '<input type="hidden" name="task" value="emailpdf">' +
+                    '<input type="hidden" name="module" value="AOS_Quotes">' +
+                    '<input type="hidden" name="uid" value="' + quote_id + '">';
+            }
+            form.append(html_field);
+            $(document.body).append(form);
+            form.submit();
+        }
+    });
+    setTimeout(function () {
+        if (return_id != '' && return_module == 'Opportunities') {
+            window.location.href = 'index.php?action=DetailView&module=Opportunities&record=' + return_id;
+        } else {
+            window.location.href = 'index.php?action=DetailView&module=AOS_Quotes&record=' + quote_id;
+        }
+    }, 1000);
 }

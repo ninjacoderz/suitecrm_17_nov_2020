@@ -913,70 +913,37 @@ $(function () {
         $(document).on('click','#detail_preview_pdf',function(){
             var quote_type = '';
             if($("#quote_type_c").val() == 'quote_type_solar'){
-                quote_type = 'quote';
+                var popupList = $('<div id="popupSolarType" title="Preview Solar Type">'
+                    + '<input name="popupSolarType" type="radio" value="SG">SG<br>'
+                    + '<input name="popupSolarType" type="radio" value="PE">PE<br>'
+                    + '</div>');
+                popupList.dialog({
+                    modal:true,
+                    buttons: {
+                        Cancel : function(){
+                            $(this).dialog("close");
+                        },
+                        OK : function() {
+                            var type =  $('input[name="popupSolarType"]:checked').val();
+                            if(type == "SG"){
+                                quote_type = 'quote';
+                            }else{
+                                quote_type = '';
+                            }
+                            build_preview_pdf(quote_type);
+                            $(this).dialog("close");
+
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar >button").contents().filter((_, el) => el.nodeType === 3).remove();
             }else if($("#quote_type_c").val() == 'quote_type_tesla'){
                 quote_type = 'tesla';
-            }
-            if(quote_type != ''){
-                SUGAR.ajaxUI.showLoadingPanel();
-                $.ajax({
-                    url: 'index.php?entryPoint=CustomDownloadPDF&module=AOS_Quotes&type='+quote_type+'&record_id='+$("input[name='record']").val()+'&preview=true',
-                    async: true,
-                    success: function(result) {
-                        // debugger;
-                        if(result == '' || typeof result === undefined)return;
-                        var data = $.parseJSON(result);                      
-                        $(".modal_preview_pdf").remove();
-                        var html = '<div class="modal fade modal_preview_pdf" tabindex="-1" role="dialog">'+
-                                        '<div class="modal-dialog" style="width:60%">'+
-                                            '<div class="modal-content">'+
-                                                '<div class="modal-header" style="padding:5px;">'+
-                                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'+
-                                                    '<h4 class="modal-title" id="title-generic"><center>'+data['pdf_file']+'</center></h4>'+
-                                                '</div>'+
-                                                '<div class="modal-body" style="padding:1px;">'+
-                                                    '<embed style="height:calc('+$('body').height()+'px - 100px);width:100%;" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+data['generate_ID']+'/'+encodeURIComponent(data['pdf_file'])+'" type="application/pdf"  />'+
-                                                '</div>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>';
-                        $("body").append(html);
-                        $(".modal_preview_pdf").modal('show');
-                        SUGAR.ajaxUI.hideLoadingPanel();
-                    }
-                });
+                build_preview_pdf(quote_type);
             }else{
-                SUGAR.ajaxUI.showLoadingPanel();
-                var filecontent;
-                $.ajax({
-                    url: "/index.php?entryPoint=generatePdf&templateID=4fbfbfa6-0bc9-3dbb-0d5e-57ce330802c5&task=pdf&module=AOS_Quotes&uid="+$("input[name='record']").val()+'&preview=yes&productType='+$('#quote_type_c').val(),
-                    type: "GET",
-                    async: false,
-                    success: function(result, text, xhr){
-                        filecontent = result;
-                        var today = new Date();
-                        var date = today.getDate()+(today.toLocaleString('default', { month: 'short' }))+today.getFullYear();
-                        var file_name  = "Quote_"+$("#number").text().trim() +"_"+ $("#name").text().replace(" ","_").trim() + date+".pdf";
-                        $(".modal_preview_pdf").remove();
-                        var html = '<div class="modal fade modal_preview_pdf" tabindex="-1" role="dialog">'+
-                                        '<div class="modal-dialog" style="width:60%">'+
-                                            '<div class="modal-content">'+
-                                                '<div class="modal-header" style="padding:5px;">'+
-                                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'+
-                                                    '<h4 class="modal-title" id="title-generic"><center>'+file_name+'</center></h4>'+
-                                                '</div>'+
-                                                '<div class="modal-body" style="padding:1px;">'+
-                                                '<iframe style="height:calc('+$('body').height()+'px - 100px);width:100%;" src="data:application/pdf;base64,'+filecontent+'" type="application/pdf"/></iframe>'+
-                                                '</div>'+
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>';
-                        $("body").append(html);
-                        $(".modal_preview_pdf").modal('show');
-                        SUGAR.ajaxUI.hideLoadingPanel();
-                    }
-                });
+                build_preview_pdf();
             }
+            
         });
 
         // .:nhantv:. Add customer form link
@@ -1505,3 +1472,66 @@ $(function () {
     };
   });
 });
+
+function build_preview_pdf(quote_type = ""){
+    if(quote_type != ''){
+        SUGAR.ajaxUI.showLoadingPanel();
+        $.ajax({
+            url: 'index.php?entryPoint=CustomDownloadPDF&module=AOS_Quotes&type='+quote_type+'&record_id='+$("input[name='record']").val()+'&preview=true',
+            async: true,
+            success: function(result) {
+                // debugger;
+                if(result == '' || typeof result === undefined)return;
+                var data = $.parseJSON(result);                      
+                $(".modal_preview_pdf").remove();
+                var html = '<div class="modal fade modal_preview_pdf" tabindex="-1" role="dialog">'+
+                                '<div class="modal-dialog" style="width:60%">'+
+                                    '<div class="modal-content">'+
+                                        '<div class="modal-header" style="padding:5px;">'+
+                                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'+
+                                            '<h4 class="modal-title" id="title-generic"><center>'+data['pdf_file']+'</center></h4>'+
+                                        '</div>'+
+                                        '<div class="modal-body" style="padding:1px;">'+
+                                            '<embed style="height:calc('+$('body').height()+'px - 100px);width:100%;" src="/custom/include/SugarFields/Fields/Multiupload/server/php/files/'+data['generate_ID']+'/'+encodeURIComponent(data['pdf_file'])+'" type="application/pdf"  />'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+                $("body").append(html);
+                $(".modal_preview_pdf").modal('show');
+                SUGAR.ajaxUI.hideLoadingPanel();
+            }
+        });
+    }else{
+        SUGAR.ajaxUI.showLoadingPanel();
+        var filecontent;
+        $.ajax({
+            url: "/index.php?entryPoint=generatePdf&templateID=4fbfbfa6-0bc9-3dbb-0d5e-57ce330802c5&task=pdf&module=AOS_Quotes&uid="+$("input[name='record']").val()+'&preview=yes&productType='+$('#quote_type_c').val(),
+            type: "GET",
+            async: false,
+            success: function(result, text, xhr){
+                filecontent = result;
+                var today = new Date();
+                var date = today.getDate()+(today.toLocaleString('default', { month: 'short' }))+today.getFullYear();
+                var file_name  = "Quote_"+$("#number").text().trim() +"_"+ $("#name").text().replace(" ","_").trim() + date+".pdf";
+                $(".modal_preview_pdf").remove();
+                var html = '<div class="modal fade modal_preview_pdf" tabindex="-1" role="dialog">'+
+                                '<div class="modal-dialog" style="width:60%">'+
+                                    '<div class="modal-content">'+
+                                        '<div class="modal-header" style="padding:5px;">'+
+                                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'+
+                                            '<h4 class="modal-title" id="title-generic"><center>'+file_name+'</center></h4>'+
+                                        '</div>'+
+                                        '<div class="modal-body" style="padding:1px;">'+
+                                        '<iframe style="height:calc('+$('body').height()+'px - 100px);width:100%;" src="data:application/pdf;base64,'+filecontent+'" type="application/pdf"/></iframe>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+                $("body").append(html);
+                $(".modal_preview_pdf").modal('show');
+                SUGAR.ajaxUI.hideLoadingPanel();
+            }
+        });
+    }
+}
