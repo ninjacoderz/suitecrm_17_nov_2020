@@ -496,6 +496,7 @@ function hideTotalGroup() {
  */
 function loadJsInputPricing(type) {
     let array_js = [];
+    let path = 'https://suitecrm.pure-electric.com.au/';
     switch (type) {
         case 'quote_type_sanden':
             array_js.push('custom/modules/AOS_Quotes/js/customFunctionSandenInput.js');
@@ -510,7 +511,7 @@ function loadJsInputPricing(type) {
     }
 
     if (array_js.length > 0) {
-        $.getMultiScripts(array_js).done(function() {
+        $.getMultiScripts(array_js, path).done(function() {
             console.log('ok');
         }).fail(function (e) {
             console.log(e);
