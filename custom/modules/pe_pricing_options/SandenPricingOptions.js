@@ -27,7 +27,7 @@ function renderSandenHTML(type){
         }
     }).done(function (data) {
         parseJSONValueToFields();
-        SUGAR.ajaxUI.hideLoadingPanel();
+        // SUGAR.ajaxUI.hideLoadingPanel();
     });
 }
 function parseJSONValueToFields(){

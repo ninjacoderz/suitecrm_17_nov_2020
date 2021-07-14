@@ -210,8 +210,8 @@
     // // Add Hint
     SD_initHint();
     if(module == '') {
-    // Show button
-    $('body').find("#sd_hint").after("<button type='button' id='generate_table' class='button default' style='display: block'>Generate From Table</button>");
+        // Show button
+        $('body').find("#sd_hint").after("<button type='button' id='generate_table' class='button default' style='display: block'>Generate From Table</button>");
     }
 }
 
