@@ -408,11 +408,19 @@
                 Attach: function(){
                     var json_add_files = [];
                     $("input[name^=dialog_add_notes]").each(function(k,v){
-                        if($(this).is(':checked') && $(this).attr('data-note-id') == "") {
-                            var file_name = $(this).attr('data-file-name');
-                            var id_folder = $(this).attr('data-id-folder');
-                            var url_image = $(this).attr('data-url');
-                            json_add_files.push([id_folder,file_name,url_image]);
+                        if($(this).is(':checked')) {
+                            if( $(this).attr('data-note-id') == ""){
+                                var file_name = $(this).attr('data-file-name');
+                                var id_folder = $(this).attr('data-id-folder');
+                                var url_image = $(this).attr('data-url');
+                                json_add_files.push([id_folder,file_name,url_image]);
+                            }else{
+                                var note_id = $(this).attr('data-note-id');
+                                $("#"+ note_id).parent().show();
+                                var removeAttachment = $("input[name='removeAttachment']").val();
+                                removeAttachment = removeAttachment.replace('::'+note_id,'');
+                                $("input[name='removeAttachment']").val(removeAttachment);
+                            }
                         }
                     });
                     var jsonString= encodeURIComponent(JSON.stringify(json_add_files));
@@ -435,6 +443,7 @@
                                 console.log('Fail');
                                 $("#icon_loader").hide();
                                 $("#dialog_files").dialog('close');
+                                return false;
                             };
                             var data_result = JSON.parse(result);   
                             var html = ''; 
