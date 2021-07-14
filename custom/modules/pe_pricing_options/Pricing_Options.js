@@ -25,6 +25,7 @@ $(function(){
                 break;
             case 'sanden':
                 renderSandenHTML('quote_type_sanden');
+                loadJsInputPricing('pricingOption_type_sanden');
                 // init_table_solar();
                 break;
             default: break;

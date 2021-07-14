@@ -4,6 +4,7 @@
     $id = $_REQUEST['id'];
     $form = $_REQUEST['solarform'];
     $id_price = $_REQUEST['id_price'];
+    $type = $_REQUEST['type'];
     if( isset($form) ){
         $name_ops = array();
         $db = DBManagerFactory::getInstance();
@@ -32,6 +33,10 @@
             $pricing_options = new pe_pricing_options();
             $pricing_options->retrieve($id);
             if($pricing_options->id){
+                if (isset($type) && $type == 'sanden') {
+                    echo $pricing_options->sanden_option_c;
+                    die;
+                }
                 echo $pricing_options->pricing_option_input_c;
                 die;
             }

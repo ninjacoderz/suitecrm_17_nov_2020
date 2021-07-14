@@ -38,7 +38,6 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
                 renderQuoteInputExtra('quote_type_sanden');
                 // init_table_sanden();
                 loadJsInputPricing('quote_type_sanden');
-
                 break;
             default: break;
         }
@@ -414,6 +413,11 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
             $("#pricing_option_type_c").closest('.edit-view-row-item').find('.label').text('Daikin Pricing Options');
             $("#pricing_option_type_c").closest('.edit-view-row-item').show();
         }
+        if (product_type == 'quote_type_sanden' ){
+            $("#pricing_option_type_c").closest('.edit-view-row-item').find('.label').text('Sanden Pricing Options');
+            $("#pricing_option_type_c").closest('.edit-view-row-item').show();
+        }
+
     }
 
     function renderQuoteInputHTML(type){

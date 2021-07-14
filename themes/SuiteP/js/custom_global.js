@@ -490,12 +490,20 @@ function hideTotalGroup() {
         });
     }
 }
-
-function loadJsInputPricing(quote_type) {
+/**
+ * 
+ * @param {*} type type = {module}_type_{type}
+ */
+function loadJsInputPricing(type) {
     let array_js = [];
-    switch (quote_type) {
+    switch (type) {
         case 'quote_type_sanden':
+            array_js.push('custom/modules/AOS_Quotes/js/customFunctionSandenInput.js');
             array_js.push('custom/modules/AOS_Quotes/customSandenPricing.js');
+            break;
+        case 'pricingOption_type_sanden':
+            array_js.push('custom/modules/AOS_Quotes/js/customFunctionSandenInput.js');
+            array_js.push('custom/modules/pe_pricing_options/js/PricingOption_Sanden.js');
             break;
         default:
             break;
