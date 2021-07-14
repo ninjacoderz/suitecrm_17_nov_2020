@@ -147,6 +147,19 @@ $(document).ready(function(){
         }
     });
 
+    $.getMultiScripts = function(arr, path) {
+        var _arr = $.map(arr, function(scr) {
+            return $.getScript( (path||"") + scr ).done(function(e, st){
+                console.log('load >> ' + scr + ' >> status: ' + st);
+            });
+        });
+            
+        _arr.push($.Deferred(function( deferred ){
+            $( deferred.resolve );
+        }));
+        return $.when.apply($, _arr);
+    }
+    
     //VUT-S-Internal Note (Shortcut)
         $("body").on('click','.link_into_panel_c',function(){
             var element_id = $(this).attr('data-id');
@@ -518,17 +531,5 @@ function loadJsInputPricing(type) {
     }
 }
 
-$.getMultiScripts = function(arr, path) {
-    var _arr = $.map(arr, function(scr) {
-        return $.getScript( (path||"") + scr ).done(function(e, st){
-            console.log('loading done >> ' + scr + 'status ' + st);
-        });
-    });
-        
-    _arr.push($.Deferred(function( deferred ){
-        $( deferred.resolve );
-    }));
-    return $.when.apply($, _arr);
-}
 
 
