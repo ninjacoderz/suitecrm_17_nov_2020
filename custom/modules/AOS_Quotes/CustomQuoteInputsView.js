@@ -23,7 +23,7 @@ solarProductCal["Smart_Meter_Solar_Monitoring_Installation"] = "PV-SM-Solar-Moni
         if ($("#quote_type_c").val() != 'quote_type_sanden') {
             $('#sanden_option_c').closest('.panel.panel-default').hide();
         } else {
-            $('#sanden_category').closest('.panel.panel-default').show();
+            $('#sanden_option_c').closest('.panel.panel-default').show();
         }
     
         switch($("#quote_type_c").val()){
