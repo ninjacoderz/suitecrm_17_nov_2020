@@ -2,9 +2,9 @@
  * Global variables
  */
  var sanden_complete, sanden_hpump, sanden_tank, sanden_accessory, sanden_extra, sanden_install;
- const sd_lineOne = ['SSI','SSPI', 'SANDEN_SUPPLY_ONLY'];
- const sd_installation = ['Sanden_Plb_Install_Std', 'Sanden_Plb_Std_New'];
- const sd_delivery = ['San_Delivery', 'SANDEN_DELIVERY']; 
+ var sd_lineOne = ['SSI','SSPI', 'SANDEN_SUPPLY_ONLY'];
+ var sd_installation = ['Sanden_Plb_Install_Std', 'Sanden_Plb_Std_New'];
+ var sd_delivery = ['San_Delivery', 'SANDEN_DELIVERY']; 
  
 
 /**
