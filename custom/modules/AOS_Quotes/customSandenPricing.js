@@ -229,6 +229,7 @@ $(function () {
 
 async function SD_autoCreateLineItem(partNumber, target, total_item, price_item = ''){
     var info_pro = getItemFromPartNumber(partNumber, target);
+    console.log(info_pro);
     if(info_pro['id'] !== undefined){
         insertProductLine('product_group0', '0');
         lineno  = prodln-1;

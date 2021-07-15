@@ -930,3 +930,7 @@ function SD_calcHint(){
     $('#sd_hint1').append(str);
     // $('#sd_hint2').append(str2);
 }
+
+const wait = ms => {
+    return new Promise(res => setTimeout(res, ms));
+};
