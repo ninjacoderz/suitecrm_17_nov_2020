@@ -380,6 +380,8 @@ $(function () {
             renderPOInputsHTML($('#po_type_c').val());
         } else if ($('#po_type_c').val() =="sanden_plumber") {
             renderPOInputsHTML($('#po_type_c').val());
+        } else if ($('#po_type_c').val() =="installer") {
+            renderPOInputsHTML($('#po_type_c').val());
         }
         $('#po_type_c').change(function(){
             var type = $(this).val(); 
@@ -394,6 +396,8 @@ $(function () {
             }else if (type == "daikin_supply") {
                 renderPOInputsHTML(type);
             }else if(type == "sanden_plumber"){
+                renderPOInputsHTML(type);
+            }else if (type =="installer") {
                 renderPOInputsHTML(type);
             }
         });
@@ -1516,6 +1520,21 @@ async function generatePOLineItem(){
         }
         var new_name = $('#aos_invoices_po_purchase_order_1_name').val() + " Plumbing";
         $('#name').val(new_name);
+    }else if($('#po_type_c').val() =="installer"){
+        var select_inputs = $("#group_custom_checklist_sanden_plumbing").find("input");
+        try {
+            for (i = 0; i < select_inputs.length; i++){
+                var el = select_inputs[i];
+                if(el.checked == true){
+                    await autoCreateLineItem(el.attributes[2].value,1);
+                }
+                
+            }
+        } catch(err) {
+            console.log(err);
+        }
+        var new_name = $('#aos_invoices_po_purchase_order_1_name').val() + " Daikin Install";
+        $('#name').val(new_name);
     }
     setTimeout(function (){
         $('html, body').animate({
@@ -1542,6 +1561,13 @@ function saveJSONPOInput(){
             values[id_name] = $(this).val();
         });
     }else if (($('#po_type_c').val() =="sanden_plumber")) {
+        $(document).find('#group_custom_checklist_sanden_plumbing input').each(function (){
+            if( $(this).is(':checked') == true){
+                var id_name = $(this).attr("id");
+                values[id_name] = 'checked';
+            }
+        });
+    }else if (($('#po_type_c').val() =="installer")) {
         $(document).find('#group_custom_checklist_sanden_plumbing input').each(function (){
             if( $(this).is(':checked') == true){
                 var id_name = $(this).attr("id");
