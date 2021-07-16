@@ -4400,7 +4400,34 @@ class EmailsController extends SugarController
                 $style = '"margin: 0;text-transform: uppercase;color: white;"';
                 $sanden_quote_input = array_diff_key($sanden_quote_input, array_flip($remove));
                 $tmp = 1;
+                $heighArr = [];
+                foreach($sanden_quote_input as $k=>$v) {
+                    $count = 0;
+                    foreach($v['completes'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    foreach($v['hpump'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    foreach($v['tanks'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    foreach($v['accessories'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    }
+                    array_push($heighArr, $count);
+                }
+                $heightD = max($heighArr)*40;
                 foreach($sanden_quote_input as $key=>$value) {
+                    $clear = '<div style="clear: both"></div>';
                     // if(intval($value['grandtotal_dk_'.$key]) > 1000) {
                     if($value['isSend'] > 0 ) {
                         $sanden_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px" data-mce-style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px">
@@ -4410,7 +4437,7 @@ class EmailsController extends SugarController
                               <p style="text-align: center;color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;" data-mce-style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0; text-align: center;">'.$this->getCapacity($value['completes'], $key).'</p>
                            </div>
                         </div>
-                        <div class="select-inverter" style="height: '.$this->setHeightDiv($value, $key).'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_sd_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
+                        <div class="select-inverter" style="height: '.$heightD.'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_sd_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
                            '.$this->parseProduct($value['completes'], $key, 'completes', 0, $tmp).'
                            '.$this->parseProduct($value['hpump'], $key, 'hpump', 0, $tmp).'
                            '.$this->parseProduct($value['tanks'], $key, 'tanks', 0, $tmp).'
@@ -4428,7 +4455,7 @@ class EmailsController extends SugarController
                         <div class="op_footer" style="text-align: center;padding: 5px;'.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #945596").';height: 25px;" data-mce-style="text-align: center;padding: 5px;'.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #945596").';height: 25px;">
                             '.($value["recom_sd_option_".$key] == 1 ? '<h3 style="margin: 0;text-transform: uppercase;color: white;padding: 2px 0;">Recommended</h3>' : "&nbsp;").'
                         </div>
-                     </div>';     
+                     </div>'.($key % 2 == 0 ? $clear : "" );     
                     }
                     $tmp += 1;
                     
