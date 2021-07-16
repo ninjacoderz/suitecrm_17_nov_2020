@@ -30,6 +30,13 @@ switch ($po_type) {
             'template_html_rebate' => $rebate_html,
         );
         break;
+    case 'heating_cooling_install':
+        $rebate_html = renderPlumbingInputsHTML($vardefs_daikin_installer_array);
+        $result = array (
+            'data_rebate' => json_encode($vardefs_daikin_installer_array),
+            'template_html_rebate' => $rebate_html,
+        );
+        break;
 }
 echo json_encode($result);
 

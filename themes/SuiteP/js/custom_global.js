@@ -146,7 +146,6 @@ $(document).ready(function(){
             $('#button_back_to_top_left').fadeOut(200);   
         }
     });
-
     //VUT-S-Internal Note (Shortcut)
         $("body").on('click','.link_into_panel_c',function(){
             var element_id = $(this).attr('data-id');
@@ -490,29 +489,47 @@ function hideTotalGroup() {
         });
     }
 }
-
-function loadJsInputPricing(quote_type) {
-    let array_js = [];
-    switch (quote_type) {
+/**
+ * 
+ * @param {*} type type = {module}_type_{type}
+ */
+async function loadJsInputPricing(type) {
+    let array_js_func = [];
+    let array_js_run = [];
+    switch (type) {
         case 'quote_type_sanden':
-            array_js.push('custom/modules/AOS_Quotes/customSandenPricing.js');
+            array_js_func.push('custom/modules/AOS_Quotes/js/customFunctionSandenInput.js');
+            array_js_run.push('custom/modules/AOS_Quotes/customSandenPricing.js');
+            break;
+        case 'pricingOption_type_sanden':
+            array_js_func.push('custom/modules/AOS_Quotes/js/customFunctionSandenInput.js');
+            array_js_run.push('custom/modules/pe_pricing_options/js/PricingOption_Sanden.js');
             break;
         default:
             break;
     }
 
-    if (array_js.length > 0) {
-        $.getMultiScripts(array_js).done(function() {
+    if (array_js_func.length > 0) {
+        await $.getMultiScripts(array_js_func).done(function(e) {
             console.log('ok');
-        }).fail(function (e) {
-            console.log(e);
+        }).fail(function (e,s,ex) {
+            console.log(ex);
+        });
+    }
+    if (array_js_run.length > 0) {
+        await $.getMultiScripts(array_js_run).done(function() {
+            console.log('ok');
+        }).fail(function (e,s,ex) {
+            console.log(ex);
         });
     }
 }
 
 $.getMultiScripts = function(arr, path) {
     var _arr = $.map(arr, function(scr) {
-        return $.getScript( (path||"") + scr );
+        return $.getScript( (path||"") + scr ).done(function(e, st){
+            console.log('load >> ' + scr + ' >> status: ' + st);
+        });
     });
         
     _arr.push($.Deferred(function( deferred ){

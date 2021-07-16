@@ -8,6 +8,7 @@ $(function () {
     $('#product_type_c').on('change',function(e){
         e.preventDefault();
         var quote_type = $("#product_type_c").val();
+        $('#sanden_option_c').closest('.panel.panel-default').hide();
         switch (quote_type) {
             case 'off_grid':
                 // Init table grid
@@ -21,7 +22,10 @@ $(function () {
                 init_table_daikin();
                 break;
             case 'sanden':
+                $('#sanden_option_c').closest('.panel.panel-default').show();
+                $('#sanden_pricing_table').remove();
                 renderSandenHTML('quote_type_sanden');
+                loadJsInputPricing('pricingOption_type_sanden');
                 // init_table_solar();
                 break;
             default: break;

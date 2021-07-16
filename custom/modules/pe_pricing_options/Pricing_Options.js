@@ -25,10 +25,18 @@ $(function(){
                 break;
             case 'sanden':
                 renderSandenHTML('quote_type_sanden');
+                loadJsInputPricing('pricingOption_type_sanden');
                 // init_table_solar();
                 break;
             default: break;
         }
+    }
+
+    //Hide/show panel for sanden pricing
+    if (quote_type != 'sanden') {
+        $('#sanden_option_c').closest('.panel.panel-default').hide();
+    } else {
+        $('#sanden_option_c').closest('.panel.panel-default').show();
     }
 
     $(document).on('click', '*[id*="clear_sl_option"]', function(e){

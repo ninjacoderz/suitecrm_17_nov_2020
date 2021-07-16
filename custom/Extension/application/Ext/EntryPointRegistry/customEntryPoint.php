@@ -1651,3 +1651,9 @@ $entry_point_registry['APIGetSandenProduct'] = array(
     'file' => 'custom/modules/AOS_Quotes/APIGetSandenProduct.php',
     'auth' => false
 );
+
+//VUT - Quote - Get STC/VEEC for Sanden
+$entry_point_registry['APTGetSTCVEEC'] = array( 
+    'file' => 'custom/modules/AOS_Quotes/APTGetSTCVEEC.php',
+    'auth' => false
+);

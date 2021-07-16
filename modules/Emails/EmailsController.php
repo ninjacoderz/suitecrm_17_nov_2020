@@ -4279,6 +4279,214 @@ class EmailsController extends SugarController
                 $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
                 $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));  
             }
+
+            // TriTruong Daikin Pricing
+            if($_REQUEST['email_type'] == "sanden_pricing"){
+                $macro_nv = array();
+                $focusName = "AOS_Quotes";
+                $quote = new AOS_Quotes();
+                $focus = $quote->retrieve($_REQUEST['record_id']);
+                $this->bean->return_module = 'AOS_Quotes';
+                $this->bean->return_id = $focus->id;
+                $lead =  new Lead();
+                $lead->retrieve($focus->leads_aos_quotes_1leads_ida);
+
+                $contact =  new Contact();
+                $contact->retrieve($focus->billing_contact_id);
+                if(!$focus->id) return;
+                /**
+                 * @var EmailTemplate $emailTemplate
+                 */
+                // Live: c11048a6-4055-49f1-0b3f-60b7500751a2
+                // Local: 3677ce10-b644-b632-0ce5-60b7531891e0
+                $emailTemplate = BeanFactory::getBean(
+                    'EmailTemplates',
+                    'cb80e1f9-89c4-e4bf-3e6d-60ee505b9b6f'
+                    // '63ecb143-9b7d-2598-3e67-60ee9612ce06'
+                );
+
+                $name = $emailTemplate->subject;
+                $description_html = $emailTemplate->body_html;
+                $description = $emailTemplate->body;
+
+                $attachmentBeans = $emailTemplate->getAttachments();
+
+                if($attachmentBeans) {
+                    $this->bean->status = "draft";
+                    $this->bean->save();
+                    foreach($attachmentBeans as $attachmentBean) {
+                        $noteTemplate = clone $attachmentBean;
+                        $noteTemplate->id = create_guid();
+                        $noteTemplate->new_with_id = true;
+                        $noteTemplate->parent_id = $this->bean->id;
+                        $noteTemplate->parent_type = 'Emails';
+
+                        $noteFile = new UploadFile();
+                        $noteFile->duplicate_file($attachmentBean->id, $noteTemplate->id, $noteTemplate->filename);
+
+                        $noteTemplate->save();
+                        $this->bean->attachNote($noteTemplate);
+                    }
+                }
+
+                $source = realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c;
+                $filesDesigns = $this->check_exist_file($source, 'Design');
+                $filesPDF = $this->check_exist_file($source, 'Quote_');
+                $filesDaikinPdf = [];
+                foreach ($filesPDF as $value) {
+                    if (strpos(strtolower($value), "pdf") !== false) {
+                        $filesDaikinPdf[] =   $value;
+                    }
+                }
+                $all_files_send  = array_merge($filesDesigns,$filesDaikinPdf);
+                foreach ($all_files_send as $file) {
+                    $this->bean->save();
+                    $noteTemplate = new Note();
+                    $noteTemplate->id = create_guid();
+                    $noteTemplate->new_with_id = true;
+                    $noteTemplate->parent_id = $this->bean->id; 
+                    $noteTemplate->parent_type = 'Emails';
+                    $noteTemplate->date_entered = '';
+                    $noteTemplate->filename = $file;
+                    $noteTemplate->name = $file;   
+                    $noteTemplate->save();
+                    global $sugar_config;
+                    $destination = $sugar_config['upload_dir'].$noteTemplate->id;
+                    $sourcefile = $source.'/'.$file;
+
+                    if(strpos(strtolower($file), "png") !== false) {
+                        $noteTemplate->file_mime_type = 'image/png';
+                    } elseif (strpos(strtolower($file), "pdf") !== false) {
+                        $noteTemplate->file_mime_type = 'image/jpg';
+                    } else {
+                        $noteTemplate->file_mime_type = 'image/jpg';
+                    }
+                    if (!symlink($sourcefile, $destination)) {
+                    $GLOBALS['log']->error("upload_file could not copy [ {$source} ] to [ {$destination} ]");
+                    }
+                    $this->bean->attachNote($noteTemplate);
+                }
+
+                $this->bean->to_addrs_names = $lead->first_name.' '.$lead->last_name." <$lead->email1>";
+                $this->bean->name = $name;
+                $this->bean->description_html = $description_html;
+                $this->bean->description = $description;
+
+                if ($quote->sanden_option_c !='') {
+                    $sanden_quote_input = json_decode(html_entity_decode($quote->sanden_option_c), true);
+                    if (count(array_filter($sanden_quote_input)) == 0) {
+                        $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                        
+                    } else {
+                        $this->bean->description_html = $this->renderTableQuoteInputSolarPricing($sanden_quote_input, $this->bean->description_html);
+                    }
+                } else {
+                    $this->bean->description_html = htmlspecialchars(preg_replace('/(?si)<p id="sugar_text_change_p_table"(.*)<=?\/p>/U', '',html_entity_decode($this->bean->description_html)));
+                    
+                } 
+
+                $this->bean->name = str_replace("\$aos_quotes_billing_account",  $focus->billing_account, $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__city_c",  $focus->install_address_city_c , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_site_detail_addr__state_c ",  $focus->install_address_state_c.' ' , $this->bean->name);
+                $this->bean->name = str_replace("\$aos_quotes_number",  $focus->number, $this->bean->name);
+                
+                //replace data for body
+                $this->bean->description_html = str_replace("\$contact_first_name",  $contact->first_name , $this->bean->description_html);
+                
+                $this->bean->description_html = str_replace("\$aos_quotes_installation address_c", $_REQUEST['address'] , $this->bean->description_html);
+                
+                $remove = ['sanden_pricing', 'sd_complete_line', 'sd_tank_line', 'sd_accessory_line', 'sd_extra_line', 'sd_pe_admin_percent', 'state'];
+                $sanden_pricing_options = '';
+                $style = '"margin: 0;text-transform: uppercase;color: white;"';
+                $sanden_quote_input = array_diff_key($sanden_quote_input, array_flip($remove));
+                $tmp = 1;
+                $heighArr = [];
+                foreach($sanden_quote_input as $k=>$v) {
+                    $count = 0;
+                    foreach($v['completes'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    foreach($v['hpump'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    foreach($v['tanks'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    foreach($v['accessories'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    }
+                    array_push($heighArr, $count);
+                }
+                $heightD = max($heighArr)*50;
+                foreach($sanden_quote_input as $key=>$value) {
+                    $clear = '<div style="clear: both"></div>';
+                    // if(intval($value['grandtotal_dk_'.$key]) > 1000) {
+                    if($value['isSend'] > 0 ) {
+                        $sanden_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px" data-mce-style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px">
+                        <div class="op_header" style="width: 100%; position: inherit;" data-mce-style="width: 100%; position: inherit;">
+                           <div class="number-options" style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold; '.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background: #5e1161").';color: white;font-size: 18px;" data-mce-style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background: #5e1161").';color: white;font-size: 18px;">'.$key.'</div>
+                           <div class="p" style="'.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5b0" : "background-color: #945596").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #945596; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;" data-mce-style="'.($value["recom_dk_option_".$key] == 1 ? "background: #7484d0" : "background-color: #945596").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #945596; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;">
+                              <p style="text-align: center;color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;" data-mce-style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0; text-align: center;">'.$this->getCapacity($value['completes'], $key).'</p>
+                           </div>
+                        </div>
+                        <div class="select-inverter" style="height: '.$heightD.'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_sd_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
+                           '.$this->parseProduct($value['completes'], $key, 'completes', 0, $tmp).'
+                           '.$this->parseProduct($value['hpump'], $key, 'hpump', 0, $tmp).'
+                           '.$this->parseProduct($value['tanks'], $key, 'tanks', 0, $tmp).'
+                           '.$this->parseProduct($value['accessories'], $key, 'accessories', 0, $tmp).'
+                        </div>
+                        <div class="total-price-item" style="'.($value["recom_sd_option_".$key] == 1 ? "background: #d0d5f3" : "background-color: #daf3ff").';padding: 10px;color: #5e1161;font-size: 14px;font-weight: 600;" data-mce-style="'.($value["recom_sd_option_".$key] == 1 ? "background: #d0d5f3" : "background-color: #daf3ff").';padding: 10px;color: #5e1161;font-size: 14px;font-weight: 600;">
+                           <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">Sub Total<span style="float: right;" data-mce-style="float: right;">$'.$value['sd_subtotal_'.$key].'</span></div>
+                           <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">GST<span style="float: right;" data-mce-style="float: right;">$'.$value['sd_gst_'.$key].'</span></div>
+                           <div style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;" data-mce-style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;">&nbsp;</div>
+                           <div class="total-price" style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;" data-mce-style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;">
+                           <span class="symbol" style="font-size: 20px;'.($value["recom_sd_option_".$key] == 1 ? "color: #4f5ea5" : "color: #945596").';font-weight: 600;" data-mce-style="font-size: 20px;'.($value["recom_sd_option_".$key] == 1 ? "color: #4f5ea5" : "color: #945596").';font-weight: 600;">$ </span>
+                           <span class="amount" style="letter-spacing: 1px;font-size: 35px;'.($value["recom_sd_option_".$key] == 1 ? "color: #4f5ea5" : "color: #945596").';" data-mce-style="letter-spacing: 1px;font-size: 35px;'.($value["recom_sd_option_".$key] == 1 ? "color: #4f5ea5" : "color: #945596").';">'.$value['sd_grandtotal_'.$key].'</span>
+                           </div>
+                        </div>
+                        <div class="op_footer" style="text-align: center;padding: 5px;'.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #945596").';height: 25px;" data-mce-style="text-align: center;padding: 5px;'.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #945596").';height: 25px;">
+                            '.($value["recom_sd_option_".$key] == 1 ? '<h3 style="margin: 0;text-transform: uppercase;color: white;padding: 2px 0;">Recommended</h3>' : "&nbsp;").'
+                        </div>
+                     </div>'.($key % 2 == 0 ? $clear : "" );     
+                    }
+                    $tmp += 1;
+                    
+                }
+                $this->bean->description_html = str_replace("\$sanden_pricing_options",  $sanden_pricing_options , $this->bean->description_html);
+                if($focus->quote_note_c !== '') {
+                    $this->bean->description_html = str_replace("\$quote_notes",   str_replace("\n", "<br />", $focus->quote_note_c), $this->bean->description_html);
+                } else {
+                    $this->bean->description_html = str_replace("\$quote_notes",  '' , $this->bean->description_html);
+                }
+                
+                //end - code render sms_template
+                $phone_number = preg_replace("/^0/", "+61", preg_replace('/\D/', '', $contact->phone_mobile));
+                $phone_number = preg_replace("/^61/", "+61", $phone_number);
+                $this->bean->number_client = $phone_number;//$_REQUEST['sms_received'];
+                $this->bean->number_receive_sms = "matthew_paul_client";
+                //start - code render sms_template  
+                global $current_user;
+                $smsTemplate = BeanFactory::getBean(
+                    'pe_smstemplate',
+                    '1ada1bb8-d4af-b06f-4f4e-60eeb58b5292'
+                    // 'e5b42cdc-b44d-dfde-ec7c-60dc96158ceb' 
+                );
+                $body =  $smsTemplate->body_c;
+                $body = str_replace("\$first_name", $contact->first_name, $body);
+                $body = str_replace("\$aos_quote_id", $_REQUEST['record_id'], $body);
+                $smsTemplate->body_c = $body;
+                $this->bean->emails_pe_smstemplate_idb  =   $smsTemplate->id;
+                $this->bean->emails_pe_smstemplate_name =  $smsTemplate->name; 
+                $this->bean->sms_message =trim(strip_tags(html_entity_decode($this->parse_sms_template($smsTemplate,$focus).' '.$current_user->sms_signature_c,ENT_QUOTES)));  
+            }
             //Thienpb code -- solar pricing options
             if($_REQUEST['email_type'] == "send_solar_pricing"){
                 $macro_nv = array();
@@ -8293,6 +8501,19 @@ class EmailsController extends SugarController
         echo utf8_decode($dataEncoded);
         $this->view = 'ajax';
     }
+
+    public function getCapacity($arr, $key) {
+        $name = '';
+        foreach($arr as $k=>$item) {
+            if($item['partNumber'] !== null) {
+                $name = explode("-", $item['partNumber'])[1].'('.$item['qty_sd_complete1_'.$key].'X) ';
+                $name = str_replace("FQS", "L", $name);
+                $name = str_replace("FQV", "L", $name);
+            }
+        }
+        return $name;
+    }
+
     public function parseProduct($arr, $key, $type, $qty = 0, $option = 0) {
         $list = '';
         if($type == 'products') {
@@ -8307,6 +8528,36 @@ class EmailsController extends SugarController
                     $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_wifi_dk".$k."_".$option].'x '.$item["wifi_dk_type".$k."_".$option].'</div>';
                 }
             }
+        } else if($type == 'completes') {
+            foreach($arr as $k=>$item) {
+                if($item['productName'] !== null) {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_sd_complete".$k."_".$option].'x '.$item["productName"].'</div>';
+                }
+            }
+        } else if($type == 'hpump') {
+            foreach($arr as $k=>$item) {
+                if($item['productName'] !== null) {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["productName"].'</div>';
+                }
+            }
+        } else if($type == 'tanks') {
+            foreach($arr as $k=>$item) {
+                if($item['productName'] !== null) {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["productName"].'</div>';
+                }
+            }
+        } else if($type == 'accessories') {
+            foreach($arr as $k=>$item) {
+                if($item['productName'] !== null) {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["productName"].'</div>';
+                }
+            }
+        } else if($type == 'extras') {
+            foreach($arr as $k=>$item) {
+                if($item['productName'] !== null) {
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["productName"].'</div>';
+                }
+            }
         } else if($type == 'install') {
             $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$qty.'x '.$arr.'</div>';
         } else if($type == 'delivery') {
@@ -8319,7 +8570,7 @@ class EmailsController extends SugarController
     public function setHeightDiv($arr, $key) {
         $height = 0;
         $count = 1;
-        $count = $count + count($arr['products']) + count($arr['wifi']);
+        $count = $count + count($arr['products']) + count($arr['wifi']) + count($arr['completes']) + count($arr['hpump']) + count($arr['tanks']) + count($arr['accessories']) + count($arr['extras']);
         if($arr['install_dk_'.$key] == "Yes") {
             $count = $count + 1;
         }
