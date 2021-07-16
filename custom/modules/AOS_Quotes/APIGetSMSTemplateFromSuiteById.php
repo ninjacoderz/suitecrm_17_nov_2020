@@ -1,4 +1,7 @@
 <?php 
+    // Enable cross domain call
+    header('Access-Control-Allow-Origin: *');
+    
     $templateId = $_POST['template_id'];
     $smsTemplate = BeanFactory::getBean(
         'pe_smstemplate',

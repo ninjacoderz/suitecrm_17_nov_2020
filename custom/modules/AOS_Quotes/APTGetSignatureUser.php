@@ -1,4 +1,6 @@
 <?php
+// Enable cross domain call
+header('Access-Control-Allow-Origin: *');
 
 $json_data = [];
 
