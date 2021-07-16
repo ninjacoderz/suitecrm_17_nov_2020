@@ -1,5 +1,7 @@
 <?php
-
+    // Enable cross domain call
+    header('Access-Control-Allow-Origin: *');
+    
     $email_info =  $_REQUEST['email_info'];
     // $email_info =  'tritruong.dev@gmail.com';
     $data_return = [];
