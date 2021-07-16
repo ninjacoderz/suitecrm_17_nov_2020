@@ -1535,6 +1535,7 @@ async function generatePOLineItem(){
         }
         var new_name = $('#aos_invoices_po_purchase_order_1_name').val() + " Daikin Install";
         $('#name').val(new_name);
+        $('#group0name').val('Daikin Install');
     }
     setTimeout(function (){
         $('html, body').animate({
