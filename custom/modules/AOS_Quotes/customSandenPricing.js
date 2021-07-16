@@ -68,6 +68,50 @@ $(function () {
 
     });
 
+    /** Get STC/VEEC*/
+    $(document).on('click', '#get_stc_veec', async function(e){
+        e.preventDefault();
+        let post_code = $("#install_address_postalcode_c").val();
+        let result = {};
+        // Check index
+        // let index = $('input[name="sanden_option"]:checked').attr('data-attr');
+        // if (!index){
+        //     alert("You must choose the Option to get stc/veec");
+        //     return;
+        // }
+        SD_saveCurrentState();
+        await SD_wait(300);
+        let completeSys = SD_getCompleteSys();
+        console.log(completeSys);
+        // debugger
+        for (const [key, partnumber] of Object.entries(completeSys)) {
+            if (result.hasOwnProperty(partnumber) || partnumber == '') {
+                continue;
+            }
+            // result[partnumber] = {stcs_number: 31, stc: 36, veec: 50, eligible_veecs:{a: 10, b: 15}};
+            // result[partnumber] = {stc: 36, veec: 50};
+            // continue;
+            SUGAR.ajaxUI.showLoadingPanel();
+            await $.ajax({
+                url: "/index.php?entryPoint=APTGetSTCVEEC&post_code=" + post_code+ "&part_number=" + partnumber,
+                type: 'GET',
+                success: function(data)
+                {   
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                    if(data == '' || typeof data == 'undefined') return;
+                    result[partnumber] = JSON.parse(data);
+                    return;
+                },
+                error: function(response){
+                    console.log("Fail");
+                    SUGAR.ajaxUI.hideLoadingPanel();
+                },
+            });
+        }
+        console.log(result);
+        window.stc_veec = result;
+        parseSTCVEEC(window.stc_veec, completeSys);
+    });
     //PE Admin % handle 
     $(document).on('change', '#sd_pe_admin_percent', function(e){
         e.preventDefault();
@@ -227,6 +271,45 @@ $(function () {
 });
 //***************************************** FUNCTION *********************************************************** */
 
+function parseSTCVEEC(stc_veec, completeSys) {
+    // debugger
+    let result = {};
+    let index;
+    for (const [k,v] of Object.entries(completeSys)) {
+        index = k.split('_').pop();
+        if (!result.hasOwnProperty(index)) {
+            result[index] = {
+                stc_price : 0,
+                stcs_number : 0,
+                veec_price : 0,
+                veecs_number : 0,
+            };
+        }
+
+        //stc
+        result[index].stcs_number += parseInt((stc_veec[v].stcs_number != '' && stc_veec[v].stcs_number != undefined) ? stc_veec[v].stcs_number : 0);
+        if (result[index].stc_price == 0) {
+            result[index].stc_price = parseInt((stc_veec[v].stc != '' && stc_veec[v].stc != undefined) ? stc_veec[v].stc : 0);
+        }
+
+        //veec
+        if (stc_veec[v].eligible_veecs != undefined) {
+            for (const [kk,vv] of Object.entries(stc_veec[v].eligible_veecs)) {
+                result[index].veecs_number += parseInt(vv);
+            }
+        }
+        if (result[index].veec_price == 0) {
+            result[index].veec_price = parseInt((stc_veec[v].veec != '' && stc_veec[v].veec != undefined) ? stc_veec[v].veec : 0);
+        }
+    }
+    // debugger;
+    console.log(result);
+    for (const [index, value] of Object.entries(result)) {
+        $(`#sd_stc_${index}`).val(value.stcs_number);
+        $(`#sd_veec_${index}`).val(value.veecs_number); 
+    } 
+}
+
 async function SD_autoCreateLineItem(partNumber, target, total_item, price_item = ''){
     var info_pro = getItemFromPartNumber(partNumber, target);
     console.log(info_pro);
@@ -282,7 +365,7 @@ async function SD_generateLineItem(){
 
     // Get option
 
-    await wait(300);
+    await SD_wait(300);
     // let json_val = JSON.parse($("#sanden_option_c").val());
     // let currState = json_val[index];
     let currState = SD_getCurrentOptionState(index);
@@ -339,7 +422,13 @@ async function SD_generateLineItem(){
         }
     
         await SD_autoCreateLineItem(sd_delivery[0], sanden_install, 1);
-
+        //stc + veec
+        if (parseInt(currState['stc_number']) != 0) {
+            await SD_autoCreateLineItem(sd_Rebate_partNumber[0], sanden_rebate, parseInt(currState['stc_number']));
+        }
+        if (parseInt(currState['veec_number']) != 0) {
+            await SD_autoCreateLineItem(sd_Rebate_partNumber[1], sanden_rebate, parseInt(currState['veec_number']));
+        }
         // Calculate
         await SD_calculatePrice(currState);
 
@@ -390,7 +479,7 @@ async function SD_calculatePrice(currState = {}){
         // blur
         list.trigger("blur");
     });
-    await wait(200);
+    await SD_wait(200);
     $("#total_amount").trigger("focusin");
     
     // // PE Admin

@@ -1,7 +1,7 @@
 $(function () {
     'use strict';
     $("#sanden_option_c").closest('.edit-view-row-item').hide();
-
+    $("#get_stc_veec").closest('tr').hide();
     //INIT
     init_table_sanden('pricingOption');
 
