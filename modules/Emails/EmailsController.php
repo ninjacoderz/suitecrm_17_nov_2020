@@ -4425,7 +4425,7 @@ class EmailsController extends SugarController
                     }
                     array_push($heighArr, $count);
                 }
-                $heightD = max($heighArr)*40;
+                $heightD = max($heighArr)*50;
                 foreach($sanden_quote_input as $key=>$value) {
                     $clear = '<div style="clear: both"></div>';
                     // if(intval($value['grandtotal_dk_'.$key]) > 1000) {
