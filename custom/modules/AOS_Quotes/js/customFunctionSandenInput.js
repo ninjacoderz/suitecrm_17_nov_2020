@@ -89,19 +89,19 @@
             , "<input type='hidden' class='sanden_pricing' name='sd_complete_line' id='sd_complete_line' value='1' />"],
         ["", "&nbsp;"],
         ["STC:"
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_1", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_2", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_3", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_4", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_5", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_6", true)],
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_1", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_2", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_3", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_4", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_5", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_6", false)],
         ["VEEC:"
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_1", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_2", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_3", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_4", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_5", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_6", true)],
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_1", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_2", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_3", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_4", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_5", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_6", false)],
         ["<button type='button' id='get_stc_veec' class='button default'>Get STC/VEEC</button>"],
         ["<strong>Separated System</strong>"
             ,""
@@ -230,6 +230,8 @@
     if(module == '') {
         // Show button
         $('body').find("#sd_hint").after("<button type='button' id='generate_table' class='button default' style='display: block'>Generate From Table</button>");
+    } else {
+        $('body').find('#get_stc_veec').closest('tr').hide();
     }
 }
 
@@ -507,29 +509,24 @@ function SD_saveCurrentState(){
 
         //Rebate 
         if (id_name.indexOf('sd_stc') != -1 || id_name.indexOf('sd_veec') != -1) {
-            if (!result[option].hasOwnProperty('rebate')) {
-                result[option].rebate = {};
-            }
             if(id_name.indexOf('sd_stc') != -1) {
-                result[option].rebate = {
-                    ...result[option].rebate
+                result[option] = {
+                    ...result[option]
                     , ...{
                         'sd_stc_cost': parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost'))
-                        , 'sd_stc_total' : parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost')) * parseInt($(this).val()) 
                     }
                 };
             } 
             if(id_name.indexOf('sd_veec') != -1) {
-                result[option].rebate = {
-                    ...result[option].rebate
+                result[option] = {
+                    ...result[option]
                     , ...{
                         'sd_veec_cost': parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost'))
-                        , 'sd_veec_total' : parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost')) * parseInt($(this).val()) 
                     }
                 };
             } 
 
-            result[option].rebate = {...result[option].rebate, ...opt};
+            result[option] = {...result[option], ...opt};
             return true;
         }
 
