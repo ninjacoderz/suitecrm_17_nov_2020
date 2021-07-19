@@ -14,9 +14,11 @@ $data_return['sanden_accessory'] = getDataByCategoryName($db, "Sanden", "accesso
 //extra
 $data_return['sanden_extra'] = getDataByCategoryName($db, "Sanden", "extra");
 
-//install (include delivery)
+//install (include delivery) for Plumber
 $data_return['sanden_install'] = getDataByCategoryName($db, "Sanden", "install");
 
+//install Electrician
+$data_return['electric_installation'] = getDataByCategoryName($db, "Electrical Standard 240V");
 
 // Return
 echo json_encode($data_return);

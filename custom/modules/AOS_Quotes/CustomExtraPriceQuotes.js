@@ -313,6 +313,9 @@ $(function () {
     if($("#pe_pricing_options_id_c").val() != '' && $("#quote_type_c").val() == 'quote_type_off_grid_system'){
             $("#pricing_option_type_c").parent().append('<p id="link_pricing_option"><a href="/index.php?module=pe_pricing_options&action=EditView&record='+$("#pe_pricing_options_id_c").val()+'" target="_blank">Open Off-grid Pricing Option</a></p>');
     }
+    if($("#pe_pricing_options_id_c").val() != '' && $("#quote_type_c").val() == 'quote_type_sanden'){
+        $("#pricing_option_type_c").parent().append('<p id="link_pricing_option"><a href="/index.php?module=pe_pricing_options&action=EditView&record='+$("#pe_pricing_options_id_c").val()+'" target="_blank">Open Sanden Pricing Option</a></p>');
+    }
     $("#quote_type_c").on("change",function(){
         if($(this).val() == 'quote_type_solar'){
             $("#pe_pricing_options_id_c").val('406fbeb4-0614-3bcd-7e15-5fbdea690303');
