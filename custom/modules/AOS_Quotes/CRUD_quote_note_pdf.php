@@ -1,5 +1,7 @@
 <?php
-
+   // Enable cross domain call
+   header('Access-Control-Allow-Origin: *');
+   
    $action =  $_POST['action'];
    if(!isset($action) && $action == '') return;
    $content = urldecode($_POST['content']);
