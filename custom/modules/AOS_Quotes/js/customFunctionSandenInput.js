@@ -505,6 +505,34 @@ function SD_saveCurrentState(){
             return true;
         }
 
+        //Rebate 
+        if (id_name.indexOf('sd_stc') != -1 || id_name.indexOf('sd_veec') != -1) {
+            if (!result[option].hasOwnProperty('rebate')) {
+                result[option].rebate = {};
+            }
+            if(id_name.indexOf('sd_stc') != -1) {
+                result[option].rebate = {
+                    ...result[option].rebate
+                    , ...{
+                        'sd_stc_cost': parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost'))
+                        , 'sd_stc_total' : parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost')) * parseInt($(this).val()) 
+                    }
+                };
+            } 
+            if(id_name.indexOf('sd_veec') != -1) {
+                result[option].rebate = {
+                    ...result[option].rebate
+                    , ...{
+                        'sd_veec_cost': parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost'))
+                        , 'sd_veec_total' : parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost')) * parseInt($(this).val()) 
+                    }
+                };
+            } 
+
+            result[option].rebate = {...result[option].rebate, ...opt};
+            return true;
+        }
+
         result[option] = {...result[option], ...opt};
     });
     //check send email daikin pricing option
@@ -899,10 +927,10 @@ function SD_calcHint(){
         , grandTotal
     );
 
-    str += SD_writeHint(
-        'Sub total (sub stc/veec)'
-        , grandTotal + (stc_cost + veec_cost)
-    );
+    // str += SD_writeHint(
+    //     'Sub total (sub stc/veec)'
+    //     , grandTotal + (stc_cost + veec_cost)
+    // );
 
 
     // GST 10%
@@ -912,12 +940,19 @@ function SD_calcHint(){
         , gst
     );
     // Include GST
-    grandTotal += gst + (stc_cost + veec_cost);
+    grandTotal += gst;
     str += SD_writeHint(
         'Grand Total inclue GST'
         , grandTotal
     );
     
+    // Sub rebate 
+    grandTotal += (stc_cost + veec_cost);
+    str += SD_writeHint(
+        'Grand Total (sub rebate)'
+        , grandTotal
+    );
+
     // PM price
     if(currState.pm != undefined && currState.pm != ''){
         grandTotal += parseFloat(currState.pm);

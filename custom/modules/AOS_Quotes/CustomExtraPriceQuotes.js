@@ -1561,6 +1561,7 @@ $(function () {
                 } catch (err) {
                     console.log(err);
                 }
+                $("#sd_calculate_price").trigger("click");
             }
         }); 
     }
@@ -1647,6 +1648,7 @@ $(function () {
                 } catch (err) {
                     console.log(err);
                 }
+                $("#calculate_dk_price").trigger("click");
             }
         }); 
     }
