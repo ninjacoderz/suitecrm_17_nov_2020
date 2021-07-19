@@ -4219,17 +4219,34 @@ class EmailsController extends SugarController
                 $style = '"margin: 0;text-transform: uppercase;color: white;"';
                 $daikin_quote_input = array_diff_key($daikin_quote_input, array_flip($remove));
                 $tmp = 1;
+                $heighArr = [];
+                foreach($daikin_quote_input as $k=>$v) {
+                    $count = 0;
+                    foreach($v['products'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    foreach($v['wifi'] as $val) {
+                        if($val['id'] != null) {
+                            $count = $count + 1;
+                        }
+                    };
+                    array_push($heighArr, $count);
+                }
+                $heightD = max($heighArr)*40 + 70;
                 foreach($daikin_quote_input as $key=>$value) {
+                    $clear = '<div style="clear: both"></div>';
                     // if(intval($value['grandtotal_dk_'.$key]) > 1000) {
                     if($value['isSend'] > 0 && intval($value["total_cooling_capacity_".$key]) > 0 && intval($value["total_heating_capacity_".$key]) > 0 ) {
                         $daikin_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px" data-mce-style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px">
                         <div class="op_header" style="width: 100%; position: inherit;" data-mce-style="width: 100%; position: inherit;">
                            <div class="number-options" style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold; '.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background: #177eb3").';color: white;font-size: 18px;" data-mce-style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background: #177eb3").';color: white;font-size: 18px;">'.$key.'</div>
                            <div class="p" style="'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5b0" : "background-color: #009acf").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;" data-mce-style="'.($value["recom_dk_option_".$key] == 1 ? "background: #7484d0" : "background-color: #009acf").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #009acf; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;">
-                              <p style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;padding-left: 12px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;" data-mce-style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-left: 5px;margin-top: 0px;padding-left: 12px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;">'.((intval($value["total_cooling_capacity_".$key]) > 0 ) ? round($value["total_cooling_capacity_".$key], 1).'kW (C)' : '3.5 kW').' '.((intval($value["total_heating_capacity_".$key]) > 0 ) ? round($value["total_heating_capacity_".$key], 1).'kW (H)' : '').'</p>
+                              <p style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;text-align: center;" data-mce-style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;text-align: center;">'.((intval($value["total_cooling_capacity_".$key]) > 0 ) ? round($value["total_cooling_capacity_".$key], 1).'kW (C)' : '3.5 kW').' '.((intval($value["total_heating_capacity_".$key]) > 0 ) ? round($value["total_heating_capacity_".$key], 1).'kW (H)' : '').'</p>
                            </div>
                         </div>
-                        <div class="select-inverter" style="height: '.$this->setHeightDiv($value, $key).'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
+                        <div class="select-inverter" style="height: '.$heightD.'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="height: '.$heightD.'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
                            '.$this->parseProduct($value['products'], $key, 'products', 0, $tmp).'
                            '.$this->parseProduct($value['wifi'], $key, 'wifi', 0, $tmp).'
                            '.($value["install_dk_".$key] == 'Yes' ? $this->parseProduct($value['install_standard'], $key, 'install', $value["install_qty"]) : "").'
@@ -4247,7 +4264,7 @@ class EmailsController extends SugarController
                         <div class="op_footer" style="text-align: center;padding: 5px;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #009acf").';height: 25px;" data-mce-style="text-align: center;padding: 5px;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background-color: #009acf").';height: 25px;">
                             '.($value["recom_dk_option_".$key] == 1 ? '<h3 style="margin: 0;text-transform: uppercase;color: white;padding: 2px 0;">Recommended</h3>' : "&nbsp;").'
                         </div>
-                     </div>';     
+                     </div>'.($key % 2 == 0 ? $clear : "" );  
                     }
                     $tmp += 1;
                     
@@ -4432,12 +4449,12 @@ class EmailsController extends SugarController
                     if($value['isSend'] > 0 ) {
                         $sanden_pricing_options .= '<div class="col-md-4 col-sm-12 col-xs-12 select_options" style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px" data-mce-style="float: left;width: 290px;background-color: white;margin-top: 25px;margin-right: 10px;box-shadow: 0 0 7px 0px #e6f9ff; margin-bottom: 30px">
                         <div class="op_header" style="width: 100%; position: inherit;" data-mce-style="width: 100%; position: inherit;">
-                           <div class="number-options" style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold; '.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background: #5e1161").';color: white;font-size: 18px;" data-mce-style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;'.($value["recom_dk_option_".$key] == 1 ? "background: #4f5ea5" : "background: #5e1161").';color: white;font-size: 18px;">'.$key.'</div>
-                           <div class="p" style="'.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5b0" : "background-color: #945596").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #945596; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;" data-mce-style="'.($value["recom_dk_option_".$key] == 1 ? "background: #7484d0" : "background-color: #945596").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #945596; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;">
+                           <div class="number-options" style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold; '.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background: #5e1161").';color: white;font-size: 18px;" data-mce-style="float: left;width: 45px;height: 45px;text-align: center;line-height: 45px;font-weight: bold;'.($value["recom_sd_option_".$key] == 1 ? "background: #4f5ea5" : "background: #5e1161").';color: white;font-size: 18px;">'.$key.'</div>
+                           <div class="p" style="'.($value["recom_sd_option_".$key] == 1 ? "background: #6f80d0" : "background: #945596").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #945596; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;" data-mce-style="'.($value["recom_sd_option_".$key] == 1 ? "background: #6f80d0" : "background: #945596").';float: right;width: 245px;/* border-radius: 0 20px 20px 0; */height: 45px;osition: relative;/* border: 1px solid #945596; */text-align: left;line-height: 45px;padding-left: 10p;font-size: 15px;">
                               <p style="text-align: center;color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0;" data-mce-style="color: white;font-family: oswaldregular;font-size: 20px;font-weight: 500;margin-top: 0px;font-weight: bold;font-size: 16px;letter-spacing: 1px;margin-bottom: 0; text-align: center;">'.$this->getCapacity($value['completes'], $key).'</p>
                            </div>
                         </div>
-                        <div class="select-inverter" style="height: '.$heightD.'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_sd_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
+                        <div class="select-inverter" style="height: '.$heightD.'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_sd_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="height: '.$heightD.'px; clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
                            '.$this->parseProduct($value['completes'], $key, 'completes', 0, $tmp).'
                            '.$this->parseProduct($value['hpump'], $key, 'hpump', 0, $tmp).'
                            '.$this->parseProduct($value['tanks'], $key, 'tanks', 0, $tmp).'

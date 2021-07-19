@@ -1,10 +1,11 @@
 /**
  * Global variables
  */
- var sanden_complete, sanden_hpump, sanden_tank, sanden_accessory, sanden_extra, sanden_install;
+ var sanden_complete, sanden_hpump, sanden_tank, sanden_accessory, sanden_extra, sanden_install, electric_installation;
  var sanden_rebate = [];
  var sd_lineOne = ['SSI','SSPI', 'SANDEN_SUPPLY_ONLY'];
- var sd_installation = ['Sanden_Plb_Install_Std', 'Sanden_Plb_Std_New', ];
+ var sd_installation_plumber = ['Sanden_Plb_Install_Std', 'Sanden_Plb_Std_New'];
+ var sd_installation_electrician = ['Sanden_Elec_Install_Std'];
  var sd_delivery = ['San_Delivery', 'SANDEN_DELIVERY']; 
  var sd_Rebate = ['STCs', 'VEECs'];
  var sd_Rebate_partNumber = ['STC Rebate Certificate', 'VEEC Rebate Certificate'];
@@ -28,7 +29,7 @@
             sanden_tank = dataJSON.sanden_tank;
             sanden_extra = dataJSON.sanden_extra;
             sanden_install = dataJSON.sanden_install; // include delivery
-
+            electric_installation = dataJSON.electric_installation; 
         });
     } catch (ex) {
         console.log(ex);
@@ -89,67 +90,74 @@
             , "<input type='hidden' class='sanden_pricing' name='sd_complete_line' id='sd_complete_line' value='1' />"],
         ["", "&nbsp;"],
         ["STC:"
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_1", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_2", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_3", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_4", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_5", true)
-            , makeInputBox("sd_stc sanden_pricing", "sd_stc_6", true)],
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_1", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_2", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_3", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_4", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_5", false)
+            , makeInputBox("sd_stc sanden_pricing", "sd_stc_6", false)],
         ["VEEC:"
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_1", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_2", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_3", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_4", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_5", true)
-            , makeInputBox("sd_veec sanden_pricing", "sd_veec_6", true)],
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_1", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_2", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_3", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_4", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_5", false)
+            , makeInputBox("sd_veec sanden_pricing", "sd_veec_6", false)],
         ["<button type='button' id='get_stc_veec' class='button default'>Get STC/VEEC</button>"],
-        ["<strong>Separated System</strong>"
-            ,""
-            ,""
-            ,""
-            ,""
-            ,""
-            ,""],
-        ["Heat Pump"
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_1 sanden_pricing", "sd_hpump_type1_1")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_2 sanden_pricing", "sd_hpump_type1_2")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_3 sanden_pricing", "sd_hpump_type1_3")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_4 sanden_pricing", "sd_hpump_type1_4")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_5 sanden_pricing", "sd_hpump_type1_5")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_6 sanden_pricing", "sd_hpump_type1_6")],
-        ["Number Heat Pump"
-            , makeInputBox("qty_sd_hpump1_1 sanden_pricing", "qty_sd_hpump1_1", false)
-            , makeInputBox("qty_sd_hpump1_2 sanden_pricing", "qty_sd_hpump1_2", false)
-            , makeInputBox("qty_sd_hpump1_3 sanden_pricing", "qty_sd_hpump1_3", false)
-            , makeInputBox("qty_sd_hpump1_4 sanden_pricing", "qty_sd_hpump1_4", false)
-            , makeInputBox("qty_sd_hpump1_5 sanden_pricing", "qty_sd_hpump1_5", false)
-            , makeInputBox("qty_sd_hpump1_6 sanden_pricing", "qty_sd_hpump1_6", false)],
-        // ["<button type='button' id='sd_hpump_add' class='button default'>+</button>"
-        //     , "<input type='hidden' class='sanden_pricing' name='sd_hpump_line' id='sd_hpump_line' value='1' />"],
-        ["Tank 1"
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_1 sanden_pricing", "sd_tank_type1_1")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_2 sanden_pricing", "sd_tank_type1_2")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_3 sanden_pricing", "sd_tank_type1_3")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_4 sanden_pricing", "sd_tank_type1_4")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_5 sanden_pricing", "sd_tank_type1_5")
-            , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_6 sanden_pricing", "sd_tank_type1_6")],
-        ["Number Tank 1"
-            , makeInputBox("qty_sd_tank1_1 sanden_pricing", "qty_sd_tank1_1", false)
-            , makeInputBox("qty_sd_tank1_2 sanden_pricing", "qty_sd_tank1_2", false)
-            , makeInputBox("qty_sd_tank1_3 sanden_pricing", "qty_sd_tank1_3", false)
-            , makeInputBox("qty_sd_tank1_4 sanden_pricing", "qty_sd_tank1_4", false)
-            , makeInputBox("qty_sd_tank1_5 sanden_pricing", "qty_sd_tank1_5", false)
-            , makeInputBox("qty_sd_tank1_6 sanden_pricing", "qty_sd_tank1_6", false)],
-        ["<button type='button' id='sd_tank_add' class='button default'>+</button>"
-            , "<input type='hidden' class='sanden_pricing' name='sd_tank_line' id='sd_tank_line' value='1' />"],
-        ["", "&nbsp;"],
-        ["Sanden Install"
-            , makeSelectBox(['Yes', 'No'], "sd_install_1 sanden_pricing", "sd_install_1")
-            , makeSelectBox(['Yes', 'No'], "sd_install_2 sanden_pricing", "sd_install_2")
-            , makeSelectBox(['Yes', 'No'], "sd_install_3 sanden_pricing", "sd_install_3")
-            , makeSelectBox(['Yes', 'No'], "sd_install_4 sanden_pricing", "sd_install_4")
-            , makeSelectBox(['Yes', 'No'], "sd_install_5 sanden_pricing", "sd_install_5")
-            , makeSelectBox(['Yes', 'No'], "sd_install_6 sanden_pricing", "sd_install_6")],
+        // ["<strong>Separated System</strong>"
+        //     ,""
+        //     ,""
+        //     ,""
+        //     ,""
+        //     ,""
+        //     ,""],
+        // ["Heat Pump"
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_1 sanden_pricing", "sd_hpump_type1_1")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_2 sanden_pricing", "sd_hpump_type1_2")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_3 sanden_pricing", "sd_hpump_type1_3")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_4 sanden_pricing", "sd_hpump_type1_4")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_5 sanden_pricing", "sd_hpump_type1_5")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_hpump), "sd_hpump_type1_6 sanden_pricing", "sd_hpump_type1_6")],
+        // ["Number Heat Pump"
+        //     , makeInputBox("qty_sd_hpump1_1 sanden_pricing", "qty_sd_hpump1_1", false)
+        //     , makeInputBox("qty_sd_hpump1_2 sanden_pricing", "qty_sd_hpump1_2", false)
+        //     , makeInputBox("qty_sd_hpump1_3 sanden_pricing", "qty_sd_hpump1_3", false)
+        //     , makeInputBox("qty_sd_hpump1_4 sanden_pricing", "qty_sd_hpump1_4", false)
+        //     , makeInputBox("qty_sd_hpump1_5 sanden_pricing", "qty_sd_hpump1_5", false)
+        //     , makeInputBox("qty_sd_hpump1_6 sanden_pricing", "qty_sd_hpump1_6", false)],
+        // // ["<button type='button' id='sd_hpump_add' class='button default'>+</button>"
+        // //     , "<input type='hidden' class='sanden_pricing' name='sd_hpump_line' id='sd_hpump_line' value='1' />"],
+        // ["Tank 1"
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_1 sanden_pricing", "sd_tank_type1_1")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_2 sanden_pricing", "sd_tank_type1_2")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_3 sanden_pricing", "sd_tank_type1_3")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_4 sanden_pricing", "sd_tank_type1_4")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_5 sanden_pricing", "sd_tank_type1_5")
+        //     , makeSelectBox(SD_convertJSONToArrayInit(sanden_tank), "sd_tank_type1_6 sanden_pricing", "sd_tank_type1_6")],
+        // ["Number Tank 1"
+        //     , makeInputBox("qty_sd_tank1_1 sanden_pricing", "qty_sd_tank1_1", false)
+        //     , makeInputBox("qty_sd_tank1_2 sanden_pricing", "qty_sd_tank1_2", false)
+        //     , makeInputBox("qty_sd_tank1_3 sanden_pricing", "qty_sd_tank1_3", false)
+        //     , makeInputBox("qty_sd_tank1_4 sanden_pricing", "qty_sd_tank1_4", false)
+        //     , makeInputBox("qty_sd_tank1_5 sanden_pricing", "qty_sd_tank1_5", false)
+        //     , makeInputBox("qty_sd_tank1_6 sanden_pricing", "qty_sd_tank1_6", false)],
+        // ["<button type='button' id='sd_tank_add' class='button default'>+</button>"
+        //     , "<input type='hidden' class='sanden_pricing' name='sd_tank_line' id='sd_tank_line' value='1' />"],
+        // ["", "&nbsp;"],
+        ["Plumber Install"
+            , makeSelectBox(['Yes', 'No'], "sd_install_plum sanden_pricing", "sd_install_plum_1")
+            , makeSelectBox(['Yes', 'No'], "sd_install_plum sanden_pricing", "sd_install_plum_2")
+            , makeSelectBox(['Yes', 'No'], "sd_install_plum sanden_pricing", "sd_install_plum_3")
+            , makeSelectBox(['Yes', 'No'], "sd_install_plum sanden_pricing", "sd_install_plum_4")
+            , makeSelectBox(['Yes', 'No'], "sd_install_plum sanden_pricing", "sd_install_plum_5")
+            , makeSelectBox(['Yes', 'No'], "sd_install_plum sanden_pricing", "sd_install_plum_6")],
+        ["Electrician Install"
+            , makeSelectBox(['Yes', 'No'], "sd_install_elec sanden_pricing", "sd_install_elec_1")
+            , makeSelectBox(['Yes', 'No'], "sd_install_elec sanden_pricing", "sd_install_elec_2")
+            , makeSelectBox(['Yes', 'No'], "sd_install_elec sanden_pricing", "sd_install_elec_3")
+            , makeSelectBox(['Yes', 'No'], "sd_install_elec sanden_pricing", "sd_install_elec_4")
+            , makeSelectBox(['Yes', 'No'], "sd_install_elec sanden_pricing", "sd_install_elec_5")
+            , makeSelectBox(['Yes', 'No'], "sd_install_elec sanden_pricing", "sd_install_elec_6")],
         ["Accessory 1"
             , makeSelectBox(SD_convertJSONToArrayInit(sanden_accessory), "sd_accessory_type1_1 sanden_pricing", "sd_accessory_type1_1")
             , makeSelectBox(SD_convertJSONToArrayInit(sanden_accessory), "sd_accessory_type1_2 sanden_pricing", "sd_accessory_type1_2")
@@ -230,6 +238,10 @@
     if(module == '') {
         // Show button
         $('body').find("#sd_hint").after("<button type='button' id='generate_table' class='button default' style='display: block'>Generate From Table</button>");
+    } else {
+        $('body').find('#get_stc_veec').closest('tr').remove();
+        $('body').find('.sd_stc').closest('tr').remove();
+        $('body').find('.sd_veec').closest('tr').remove();
     }
 }
 
@@ -505,6 +517,29 @@ function SD_saveCurrentState(){
             return true;
         }
 
+        //Rebate 
+        if (id_name.indexOf('sd_stc') != -1 || id_name.indexOf('sd_veec') != -1) {
+            if(id_name.indexOf('sd_stc') != -1) {
+                result[option] = {
+                    ...result[option]
+                    , ...{
+                        'sd_stc_cost': parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost'))
+                    }
+                };
+            } 
+            if(id_name.indexOf('sd_veec') != -1) {
+                result[option] = {
+                    ...result[option]
+                    , ...{
+                        'sd_veec_cost': parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost'))
+                    }
+                };
+            } 
+
+            result[option] = {...result[option], ...opt};
+            return true;
+        }
+
         result[option] = {...result[option], ...opt};
     });
     //check send email daikin pricing option
@@ -627,9 +662,9 @@ function SD_getCurrentOptionState(index){
         result['sd_tank_type' + (i + 1)] = $('#sd_tank_type' + (i + 1) + '_' + index).val() == null ? '' : $('#sd_tank_type' + (i + 1) + '_' + index).val();
         result['qty_sd_tank' + (i + 1)] = $('#qty_sd_tank' + (i + 1) + '_' + index).val() != '' ? $('#qty_sd_tank' + (i + 1) + '_' + index).val() : '0' ;
     }
-
-    result['sd_install'] = $('#sd_install_' + index).val();
-
+    // Installer
+    result['sd_install_plumber'] = $('#sd_install_plum_' + index).val();
+    result['sd_install_electrician'] = $('#sd_install_elec_' + index).val();
     // Accessory line
     num_of_line = SD_getCountLine('sd_accessory');
     for (var i = 0; i < num_of_line; i++) {
@@ -693,9 +728,13 @@ function SD_calcInstallCost(currState) {
         }
     }
     // Sanden install
-    if (currState['sd_install'] == 'Yes' && total_qty_sd_complete > 0 ) {
-        install_cost += parseFloat(getAttributeFromPartNumber(sd_installation[0], sanden_install, 'cost')) * parseFloat(total_qty_sd_complete);
+    if (currState['sd_install_plumber'] == 'Yes' && total_qty_sd_complete > 0 ) {
+        install_cost += parseFloat(getAttributeFromPartNumber(sd_installation_plumber[0], sanden_install, 'cost')) * parseFloat(total_qty_sd_complete);
     }
+    if (currState['sd_install_electrician'] == 'Yes' && total_qty_sd_complete > 0 ) {
+        install_cost += parseFloat(getAttributeFromPartNumber(sd_installation_electrician[0], electric_installation, 'cost')) * parseFloat(total_qty_sd_complete);
+    }
+
     return install_cost;
 }
 
@@ -763,13 +802,12 @@ function SD_calcGrandTotal(currState){
     grandTotal += grandTotal * (parseFloat($('#sd_pe_admin_percent').val()) / 100);
     // GST 10%
     let gst = grandTotal * 0.1;
-    // Include GST above
+    // Include GST, sub rebate
     grandTotal += gst + stc_veec_cost;
-     // PM
-     if (currState.pm != undefined && currState.pm != '') {
+    // PM
+    if (currState.pm != undefined && currState.pm != '') {
         grandTotal += parseFloat(currState.pm);
-     }
-
+    }
     return grandTotal;
 }
 
@@ -787,7 +825,7 @@ function SD_calcHint(){
     let str = "";
     /** ==S== HINT 1 ==== */
          /** S - Equipment Cost */ 
-        let complete_cost = 0, delivery_cost = 0, install_cost = 0, extra_cost = 0, tank_cost = 0, hpump_cost = 0, accessory_cost = 0, stc_cost = 0, veec_cost = 0;
+        let complete_cost = 0, delivery_cost = 0, install_cost = 0, extra_cost = 0, tank_cost = 0, hpump_cost = 0, accessory_cost = 0, rebate_cost = 0;
         // Sanden complete cost
         let num_of_line = SD_getCountLine('sd_complete');
         for (var i = 0; i < num_of_line; i++) {
@@ -844,11 +882,17 @@ function SD_calcHint(){
             delivery_cost += parseFloat(getAttributeFromPartNumber(sd_delivery[0], sanden_install, 'cost'));
             str+= SD_writeHint('Delivery',delivery_cost); 
         }
-        // Sanden install
-        if (currState['sd_install'] == 'Yes' && currState['total_qty_sd_complete'] != 0) {
-            install_cost += parseFloat(getAttributeFromPartNumber(sd_installation[0], sanden_install, 'cost')) * parseFloat(currState['total_qty_sd_complete']);
-            str+= SD_writeHint('Sanden Install',install_cost, currState['total_qty_sd_complete']);
+        // Sanden install 
+        let plumber_cost = 0, electrician_cost = 0;
+        if (currState['sd_install_plumber'] == 'Yes' && currState['total_qty_sd_complete'] > 0) {
+            plumber_cost += parseFloat(getAttributeFromPartNumber(sd_installation_plumber[0], sanden_install, 'cost')) * parseFloat(currState['total_qty_sd_complete']);
+            str+= SD_writeHint('Plumber Install',plumber_cost, currState['total_qty_sd_complete']);
         }
+        if (currState['sd_install_electrician'] == 'Yes' && currState['total_qty_sd_complete'] > 0) {
+            electrician_cost += parseFloat(getAttributeFromPartNumber(sd_installation_electrician[0], electric_installation, 'cost')) * parseFloat(currState['total_qty_sd_complete']);
+            str+= SD_writeHint('Electrician Install',electrician_cost, currState['total_qty_sd_complete']);
+        }
+        install_cost = plumber_cost + electrician_cost;
         let ins_delivery = delivery_cost + install_cost;
         str += SD_writeHint(
             "TOTAL INSTALL AND DELIVERY COST"
@@ -868,24 +912,6 @@ function SD_calcHint(){
             , true
         );
     /** E - Subtotal = Equipment + install + delivery */
-    /** STC - VEEC */
-    if (parseInt(currState['stc_number']) > 0 || parseInt(currState['veec_number']) > 0) {
-        if (parseInt(currState['stc_number']) > 0) {
-            stc_cost += parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost')) * parseInt(currState['stc_number']);
-            str+= SD_writeHint('STCs', stc_cost, parseInt(currState['stc_number']));
-        }
-        if (parseInt(currState['veec_number']) > 0) {
-            veec_cost += parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost')) * parseInt(currState['veec_number']);
-            str+= SD_writeHint('VEECs', veec_cost, parseInt(currState['veec_number']));
-        }
-        str+= SD_writeHint(
-            "Total STCs/VEECs"
-            , stc_cost + veec_cost
-            , ''
-            , true
-            , true
-        );
-    }
     // PE Admin %
     str += SD_writeHint(
         'PE Admin %'
@@ -899,10 +925,10 @@ function SD_calcHint(){
         , grandTotal
     );
 
-    str += SD_writeHint(
-        'Sub total (sub stc/veec)'
-        , grandTotal + (stc_cost + veec_cost)
-    );
+    // str += SD_writeHint(
+    //     'Sub total (sub stc/veec)'
+    //     , grandTotal + (stc_cost + veec_cost)
+    // );
 
 
     // GST 10%
@@ -912,18 +938,52 @@ function SD_calcHint(){
         , gst
     );
     // Include GST
-    grandTotal += gst + (stc_cost + veec_cost);
+    grandTotal += gst;
     str += SD_writeHint(
         'Grand Total inclue GST'
         , grandTotal
+        ,''
+        , true
+        , true
     );
-    
+
+    /**S -  STC - VEEC */
+    let stc_cost = 0, veec_cost = 0
+    if (parseInt(currState['stc_number']) > 0 || parseInt(currState['veec_number']) > 0) {
+        if (parseInt(currState['stc_number']) > 0) {
+            stc_cost += parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost')) * parseInt(currState['stc_number']);
+            str+= SD_writeHint('STCs', stc_cost, parseInt(currState['stc_number']));
+        }
+        if (parseInt(currState['veec_number']) > 0) {
+            veec_cost += parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost')) * parseInt(currState['veec_number']);
+            str+= SD_writeHint('VEECs', veec_cost, parseInt(currState['veec_number']));
+        }
+        rebate_cost = stc_cost + veec_cost;
+        str+= SD_writeHint("TOTAL REBATES (STCs/VEECs)"
+            , rebate_cost
+            , ''
+            , true
+            , true
+        );
+    }
+    /**E - STC - VEEC */
+
+    // Sub rebate 
+    grandTotal += (stc_cost + veec_cost);
+    str += SD_writeHint(
+        'Grand Total (sub rebate)'
+        , grandTotal
+    );
+
     // PM price
     if(currState.pm != undefined && currState.pm != ''){
         grandTotal += parseFloat(currState.pm);
         str += SD_writeHint(
-            'GrandTotal + PM'
+            'GRAND TOTAL + PM'
             , grandTotal
+            , ''
+            , true
+            , true
         );
     }
     /** ==E== HINT 1 ==== */
@@ -1015,10 +1075,10 @@ function SD_getRebateProduct(){
 function SD_calcSTCVEEC(currState) {
     let stc_cost = 0, veec_cost = 0;
     /** STC - VEEC */
-    if (parseInt(currState['stc_number']) > 0) {
+    if (parseInt(currState['stc_number']) > 0 && currState['total_qty_sd_complete'] > 0) {
         stc_cost += parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost')) * parseInt(currState['stc_number']);
     }
-    if (parseInt(currState['veec_number']) > 0) {
+    if (parseInt(currState['veec_number']) > 0 && currState['total_qty_sd_complete'] > 0) {
         veec_cost += parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[1], sanden_rebate, 'cost')) * parseInt(currState['veec_number']);
     }
     return stc_cost + veec_cost;

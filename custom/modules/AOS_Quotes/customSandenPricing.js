@@ -379,13 +379,15 @@ async function SD_generateLineItem(){
     try{
         // Show loading
         SUGAR.ajaxUI.showLoadingPanel();
-        //
-        if (currState['sd_install'] == 'Yes') {
-            await SD_autoCreateLineItem(sd_lineOne[1], sanden_install, 1);
-            await SD_autoCreateLineItem(sd_installation[0], sanden_install, currState['total_qty_sd_complete']);
-        } else {
-            await SD_autoCreateLineItem(sd_lineOne[0], sanden_install, 1);
+        /**S - Add SSI/SSPI line 1 */
+        if (currState['sd_install_plumber'] == 'Yes') {
+            if (currState['sd_install_electrician'] == 'Yes') {
+                await SD_autoCreateLineItem(sd_lineOne[0], sanden_install, 1);
+            } else {
+                await SD_autoCreateLineItem(sd_lineOne[1], sanden_install, 1);
+            }
         }
+        /**E - Add SSI/SSPI line 1 */
         // Complete line
         let num_of_line = SD_getCountLine('sd_complete');
         for (var i = 0; i < num_of_line; i++) {
@@ -421,6 +423,14 @@ async function SD_generateLineItem(){
             }
         }
     
+        /**S - Add installation */
+        if (currState['sd_install_plumber'] == 'Yes') {
+            await SD_autoCreateLineItem(sd_installation_plumber[0], sanden_install, 1); //currState['total_qty_sd_complete']
+            if (currState['sd_install_electrician'] == 'Yes') {
+                await SD_autoCreateLineItem(sd_installation_electrician[0], electric_installation, 1);
+            }
+        }
+        /**E - Add installation */
         await SD_autoCreateLineItem(sd_delivery[0], sanden_install, 1);
         //stc + veec
         if (parseInt(currState['stc_number']) != 0) {
