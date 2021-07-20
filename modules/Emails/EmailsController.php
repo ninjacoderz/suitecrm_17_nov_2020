@@ -9211,7 +9211,7 @@ class EmailsController extends SugarController
         $result = array();
         foreach($file_array as $file){
             if($string_type == 'Sanden') {
-                if (strpos(strtolower($file), strtolower($string)) !== false && strpos($file, $string) == 0 && strpos($file, $string_type) == 0) {
+                if (strpos(strtolower($file), strtolower($string)) !== false && strpos($file, $string) == 0 && strpos($file, $string_type) != 0) {
                     $result[] = $file;
                 }
             } else {
