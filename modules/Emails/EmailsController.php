@@ -4412,7 +4412,7 @@ class EmailsController extends SugarController
                 
                 $this->bean->description_html = str_replace("\$aos_quotes_installation address_c", $_REQUEST['address'] , $this->bean->description_html);
                 
-                $remove = ['sanden_pricing', 'sd_complete_line', 'sd_tank_line', 'sd_accessory_line', 'sd_extra_line', 'sd_pe_admin_percent', 'state'];
+                $remove = ['sanden_pricing', 'sd_complete_line', 'sd_tank_line', 'sd_accessory_line', 'sd_extra_line', 'sd_pe_admin_percent', 'state', 'postcode'];
                 $sanden_pricing_options = '';
                 $style = '"margin: 0;text-transform: uppercase;color: white;"';
                 $sanden_quote_input = array_diff_key($sanden_quote_input, array_flip($remove));
@@ -4442,7 +4442,7 @@ class EmailsController extends SugarController
                     }
                     array_push($heighArr, $count);
                 }
-                $heightD = max($heighArr)*50;
+                $heightD = max($heighArr)*50 + 70;
                 foreach($sanden_quote_input as $key=>$value) {
                     $clear = '<div style="clear: both"></div>';
                     // if(intval($value['grandtotal_dk_'.$key]) > 1000) {
@@ -4455,6 +4455,7 @@ class EmailsController extends SugarController
                            </div>
                         </div>
                         <div class="select-inverter" style="height: '.$heightD.'px;clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_sd_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").';" data-mce-style="height: '.$heightD.'px; clear: both;padding: 15px 10px;z-index: 7;position: relative;'.($value["recom_dk_option_".$key] == 1 ? "background: #f1f3ff" : "background: #e6f9ff").'">
+                           '.$this->parseDataSS($value['sd_install_plum_'.$key]).'
                            '.$this->parseProduct($value['completes'], $key, 'completes', 0, $tmp).'
                            '.$this->parseProduct($value['hpump'], $key, 'hpump', 0, $tmp).'
                            '.$this->parseProduct($value['tanks'], $key, 'tanks', 0, $tmp).'
@@ -4463,6 +4464,8 @@ class EmailsController extends SugarController
                         <div class="total-price-item" style="'.($value["recom_sd_option_".$key] == 1 ? "background: #d0d5f3" : "background-color: #daf3ff").';padding: 10px;color: #5e1161;font-size: 14px;font-weight: 600;" data-mce-style="'.($value["recom_sd_option_".$key] == 1 ? "background: #d0d5f3" : "background-color: #daf3ff").';padding: 10px;color: #5e1161;font-size: 14px;font-weight: 600;">
                            <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">Sub Total<span style="float: right;" data-mce-style="float: right;">$'.$value['sd_subtotal_'.$key].'</span></div>
                            <div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">GST<span style="float: right;" data-mce-style="float: right;">$'.$value['sd_gst_'.$key].'</span></div>
+                           '.$this->parseSTCVEECs('STCs',$value['sd_stc_cost'] ,$value['sd_stc_'.$key]).'
+                           '.$this->parseSTCVEECs('VEECs',$value['sd_veec_cost'] ,$value['sd_veec_'.$key]).'
                            <div style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;" data-mce-style="height: 1px;border-bottom: 1px solid #a5c9fc;margin: 5px 0px 5px 0px;">&nbsp;</div>
                            <div class="total-price" style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;" data-mce-style="text-align: center;/* border: 1px solid #ea9e23; */margin-top: 15px;">
                            <span class="symbol" style="font-size: 20px;'.($value["recom_sd_option_".$key] == 1 ? "color: #4f5ea5" : "color: #945596").';font-weight: 600;" data-mce-style="font-size: 20px;'.($value["recom_sd_option_".$key] == 1 ? "color: #4f5ea5" : "color: #945596").';font-weight: 600;">$ </span>
@@ -8530,6 +8533,17 @@ class EmailsController extends SugarController
         }
         return $name;
     }
+    public function parseDataSS($data) {
+        if($data == 'Yes') {
+            return '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">1x Sanden Eco Plus Heat Pump Supply and Install</div>';
+        }
+    }
+
+    public function parseSTCVEECs($type, $value, $number) {
+        if($number !== '') {
+            return '<div style="margin-bottom: 10px;" data-mce-style="margin-bottom: 10px;">'.$type.'<span style="float: right; color: red" data-mce-style="float: right;color: red">-$'.abs($value*$number).'</span></div>';
+        }
+    }
 
     public function parseProduct($arr, $key, $type, $qty = 0, $option = 0) {
         $list = '';
@@ -8566,7 +8580,7 @@ class EmailsController extends SugarController
         } else if($type == 'accessories') {
             foreach($arr as $k=>$item) {
                 if($item['productName'] !== null) {
-                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["productName"].'</div>';
+                    $list .= '<div style="font-size: 15px;margin-top: 10px;" data-mce-style="font-size: 15px;margin-top: 10px;">'.$item["qty_sd_accessory".$k."_".$option].'x '.$item["productName"].'</div>';
                 }
             }
         } else if($type == 'extras') {
