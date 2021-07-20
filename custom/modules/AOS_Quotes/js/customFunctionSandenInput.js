@@ -251,7 +251,9 @@
     SD_initHint();
     if(module == '') {
         // Show button
-        $('body').find("#sd_hint").after("<button type='button' id='generate_table' class='button default' style='display: block'>Generate From Table</button>");
+        $('body').find("#sd_hint").after("<button type='button' id='generate_table' class='button default' style='display: block'>Generate Pricing Options</button>");
+        $('body').find('#generate_table').after($(document).find('#send_sanden_pricing').clone()); 
+
     } else {
         $('body').find('#get_stc_veec').closest('tr').remove();
         $('body').find('.sd_stc').closest('tr').remove();

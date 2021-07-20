@@ -8,11 +8,12 @@ $(function () {
     $(document).find('#pricing_option_type_c').closest(".edit-view-row-item").detach().insertBefore($("#sanden_option_c").closest(".edit-view-row-item"));
     $("#sanden_option_c").closest('.edit-view-row-item').hide();
 
-    //INIT
-    init_table_sanden();
-    // $(document).find('#own_solar_pv_pricing_c').attr('readonly', 'readonly'); edit-view-row
+    // Pricing Option Email
     var div_buttons = $('td.buttons div.buttons');
     $(div_buttons).append('<button type="button" style="margin:4px;" class="button" id="send_sanden_pricing" class="button send_sanden_pricing" onclick="$(document).openComposeViewModal_SendSandenPricing(this);" data-email-type="sanden_pricing"  data-module="AOS_Quotes" data-module-name="' + $("#name").val() + '" data-record-id="' + $("input[name='record']").val() + '">SEND SANDEN PRICING OPTIONS</button>');
+    //INIT
+    init_table_sanden();
+    
     /** Extra Add Button Click handle */ 
     $(document).on('click', '#sd_tank_add, #sd_complete_add, #sd_accessory_add, #sd_extra_add', function(e){
         e.preventDefault();
