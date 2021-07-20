@@ -4348,7 +4348,7 @@ class EmailsController extends SugarController
 
                 $source = realpath(dirname(__FILE__) . '/../../').'/custom/include/SugarFields/Fields/Multiupload/server/php/files/'. $focus->pre_install_photos_c;
                 $filesDesigns = $this->check_exist_file($source, 'Design');
-                $filesPDF = $this->check_exist_file($source, 'Quote_');
+                $filesPDF = $this->check_exist_file($source, 'Quote_', 'Sanden');
                 $filesDaikinPdf = [];
                 foreach ($filesPDF as $value) {
                     if (strpos(strtolower($value), "pdf") !== false) {
@@ -9199,12 +9199,12 @@ class EmailsController extends SugarController
         return $body;
     }
 
-    public function check_exist_file($source, $string) {
+    public function check_exist_file($source, $string, $string_type = '') {
         $file_array = scandir($source);
         $file_array = array_diff($file_array, array('.', '..'));
         $result = array();
         foreach($file_array as $file){
-            if (strpos(strtolower($file), strtolower($string)) !== false && strpos($file, $string) == 0) {
+            if ((strpos(strtolower($file), strtolower($string)) !== false && strpos($file, $string) == 0) || (strpos(strtolower($file), strtolower($string_type)) !== false && strpos($file, $string_type) == 0)) {
                 $result[] = $file;
             }
         }
