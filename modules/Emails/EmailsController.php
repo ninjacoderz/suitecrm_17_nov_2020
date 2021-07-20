@@ -1456,6 +1456,12 @@ class EmailsController extends SugarController
                 $description_html = $emailTemplate->body_html;
                 $description = $emailTemplate->body;
 
+                $link_upload_files = 'https://pure-electric.com.au/pedaikinform-new/confirm-to-lead?lead-id=' . $focus->id;
+                $string_link_upload_files = '<a target="_blank" href="'.$link_upload_files.'">File Upload Link Here</a>';
+                
+                $description = str_replace("\$link_upload_files",$string_link_upload_files , $description);
+                $description_html = str_replace("\$link_upload_files",$string_link_upload_files, $description_html);
+
                 $templateData = $emailTemplate->parse_email_template(
                     array(
                         'subject' => $name,
