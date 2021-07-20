@@ -9210,7 +9210,7 @@ class EmailsController extends SugarController
         $file_array = array_diff($file_array, array('.', '..'));
         $result = array();
         foreach($file_array as $file){
-            if ((strpos(strtolower($file), strtolower($string)) !== false && strpos($file, $string) == 0) || (strpos(strtolower($file), strtolower($string_type)) !== false && strpos($file, $string_type) == 0)) {
+            if ((strpos(strtolower($file), strtolower($string)) !== false && strpos($file, $string) == 0) && (strpos(strtolower($file), strtolower($string_type)) !== false && strpos($file, $string_type) == 0)) {
                 $result[] = $file;
             }
         }
