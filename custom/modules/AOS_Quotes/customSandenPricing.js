@@ -125,7 +125,7 @@ $(function () {
         checkBoxOptionHandle($(this), "sanden_option");
     });
 
-    $(document).on("change", "select[id*='sd_extra_type'], select[id*='sd_complete_type'], input[id*='qty_sd_complete'], input[id*='pmsd_'], select[id*='sd_install_'], input[id*='qty_ext_sd_extra'], input[id*='price_ext_sd_extra'], select[id*='sd_hpump_type'], input[id*='qty_sd_hpump'], select[id*='sd_tank_type'], input[id*='qty_sd_tank'], select[id*='sd_accessory_type'], input[id*='qty_sd_accessory']", function(e){
+    $(document).on("change", "select[id*='sd_extra_type'], select[id*='sd_complete_type'], input[id*='qty_sd_complete'], input[id*='pmsd_'], input[id*='sd_stc_'], input[id*='sd_veec_'], select[id*='sd_install_'], input[id*='qty_ext_sd_extra'], input[id*='price_ext_sd_extra'], select[id*='sd_hpump_type'], input[id*='qty_sd_hpump'], select[id*='sd_tank_type'], input[id*='qty_sd_tank'], select[id*='sd_accessory_type'], input[id*='qty_sd_accessory']", function(e){
         var index  = $(this).attr("id").split('_');
         let item_no = $(this).attr('id').charAt($(this).attr('id').length-3);
         let selector = '', type = '', qty_id ='';
@@ -424,6 +424,7 @@ async function SD_generateLineItem(){
         }
     
         /**S - Add installation */
+        let quantityPB = 0;
         if (currState['sd_install_plumber'] == 'Yes') {
             await SD_autoCreateLineItem(sd_installation_plumber[0], sanden_install, 1); //currState['total_qty_sd_complete']
             if (currState['sd_install_electrician'] == 'Yes') {
@@ -466,25 +467,31 @@ async function SD_generateLineItem(){
 }
 
 async function SD_calculatePrice(currState = {}){
+    // debugger
     let productVisible = $('.product_group').find('tbody[id*=product_body]:visible');
     var totalList = 0, totalDiscount = 0, totalAmount = 0;
-    var list, dis, amount, tax;
-    let grandTotal = parseFloat(roundTo90(SD_calcGrandTotal(currState))).formatMoney(2, ',', '.')
+    var list, dis, amount, tax, name;
+    let grandTotal = parseFloat(roundTo90(SD_calcGrandTotal(currState))).formatMoney(2, ',', '.');
     // For each
     productVisible.each((index, el) => {
         // // get target
         list = $(el).find('input[id*=product_product_list_price]');
+        name = $(el).find('input[id*=product_name]').val();
         // dis = $(el).find('input[id*=product_product_discount]');
         // amount = $(el).find('input[id*=product_product_total_price]');
         tax = $(el).find('select[id*=product_vat]');
 
-        if(index !== 0 && index < productVisible.length){
+        if(index !== 0){
             // // calculate line item exclude first line and last line
             // totalList += get_value(list.attr('id'));
             // totalDiscount += get_value(dis.attr('id'));
             // totalAmount += get_value(amount.attr('id'));
-            set_value(list.attr('id'), "");
-            $(tax).val('0.0');
+            if (name == 'STCs' || name == 'VEECs') {
+                $(tax).val('0.0');
+            } else {
+                set_value(list.attr('id'), "");
+                $(tax).val('0.0');
+            }
         }
         // blur
         list.trigger("blur");

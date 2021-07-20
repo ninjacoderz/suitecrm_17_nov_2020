@@ -2,13 +2,14 @@
  * Global variables
  */
  var sanden_complete, sanden_hpump, sanden_tank, sanden_accessory, sanden_extra, sanden_install, electric_installation;
- var sanden_rebate = [];
+ var sanden_rebate = [], sanden_installation_extra = [];
  var sd_lineOne = ['SSI','SSPI', 'SANDEN_SUPPLY_ONLY'];
  var sd_installation_plumber = ['Sanden_Plb_Install_Std', 'Sanden_Plb_Std_New'];
  var sd_installation_electrician = ['Sanden_Elec_Install_Std'];
  var sd_delivery = ['San_Delivery', 'SANDEN_DELIVERY']; 
  var sd_Rebate = ['STCs', 'VEECs'];
  var sd_Rebate_partNumber = ['STC Rebate Certificate', 'VEEC Rebate Certificate'];
+ var sd_installation_extra = ['PB', 'Photo_Upload_Bonus']; //shortname same partnumber
 
 /**
  * Init table Sanden for Quote
@@ -17,7 +18,9 @@
     // Call API get Sanden Product
     try{
         //get STC - VEEC
-        SD_getRebateProduct();
+        SD_getRebateProduct(sd_Rebate, sanden_rebate);
+        //get Installer extra
+        SD_getRebateProduct(sd_installation_extra, sanden_installation_extra);
         await $.ajax({
             url: '/index.php?entryPoint=APIGetSandenProduct'
         }).then(function(result) {
@@ -205,6 +208,13 @@
             , makeInputBox("sd_gst sanden_pricing", "sd_gst_4", true)
             , makeInputBox("sd_gst sanden_pricing", "sd_gst_5", true)
             , makeInputBox("sd_gst sanden_pricing", "sd_gst_6", true)],
+        ["Rebate (stc/veec):"
+            , makeInputBox("sd_rebate sanden_pricing", "sd_rebate_1", true)
+            , makeInputBox("sd_rebate sanden_pricing", "sd_rebate_2", true)
+            , makeInputBox("sd_rebate sanden_pricing", "sd_rebate_3", true)
+            , makeInputBox("sd_rebate sanden_pricing", "sd_rebate_4", true)
+            , makeInputBox("sd_rebate sanden_pricing", "sd_rebate_5", true)
+            , makeInputBox("sd_rebate sanden_pricing", "sd_rebate_6", true)],
         ["Grand total:"
             , makeInputBox("sanden_pricing", "sd_grandtotal_1", true)
             , makeInputBox("sanden_pricing", "sd_grandtotal_2", true)
@@ -684,20 +694,23 @@ function SD_getCurrentOptionState(index){
 
 
 function SD_calcOption(index) {
-    
+    // debugger
     if(index != '' && index != undefined){
         let currState = SD_getCurrentOptionState(index);
         let grandTotalR90;
         // Grand Total
-        let grandTotal = SD_calcGrandTotal(currState);
+        let rebate = SD_calcSTCVEEC(currState); // so am
+        let grandTotal = SD_calcGrandTotal(currState); //include rebate
         if (grandTotal != 0) {
             grandTotalR90 = Number(roundTo90(grandTotal));
         } else {
             grandTotalR90 = grandTotal;
         }
-        let subtotal = Number(parseFloat(grandTotalR90/1.1).toFixed(2));
-        let gst = Number(parseFloat(grandTotalR90 - subtotal).toFixed(2));
+        let grandTotalNoRebate = grandTotalR90 - rebate;
+        let subtotal = Number(parseFloat(grandTotalNoRebate/1.1).toFixed(2));
+        let gst = Number(parseFloat(grandTotalNoRebate - subtotal).toFixed(2));
         //fill 
+        $('#sd_rebate_'+index).val(parseFloat(rebate).formatMoney(2, ',', '.'));
         $("#sd_subtotal_"+index).val(parseFloat(subtotal).formatMoney(2, ',', '.'));
         $("#sd_gst_"+index).val(parseFloat(gst).formatMoney(2, ',', '.'));
         $("#sd_grandtotal_"+index).val(parseFloat(grandTotalR90).formatMoney(2, ',', '.'));
@@ -721,7 +734,7 @@ function SD_getCountLine(target){
 
 function SD_calcInstallCost(currState) {
     let num_of_line = SD_getCountLine('sd_complete');
-    let total_qty_sd_complete = 0, install_cost = 0;
+    let total_qty_sd_complete = 0, install_cost = 0, quantityPB = 0;
     for (var i = 0; i < num_of_line; i++) {
         if(currState['sd_complete_type' + (i + 1)] != '' && currState['qty_sd_complete'+(i+1)] != ''){
             total_qty_sd_complete += parseFloat(currState['qty_sd_complete'+(i+1)]);
@@ -730,11 +743,15 @@ function SD_calcInstallCost(currState) {
     // Sanden install
     if (currState['sd_install_plumber'] == 'Yes' && total_qty_sd_complete > 0 ) {
         install_cost += parseFloat(getAttributeFromPartNumber(sd_installation_plumber[0], sanden_install, 'cost')) * parseFloat(total_qty_sd_complete);
+        quantityPB+=1;
     }
     if (currState['sd_install_electrician'] == 'Yes' && total_qty_sd_complete > 0 ) {
         install_cost += parseFloat(getAttributeFromPartNumber(sd_installation_electrician[0], electric_installation, 'cost')) * parseFloat(total_qty_sd_complete);
+        quantityPB+=1;
     }
-
+    if (quantityPB > 0) {
+        install_cost += parseFloat(getAttributeFromPartNumber(sd_installation_extra[0], sanden_installation_extra, 'cost')) * quantityPB + parseFloat(getAttributeFromPartNumber(sd_installation_extra[1], sanden_installation_extra, 'cost')) * quantityPB;
+    }
     return install_cost;
 }
 
@@ -883,16 +900,23 @@ function SD_calcHint(){
             str+= SD_writeHint('Delivery',delivery_cost); 
         }
         // Sanden install 
-        let plumber_cost = 0, electrician_cost = 0;
+        let plumber_cost = 0, electrician_cost = 0, quantityPB = 0, install_extra_cost = 0;
         if (currState['sd_install_plumber'] == 'Yes' && currState['total_qty_sd_complete'] > 0) {
             plumber_cost += parseFloat(getAttributeFromPartNumber(sd_installation_plumber[0], sanden_install, 'cost')) * parseFloat(currState['total_qty_sd_complete']);
             str+= SD_writeHint('Plumber Install',plumber_cost, currState['total_qty_sd_complete']);
+            quantityPB+=1;
         }
         if (currState['sd_install_electrician'] == 'Yes' && currState['total_qty_sd_complete'] > 0) {
             electrician_cost += parseFloat(getAttributeFromPartNumber(sd_installation_electrician[0], electric_installation, 'cost')) * parseFloat(currState['total_qty_sd_complete']);
             str+= SD_writeHint('Electrician Install',electrician_cost, currState['total_qty_sd_complete']);
+            quantityPB+=1;
         }
-        install_cost = plumber_cost + electrician_cost;
+        if (quantityPB > 0) {
+            str+= SD_writeHint('Paperwork Bonus',parseFloat(getAttributeFromPartNumber(sd_installation_extra[0], sanden_installation_extra, 'cost')) * quantityPB, quantityPB);
+            str+= SD_writeHint('Upload Photo',parseFloat(getAttributeFromPartNumber(sd_installation_extra[1], sanden_installation_extra, 'cost')) * quantityPB, quantityPB);
+            install_extra_cost += parseFloat(getAttributeFromPartNumber(sd_installation_extra[0], sanden_installation_extra, 'cost')) * quantityPB + parseFloat(getAttributeFromPartNumber(sd_installation_extra[1], sanden_installation_extra, 'cost')) * quantityPB
+        }
+        install_cost = plumber_cost + electrician_cost + install_extra_cost;
         let ins_delivery = delivery_cost + install_cost;
         str += SD_writeHint(
             "TOTAL INSTALL AND DELIVERY COST"
@@ -948,7 +972,7 @@ function SD_calcHint(){
     );
 
     /**S -  STC - VEEC */
-    let stc_cost = 0, veec_cost = 0
+    let stc_cost = 0, veec_cost = 0;
     if (parseInt(currState['stc_number']) > 0 || parseInt(currState['veec_number']) > 0) {
         if (parseInt(currState['stc_number']) > 0) {
             stc_cost += parseFloat(getAttributeFromPartNumber(sd_Rebate_partNumber[0], sanden_rebate, 'cost')) * parseInt(currState['stc_number']);
@@ -969,7 +993,7 @@ function SD_calcHint(){
     /**E - STC - VEEC */
 
     // Sub rebate 
-    grandTotal += (stc_cost + veec_cost);
+    grandTotal += rebate_cost;
     str += SD_writeHint(
         'Grand Total (sub rebate)'
         , grandTotal
@@ -988,59 +1012,48 @@ function SD_calcHint(){
     }
     /** ==E== HINT 1 ==== */
 
-    // /** ==================== GP calc =======================*/ 
-    // let str2 = '';
-    // // Sub Price Total
-    // str2 += SD_writeHint(
-    //     'SUB PRICE TOTAL = Sub total + PE Admin %'
-    //     , sub_price_toal
-    //     , true
-    //     , true
-    // );
-    // // Customer Revenue
-    // let customer_revenue = parseFloat(sub_price_toal) + parseFloat(stc_client);
-    // str2 += SD_writeHint(
-    //     'Customer Revenue = Sub Price Total + STCs (Client show)'
-    //     , customer_revenue
-    // );
-    // // STCs Revenue
-    // let stc_revenue = 37.25 * parseFloat(currState.number_stcs);
-    // str2 += SD_writeHint(
-    //     'STCs Revenue'
-    //     , stc_revenue
-    // );
-    // // Sub Total for GP
-    // let sub_total_gp = customer_revenue + stc_revenue;
-    // str2 += SD_writeHint(
-    //     'SUB TOTAL (Revenue) = STCs + Customer'
-    //     , sub_total_gp
-    //     , true
-    //     , true
-    // );
-    // // Gross Profit
-    // let gross_profit = parseFloat(sub_total_gp) - parseFloat(sub_total);
-    // str2 += SD_writeHint(
-    //     'Gross Profit = Sub Total (Revenue) - Sub total'
-    //     , gross_profit
-    // );
-    // // % Gross Profit
-    // let gross_profit_percent = (parseFloat(gross_profit) / parseFloat(sub_total));
-    // str2 += SD_writeHint(
-    //     '% Gross Profit = Gross Profit / Sub total'
-    //     , gross_profit_percent
-    // );
-    // if (parseFloat(gross_profit_percent) < parseFloat($('#pe_admin_percent').val()) / 100) {
-    //     str2 += SD_writeHint(
-    //         '-> Need to Go Seek: SUB PRICE TOTAL'
-    //         , ''
-    //         , true
-    //         , true
-    //     );
-    // }
+    // /** ==================== Hint 2 =======================*/ 
+    let str2 = '';
+    let grandTotal2 = Number(roundTo90(grandTotal));
+    // Recalculate Sub Price Total
+    str2 += SD_writeHint(
+        'Grand Total (Round 90)'
+        , grandTotal2
+        , ''
+        , true
+        , true
+    );
+
+    // Total before Rebate (STCs/VEECs)
+    grandTotal2 = grandTotal2 - rebate_cost;
+    str2 += SD_writeHint(
+        'Grand Total (before Rebate)'
+        , grandTotal2
+    );
+
+    let subtotal2 = Number(parseFloat(grandTotal2/1.1).toFixed(2));
+    let gst2 = Number(parseFloat(grandTotal2 - subtotal2).toFixed(2));
+    str2 += SD_writeHint(
+        'New Subtotal (before rebate, show at calc Table / line 01 in line item)'
+        , subtotal2
+    );
+    str2 += SD_writeHint(
+        'New GST'
+        , gst2
+    );
+
+    str2 += SD_writeHint(
+        'New Subtotal (sub rebate, show at line item summary)'
+        , subtotal2 + rebate_cost
+        , ''
+        , true
+        , true
+    );
+
 
     // Return
     $('#sd_hint1').append(str);
-    // $('#sd_hint2').append(str2);
+    $('#sd_hint2').append(str2);
 }
 
 var SD_wait = ms => {
@@ -1059,14 +1072,14 @@ function SD_getCompleteSys(){
     return result;
 }
 
-function SD_getRebateProduct(){
-    sd_Rebate.forEach((element, index) => {
+function SD_getRebateProduct(data_in, data_out){
+    data_in.forEach((element, index) => {
         $.ajax({
             url: "/index.php?entryPoint=APIGetProductInfoByShortName&short_name=" + element,
             type: 'GET'})
         .then(function(data) {
             if(data !== undefined || data !== ""){
-                sanden_rebate.push(JSON.parse(data));
+                data_out.push(JSON.parse(data));
             }
         });
     });
