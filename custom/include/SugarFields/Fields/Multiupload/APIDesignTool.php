@@ -33,20 +33,21 @@
         }
 
         if($quote->quote_type_c == 'quote_type_daikin' || $quote->quote_type_c == 'quote_type_nexura'){
-            $dataURL = $_REQUEST['dataURL'];
             $quoteType = 'Daikin';
-            for($i = 0 ; $i < count($dataURL); $i++){
-                foreach($dataURL[$i] as $key =>$val){
-                    if($key == "tabname") continue;
-                    $designType = '_'.str_replace(" ","_",$dataURL[$i]['tabname']).'_'.(($key!='floorplan')?$key:'');
-                    createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status,$dataURL[$i]['tabname']);
-                }
-            }
+            
     
         }else if($quote->quote_type_c == 'quote_type_sanden'){
-            $dataURL = base64_decode($_REQUEST['dataURL']);
+            // $dataURL = base64_decode($_REQUEST['dataURL']);
             $quoteType = 'Sanden';
-            createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status,'');
+            // createImage($quote,$dataURL,'sanden',$designType,$quoteType,$status,'');
+        }
+        $dataURL = $_REQUEST['dataURL'];
+        for($i = 0 ; $i < count($dataURL); $i++){
+            foreach($dataURL[$i] as $key =>$val){
+                if($key == "tabname") continue;
+                $designType = '_'.str_replace(" ","_",$dataURL[$i]['tabname']).'_'.(($key!='floorplan')?$key:'');
+                createImage($quote,base64_decode($val),$key,$designType,$quoteType,$status,$dataURL[$i]['tabname']);
+            }
         }
     }
 
