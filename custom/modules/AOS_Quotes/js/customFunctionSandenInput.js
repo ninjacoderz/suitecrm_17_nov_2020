@@ -10,6 +10,10 @@
  var sd_Rebate = ['STCs', 'VEECs'];
  var sd_Rebate_partNumber = ['STC Rebate Certificate', 'VEEC Rebate Certificate'];
  var sd_installation_extra = ['PB', 'Photo_Upload_Bonus']; //shortname same partnumber
+ var sd_delivery_state = {
+     'WA' : 360,
+     'default': 150,
+ };
 
 /**
  * Init table Sanden for Quote
@@ -755,11 +759,12 @@ function SD_calcInstallCost(currState) {
     return install_cost;
 }
 
-function SD_calcDeliveryCost(equipmentCost) {
+function SD_calcDeliveryCost(equipmentCost, currState) {
     let delivery_cost = 0;
     //Sanden delivery 
     if (equipmentCost > 0) {
-        delivery_cost += parseFloat(getAttributeFromPartNumber(sd_delivery[0], sanden_install, 'cost'));
+        // delivery_cost += parseFloat(getAttributeFromPartNumber(sd_delivery[0], sanden_install, 'cost')); //get database
+        delivery_cost += parseFloat(sd_delivery_state[currState.state == 'WA' ? 'WA' : 'default']);
     }
     return delivery_cost;
 }
@@ -812,7 +817,7 @@ function SD_calcGrandTotal(currState){
     // Equipment cost
     grandTotal += SD_calcEquipmentCost(currState);
     // Install + Delivery cost
-    grandTotal += SD_calcInstallCost(currState) + SD_calcDeliveryCost(SD_calcEquipmentCost(currState));
+    grandTotal += SD_calcInstallCost(currState) + SD_calcDeliveryCost(SD_calcEquipmentCost(currState), currState);
     //stc + veec
     stc_veec_cost += SD_calcSTCVEEC(currState);
     // PE Admin %
@@ -896,8 +901,9 @@ function SD_calcHint(){
     /** S - Install and Delivery */
         //Sanden delivery 
         if (equipment != 0) {
-            delivery_cost += parseFloat(getAttributeFromPartNumber(sd_delivery[0], sanden_install, 'cost'));
-            str+= SD_writeHint('Delivery',delivery_cost); 
+            // delivery_cost += parseFloat(getAttributeFromPartNumber(sd_delivery[0], sanden_install, 'cost'));
+            delivery_cost += parseFloat(sd_delivery_state[currState.state == 'WA' ? 'WA' : 'default']);
+            str+= SD_writeHint(`Delivery ${currState.state}`,delivery_cost); 
         }
         // Sanden install 
         let plumber_cost = 0, electrician_cost = 0, quantityPB = 0, install_extra_cost = 0;
