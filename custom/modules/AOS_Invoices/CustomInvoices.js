@@ -6576,6 +6576,7 @@ function cal_total_constractor(default_value_input = null) {
         }
         $.ajax({
             url: "/index.php?entryPoint=APIGetContactEmail&contact_id="+ $('#billing_contact_id').val() ,
+            async: false,
             success: function(data){
                 emailAddress = data;
             }
@@ -6611,8 +6612,21 @@ function cal_total_constractor(default_value_input = null) {
             $(self.emailComposeView).find('#cc_addrs_names').val("Pure Info <info@pure-electric.com.au>");
             $(self.emailComposeView).find('#parent_id').val(populateModuleRecord);
             $(self.emailComposeView).find('input[name="return_id"]').val(populateModuleRecord);
-            $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);         
-            $(self.emailComposeView).find('input[name="to_addrs_names"]').val(populateModuleName+'<'+ emailAddress + '>');    
+            $(self.emailComposeView).find('input[name="return_module"]').val(populateModule);  
+            
+            //change value with type email
+            var var_to_addrs_names = populateModuleName+'<'+ emailAddress + '>';
+            switch (email_type) {
+                case 'email_sa_reps_to_yess':   ``
+                case 'email_sa_reps_customer':
+                    var_to_addrs_names = $("#billing_contact").val() +'<'+ emailAddress + '>';
+                    break;
+                default:
+                    var_to_addrs_names = populateModuleName+'<'+ emailAddress + '>';
+                    break;
+            }
+
+            $(self.emailComposeView).find('input[name="to_addrs_names"]').val(var_to_addrs_names);    
             
             $(self.emailComposeView).on('sentEmail', function (event, composeView) {
                 composeBox.hide();
